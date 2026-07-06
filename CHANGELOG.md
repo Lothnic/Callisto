@@ -12,4 +12,10 @@ expect breaking changes).
   security policy), CI, RFC process, npm workspace with `packages/mini`.
 - Phase 1: `@callisto/mini` — a token-lean CDP wrapper over Chromium exposing
   the ~20-method surface an agent needs (lifecycle, navigation, interaction,
-  observation, tabs/wait, storage). `snapshot()` is a stub pending Phase 2.
+  observation, tabs/wait, storage).
+- Phase 2: custom accessibility tree behind `snapshot()` — pruned,
+  ref-annotated, iframe-aware, serialized to compact indented text
+  (`ax-prune`/`ax-refs`/`ax-format`). Refs are stable by `backendDOMNodeId` and
+  resolve to box-model centers at action time, so interaction works by ref, not
+  just coordinates. `LaunchOpts.chromeFlags` for Docker/CI (`--no-sandbox`).
+  RFC 0002 documents the design; `scripts/tokens.mjs` reports tree density.

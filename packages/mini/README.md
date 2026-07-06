@@ -44,15 +44,32 @@ await mini.click({ x: 120, y: 30 })
 await mini.close()
 ```
 
+## Snapshot format
+
+`snapshot().text` is a pruned accessibility tree — `[ref] role "name" {state}
+=value`, two-space indent per depth. Only interactive nodes get refs. Design:
+[rfcs/0002](../../rfcs/0002-a11y-tree.md).
+
+```
+[ax-3] button "Add to Cart" {focused}
+navigation "Main"
+  [ax-7] link "Sign in"
+[ax-12] textbox "Search" =laptop
+```
+
+Rough density (approx tokens, `chars/4`): example.com ~40, github.com ~2.8k,
+news.ycombinator.com ~4.3k. Reproduce with `scripts/tokens.mjs <url…>`.
+
 ## API
 
-Targets are `{ x, y }` coordinates or opaque string refs. Refs come from
-`snapshot()` and land in **Phase 2**; until then use coordinates.
+Targets are `{ x, y }` coordinates or opaque string refs (`ax-N`). Refs come
+from `snapshot()` and resolve to the element's box-model center at action time;
+they are stable by DOM node, so a ref survives clicks and state changes.
 
 ### Lifecycle
 | Method | Signature |
 | --- | --- |
-| `Mini.launch` | `(opts?: { headless?, viewport?, userAgent? }) => Promise<Mini>` |
+| `Mini.launch` | `(opts?: { headless?, viewport?, userAgent?, chromeFlags? }) => Promise<Mini>` |
 | `close` | `() => Promise<void>` |
 | `pages` | `() => Promise<{ id, url, title }[]>` |
 
@@ -70,14 +87,14 @@ Targets are `{ x, y }` coordinates or opaque string refs. Refs come from
 | `dragTo` | `(from, to) => Promise<void>` |
 | `type` | `(text, { delay? }?) => Promise<void>` |
 | `press` / `keyDown` / `keyUp` | `(key) => Promise<void>` |
-| `fill` | `(ref, value) => Promise<void>` — clears then types *(needs Phase 2 refs)* |
+| `fill` | `(target, value) => Promise<void>` — clears then types |
 | `scroll` | `(deltaX, deltaY) => Promise<void>` |
 
 ### Observation
 | Method | Signature |
 | --- | --- |
 | `screenshot` | `({ fullPage? }?) => Promise<Buffer>` |
-| `snapshot` | `() => Promise<{ url, title, text }>` — `text` empty until Phase 2 |
+| `snapshot` | `() => Promise<{ url, title, text }>` — pruned, ref-annotated a11y tree |
 | `evaluate<T>` | `(fn: string \| Function, ...args) => Promise<T>` |
 
 ### Tabs / wait

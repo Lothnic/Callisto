@@ -15,6 +15,8 @@ export interface LaunchOpts {
   /** default: 1440x900 — pinned so the model sees a stable, training-shaped page */
   viewport?: Viewport
   userAgent?: string
+  /** extra Chrome flags, e.g. ['--no-sandbox'] in Docker/CI/root environments */
+  chromeFlags?: string[]
 }
 
 export interface Session {
@@ -26,8 +28,14 @@ export interface Session {
 const DEFAULT_VIEWPORT: Viewport = { width: 1440, height: 900 }
 
 async function enableDomains(cdp: CDP.Client): Promise<void> {
-  const { Page, DOM, Runtime, Network } = cdp
-  await Promise.all([Page.enable(), DOM.enable(), Runtime.enable(), Network.enable()])
+  const { Page, DOM, Runtime, Network, Accessibility } = cdp
+  await Promise.all([
+    Page.enable(),
+    DOM.enable(),
+    Runtime.enable(),
+    Network.enable(),
+    Accessibility.enable(),
+  ])
 }
 
 async function applyViewport(cdp: CDP.Client, viewport: Viewport, userAgent?: string): Promise<void> {
@@ -50,6 +58,7 @@ export async function launchChrome(opts: LaunchOpts = {}): Promise<Session> {
     `--window-size=${viewport.width},${viewport.height}`,
   ]
   if (headless) flags.push('--headless=new')
+  if (opts.chromeFlags) flags.push(...opts.chromeFlags)
 
   const chrome = await ChromeLauncher.launch({ chromeFlags: flags })
   const cdp = await CDP({ port: chrome.port })

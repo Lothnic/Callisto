@@ -8,7 +8,8 @@ import {
   type LaunchOpts,
   type Session,
 } from './client.js'
-import { RefRegistry, isPoint, type Target, type Point, type Ref } from './elements.js'
+import { isPoint, type Target, type Point, type Ref } from './elements.js'
+import { RefRegistry } from './ax-refs.js'
 import { snapshot, type Snapshot } from './snapshot.js'
 
 export type { LaunchOpts, Viewport } from './client.js'
@@ -110,25 +111,25 @@ export class Mini {
   // --- interaction ---
 
   async click(target: Target, opts: ClickOpts = {}): Promise<void> {
-    await this.mouse(this.point(target), opts.button ?? 'left', opts.clickCount ?? 1)
+    await this.mouse(await this.resolve(target), opts.button ?? 'left', opts.clickCount ?? 1)
   }
 
   async dblclick(target: Target, opts: ClickOpts = {}): Promise<void> {
-    await this.mouse(this.point(target), opts.button ?? 'left', 2)
+    await this.mouse(await this.resolve(target), opts.button ?? 'left', 2)
   }
 
   async rightclick(target: Target): Promise<void> {
-    await this.mouse(this.point(target), 'right', 1)
+    await this.mouse(await this.resolve(target), 'right', 1)
   }
 
   async hover(target: Target): Promise<void> {
-    const p = this.point(target)
+    const p = await this.resolve(target)
     await this.cdp.Input.dispatchMouseEvent({ type: 'mouseMoved', x: p.x, y: p.y })
   }
 
   async dragTo(from: Target, to: Target): Promise<void> {
-    const a = this.point(from)
-    const b = this.point(to)
+    const a = await this.resolve(from)
+    const b = await this.resolve(to)
     const { Input } = this.cdp
     await Input.dispatchMouseEvent({ type: 'mousePressed', x: a.x, y: a.y, button: 'left', buttons: 1, clickCount: 1 })
     await Input.dispatchMouseEvent({ type: 'mouseMoved', x: b.x, y: b.y, button: 'left', buttons: 1 })
@@ -159,8 +160,8 @@ export class Mini {
   }
 
   /** Clears the field first (so the model needn't remember to), then types. */
-  async fill(ref: Ref, value: string): Promise<void> {
-    await this.mouse(this.refs.resolve(ref), 'left', 1) // focus (Phase 2: real refs)
+  async fill(target: Target, value: string): Promise<void> {
+    await this.mouse(await this.resolve(target), 'left', 1) // focus
     await this.evaluate(
       '(() => { const el = document.activeElement; if (el && "value" in el) el.value = ""; })()',
     )
@@ -188,9 +189,9 @@ export class Mini {
     return Buffer.from(data, 'base64')
   }
 
-  /** Phase 1: page metadata + empty tree. Full a11y tree in Phase 2. */
+  /** Pruned, ref-annotated a11y tree as indented text (rfcs/0002). */
   async snapshot(): Promise<Snapshot> {
-    return snapshot(this.session)
+    return snapshot(this.session, this.refs)
   }
 
   async evaluate<T = unknown>(
@@ -269,8 +270,30 @@ export class Mini {
 
   // --- internals ---
 
-  private point(target: Target): Point {
-    return isPoint(target) ? target : this.refs.resolve(target)
+  /** A target is either raw coordinates or a ref resolved to its box center. */
+  private async resolve(target: Target): Promise<Point> {
+    if (isPoint(target)) return target
+    let info = this.refs.get(target) ?? this.refs.remap(target)
+    if (!info) {
+      throw new Error(`ref "${target}" unknown — call snapshot() first.`)
+    }
+    try {
+      return await this.boxCenter(info.backendDOMNodeId)
+    } catch {
+      // Node detached since snapshot: try a same-role+name survivor once.
+      const remapped = this.refs.remap(target)
+      if (remapped && remapped.backendDOMNodeId !== info.backendDOMNodeId) {
+        return await this.boxCenter(remapped.backendDOMNodeId)
+      }
+      throw new Error(`ref "${target}" is stale — re-snapshot and retry.`)
+    }
+  }
+
+  /** Center of a backend node's content box, via CDP box model. */
+  private async boxCenter(backendNodeId: number): Promise<Point> {
+    const { model } = await this.cdp.DOM.getBoxModel({ backendNodeId })
+    const q = model.content // [x1,y1, x2,y2, x3,y3, x4,y4]
+    return { x: Math.round((q[0] + q[2] + q[4] + q[6]) / 4), y: Math.round((q[1] + q[3] + q[5] + q[7]) / 4) }
   }
 
   private async mouse(p: Point, button: MouseButton, clickCount: number): Promise<void> {
