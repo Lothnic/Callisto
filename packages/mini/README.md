@@ -15,6 +15,23 @@ CALLISTO_SMOKE=1 npm test    # + browser smoke (needs local Chrome + network)
 
 Chrome discovery is handled by `chrome-launcher`; set `CHROME_PATH` to override.
 
+### Getting a usable Chrome (Linux / snap trap)
+
+`chrome-launcher` needs a Chrome that speaks CDP over a debug port. **Ubuntu's
+snap Chromium doesn't** — it silently refuses the remote-debugging port and you
+get `ECONNREFUSED`. If `which google-chrome` points into `/snap`, grab a
+Chrome for Testing binary once:
+
+```bash
+npx @puppeteer/browsers install chrome@stable
+# prints e.g. .../chrome/linux-XXX/chrome-linux64/chrome — export that:
+export CHROME_PATH="$PWD/chrome/linux-<version>/chrome-linux64/chrome"
+CALLISTO_SMOKE=1 npm test
+```
+
+The `chrome/` download is git-ignored. macOS/Windows with real Chrome
+installed can skip this — `chrome-launcher` finds it automatically.
+
 ## Usage
 
 ```ts

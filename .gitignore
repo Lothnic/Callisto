@@ -16,6 +16,9 @@ venv/
 .callisto/
 /tmp/callisto/
 
+# Chrome for Testing binary (downloaded per-machine, never committed)
+chrome/
+
 # Env / secrets
 .env
 .env.*
