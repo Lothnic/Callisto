@@ -1,0 +1,26 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  mini:
+    name: packages/mini (typecheck + test)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/mini
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: packages/mini/package-lock.json
+      - run: npm ci
+      - run: npm run typecheck
+      # Unit tests only. The browser smoke test (CALLISTO_SMOKE=1) needs a real
+      # Chrome + network and is run locally, not in CI.
+      - run: npm test
