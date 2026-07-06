@@ -72,3 +72,26 @@ test('smoke: a11y snapshot has refs and stable ids', { skip: !process.env.CALLIS
     await mini.close()
   }
 })
+
+test('smoke: iframe stitching grafts nested frame content', { skip: !process.env.CALLISTO_SMOKE }, async () => {
+  const mini = await Mini.launch({ headless: true, chromeFlags })
+  try {
+    const iframeContent = encodeURIComponent('<h2>Inside Iframe</h2><button id="ibtn">Iframe Button</button>')
+    const page =
+      'data:text/html,' +
+      encodeURIComponent(
+        '<h1>Main Page</h1>' +
+          `<iframe id="sub" src="data:text/html,${iframeContent}"></iframe>`
+      )
+    await mini.goto(page, { waitUntil: 'load' })
+
+    const snap = await mini.snapshot()
+    // The button inside the iframe should be stitched, pruned, and annotated
+    assert.match(snap.text, /button "Iframe Button"/)
+    
+    const iframeBtnRef = snap.text.split('\n').find((l) => /button "Iframe Button"/.test(l))!.match(/\[(ax-\d+)\]/)![1]
+    assert.ok(iframeBtnRef, 'expected to find a ref for the button inside the iframe')
+  } finally {
+    await mini.close()
+  }
+})
