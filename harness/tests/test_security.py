@@ -473,3 +473,27 @@ class TestGroq:
         monkeypatch.delenv("GROQ_API_KEY", raising=False)
         with pytest.raises(ValueError, match="GROQ_API_KEY is not set"):
             GroqModel()
+
+
+from callisto.loop import prune_old_snapshots
+
+class TestPruneSnapshots:
+    def test_prune_old_snapshots(self):
+        history = [
+            {"role": "user", "content": "task"},
+            {"role": "assistant", "content": "think", "tool_calls": [{"id": "c1", "name": "repl", "arguments": {}}]},
+            {"role": "tool", "tool_call_id": "c1", "content": json.dumps({"value": "[ax-1] link \"Home\""})},
+            {"role": "assistant", "content": "think2", "tool_calls": [{"id": "c2", "name": "repl", "arguments": {}}]},
+            {"role": "tool", "tool_call_id": "c2", "content": json.dumps({"value": "[ax-2] button \"Submit\""})},
+        ]
+
+        pruned = prune_old_snapshots(history)
+
+        # Snapshot 1 (c1) should be pruned
+        c1_msg = [m for m in pruned if m.get("tool_call_id") == "c1"][0]
+        assert "pruned for brevity" in c1_msg["content"]
+
+        # Snapshot 2 (c2) should NOT be pruned
+        c2_msg = [m for m in pruned if m.get("tool_call_id") == "c2"][0]
+        assert "Submit" in c2_msg["content"]
+        assert "pruned" not in c2_msg["content"]

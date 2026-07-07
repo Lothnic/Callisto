@@ -195,6 +195,46 @@ def _find_last_snapshot(history: list[dict[str, Any]]) -> str | None:
     return None
 
 
+def prune_old_snapshots(history: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """
+    Find all tool result messages containing accessibility snapshots.
+    Keep only the most recent one intact, and replace all older ones with a brief
+    placeholder to save tokens and avoid HTTP 413 Payload Too Large.
+    """
+    pruned = []
+    snapshot_count = 0
+    # Count how many snapshot results are in the history
+    for msg in history:
+        if msg.get("role") == "tool":
+            content = msg.get("content", "")
+            if "[ax-" in content:
+                snapshot_count += 1
+
+    seen_snapshots = 0
+    for msg in history:
+        if msg.get("role") == "tool":
+            content = msg.get("content", "")
+            if "[ax-" in content:
+                seen_snapshots += 1
+                # If this is not the last snapshot, prune its contents
+                if seen_snapshots < snapshot_count:
+                    try:
+                        data = json.loads(content)
+                        orig_val = data.get("value", "")
+                        orig_len = len(orig_val) if isinstance(orig_val, str) else 0
+                        data["value"] = f"[Accessibility tree snapshot pruned for brevity ({orig_len} chars)]"
+                        pruned.append({
+                            "role": "tool",
+                            "tool_call_id": msg["tool_call_id"],
+                            "content": json.dumps(data),
+                        })
+                        continue
+                    except Exception:
+                        pass
+        pruned.append(msg)
+    return pruned
+
+
 # ---------------------------------------------------------------------------
 # Main loop
 # ---------------------------------------------------------------------------
@@ -270,9 +310,12 @@ async def run(
     consecutive_identical = 0
 
     for step in range(max_steps):
+        # Prune older accessibility snapshots from history to save tokens and payload size
+        pruned_history = prune_old_snapshots(history)
+
         # ── Compaction (token-count triggered) ──────────────────────────
         messages, compaction_info = await compact(
-            [system_message()] + history,
+            [system_message()] + pruned_history,
             model=model,
         )
         if compaction_info:
