@@ -210,6 +210,7 @@ async def run(
     auto_approve: set[str] | None = None,
     budget: BudgetTracker | None = None,
     memory: MemoryStore | None = None,
+    history: list[dict[str, Any]] | None = None,
 ) -> str:
     """
     Run the agent loop for `task`.
@@ -242,9 +243,14 @@ async def run(
 
     audit.record_session_start(task, getattr(model, "model", "unknown"))
 
-    # ── Memory retrieval at task start ──────────────────────────────────
-    history: list[dict[str, Any]] = [_user_msg(task)]
-    if memory and memory.available:
+    # ── Memory retrieval or continuation ────────────────────────────────
+    is_new_session = history is None
+    if history is None:
+        history = [_user_msg(task)]
+    else:
+        history.append(_user_msg(task))
+
+    if is_new_session and memory and memory.available:
         try:
             memories = memory.retrieve(task, k=3)
             if memories:
@@ -324,6 +330,9 @@ async def run(
 
             duration_s = time.monotonic() - t_start
             audit.record_session_end("success", duration_s)
+            
+            # Append final message to history to preserve assistant response
+            history.append({"role": "assistant", "content": final, "tool_calls": None})
             return final
 
         # ── Single-action discipline ────────────────────────────────────
