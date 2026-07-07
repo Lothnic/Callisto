@@ -1,16 +1,18 @@
-"""bash tool — shell out with a 30-second timeout."""
+"""bash tool — shell out with a 30-second timeout + sandbox isolation."""
 from __future__ import annotations
 
 import asyncio
 from typing import Any
 
-from . import requires_approval
+from ..sandbox import wrap_command
 
 
-@requires_approval
-async def bash(cmd: str) -> dict[str, Any]:
+async def bash(cmd: str, session_dir: str = "") -> dict[str, Any]:
     """
-    Run `cmd` in a subprocess shell.
+    Run `cmd` in a subprocess shell, optionally sandboxed.
+
+    If `session_dir` is provided, the command is wrapped with OS-level
+    isolation (bwrap on Linux, sandbox-exec on macOS). See sandbox.py.
 
     Returns::
 
@@ -18,9 +20,11 @@ async def bash(cmd: str) -> dict[str, Any]:
 
     Timeout: 30 seconds. On timeout, the process is killed and exit_code is -1.
     """
+    actual_cmd = wrap_command(cmd, session_dir) if session_dir else cmd
+
     try:
         proc = await asyncio.create_subprocess_shell(
-            cmd,
+            actual_cmd,
             stdout=asyncio.subprocess.PIPE,
             stderr=asyncio.subprocess.PIPE,
         )

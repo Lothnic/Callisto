@@ -1,13 +1,16 @@
-"""cli.py — `callisto run "task"` entry point."""
+"""cli.py — `callisto run "task"` and `callisto creds` entry points."""
 from __future__ import annotations
 
 import asyncio
+import getpass
 import logging
 import sys
 
 import click
 
+from .budget import BudgetExceededError, BudgetTracker
 from .loop import run
+from .memory import MemoryStore
 from .models.openrouter import OpenRouterModel
 from .sidecar_client import SidecarClient, SidecarDead
 
@@ -24,6 +27,10 @@ def cli(debug: bool) -> None:
     )
 
 
+# ---------------------------------------------------------------------------
+# callisto run
+# ---------------------------------------------------------------------------
+
 @cli.command()
 @click.argument("task")
 @click.option("--model", default="anthropic/claude-3.5-sonnet", show_default=True,
@@ -34,15 +41,27 @@ def cli(debug: bool) -> None:
               help="Pass --no-sandbox to Chrome (needed in Docker/CI).")
 @click.option("--max-steps", default=40, show_default=True,
               help="Maximum tool-call turns.")
+@click.option("--max-cost", default=10.0, show_default=True,
+              help="Maximum cost in USD (0 = unlimited).")
+@click.option("--max-turns", default=100, show_default=True,
+              help="Maximum model turns (0 = unlimited).")
 @click.option("--no-approval", is_flag=True,
               help="Skip approval prompts (non-interactive / CI mode).")
+@click.option("--auto-approve", multiple=True,
+              help="Auto-approve specific categories (e.g., --auto-approve shell).")
+@click.option("--no-memory", is_flag=True,
+              help="Disable memory retrieval and storage.")
 def run_task(
     task: str,
     model: str,
     headless: bool,
     no_sandbox: bool,
     max_steps: int,
+    max_cost: float,
+    max_turns: int,
     no_approval: bool,
+    auto_approve: tuple[str, ...],
+    no_memory: bool,
 ) -> None:
     """Run TASK in the browser and print the result."""
     asyncio.run(
@@ -52,7 +71,11 @@ def run_task(
             headless=headless,
             no_sandbox=no_sandbox,
             max_steps=max_steps,
+            max_cost=max_cost,
+            max_turns=max_turns,
             require_approval=not no_approval,
+            auto_approve_categories=set(auto_approve),
+            enable_memory=not no_memory,
         )
     )
 
@@ -63,10 +86,16 @@ async def _run_async(
     headless: bool,
     no_sandbox: bool,
     max_steps: int,
+    max_cost: float,
+    max_turns: int,
     require_approval: bool,
+    auto_approve_categories: set[str],
+    enable_memory: bool,
 ) -> None:
     model = OpenRouterModel(model=model_name)
     client = SidecarClient()
+    budget = BudgetTracker(max_cost=max_cost, max_turns=max_turns)
+    memory = MemoryStore() if enable_memory else None
 
     chrome_flags = ["--no-sandbox"] if no_sandbox else []
 
@@ -80,11 +109,17 @@ async def _run_async(
             client=client,
             max_steps=max_steps,
             require_approval=require_approval,
+            auto_approve=auto_approve_categories,
+            budget=budget,
+            memory=memory,
         )
         click.echo(result)
 
     except SidecarDead as exc:
         click.echo(f"[callisto] Browser session died: {exc}", err=True)
+        sys.exit(1)
+    except BudgetExceededError as exc:
+        click.echo(f"[callisto] Budget exceeded: {exc}", err=True)
         sys.exit(1)
     except RuntimeError as exc:
         click.echo(f"[callisto] {exc}", err=True)
@@ -100,5 +135,57 @@ async def _run_async(
         client.terminate()
 
 
+# ---------------------------------------------------------------------------
+# callisto creds
+# ---------------------------------------------------------------------------
+
+@cli.group()
+def creds() -> None:
+    """Manage credentials in the OS keychain."""
+
+
+@creds.command("add")
+@click.argument("credential_id")
+def creds_add(credential_id: str) -> None:
+    """Add a credential to the keychain (prompts for the secret)."""
+    from .auth import keychain
+
+    secret = getpass.getpass(f"Enter secret for '{credential_id}': ")
+    if not secret:
+        click.echo("Empty secret — aborting.", err=True)
+        sys.exit(1)
+
+    keychain.set_(credential_id, secret)
+    click.echo(f"Credential '{credential_id}' stored in keychain.")
+
+
+@creds.command("list")
+def creds_list() -> None:
+    """List all stored credential IDs."""
+    from .auth import keychain
+
+    ids = keychain.list_ids()
+    if not ids:
+        click.echo("No credentials stored.")
+        return
+    for cid in ids:
+        click.echo(f"  • {cid}")
+
+
+@creds.command("remove")
+@click.argument("credential_id")
+def creds_remove(credential_id: str) -> None:
+    """Remove a credential from the keychain."""
+    from .auth import keychain
+
+    try:
+        keychain.delete(credential_id)
+        click.echo(f"Credential '{credential_id}' removed.")
+    except Exception as exc:
+        click.echo(f"Failed to remove '{credential_id}': {exc}", err=True)
+        sys.exit(1)
+
+
+# Allow `python -m callisto.cli` as well
 if __name__ == "__main__":
     cli()

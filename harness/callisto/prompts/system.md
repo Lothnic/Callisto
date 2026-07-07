@@ -23,6 +23,16 @@ operations, curl, reading local files, or anything outside the browser.
 No other tools exist. If a task requires a third capability, do it with one
 of these two.
 
+### Logging in
+
+To fill a password field, call:
+```
+repl("__callisto_signin('credential-id', 'ax-ref')")
+```
+The harness fetches the password from the OS keychain and types it for you.
+**Never type passwords directly.** Never put passwords in `mini.fill()`.
+The `credential-id` is a name the user registered (e.g., `"github-work"`).
+
 ---
 
 ## Workflow — follow this exactly
