@@ -330,6 +330,13 @@ async def run(
         # If the model returns multiple tool calls, we execute only the first one
         # and return errors for the others to maintain single-action discipline.
         tool_calls = resp["tool_calls"]
+        if len(tool_calls) > 5:
+            log.warning(
+                "model returned %d tool calls at step %d; truncating to 5 to prevent payload bloat",
+                len(tool_calls), step
+            )
+            tool_calls = tool_calls[:5]
+
         call = tool_calls[0]
         log.info("step %d: %s(%s)", step, call["name"], list(call["arguments"].keys()))
         if len(tool_calls) > 1:
