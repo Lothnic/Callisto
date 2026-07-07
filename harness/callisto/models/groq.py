@@ -1,7 +1,9 @@
 """Groq model — OpenAI-compatible /chat/completions endpoint (RFC 0003)."""
 from __future__ import annotations
 
+import asyncio
 import json
+import logging
 import os
 from typing import Any
 
@@ -11,6 +13,8 @@ from . import Response, ToolCall
 
 _API_URL = "https://api.groq.com/openai/v1/chat/completions"
 _DEFAULT_MODEL = "llama-3.3-70b-versatile"
+
+log = logging.getLogger("callisto.groq")
 
 
 class GroqModel:
@@ -58,10 +62,35 @@ class GroqModel:
             "Content-Type": "application/json",
         }
 
-        async with aiohttp.ClientSession() as session:
-            async with session.post(_API_URL, json=payload, headers=headers) as resp:
-                resp.raise_for_status()
-                data = await resp.json()
+        max_retries = 4
+        backoff = 3.0
+        data = None
+
+        for attempt in range(max_retries):
+            async with aiohttp.ClientSession() as session:
+                async with session.post(_API_URL, json=payload, headers=headers) as resp:
+                    if resp.status == 429:
+                        # Inspect Retry-After header if present, otherwise use backoff
+                        retry_after_str = resp.headers.get("Retry-After")
+                        try:
+                            retry_after = float(retry_after_str) if retry_after_str else backoff
+                        except ValueError:
+                            retry_after = backoff
+
+                        log.warning(
+                            "Groq API rate-limited (429). Retrying in %.1f seconds... (Attempt %d/%d)",
+                            retry_after, attempt + 1, max_retries
+                        )
+                        await asyncio.sleep(retry_after)
+                        backoff *= 2.0
+                        continue
+
+                    resp.raise_for_status()
+                    data = await resp.json()
+                    break
+
+        if data is None:
+            raise RuntimeError("Failed to get response from Groq API after multiple retries.")
 
         choice = data["choices"][0]
         msg = choice["message"]

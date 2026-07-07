@@ -1,7 +1,9 @@
-"""OpenRouter model — OpenAI-compatible /chat/completions (RFC 0003)."""
+"""OpenRouter model — REST API integration (RFC 0003)."""
 from __future__ import annotations
 
+import asyncio
 import json
+import logging
 import os
 from typing import Any
 
@@ -12,12 +14,13 @@ from . import Response, ToolCall
 _API_URL = "https://openrouter.ai/api/v1/chat/completions"
 _DEFAULT_MODEL = "anthropic/claude-3.5-sonnet"
 
+log = logging.getLogger("callisto.openrouter")
+
 
 class OpenRouterModel:
     """
-    Calls OpenRouter's OpenAI-compatible endpoint.
+    Calls OpenRouter's /v1/chat/completions REST endpoint.
 
-    All models available on OpenRouter are reachable by changing `model`.
     Reads OPENROUTER_API_KEY from the environment.
     """
 
@@ -61,10 +64,35 @@ class OpenRouterModel:
             "X-Title": "callisto",
         }
 
-        async with aiohttp.ClientSession() as session:
-            async with session.post(_API_URL, json=payload, headers=headers) as resp:
-                resp.raise_for_status()
-                data = await resp.json()
+        max_retries = 4
+        backoff = 3.0
+        data = None
+
+        for attempt in range(max_retries):
+            async with aiohttp.ClientSession() as session:
+                async with session.post(_API_URL, json=payload, headers=headers) as resp:
+                    if resp.status == 429:
+                        # Inspect Retry-After header if present, otherwise use backoff
+                        retry_after_str = resp.headers.get("Retry-After")
+                        try:
+                            retry_after = float(retry_after_str) if retry_after_str else backoff
+                        except ValueError:
+                            retry_after = backoff
+
+                        log.warning(
+                            "OpenRouter API rate-limited (429). Retrying in %.1f seconds... (Attempt %d/%d)",
+                            retry_after, attempt + 1, max_retries
+                        )
+                        await asyncio.sleep(retry_after)
+                        backoff *= 2.0
+                        continue
+
+                    resp.raise_for_status()
+                    data = await resp.json()
+                    break
+
+        if data is None:
+            raise RuntimeError("Failed to get response from OpenRouter API after multiple retries.")
 
         choice = data["choices"][0]
         msg = choice["message"]
