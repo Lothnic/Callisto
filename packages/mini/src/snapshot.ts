@@ -84,7 +84,7 @@ function normalizeFrame(
       role: n.role?.value ?? '',
       name: strval(n.name),
       description: strval(n.description) || undefined,
-      value: strval(n.value) || undefined,
+      value: (n.role?.value === 'password' || n.role?.value === 'PasswordField') ? '[REDACTED]' : (strval(n.value) || undefined),
       state,
       backendDOMNodeId: n.backendDOMNodeId,
       frameId,

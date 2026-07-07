@@ -26,24 +26,8 @@ from callisto.models.fake import FakeModel
 
 
 # ---------------------------------------------------------------------------
-# Minimal fakes (same as test_loop.py)
+# Helpers
 # ---------------------------------------------------------------------------
-
-class FakeSidecarClient:
-    """In-process fake — no subprocess, no Node, no Chrome."""
-
-    def __init__(self, eval_result: dict | None = None, raise_on_call: Exception | None = None):
-        self._eval_result = eval_result or {"value": "fake-result"}
-        self._raise = raise_on_call
-        self.calls: list[tuple[str, dict]] = []
-
-    async def call(self, method: str, params: dict, **_kwargs) -> dict:
-        self.calls.append((method, params))
-        if self._raise:
-            raise self._raise
-        if method == "eval":
-            return self._eval_result
-        return {"ok": True}
 
 
 def _repl_call(code: str = "return 1", call_id: str = "c1") -> ToolCall:
@@ -365,7 +349,7 @@ class TestAuditLog:
 class TestLoopApproval:
 
     @pytest.mark.asyncio
-    async def test_category_shown_in_approval_prompt(self, monkeypatch):
+    async def test_category_shown_in_approval_prompt(self, fake_sidecar_client, monkeypatch):
         """Approval prompt should include the category name."""
         prompts_seen = []
 
@@ -379,7 +363,7 @@ class TestLoopApproval:
             _resp_tool(_bash_call("rm -rf /tmp/test")),
             _resp_done("deleted"),
         ])
-        client = FakeSidecarClient()
+        client = fake_sidecar_client()
 
         await run("task", model, client, require_approval=True)
 
@@ -387,7 +371,7 @@ class TestLoopApproval:
         assert "[delete]" in prompts_seen[0].lower()
 
     @pytest.mark.asyncio
-    async def test_auto_approve_category_skips_prompt(self, monkeypatch):
+    async def test_auto_approve_category_skips_prompt(self, fake_sidecar_client, monkeypatch):
         """Auto-approved categories should not trigger a prompt."""
         ask_called = []
 
@@ -401,7 +385,7 @@ class TestLoopApproval:
             _resp_tool(_bash_call("echo hello")),
             _resp_done("done"),
         ])
-        client = FakeSidecarClient()
+        client = fake_sidecar_client()
 
         await run(
             "task", model, client,
@@ -414,10 +398,10 @@ class TestLoopApproval:
 class TestLoopBudget:
 
     @pytest.mark.asyncio
-    async def test_budget_exceeded_raises(self):
+    async def test_budget_exceeded_raises(self, fake_sidecar_client):
         """Loop should raise BudgetExceededError when budget is exhausted."""
         model = FakeModel([_resp_tool(_repl_call())] * 10)
-        client = FakeSidecarClient()
+        client = fake_sidecar_client()
         budget = BudgetTracker(max_turns=2, max_cost=0)
 
         with pytest.raises(BudgetExceededError, match="Turn limit"):

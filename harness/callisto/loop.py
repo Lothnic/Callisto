@@ -147,6 +147,24 @@ def _assistant_tool_call_msg(call: ToolCall) -> dict[str, Any]:
     }
 
 
+def _assistant_tool_calls_msg(calls: list[ToolCall]) -> dict[str, Any]:
+    return {
+        "role": "assistant",
+        "content": None,
+        "tool_calls": [
+            {
+                "id": c["id"],
+                "type": "function",
+                "function": {
+                    "name": c["name"],
+                    "arguments": json.dumps(c["arguments"]) if not isinstance(c["arguments"], str) else c["arguments"],
+                },
+            }
+            for c in calls
+        ],
+    }
+
+
 def _tool_result_msg(call_id: str, result: dict[str, Any]) -> dict[str, Any]:
     return {
         "role": "tool",
@@ -273,12 +291,6 @@ async def run(
             audit.record_task_end("error", str(exc))
             raise
 
-        # ── Single-action discipline ────────────────────────────────────
-        assert len(resp["tool_calls"]) <= 1, (
-            f"Model returned {len(resp['tool_calls'])} tool calls at step {step}; "
-            "single-action discipline violated"
-        )
-
         # ── No tool call → done ─────────────────────────────────────────
         if not resp["tool_calls"]:
             final = resp["text"] or ""
@@ -296,8 +308,17 @@ async def run(
             audit.record_session_end("success", duration_s)
             return final
 
-        call = resp["tool_calls"][0]
+        # ── Single-action discipline ────────────────────────────────────
+        # If the model returns multiple tool calls, we execute only the first one
+        # and return errors for the others to maintain single-action discipline.
+        tool_calls = resp["tool_calls"]
+        call = tool_calls[0]
         log.info("step %d: %s(%s)", step, call["name"], list(call["arguments"].keys()))
+        if len(tool_calls) > 1:
+            log.warning(
+                "model returned %d tool calls at step %d; violating single-action discipline",
+                len(tool_calls), step
+            )
 
         # ── Stuck detection ─────────────────────────────────────────────
         fp = _tool_call_fingerprint(call)
@@ -356,9 +377,22 @@ async def run(
 
         except SidecarDead as exc:
             log.warning("sidecar died during tool call: %s", exc)
-            audit.record_task_end("error", str(exc))
-            audit.record_session_end("error", time.monotonic() - t_start)
-            raise
+            try:
+                # Attempt to restart the sidecar
+                audit.record_sidecar_restart(str(exc), client._restart_budget)
+                await client.maybe_restart()
+                result = {
+                    "error": (
+                        "Browser process crashed and was restarted. "
+                        "All page state was lost. "
+                        "Please navigate back to the page and continue."
+                    )
+                }
+            except Exception as restart_exc:
+                log.error("sidecar restart failed: %s", restart_exc)
+                audit.record_task_end("error", f"Sidecar crash + restart failed: {restart_exc}")
+                audit.record_session_end("error", time.monotonic() - t_start)
+                raise SidecarDead(f"Sidecar crashed and restart failed: {restart_exc}") from exc
 
         except Exception as exc:  # noqa: BLE001
             result = {"error": str(exc)}
@@ -370,8 +404,13 @@ async def run(
             duration_ms,
         )
 
-        history.append(_assistant_tool_call_msg(call))
+        history.append(_assistant_tool_calls_msg(tool_calls))
         history.append(_tool_result_msg(call["id"], result))
+
+        for extra in tool_calls[1:]:
+            history.append(_tool_result_msg(extra["id"], {
+                "error": "Single-action discipline violated. Only one action per turn is permitted. This tool call was not executed."
+            }))
 
         # ── Purge secrets from history after autofill ───────────────────
         if autofill_credential_id:

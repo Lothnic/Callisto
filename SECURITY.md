@@ -45,6 +45,7 @@ catch obvious mistakes and give the human a chance to intervene.
 | **Prompt injection** | A malicious page could inject instructions into the snapshot that influence the agent's behavior. | Research problem — no mitigation yet |
 | **macOS without sandbox-exec** | On macOS systems where `sandbox-exec` is unavailable, bash runs without OS-level isolation. | Use a VM or dedicated user account |
 | **Linux without bubblewrap** | Same as above: no OS-level bash isolation without `bwrap`. | `apt install bubblewrap` |
+| **Autofilled secret DOM readback** | Autofill types the secret into the field via `mini.fill`. While the sidecar redacts inputs of role `password`/`PasswordField` from snapshots, a model could evaluate arbitrary JS to read the value back (`document.querySelector('#pw').value`). | Prompt conformance and limiting eval execution |
 
 ### The actual safety boundary
 

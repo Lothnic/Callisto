@@ -70,7 +70,7 @@ class SidecarClient:
             SIDECAR_BIN,
             stdin=asyncio.subprocess.PIPE,
             stdout=asyncio.subprocess.PIPE,
-            stderr=None,  # passthrough to terminal
+            stderr=asyncio.subprocess.DEVNULL,  # quieten sidecar diagnostics for CLI/harness
         )
         log.debug("sidecar PID %d started", self._process.pid)
         self._reader_task = asyncio.create_task(self._reader(), name="sidecar-reader")
@@ -91,6 +91,9 @@ class SidecarClient:
             SidecarTimeout — no response within `timeout` seconds
             SidecarError   — sidecar returned { ok: false, error: "..." }
         """
+        if method == "launch":
+            self._launch_params = params
+
         if self._dead:
             raise SidecarDead("sidecar process is not running")
 
@@ -158,16 +161,18 @@ class SidecarClient:
                 fut.set_exception(exc)
         self._pending.clear()
 
-    async def _maybe_restart_chrome(self, launch_params: dict[str, Any]) -> None:
+    async def maybe_restart(self) -> None:
         """
         Attempt one-shot Chrome restart (RFC 0003 §Sidecar watchdog).
         Called by the loop when SidecarDead is caught mid-task.
         """
+        if not hasattr(self, "_launch_params"):
+            raise SidecarDead("cannot restart sidecar — was never launched")
         if self._restart_budget <= 0:
             raise SidecarDead("sidecar restart budget exhausted — giving up")
         self._restart_budget -= 1
         log.info("restarting sidecar (budget remaining: %d)", self._restart_budget)
         self.terminate()
         await self.start()
-        await self.call("launch", launch_params)
+        await self.call("launch", self._launch_params)
         log.info("sidecar restarted successfully")

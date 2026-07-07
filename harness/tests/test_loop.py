@@ -12,32 +12,11 @@ import pytest
 from callisto.loop import run, _tool_call_fingerprint, STUCK_THRESHOLD
 from callisto.models import Response, ToolCall
 from callisto.models.fake import FakeModel
-from callisto.sidecar_client import SidecarClient, SidecarError
+from callisto.sidecar_client import SidecarError
 
 
 # ---------------------------------------------------------------------------
-# Minimal fake SidecarClient that doesn't touch the network
-# ---------------------------------------------------------------------------
-
-class FakeSidecarClient:
-    """In-process fake — no subprocess, no Node, no Chrome."""
-
-    def __init__(self, eval_result: dict | None = None, raise_on_call: Exception | None = None):
-        self._eval_result = eval_result or {"value": "fake-result"}
-        self._raise = raise_on_call
-        self.calls: list[tuple[str, dict]] = []
-
-    async def call(self, method: str, params: dict, **_kwargs) -> dict:
-        self.calls.append((method, params))
-        if self._raise:
-            raise self._raise
-        if method == "eval":
-            return self._eval_result
-        return {"ok": True}
-
-
-# ---------------------------------------------------------------------------
-# Helper
+# Helpers
 # ---------------------------------------------------------------------------
 
 def _repl_call(code: str = "return 1", call_id: str = "c1") -> ToolCall:
@@ -61,13 +40,13 @@ def _resp_done(text: str = "Task complete.") -> Response:
 # ---------------------------------------------------------------------------
 
 @pytest.mark.asyncio
-async def test_happy_path_repl_then_done():
+async def test_happy_path_repl_then_done(fake_sidecar_client):
     """Normal: one repl tool call, then a final text response."""
     model = FakeModel([
         _resp_tool(_repl_call("return (await mini.snapshot()).text")),
         _resp_done("The pricing page is at /pricing"),
     ])
-    client = FakeSidecarClient(eval_result={"value": "page text here"})
+    client = fake_sidecar_client(eval_result={"value": "page text here"})
 
     result = await run(
         task="Find the pricing page",
@@ -82,39 +61,56 @@ async def test_happy_path_repl_then_done():
 
 
 @pytest.mark.asyncio
-async def test_single_action_assertion_fires():
-    """Loop must assert if the model returns more than one tool call."""
+async def test_single_action_discipline_degrades_gracefully(fake_sidecar_client):
+    """Loop executes the first tool call and feeds back an error for the others."""
 
     class TwoToolModel:
-        async def chat(self, messages, tools) -> Response:
-            return Response(
-                text=None,
-                tool_calls=[
-                    _repl_call(call_id="c1"),
-                    _repl_call(call_id="c2"),
-                ],
-            )
+        def __init__(self):
+            self.calls = 0
 
-    client = FakeSidecarClient()
-    with pytest.raises(AssertionError, match="single-action discipline violated"):
-        await run("task", TwoToolModel(), client, require_approval=False)
+        async def chat(self, messages, tools) -> Response:
+            self.calls += 1
+            if self.calls == 1:
+                return Response(
+                    text=None,
+                    tool_calls=[
+                        _repl_call(code="return 1", call_id="c1"),
+                        _repl_call(code="return 2", call_id="c2"),
+                    ],
+                )
+            # Second turn: verify that the tool results were appended to history
+            # The tool result for c2 should contain the single-action error.
+            tool_results = [m for m in messages if m.get("role") == "tool"]
+            assert len(tool_results) == 2
+
+            c1_res = next(r for r in tool_results if r.get("tool_call_id") == "c1")
+            c2_res = next(r for r in tool_results if r.get("tool_call_id") == "c2")
+
+            assert "value" in json.loads(c1_res["content"])
+            assert "single-action discipline violated" in json.loads(c2_res["content"])["error"].lower()
+
+            return Response(text="Done.", tool_calls=[])
+
+    client = fake_sidecar_client()
+    res = await run("task", TwoToolModel(), client, require_approval=False)
+    assert res == "Done."
 
 
 @pytest.mark.asyncio
-async def test_stuck_detection_halts_loop():
+async def test_stuck_detection_halts_loop(fake_sidecar_client):
     """Loop raises RuntimeError when the same action repeats STUCK_THRESHOLD times."""
     repeated_call = _repl_call("return 'stuck'")
     # Script must be long enough to trigger the threshold
     script = [_resp_tool(repeated_call)] * (STUCK_THRESHOLD + 1)
     model = FakeModel(script)
-    client = FakeSidecarClient(eval_result={"value": "stuck"})
+    client = fake_sidecar_client(eval_result={"value": "stuck"})
 
     with pytest.raises(RuntimeError, match="stuck"):
         await run("task", model, client, require_approval=False)
 
 
 @pytest.mark.asyncio
-async def test_tool_error_is_returned_to_model_not_raised():
+async def test_tool_error_is_returned_to_model_not_raised(fake_sidecar_client):
     """If the sidecar returns an error, the loop feeds it back as a tool result."""
     call = _repl_call("bad code")
     model = FakeModel([
@@ -122,32 +118,32 @@ async def test_tool_error_is_returned_to_model_not_raised():
         _resp_done("ok, I handled the error"),
     ])
     # Sidecar raises SidecarError — loop should catch and continue
-    client = FakeSidecarClient(raise_on_call=SidecarError("EvalError: bad code"))
+    client = fake_sidecar_client(raise_on_call=SidecarError("EvalError: bad code"))
 
     result = await run("task", model, client, require_approval=False)
     assert result == "ok, I handled the error"
 
 
 @pytest.mark.asyncio
-async def test_max_steps_exceeded():
+async def test_max_steps_exceeded(fake_sidecar_client):
     """Loop raises RuntimeError if max_steps is reached without a final answer."""
     # Model always returns a tool call, never finishes
     model = FakeModel([_resp_tool(_repl_call())] * 10)
-    client = FakeSidecarClient()
+    client = fake_sidecar_client()
 
     with pytest.raises(RuntimeError, match="did not finish within 3 steps"):
         await run("task", model, client, max_steps=3, require_approval=False)
 
 
 @pytest.mark.asyncio
-async def test_approval_required_for_bash(monkeypatch):
+async def test_approval_required_for_bash(fake_sidecar_client, monkeypatch):
     """bash tool should trigger approval; denial feeds an error back to the model."""
     bash_call = _bash_call("rm -rf /tmp/test")
     model = FakeModel([
         _resp_tool(bash_call),
         _resp_done("understood, not deleting"),
     ])
-    client = FakeSidecarClient()
+    client = fake_sidecar_client()
 
     # Simulate user typing "n" — patch the module-level function the loop calls
     async def _deny(_prompt: str) -> bool:
@@ -161,11 +157,11 @@ async def test_approval_required_for_bash(monkeypatch):
 
 
 @pytest.mark.asyncio
-async def test_approval_not_required_for_repl(monkeypatch):
+async def test_approval_not_required_for_repl(fake_sidecar_client, monkeypatch):
     """repl does not require approval — should dispatch without asking."""
     call = _repl_call()
     model = FakeModel([_resp_tool(call), _resp_done("done")])
-    client = FakeSidecarClient()
+    client = fake_sidecar_client()
 
     ask_called = []
     async def _track_ask(prompt):
