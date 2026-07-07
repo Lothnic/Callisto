@@ -280,6 +280,7 @@ async def run(
     budget: BudgetTracker | None = None,
     memory: MemoryStore | None = None,
     history: list[dict[str, Any]] | None = None,
+    token_budget: int = 80000,
 ) -> str:
     """
     Run the agent loop for `task`.
@@ -345,6 +346,7 @@ async def run(
         # ── Compaction (token-count triggered) ──────────────────────────
         messages, compaction_info = await compact(
             [system_message()] + pruned_history,
+            token_budget=token_budget,
             model=model,
         )
         if compaction_info:

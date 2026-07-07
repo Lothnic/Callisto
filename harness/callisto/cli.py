@@ -57,6 +57,8 @@ def cli(debug: bool) -> None:
               help="Explicit token limit per LLM completion (useful for free tier keys).")
 @click.option("--keep-open", is_flag=True,
               help="Keep the browser open after the task completes.")
+@click.option("--token-budget", type=int, default=None,
+              help="Max tokens for context history before triggering compaction.")
 def run_task(
     task: str,
     provider: str,
@@ -71,10 +73,14 @@ def run_task(
     no_memory: bool,
     max_tokens: int | None,
     keep_open: bool,
+    token_budget: int | None,
 ) -> None:
     """Run TASK in the browser and print the result."""
     if provider == "groq" and model == "anthropic/claude-3.5-sonnet":
         model = "llama-3.3-70b-versatile"
+
+    if token_budget is None:
+        token_budget = 6500 if provider == "groq" else 80000
 
     asyncio.run(
         _run_async(
@@ -91,6 +97,7 @@ def run_task(
             enable_memory=not no_memory,
             max_tokens=max_tokens,
             keep_open=keep_open,
+            token_budget=token_budget,
         )
     )
 
@@ -109,6 +116,7 @@ async def _run_async(
     enable_memory: bool,
     max_tokens: int | None = None,
     keep_open: bool = False,
+    token_budget: int = 80000,
 ) -> None:
     from .models.groq import GroqModel
 
@@ -136,6 +144,7 @@ async def _run_async(
             auto_approve=auto_approve_categories,
             budget=budget,
             memory=memory,
+            token_budget=token_budget,
         )
         click.echo(result)
 
@@ -242,6 +251,8 @@ def creds_remove(credential_id: str) -> None:
               help="Disable memory retrieval.")
 @click.option("--max-tokens", type=int, default=None,
               help="Explicit token limit per LLM completion (useful for free tier keys).")
+@click.option("--token-budget", type=int, default=None,
+              help="Max tokens for context history before triggering compaction.")
 def chat(
     provider: str,
     model: str,
@@ -254,10 +265,14 @@ def chat(
     auto_approve: tuple[str, ...],
     no_memory: bool,
     max_tokens: int | None,
+    token_budget: int | None,
 ) -> None:
     """Start an interactive multi-turn chat session with Callisto."""
     if provider == "groq" and model == "anthropic/claude-3.5-sonnet":
         model = "llama-3.3-70b-versatile"
+
+    if token_budget is None:
+        token_budget = 6500 if provider == "groq" else 80000
 
     asyncio.run(
         _chat_async(
@@ -272,6 +287,7 @@ def chat(
             auto_approve_categories=set(auto_approve),
             enable_memory=not no_memory,
             max_tokens=max_tokens,
+            token_budget=token_budget,
         )
     )
 
@@ -288,6 +304,7 @@ async def _chat_async(
     auto_approve_categories: set[str],
     enable_memory: bool,
     max_tokens: int | None,
+    token_budget: int = 80000,
 ) -> None:
     from .models.groq import GroqModel
 
@@ -336,6 +353,7 @@ async def _chat_async(
                     budget=budget,
                     memory=memory,
                     history=history,
+                    token_budget=token_budget,
                 )
                 click.echo(f"\n[callisto] {result}")
             except Exception as turn_exc:
