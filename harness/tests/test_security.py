@@ -497,3 +497,30 @@ class TestPruneSnapshots:
         c2_msg = [m for m in pruned if m.get("tool_call_id") == "c2"][0]
         assert "Submit" in c2_msg["content"]
         assert "pruned" not in c2_msg["content"]
+
+
+class TestRepoExecTranslation:
+    @pytest.mark.asyncio
+    async def test_repo_exec_translates_to_bash(self, fake_sidecar_client, monkeypatch):
+        """repo.exec tool calls are translated to bash calls."""
+        commands_run = []
+
+        async def _fake_bash(cmd: str, session_dir: str = "") -> dict[str, Any]:
+            commands_run.append(cmd)
+            return {"stdout": "success", "stderr": "", "exit_code": 0}
+
+        monkeypatch.setattr("callisto.loop.bash", _fake_bash)
+
+        model = FakeModel([
+            _resp_tool({
+                "id": "c1",
+                "name": "repo.exec",
+                "arguments": {"cmd": ["bash", "-lc", "echo hello"]}
+            }),
+            _resp_done("done"),
+        ])
+        client = fake_sidecar_client()
+
+        await run("task", model, client, require_approval=False)
+
+        assert commands_run == ["echo hello"]
