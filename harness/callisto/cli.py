@@ -33,8 +33,10 @@ def cli(debug: bool) -> None:
 
 @cli.command()
 @click.argument("task")
+@click.option("--provider", type=click.Choice(["openrouter", "groq"]), default="openrouter", show_default=True,
+              help="Inference provider.")
 @click.option("--model", default="anthropic/claude-3.5-sonnet", show_default=True,
-              help="OpenRouter model string.")
+              help="Model slug/ID (defaults to anthropic/claude-3.5-sonnet for OpenRouter, llama-3.3-70b-versatile for Groq).")
 @click.option("--headless/--no-headless", default=True, show_default=True,
               help="Run browser headless.")
 @click.option("--no-sandbox", is_flag=True,
@@ -51,8 +53,11 @@ def cli(debug: bool) -> None:
               help="Auto-approve specific categories (e.g., --auto-approve shell).")
 @click.option("--no-memory", is_flag=True,
               help="Disable memory retrieval and storage.")
+@click.option("--max-tokens", type=int, default=None,
+              help="Explicit token limit per LLM completion (useful for free tier keys).")
 def run_task(
     task: str,
+    provider: str,
     model: str,
     headless: bool,
     no_sandbox: bool,
@@ -62,11 +67,16 @@ def run_task(
     no_approval: bool,
     auto_approve: tuple[str, ...],
     no_memory: bool,
+    max_tokens: int | None,
 ) -> None:
     """Run TASK in the browser and print the result."""
+    if provider == "groq" and model == "anthropic/claude-3.5-sonnet":
+        model = "llama-3.3-70b-versatile"
+
     asyncio.run(
         _run_async(
             task=task,
+            provider_name=provider,
             model_name=model,
             headless=headless,
             no_sandbox=no_sandbox,
@@ -76,12 +86,14 @@ def run_task(
             require_approval=not no_approval,
             auto_approve_categories=set(auto_approve),
             enable_memory=not no_memory,
+            max_tokens=max_tokens,
         )
     )
 
 
 async def _run_async(
     task: str,
+    provider_name: str,
     model_name: str,
     headless: bool,
     no_sandbox: bool,
@@ -91,8 +103,15 @@ async def _run_async(
     require_approval: bool,
     auto_approve_categories: set[str],
     enable_memory: bool,
+    max_tokens: int | None = None,
 ) -> None:
-    model = OpenRouterModel(model=model_name)
+    from .models.groq import GroqModel
+
+    if provider_name == "groq":
+        model = GroqModel(model=model_name, max_tokens=max_tokens)
+    else:
+        model = OpenRouterModel(model=model_name, max_tokens=max_tokens)
+
     client = SidecarClient()
     budget = BudgetTracker(max_cost=max_cost, max_turns=max_turns)
     memory = MemoryStore() if enable_memory else None

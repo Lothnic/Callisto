@@ -26,6 +26,7 @@ class OpenRouterModel:
         model: str = _DEFAULT_MODEL,
         api_key: str | None = None,
         temperature: float = 0.0,
+        max_tokens: int | None = None,
     ) -> None:
         self.model = model
         self.api_key = api_key or os.environ.get("OPENROUTER_API_KEY", "")
@@ -35,6 +36,7 @@ class OpenRouterModel:
                 "Export it or pass api_key= explicitly."
             )
         self.temperature = temperature
+        self.max_tokens = max_tokens
 
     async def chat(
         self,
@@ -46,6 +48,8 @@ class OpenRouterModel:
             "messages": messages,
             "temperature": self.temperature,
         }
+        if self.max_tokens is not None:
+            payload["max_tokens"] = self.max_tokens
         if tools:
             payload["tools"] = tools
             payload["tool_choice"] = "auto"

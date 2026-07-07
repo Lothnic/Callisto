@@ -458,3 +458,18 @@ class TestLoopBudget:
                 require_approval=False,
                 budget=budget,
             )
+
+
+from callisto.models.groq import GroqModel
+
+class TestGroq:
+    def test_groq_init(self, monkeypatch):
+        monkeypatch.setenv("GROQ_API_KEY", "fake-key")
+        model = GroqModel(model="llama-test")
+        assert model.model == "llama-test"
+        assert model.api_key == "fake-key"
+
+    def test_groq_init_missing_key(self, monkeypatch):
+        monkeypatch.delenv("GROQ_API_KEY", raising=False)
+        with pytest.raises(ValueError, match="GROQ_API_KEY is not set"):
+            GroqModel()

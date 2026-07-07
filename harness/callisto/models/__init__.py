@@ -23,3 +23,8 @@ class ChatModel(Protocol):
         messages: list[dict[str, Any]],
         tools: list[dict[str, Any]],
     ) -> Response: ...
+
+
+# Expose concrete implementations
+from .openrouter import OpenRouterModel
+from .groq import GroqModel
