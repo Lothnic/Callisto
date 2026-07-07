@@ -85,7 +85,16 @@ class GroqModel:
                         backoff *= 2.0
                         continue
 
-                    resp.raise_for_status()
+                    if resp.status >= 400:
+                        err_text = await resp.text()
+                        log.error("Groq API error (%d): %s", resp.status, err_text)
+                        try:
+                            err_data = json.loads(err_text)
+                            msg = err_data.get("error", {}).get("message", err_text)
+                        except Exception:
+                            msg = err_text
+                        raise RuntimeError(f"Groq API error {resp.status}: {msg}")
+
                     data = await resp.json()
                     break
 
