@@ -55,6 +55,8 @@ def cli(debug: bool) -> None:
               help="Disable memory retrieval and storage.")
 @click.option("--max-tokens", type=int, default=None,
               help="Explicit token limit per LLM completion (useful for free tier keys).")
+@click.option("--keep-open", is_flag=True,
+              help="Keep the browser open after the task completes.")
 def run_task(
     task: str,
     provider: str,
@@ -68,6 +70,7 @@ def run_task(
     auto_approve: tuple[str, ...],
     no_memory: bool,
     max_tokens: int | None,
+    keep_open: bool,
 ) -> None:
     """Run TASK in the browser and print the result."""
     if provider == "groq" and model == "anthropic/claude-3.5-sonnet":
@@ -87,6 +90,7 @@ def run_task(
             auto_approve_categories=set(auto_approve),
             enable_memory=not no_memory,
             max_tokens=max_tokens,
+            keep_open=keep_open,
         )
     )
 
@@ -104,6 +108,7 @@ async def _run_async(
     auto_approve_categories: set[str],
     enable_memory: bool,
     max_tokens: int | None = None,
+    keep_open: bool = False,
 ) -> None:
     from .models.groq import GroqModel
 
@@ -133,6 +138,11 @@ async def _run_async(
             memory=memory,
         )
         click.echo(result)
+
+        if keep_open:
+            await asyncio.to_thread(
+                input, "\n[callisto] Task complete. Keeping browser open. Press Enter to exit and close the browser..."
+            )
 
     except SidecarDead as exc:
         click.echo(f"[callisto] Browser session died: {exc}", err=True)
