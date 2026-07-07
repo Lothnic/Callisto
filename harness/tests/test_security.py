@@ -233,6 +233,27 @@ class TestApprovalCategories:
         assert rule is not None
         assert rule.category == "delete"
 
+    def test_repl_click_on_delete_element_requires_approval(self):
+        call = {"name": "repl", "arguments": {"code": "await mini.click('ax-12')"}}
+        snapshot = '[ax-12] button "Delete Account"'
+        rule = check_approval(call, last_snapshot_text=snapshot)
+        assert rule is not None
+        assert rule.category == "delete"
+        assert "Delete Account" in rule.message
+
+    def test_repl_click_on_payment_element_requires_approval(self):
+        call = {"name": "repl", "arguments": {"code": "await mini.click('ax-15')"}}
+        snapshot = '[ax-15] link "Pay $10 Now"'
+        rule = check_approval(call, last_snapshot_text=snapshot)
+        assert rule is not None
+        assert rule.category == "payment"
+
+    def test_repl_click_on_normal_element_does_not_require_approval(self):
+        call = {"name": "repl", "arguments": {"code": "await mini.click('ax-15')"}}
+        snapshot = '[ax-15] link "Home"'
+        rule = check_approval(call, last_snapshot_text=snapshot)
+        assert rule is None
+
 
 # ===========================================================================
 # 3. BUDGET TESTS
@@ -393,6 +414,33 @@ class TestLoopApproval:
             auto_approve={"shell"},
         )
         assert not ask_called, "auto-approved category should skip prompt"
+
+    @pytest.mark.asyncio
+    async def test_repl_click_gated_by_snapshot(self, fake_sidecar_client, monkeypatch):
+        """Repl clicking a delete element based on snapshot triggers approval."""
+        prompts_seen = []
+
+        async def _track_ask(prompt: str) -> bool:
+            prompts_seen.append(prompt)
+            return True
+
+        monkeypatch.setattr("callisto.tools.ask.ask", _track_ask)
+
+        model = FakeModel([
+            # First turn: model gets snapshot
+            _resp_tool(_repl_call("return (await mini.snapshot()).text")),
+            # Second turn: model clicks a delete element
+            _resp_tool(_repl_call("await mini.click('ax-12')")),
+            _resp_done("done"),
+        ])
+
+        # Sidecar returns the snapshot text containing a delete element
+        client = fake_sidecar_client(eval_result={"value": '[ax-12] button "Delete Account"'})
+
+        await run("task", model, client, require_approval=True)
+
+        assert len(prompts_seen) == 1
+        assert "[delete]" in prompts_seen[0].lower()
 
 
 class TestLoopBudget:

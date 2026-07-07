@@ -177,6 +177,24 @@ def _user_msg(content: str) -> dict[str, Any]:
     return {"role": "user", "content": content}
 
 
+def _find_last_snapshot(history: list[dict[str, Any]]) -> str | None:
+    """Find the most recent accessibility snapshot in the conversation history."""
+    for msg in reversed(history):
+        if msg.get("role") == "tool":
+            content = msg.get("content", "")
+            if not content:
+                continue
+            try:
+                data = json.loads(content)
+                val = data.get("value")
+                # If it's a string containing accessibility refs, it's our snapshot
+                if isinstance(val, str) and "[ax-" in val:
+                    return val
+            except Exception:
+                pass
+    return None
+
+
 # ---------------------------------------------------------------------------
 # Main loop
 # ---------------------------------------------------------------------------
@@ -338,7 +356,8 @@ async def run(
 
         # ── Approval check (category-based) ─────────────────────────────
         if require_approval:
-            rule = check_approval(call, auto_approve=auto_approve)
+            last_snap = _find_last_snapshot(history)
+            rule = check_approval(call, auto_approve=auto_approve, last_snapshot_text=last_snap)
             if rule is not None:
                 args_preview = json.dumps(call["arguments"])[:200]
                 prompt = (

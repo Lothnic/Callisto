@@ -10,13 +10,8 @@ IMPORTANT — BYPASS RISK (documented, not oversold):
 
     Approval rules are a defense-in-depth layer, NOT a guarantee. They catch
     obvious patterns in bash commands; a sufficiently motivated or adversarial
-    agent can phrase around them. Examples of what is NOT caught:
-
-        bash("curl https://x.com/api/v1/destroy")  ← no "delete" match
-        repl("await mini.click(ref_42)")            ← clicks a "delete account"
-                                                       button with zero approval
-
-    The human-in-the-loop on the CLI is the actual safety boundary.
+    agent can phrase around them. The human-in-the-loop on the CLI is the
+    actual safety boundary.
 """
 from __future__ import annotations
 
@@ -40,19 +35,19 @@ DEFAULT_RULES: list[ApprovalRule] = [
     ApprovalRule(
         category="delete",
         pattern=re.compile(
-            r"rm\s+-[rRf]|rmdir|shred|unlink|del\s|Remove-Item",
+            r"rm\s+-[rRf]|rmdir|shred|unlink|del\s|Remove-Item|delete",
             re.IGNORECASE,
         ),
-        message="This command deletes files or directories.",
+        message="This command deletes files, directories, or resources.",
     ),
     ApprovalRule(
         category="send_message",
         pattern=re.compile(
             r"git\s+push|curl\s.*-X\s*POST|curl\s.*--data|"
-            r"wget\s+--post|sendmail|mail\s+-s",
+            r"wget\s+--post|sendmail|mail\s+-s|curl\s+.*\s*\|\s*(?:bash|sh)",
             re.IGNORECASE,
         ),
-        message="This command sends data externally.",
+        message="This command sends data externally or runs a piped remote script.",
     ),
     ApprovalRule(
         category="payment",
@@ -84,34 +79,61 @@ def check_approval(
     call: dict[str, Any],
     rules: list[ApprovalRule] | None = None,
     auto_approve: set[str] | None = None,
+    last_snapshot_text: str | None = None,
 ) -> ApprovalRule | None:
     """
     Check whether a tool call requires human approval.
 
     Args:
-        call:         ToolCall dict with "name" and "arguments" keys.
-        rules:        Override the default rules (useful for tests).
-        auto_approve: Set of category names to auto-approve without prompting.
+        call:               ToolCall dict with "name" and "arguments" keys.
+        rules:              Override the default rules (useful for tests).
+        auto_approve:       Set of category names to auto-approve without prompting.
+        last_snapshot_text: Most recent accessibility tree snapshot string from history.
 
     Returns:
         The first matching ApprovalRule, or None if no approval is needed.
         If the matched category is in auto_approve, returns None (auto-approved).
 
-    Only bash calls are checked. repl calls never require approval.
+    Both bash commands and repl clicks/actions targeting sensitive elements are checked.
     """
-    if call["name"] != "bash":
-        return None
-
     ruleset = rules if rules is not None else DEFAULT_RULES
     approved = auto_approve or set()
 
-    # Serialise arguments for pattern matching
-    args_text = json.dumps(call.get("arguments", {}))
+    # ── repl element click approval check ────────────────────────────
+    if call["name"] == "repl":
+        code = call.get("arguments", {}).get("code", "")
+        # Find all referenced elements matching ax-\d+ in the JS code
+        refs = re.findall(r"ax-\d+", code)
+        if not refs or not last_snapshot_text:
+            return None
 
-    for rule in ruleset:
-        if rule.pattern.search(args_text):
-            if rule.category in approved:
-                return None  # auto-approved
-            return rule
+        # Search for corresponding ref lines in the last accessibility tree snapshot
+        for ref in refs:
+            for line in last_snapshot_text.splitlines():
+                if f"[{ref}]" in line:
+                    # Check rules against this snapshot line
+                    for rule in ruleset:
+                        if rule.category == "shell":
+                            continue  # skip shell catch-all for repl clicks
+                        if rule.pattern.search(line):
+                            if rule.category in approved:
+                                continue
+                            return ApprovalRule(
+                                category=rule.category,
+                                pattern=rule.pattern,
+                                message=f"Browser action targets a '{rule.category}' element: {line.strip()}",
+                            )
+        return None
+
+    # ── bash approval check ──────────────────────────────────────────
+    if call["name"] == "bash":
+        # Serialise arguments for pattern matching
+        args_text = json.dumps(call.get("arguments", {}))
+
+        for rule in ruleset:
+            if rule.pattern.search(args_text):
+                if rule.category in approved:
+                    return None  # auto-approved
+                return rule
 
     return None
