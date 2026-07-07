@@ -87,23 +87,44 @@ async def compact(
     if not turn_msgs:
         return messages, None
 
+    # Group messages into atomic transactions so we never split assistant tool calls from tool results
+    groups = []
+    current_group = []
+    for msg in turn_msgs:
+        role = msg.get("role")
+        if role in ("user", "assistant"):
+            if current_group:
+                groups.append(current_group)
+            current_group = [msg]
+        elif role == "tool":
+            current_group.append(msg)
+        else:
+            if current_group:
+                groups.append(current_group)
+            current_group = [msg]
+    if current_group:
+        groups.append(current_group)
+
     # Determine how many turns to keep (fill budget from the end)
     system_tokens = estimate_tokens(system_msgs)
     remaining_budget = (token_budget * CHARS_PER_TOKEN) - (system_tokens * CHARS_PER_TOKEN)
     # Reserve space for the summary message (~500 tokens)
     remaining_budget -= 500 * CHARS_PER_TOKEN
 
-    kept: list[dict[str, Any]] = []
+    kept_groups = []
     used = 0
-    for msg in reversed(turn_msgs):
-        cost = len(json.dumps(msg))
+    for gp in reversed(groups):
+        cost = sum(len(json.dumps(m)) for m in gp)
         if used + cost > remaining_budget:
             break
-        kept.append(msg)
+        kept_groups.append(gp)
         used += cost
 
-    kept.reverse()
-    dropped = turn_msgs[: len(turn_msgs) - len(kept)]
+    kept_groups.reverse()
+    kept = [m for gp in kept_groups for m in gp]
+
+    dropped_groups = groups[: len(groups) - len(kept_groups)]
+    dropped = [m for gp in dropped_groups for m in gp]
     turns_dropped = len(dropped)
 
     if turns_dropped == 0:
