@@ -128,9 +128,13 @@ function classify(node: RawNode, ancestorName: string): Keep {
 }
 
 function toPruned(node: RawNode): PrunedNode {
+  let name = node.name
+  if ((node.role === 'StaticText' || node.role === 'text') && name.length > 250) {
+    name = name.slice(0, 250) + '... [truncated]'
+  }
   return {
     role: node.role,
-    name: node.name,
+    name,
     description: node.description,
     value: node.value,
     state: node.state,

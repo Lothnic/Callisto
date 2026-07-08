@@ -21,9 +21,10 @@ log = logging.getLogger(__name__)
 CHARS_PER_TOKEN = 4
 
 SUMMARISE_PROMPT = (
-    "Summarise the following conversation turns into a brief progress report. "
-    "Include: pages visited, actions taken, errors encountered, and current "
-    "state. Be concise — under 200 words.\n\n"
+    "Summarise the following conversation turns concisely (under 150 words). "
+    "Include: pages visited, actions taken, errors, and the exact next step "
+    "the agent was about to take. This is NOT the end — the agent will "
+    "continue working after this summary.\n\n"
 )
 
 
@@ -140,8 +141,10 @@ async def compact(
             summary_msg = {
                 "role": "user",
                 "content": (
-                    f"[Context summary — turns 1-{turns_dropped} were compacted]\n\n"
-                    f"{summary_text}"
+                    f"[Context summary — earlier turns 1-{turns_dropped} were compacted]\n"
+                    f"Context from previous turns:\n{summary_text}\n"
+                    f"---\n"
+                    f"Continue the task. Make a tool call for the next action."
                 ),
             }
             summary_used = True
@@ -157,6 +160,13 @@ async def compact(
     if summary_msg:
         result.append(summary_msg)
     result.extend(kept)
+
+    # Ensure at least one user message exists (Groq requirement).
+    if not any(m.get("role") == "user" for m in result):
+        result.append({
+            "role": "user",
+            "content": "Continue the task using the most recent browser state.",
+        })
 
     new_tokens = estimate_tokens(result)
     token_savings = current_tokens - new_tokens
@@ -187,7 +197,7 @@ async def _summarise_turns(
         role = msg.get("role", "?")
         content = msg.get("content") or ""
         if content:
-            turn_text.append(f"Turn {i} ({role}): {content[:500]}")
+            turn_text.append(f"Turn {i} ({role}): {content[:300]}")
         for tc in msg.get("tool_calls") or []:
             fn = tc.get("function", {})
             name = fn.get("name", "?")
@@ -199,4 +209,8 @@ async def _summarise_turns(
         [{"role": "user", "content": prompt}],
         [],  # no tools for summarisation
     )
-    return resp.get("text") or resp.get("content") or str(resp)
+    # resp is a Response TypedDict with key 'text'
+    text = resp["text"] if isinstance(resp, dict) else getattr(resp, "text", None)
+    if not text:
+        raise ValueError("Model returned empty summary")
+    return text
