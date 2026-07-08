@@ -98,6 +98,7 @@ function normalizeFrame(
 
 export async function snapshot(session: Session, refs: RefRegistry): Promise<Snapshot> {
   const cdp = session.cdp
+
   const ax = cdp.Accessibility as unknown as {
     getFullAXTree(p: { frameId?: string }): Promise<{ nodes: CdpAXNode[] }>
   }
@@ -105,53 +106,110 @@ export async function snapshot(session: Session, refs: RefRegistry): Promise<Sna
     getFrameOwner(p: { frameId: string }): Promise<{ backendNodeId: number }>
   }
 
-  const { frameTree } = await cdp.Page.getFrameTree()
-  const frames = flattenFrames(frameTree as unknown as FrameTreeNode)
-  const mainId = frames[0].id
+  // Hide offscreen elements
+  try {
+    await cdp.Runtime.evaluate({
+      expression: `(() => {
+        if (!document.body) return;
+        const hiddenElements = [];
+        const walk = (el) => {
+          if (el.tagName === 'SCRIPT' || el.tagName === 'STYLE') return;
+          const rect = el.getBoundingClientRect();
+          const isOffscreen = (
+            rect.bottom <= 0 ||
+            rect.top >= window.innerHeight ||
+            rect.right <= 0 ||
+            rect.left >= window.innerWidth
+          );
+          if (isOffscreen && rect.width > 0 && rect.height > 0) {
+            const prev = el.getAttribute('aria-hidden');
+            el.setAttribute('aria-hidden', 'true');
+            hiddenElements.push({ el, prev });
+            return;
+          }
+          for (let i = 0; i < el.children.length; i++) {
+            walk(el.children[i]);
+          }
+        };
+        walk(document.body);
+        window.__callisto_hidden = hiddenElements;
+      })()`,
+      awaitPromise: true,
+    });
+  } catch {
+    // Ignore evaluation failures
+  }
 
-  const byId = new Map<string, RawNode>()
-  const frameRoot = new Map<string, string>()
-  for (const f of frames) {
+  try {
+    const { frameTree } = await cdp.Page.getFrameTree()
+    const frames = flattenFrames(frameTree as unknown as FrameTreeNode)
+    const mainId = frames[0].id
+
+    const byId = new Map<string, RawNode>()
+    const frameRoot = new Map<string, string>()
+    for (const f of frames) {
+      try {
+        const { nodes } = await ax.getFullAXTree({ frameId: f.id })
+        const root = normalizeFrame(nodes, f.id, byId)
+        if (root) frameRoot.set(f.id, root)
+      } catch {
+        // frame went away mid-snapshot; skip it
+      }
+    }
+
+    // Stitch: graft each child frame's root under its owner <iframe> node.
+    const byBackend = new Map<number, string>()
+    for (const [id, n] of byId) {
+      if (n.backendDOMNodeId != null) byBackend.set(n.backendDOMNodeId, id)
+    }
+    for (const f of frames) {
+      if (f.id === mainId) continue
+      const childRoot = frameRoot.get(f.id)
+      if (!childRoot) continue
+      try {
+        const { backendNodeId } = await dom.getFrameOwner({ frameId: f.id })
+        const ownerId = byBackend.get(backendNodeId)
+        if (ownerId) byId.get(ownerId)!.childIds.push(childRoot)
+      } catch {
+        // OOPIF / detached: leave the child frame as its own top-level root
+      }
+    }
+
+    // Top-level roots = nodes referenced by no one (main root + any orphan frames).
+    const referenced = new Set<string>()
+    for (const n of byId.values()) n.childIds.forEach((c) => referenced.add(c))
+    const roots: string[] = []
+    for (const id of byId.keys()) if (!referenced.has(id)) roots.push(id)
+
+    const forest = refs.annotate(pruneForest(roots, byId))
+    const text = formatTree(forest)
+
+    const meta = await cdp.Runtime.evaluate({
+      expression: 'JSON.stringify({ url: location.href, title: document.title })',
+      returnByValue: true,
+    })
+    const { url, title } = JSON.parse(meta.result.value as string) as { url: string; title: string }
+    return { url, title, text }
+  } finally {
+    // Revert offscreen elements hiding
     try {
-      const { nodes } = await ax.getFullAXTree({ frameId: f.id })
-      const root = normalizeFrame(nodes, f.id, byId)
-      if (root) frameRoot.set(f.id, root)
+      await cdp.Runtime.evaluate({
+        expression: `(() => {
+          if (window.__callisto_hidden) {
+            for (const x of window.__callisto_hidden) {
+              if (x.prev === null) {
+                x.el.removeAttribute('aria-hidden');
+              } else {
+                x.el.setAttribute('aria-hidden', x.prev);
+              }
+            }
+            delete window.__callisto_hidden;
+          }
+        })()`,
+        awaitPromise: true,
+      });
     } catch {
-      // frame went away mid-snapshot; skip it
+      // Ignore evaluation failures
     }
   }
-
-  // Stitch: graft each child frame's root under its owner <iframe> node.
-  const byBackend = new Map<number, string>()
-  for (const [id, n] of byId) {
-    if (n.backendDOMNodeId != null) byBackend.set(n.backendDOMNodeId, id)
-  }
-  for (const f of frames) {
-    if (f.id === mainId) continue
-    const childRoot = frameRoot.get(f.id)
-    if (!childRoot) continue
-    try {
-      const { backendNodeId } = await dom.getFrameOwner({ frameId: f.id })
-      const ownerId = byBackend.get(backendNodeId)
-      if (ownerId) byId.get(ownerId)!.childIds.push(childRoot)
-    } catch {
-      // OOPIF / detached: leave the child frame as its own top-level root
-    }
-  }
-
-  // Top-level roots = nodes referenced by no one (main root + any orphan frames).
-  const referenced = new Set<string>()
-  for (const n of byId.values()) n.childIds.forEach((c) => referenced.add(c))
-  const roots: string[] = []
-  for (const id of byId.keys()) if (!referenced.has(id)) roots.push(id)
-
-  const forest = refs.annotate(pruneForest(roots, byId))
-  const text = formatTree(forest)
-
-  const meta = await cdp.Runtime.evaluate({
-    expression: 'JSON.stringify({ url: location.href, title: document.title })',
-    returnByValue: true,
-  })
-  const { url, title } = JSON.parse(meta.result.value as string) as { url: string; title: string }
-  return { url, title, text }
 }

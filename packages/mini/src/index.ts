@@ -161,10 +161,52 @@ export class Mini {
 
   /** Clears the field first (so the model needn't remember to), then types. */
   async fill(target: Target, value: string): Promise<void> {
-    await this.mouse(await this.resolve(target), 'left', 1) // focus
-    await this.evaluate(
-      '(() => { const el = document.activeElement; if (el && "value" in el) el.value = ""; })()',
-    )
+    if (isPoint(target)) {
+      await this.mouse(target, 'left', 1)
+      await this.evaluate(
+        '(() => { const el = document.activeElement; if (el && "value" in el) el.value = ""; })()',
+      )
+    } else {
+      let cleanRef = target
+      if (cleanRef.startsWith('[') && cleanRef.endsWith(']')) {
+        cleanRef = cleanRef.slice(1, -1)
+      }
+      const info = this.refs.get(cleanRef) ?? this.refs.remap(cleanRef)
+      if (!info) {
+        throw new Error(`ref "${target}" unknown — call snapshot() first.`)
+      }
+
+      try {
+        // Click first to trigger any custom dropdown / hover state scripts on the page
+        await this.mouse(await this.resolve(target), 'left', 1)
+
+        // Resolve the backend node to a DOM element, focus and clear it, and trigger events
+        const { object } = await this.cdp.DOM.resolveNode({ backendNodeId: info.backendDOMNodeId })
+        if (object.objectId) {
+          await this.cdp.Runtime.callFunctionOn({
+            objectId: object.objectId,
+            functionDeclaration: `function() {
+              const input = this.tagName === 'INPUT' || this.tagName === 'TEXTAREA' ? this : this.querySelector('input, textarea');
+              if (input) {
+                input.focus();
+                input.value = "";
+                input.dispatchEvent(new Event('focus', { bubbles: true }));
+                input.dispatchEvent(new Event('input', { bubbles: true }));
+                input.dispatchEvent(new Event('change', { bubbles: true }));
+              }
+            }`
+          })
+          await this.cdp.Runtime.releaseObject({ objectId: object.objectId })
+        }
+      } catch (err) {
+        // Fallback to coordinates click + activeElement clear if CDP node resolution fails
+        await this.mouse(await this.resolve(target), 'left', 1)
+        await this.evaluate(
+          '(() => { const el = document.activeElement; if (el && "value" in el) el.value = ""; })()',
+        )
+      }
+    }
+
     await this.type(value)
   }
 
@@ -273,7 +315,11 @@ export class Mini {
   /** A target is either raw coordinates or a ref resolved to its box center. */
   private async resolve(target: Target): Promise<Point> {
     if (isPoint(target)) return target
-    let info = this.refs.get(target) ?? this.refs.remap(target)
+    let cleanRef = target
+    if (cleanRef.startsWith('[') && cleanRef.endsWith(']')) {
+      cleanRef = cleanRef.slice(1, -1)
+    }
+    let info = this.refs.get(cleanRef) ?? this.refs.remap(cleanRef)
     if (!info) {
       throw new Error(`ref "${target}" unknown — call snapshot() first.`)
     }

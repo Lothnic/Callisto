@@ -3,6 +3,10 @@
 // agent-facing surface (index.ts) needs to talk to a real browser.
 import * as ChromeLauncher from 'chrome-launcher'
 import CDP from 'chrome-remote-interface'
+import * as path from 'node:path'
+import { fileURLToPath } from 'node:url'
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 export interface Viewport {
   width: number
@@ -23,9 +27,12 @@ export interface Session {
   cdp: CDP.Client
   chrome: ChromeLauncher.LaunchedChrome
   viewport: Viewport
+  userAgent?: string
+  headless: boolean
 }
 
 const DEFAULT_VIEWPORT: Viewport = { width: 1440, height: 900 }
+const DEFAULT_USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36'
 
 async function enableDomains(cdp: CDP.Client): Promise<void> {
   const { Page, DOM, Runtime, Network, Accessibility } = cdp
@@ -36,35 +43,64 @@ async function enableDomains(cdp: CDP.Client): Promise<void> {
     Network.enable(),
     Accessibility.enable(),
   ])
+  // Bypass basic automation detection by removing navigator.webdriver safely
+  await Page.addScriptToEvaluateOnNewDocument({
+    source: `
+      try {
+        const newProto = Object.getPrototypeOf(navigator);
+        delete newProto.webdriver;
+      } catch (e) {}
+    `
+  })
 }
 
-async function applyViewport(cdp: CDP.Client, viewport: Viewport, userAgent?: string): Promise<void> {
-  await cdp.Emulation.setDeviceMetricsOverride({
-    width: viewport.width,
-    height: viewport.height,
-    deviceScaleFactor: 1,
-    mobile: false,
-  })
+
+
+async function applyViewport(
+  cdp: CDP.Client,
+  viewport: Viewport,
+  userAgent?: string,
+  headless: boolean = true
+): Promise<void> {
+  if (headless) {
+    await cdp.Emulation.setDeviceMetricsOverride({
+      width: viewport.width,
+      height: viewport.height,
+      deviceScaleFactor: 1,
+      mobile: false,
+    })
+  }
   if (userAgent) await cdp.Network.setUserAgentOverride({ userAgent })
 }
 
 export async function launchChrome(opts: LaunchOpts = {}): Promise<Session> {
   const viewport = opts.viewport ?? DEFAULT_VIEWPORT
   const headless = opts.headless ?? true
+  const defaultFlags = ChromeLauncher.Launcher.defaultFlags().filter(
+    (flag) => flag !== '--disable-extensions' && flag !== '--mute-audio'
+  )
   const flags = [
+    ...defaultFlags,
     '--no-first-run',
     '--no-default-browser-check',
     '--disable-gpu',
-    `--window-size=${viewport.width},${viewport.height}`,
+    '--disable-browseros-server',
+    `--load-extension=${path.resolve(__dirname, '../callisto-extension')}`,
   ]
-  if (headless) flags.push('--headless=new')
+  if (headless) {
+    flags.push(`--window-size=${viewport.width},${viewport.height}`)
+    flags.push('--headless=new')
+  } else {
+    flags.push('--start-maximized')
+  }
   if (opts.chromeFlags) flags.push(...opts.chromeFlags)
 
-  const chrome = await ChromeLauncher.launch({ chromeFlags: flags })
+  const userAgent = opts.userAgent ?? DEFAULT_USER_AGENT
+  const chrome = await ChromeLauncher.launch({ chromeFlags: flags, ignoreDefaultFlags: true })
   const cdp = await CDP({ port: chrome.port })
   await enableDomains(cdp)
-  await applyViewport(cdp, viewport, opts.userAgent)
-  return { cdp, chrome, viewport }
+  await applyViewport(cdp, viewport, userAgent, headless)
+  return { cdp, chrome, viewport, userAgent, headless }
 }
 
 /** Repoint the session's protocol connection at another tab (target). */
@@ -72,7 +108,7 @@ export async function switchTarget(session: Session, targetId: string): Promise<
   await session.cdp.close()
   const cdp = await CDP({ port: session.chrome.port, target: targetId })
   await enableDomains(cdp)
-  await applyViewport(cdp, session.viewport)
+  await applyViewport(cdp, session.viewport, session.userAgent, session.headless)
   session.cdp = cdp
 }
 
