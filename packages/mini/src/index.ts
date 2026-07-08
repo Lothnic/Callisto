@@ -9,12 +9,15 @@ import {
   type Session,
 } from './client.js'
 import { isPoint, type Target, type Point, type Ref } from './elements.js'
-import { RefRegistry } from './ax-refs.js'
+import { RefRegistry, type RefLookup } from './ax-refs.js'
 import { snapshot, type Snapshot } from './snapshot.js'
+export { Page, Locator } from './page.js'
+export type { LocatorOptions } from './page.js'
 
 export type { LaunchOpts, Viewport } from './client.js'
 export type { Target, Point, Ref } from './elements.js'
 export type { Snapshot } from './snapshot.js'
+export type { RefLookup } from './ax-refs.js'
 
 export type MouseButton = 'left' | 'right' | 'middle'
 export interface ClickOpts {
@@ -311,6 +314,11 @@ export class Mini {
   }
 
   // --- internals ---
+
+  /** Find a snapshot ref by accessible metadata for the Playwright-shaped facade. */
+  ref(query: RefLookup): Ref | undefined {
+    return this.refs.find(query)?.ref
+  }
 
   /** A target is either raw coordinates or a ref resolved to its box center. */
   private async resolve(target: Target): Promise<Point> {

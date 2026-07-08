@@ -1,8 +1,9 @@
 # @callisto/mini
 
 A token-lean wrapper over Chromium via the Chrome DevTools Protocol — the
-agent's hands and eyes. ~20 methods, no selector engine, no locator chains, no
-assertions. Design: [rfcs/0001](../../rfcs/0001-mini-playwright-surface.md).
+agent's hands and eyes. `Mini` is the thin CDP engine; `Page` is a
+Playwright-shaped facade for agents. No `playwright-core`, no assertions, no full
+selector engine. Design: [rfcs/0001](../../rfcs/0001-mini-playwright-surface.md).
 
 ## Install & run
 
@@ -35,18 +36,21 @@ installed can skip this — `chrome-launcher` finds it automatically.
 ## Usage
 
 ```ts
-import { Mini } from '@callisto/mini'
+import { Mini, Page } from '@callisto/mini'
 
 const mini = await Mini.launch({ headless: true }) // viewport pinned 1440x900
-await mini.goto('https://github.com', { waitUntil: 'load' })
-const png = await mini.screenshot()
-await mini.click({ x: 120, y: 30 })
+const page = new Page(mini)
+
+await page.goto('https://github.com', { waitUntil: 'load' })
+const snap = await page.accessibility.snapshot()
+await page.locator('[callisto-ref="ax-7"]').click()
+const png = await page.screenshot()
 await mini.close()
 ```
 
 ## Snapshot format
 
-`snapshot().text` is a pruned accessibility tree — `[ref] role "name" {state}
+`page.accessibility.snapshot().text` (backed by `mini.snapshot()`) is a pruned accessibility tree — `[ref] role "name" {state}
 =value`, two-space indent per depth. Only interactive nodes get refs. Design:
 [rfcs/0002](../../rfcs/0002-a11y-tree.md).
 
@@ -63,8 +67,24 @@ news.ycombinator.com ~4.3k. Reproduce with `scripts/tokens.mjs <url…>`.
 ## API
 
 Targets are `{ x, y }` coordinates or opaque string refs (`ax-N`). Refs come
-from `snapshot()` and resolve to the element's box-model center at action time;
+from the snapshot and resolve to the element's box-model center at action time;
 they are stable by DOM node, so a ref survives clicks and state changes.
+
+### Page facade
+| Method | Signature |
+| --- | --- |
+| `new Page(mini)` | wraps a `Mini` engine |
+| `goto` / `goBack` / `goForward` / `reload` | Playwright-shaped navigation |
+| `click` / `fill` / `press` | `(locatorOrRef, ...) => Promise<void>` |
+| `locator` | `('[callisto-ref="ax-N"]') => Locator` |
+| `getByRole` / `getByText` / `getByLabel` | resolves against the latest snapshot refs |
+| `accessibility.snapshot` | `() => Promise<{ url, title, text }>` — Callisto's pruned tree |
+| `screenshot` | `({ fullPage?, path? }?) => Promise<Buffer>` |
+| `evaluate` | `(fn: string \| Function, ...args) => Promise<T>` |
+| `waitForTimeout` / `waitForFunction` | minimal wait helpers |
+| `url` / `title` | `() => Promise<string>` |
+| `context().pages()` | `() => Promise<{ id, url, title }[]>` |
+| `mouse.wheel` / `keyboard.press` | common Playwright-shaped input helpers |
 
 ### Lifecycle
 | Method | Signature |
@@ -114,5 +134,7 @@ they are stable by DOM node, so a ref survives clicks and state changes.
 
 ## Not here (on purpose)
 
-No `page.locator()`, no `expect()`, no trace viewer, no video, no network
-mocking. If the agent needs it, reach for `evaluate()`.
+No full CSS selector engine, no `expect()`, no trace viewer, no video, no network
+mocking. `page.locator()` intentionally supports only `[callisto-ref="ax-N"]`
+ref locators; role/text/label helpers resolve against Callisto's snapshot refs.
+If the agent needs more, reach for `evaluate()`.

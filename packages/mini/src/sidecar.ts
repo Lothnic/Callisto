@@ -9,11 +9,11 @@
  * Methods: launch | eval | close
  *
  * This process never crashes on a bad call. All errors are serialised and
- * returned. Call mini.close() from inside eval is explicitly blocked.
+ * returned. Browser lifecycle remains owned by the sidecar, not eval code.
  */
 
 import * as readline from 'node:readline'
-import { Mini } from './index.js'
+import { Mini, Page } from './index.js'
 
 // ---------------------------------------------------------------------------
 // Types
@@ -80,6 +80,7 @@ function safeSerialise(raw: unknown): { value: unknown; truncated: boolean } {
 // ---------------------------------------------------------------------------
 
 let mini: Mini | null = null
+let page: Page | null = null
 
 // ---------------------------------------------------------------------------
 // Handlers
@@ -90,6 +91,8 @@ async function handleLaunch(
 ): Promise<Record<string, unknown>> {
   if (mini) {
     await mini.close()
+    mini = null
+    page = null
   }
   mini = await Mini.launch({
     headless: params.headless !== false,
@@ -97,11 +100,12 @@ async function handleLaunch(
       ? (params.chromeFlags as string[])
       : [],
   })
+  page = new Page(mini)
   return { ok: true }
 }
 
 async function handleEval(params: Record<string, unknown>): Promise<Record<string, unknown>> {
-  if (!mini) {
+  if (!mini || !page) {
     throw new Error('EvalError: no browser session — call launch first')
   }
   const code = params.code
@@ -109,16 +113,17 @@ async function handleEval(params: Record<string, unknown>): Promise<Record<strin
     throw new Error('EvalError: params.code must be a string')
   }
 
-  // Build the user's async function with mini in scope.
-  // mini.close() is stubbed out — the sidecar owns the lifecycle.
+  // Build the user's async function with page in scope. Mini stays internal and
+  // close() is stubbed out behind the facade — the sidecar owns the lifecycle.
   const miniProxy = Object.create(mini) as Mini
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ;(miniProxy as any).close = () => {
-    throw new Error('EvalError: mini.close() is not callable from eval')
+    throw new Error('EvalError: browser close is not callable from eval')
   }
+  const pageProxy = new Page(miniProxy)
 
   // eslint-disable-next-line @typescript-eslint/no-implied-eval
-  const fn = new Function('mini', `return (async () => { ${code} })()`)
+  const fn = new Function('page', `return (async () => { ${code} })()`)
 
   let timer: ReturnType<typeof setTimeout>
   const timeout = new Promise<never>((_, reject) => {
@@ -129,7 +134,7 @@ async function handleEval(params: Record<string, unknown>): Promise<Record<strin
   })
 
   try {
-    const raw = await Promise.race([fn(miniProxy) as Promise<unknown>, timeout])
+    const raw = await Promise.race([fn(pageProxy) as Promise<unknown>, timeout])
     const { value, truncated } = safeSerialise(raw)
     return truncated ? { value, truncated: true } : { value }
   } finally {
@@ -141,6 +146,7 @@ async function handleClose(): Promise<Record<string, unknown>> {
   if (mini) {
     await mini.close()
     mini = null
+    page = null
   }
   return { ok: true }
 }
@@ -219,6 +225,7 @@ rl.on('close', async () => {
   if (mini) {
     try { await mini.close() } catch { /* best-effort */ }
   }
+  page = null
   process.exit(0)
 })
 

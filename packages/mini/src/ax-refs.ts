@@ -12,6 +12,12 @@ export interface RefInfo {
   frameId: string
 }
 
+export interface RefLookup {
+  role?: string
+  name?: string | RegExp
+  exact?: boolean
+}
+
 export class RefRegistry {
   private byBackend = new Map<number, RefInfo>()
   private byRef = new Map<string, RefInfo>()
@@ -48,6 +54,26 @@ export class RefRegistry {
 
   get(ref: string): RefInfo | undefined {
     return this.byRef.get(ref)
+  }
+
+  find(query: RefLookup): RefInfo | undefined {
+    const role = query.role?.toLowerCase()
+    const candidates = [...this.byRef.values()].filter((info) => {
+      if (role && info.role.toLowerCase() !== role) return false
+      return this.matchesName(info.name, query.name, query.exact)
+    })
+    return candidates[0]
+  }
+
+  private matchesName(actual: string, expected?: string | RegExp, exact = false): boolean {
+    if (expected === undefined) return true
+    if (expected instanceof RegExp) return expected.test(actual)
+
+    const a = actual.trim()
+    const e = expected.trim()
+    if (exact) return a === e
+    if (a === e) return true
+    return a.toLowerCase().includes(e.toLowerCase())
   }
 
   /** Heuristic remap for a stale ref: another live ref with same role+name. */
