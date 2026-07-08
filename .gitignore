@@ -34,3 +34,6 @@ chrome/
 
 # Claude Code local settings
 .claude/
+
+# Marketing / Blog drafts
+/How we built the SOTA browser agent that outperforms Fable.md
