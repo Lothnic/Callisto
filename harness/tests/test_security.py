@@ -81,7 +81,7 @@ class TestSigninMarkerMatching:
         assert not is_signin_call("")
 
     def test_normal_repl_code(self):
-        assert not is_signin_call("return (await mini.snapshot()).text")
+        assert not is_signin_call("return (await page.accessibility.snapshot()).text")
 
     def test_contains_marker_as_substring(self):
         """Marker as a substring of other code — must NOT match."""
@@ -121,7 +121,7 @@ class TestHistoryPurge:
         monkeypatch.setattr("callisto.auth.autofill.keychain.get", lambda _: "s3cret_pass!")
 
         history = [
-            {"role": "tool", "content": "await mini.fill('ax-5', 's3cret_pass!')"},
+            {"role": "tool", "content": "await page.locator('[callisto-ref=\"ax-5\"]').fill('s3cret_pass!')"},
             {"role": "assistant", "content": "I typed the password s3cret_pass! into the field."},
         ]
         purge_secret_from_history(history, "test-cred")
@@ -140,7 +140,7 @@ class TestHistoryPurge:
                     {
                         "function": {
                             "name": "repl",
-                            "arguments": '{"code": "await mini.fill(\'ax-5\', \'hunter2\')"}',
+                            "arguments": '{"code": "await page.locator(\'[callisto-ref=\\\"ax-5\\\"]\').fill(\'hunter2\')"}',
                         }
                     }
                 ],
@@ -218,7 +218,7 @@ class TestApprovalCategories:
 
     def test_repl_never_triggers_approval(self):
         """repl calls NEVER require approval."""
-        call = {"name": "repl", "arguments": {"code": "await mini.click('ax-42')"}}
+        call = {"name": "repl", "arguments": {"code": "await page.locator('[callisto-ref=\"ax-42\"]').click()"}}
         rule = check_approval(call)
         assert rule is None
 
@@ -234,7 +234,7 @@ class TestApprovalCategories:
         assert rule.category == "delete"
 
     def test_repl_click_on_delete_element_requires_approval(self):
-        call = {"name": "repl", "arguments": {"code": "await mini.click('ax-12')"}}
+        call = {"name": "repl", "arguments": {"code": "await page.locator('[callisto-ref=\"ax-12\"]').click()"}}
         snapshot = '[ax-12] button "Delete Account"'
         rule = check_approval(call, last_snapshot_text=snapshot)
         assert rule is not None
@@ -242,14 +242,14 @@ class TestApprovalCategories:
         assert "Delete Account" in rule.message
 
     def test_repl_click_on_payment_element_requires_approval(self):
-        call = {"name": "repl", "arguments": {"code": "await mini.click('ax-15')"}}
+        call = {"name": "repl", "arguments": {"code": "await page.locator('[callisto-ref=\"ax-15\"]').click()"}}
         snapshot = '[ax-15] link "Pay $10 Now"'
         rule = check_approval(call, last_snapshot_text=snapshot)
         assert rule is not None
         assert rule.category == "payment"
 
     def test_repl_click_on_normal_element_does_not_require_approval(self):
-        call = {"name": "repl", "arguments": {"code": "await mini.click('ax-15')"}}
+        call = {"name": "repl", "arguments": {"code": "await page.locator('[callisto-ref=\"ax-15\"]').click()"}}
         snapshot = '[ax-15] link "Home"'
         rule = check_approval(call, last_snapshot_text=snapshot)
         assert rule is None
@@ -428,9 +428,9 @@ class TestLoopApproval:
 
         model = FakeModel([
             # First turn: model gets snapshot
-            _resp_tool(_repl_call("return (await mini.snapshot()).text")),
+            _resp_tool(_repl_call("return (await page.accessibility.snapshot()).text")),
             # Second turn: model clicks a delete element
-            _resp_tool(_repl_call("await mini.click('ax-12')")),
+            _resp_tool(_repl_call("await page.locator('[callisto-ref=\"ax-12\"]').click()")),
             _resp_done("done"),
         ])
 

@@ -116,7 +116,8 @@ async def do_autofill(
         )
 
     # Type into the page — fail-loud on sidecar failure
-    fill_code = f"await mini.fill({json.dumps(ref)}, {json.dumps(secret)})"
+    selector = f'[callisto-ref="{ref}"]'
+    fill_code = f"await page.locator({json.dumps(selector)}).fill({json.dumps(secret)})"
     try:
         result = await client.call("eval", {"code": fill_code})
     except SidecarDead:

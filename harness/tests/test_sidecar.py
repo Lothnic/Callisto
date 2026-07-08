@@ -47,12 +47,12 @@ async def test_launch_eval_close(client: SidecarClient):
 @pytest.mark.asyncio
 @pytest.mark.skipif(SKIP, reason=SKIP_REASON)
 async def test_screenshot_returns_base64(client: SidecarClient):
-    """mini.screenshot() should come back as { type: 'base64', data: '...' }."""
+    """page.screenshot() should come back as { type: 'base64', data: '...' }."""
     chrome_flags = ["--no-sandbox"] if NO_SANDBOX else []
     await client.call("launch", {"headless": True, "chromeFlags": chrome_flags})
-    await client.call("eval", {"code": "await mini.goto('about:blank')"})
+    await client.call("eval", {"code": "await page.goto('about:blank')"})
 
-    result = await client.call("eval", {"code": "return await mini.screenshot()"})
+    result = await client.call("eval", {"code": "return await page.screenshot()"})
     value = result["value"]
     assert isinstance(value, dict), f"expected dict, got {type(value)}"
     assert value.get("type") == "base64", f"expected base64 encoding, got: {value}"
@@ -61,13 +61,16 @@ async def test_screenshot_returns_base64(client: SidecarClient):
 
 @pytest.mark.asyncio
 @pytest.mark.skipif(SKIP, reason=SKIP_REASON)
-async def test_eval_mini_close_is_blocked(client: SidecarClient):
-    """mini.close() inside eval must return an error, not crash the sidecar."""
+async def test_eval_mini_is_not_in_scope(client: SidecarClient):
+    """Mini stays internal; eval exposes the Playwright-shaped page facade."""
     chrome_flags = ["--no-sandbox"] if NO_SANDBOX else []
     await client.call("launch", {"headless": True, "chromeFlags": chrome_flags})
 
-    with pytest.raises(SidecarError, match="not callable from eval"):
-        await client.call("eval", {"code": "await mini.close(); return 'ok'"})
+    result = await client.call("eval", {"code": "return typeof mini"})
+    assert result["value"] == "undefined"
+
+    with pytest.raises(SidecarError, match="page.close is not a function"):
+        await client.call("eval", {"code": "await page.close(); return 'ok'"})
 
     # Sidecar should still be alive after the blocked call
     result = await client.call("eval", {"code": "return 'still alive'"})

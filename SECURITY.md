@@ -40,12 +40,12 @@ catch obvious mistakes and give the human a chance to intervene.
 | **The browser session** | Chrome has full network access and full filesystem access (within the user's account permissions). The sidecar is not sandboxed. | Use a dedicated browser profile or a VM |
 | **Pages visited by the agent** | A malicious page can attempt XSS, CSRF, exfiltration via normal HTTP. | Same as any browser user — be cautious about which sites the agent visits |
 | **Cookies and storage** | The agent inherits the user's full session state for any site it visits. | Use `--headless` with a fresh profile |
-| **repl-based destructive actions** | Clicking a "Delete Account" button via `repl("await mini.click('ax-42')")` requires zero approval. Approval rules only match bash commands. | The human-in-the-loop CLI prompt is the actual safety boundary |
+| **repl-based destructive actions** | Clicking a "Delete Account" button via `repl("await page.locator('[callisto-ref=\"ax-42\"]').click()")` requires zero approval. Approval rules only match bash commands. | The human-in-the-loop CLI prompt is the actual safety boundary |
 | **Rephrased bash commands** | `curl https://x.com/api/v1/destroy` bypasses the `delete` regex. A sufficiently creative agent can phrase around any regex pattern. | Approval rules are defense-in-depth, not guarantees |
 | **Prompt injection** | A malicious page could inject instructions into the snapshot that influence the agent's behavior. | Research problem — no mitigation yet |
 | **macOS without sandbox-exec** | On macOS systems where `sandbox-exec` is unavailable, bash runs without OS-level isolation. | Use a VM or dedicated user account |
 | **Linux without bubblewrap** | Same as above: no OS-level bash isolation without `bwrap`. | `apt install bubblewrap` |
-| **Autofilled secret DOM readback** | Autofill types the secret into the field via `mini.fill`. While the sidecar redacts inputs of role `password`/`PasswordField` from snapshots, a model could evaluate arbitrary JS to read the value back (`document.querySelector('#pw').value`). | Prompt conformance and limiting eval execution |
+| **Autofilled secret DOM readback** | Autofill types the secret into the field via `page.locator(...).fill`. While the sidecar redacts inputs of role `password`/`PasswordField` from snapshots, a model could evaluate arbitrary JS to read the value back (`document.querySelector('#pw').value`). | Prompt conformance and limiting eval execution |
 
 ### The actual safety boundary
 
@@ -70,7 +70,7 @@ Everything else is a best-effort layer on top of that.
 │             │     │  • budget    │     │  • Chrome CDP  │
 │             │     │  • audit     │     │  • eval()      │
 │             │     │  • keychain  │     │  • sandbox for │
-│             │     │  • sandbox   │     │    mini.close() │
+│             │     │  • sandbox   │     │    browser close│
 │             │     │    (bash)    │     │                │
 └─────────────┘     └──────────────┘     └────────────────┘
 ```
@@ -83,7 +83,7 @@ Everything else is a best-effort layer on top of that.
 1. Model emits: repl("__callisto_signin('github-work', 'ax-12')")
 2. Harness: is_signin_call() → True (closed allowlist)
 3. Harness: keychain.get("github-work") → "s3cret!"
-4. Harness: sidecar.eval("await mini.fill('ax-12', 's3cret!')")
+4. Harness: sidecar.eval("await page.locator('[callisto-ref=\"ax-12\"]').fill('s3cret!')")
 5. Harness: purge "s3cret!" from all message history
 6. Harness: audit.record_autofill("github-work", "ax-12")
 7. Model never sees "s3cret!" in any subsequent context

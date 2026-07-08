@@ -43,7 +43,7 @@ def _resp_done(text: str = "Task complete.") -> Response:
 async def test_happy_path_repl_then_done(fake_sidecar_client):
     """Normal: one repl tool call, then a final text response."""
     model = FakeModel([
-        _resp_tool(_repl_call("return (await mini.snapshot()).text")),
+        _resp_tool(_repl_call("return (await page.accessibility.snapshot()).text")),
         _resp_done("The pricing page is at /pricing"),
     ])
     client = fake_sidecar_client(eval_result={"value": "page text here"})

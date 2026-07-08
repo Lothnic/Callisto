@@ -64,8 +64,8 @@ TOOL_SCHEMAS: list[dict[str, Any]] = [
             "name": "repl",
             "description": (
                 "Execute JavaScript in the live browser session. "
-                "`mini` is in scope. Return a value with `return ...`. "
-                "Example: return (await mini.snapshot()).text"
+                "Playwright-shaped `page` is in scope. Return a value with `return ...`. "
+                "Example: return (await page.accessibility.snapshot()).text"
             ),
             "parameters": {
                 "type": "object",
@@ -339,7 +339,8 @@ async def run(
             log.warning("memory retrieval failed: %s", exc)
             audit.record_error("memory_retrieve", str(exc))
 
-    recent_modifying_fps: list[str] = []
+    last_fingerprint: str | None = None
+    consecutive_identical = 0
 
     for step in range(max_steps):
         # Prune older accessibility snapshots from history to save tokens and payload size
@@ -403,7 +404,7 @@ async def run(
             # If the model returned empty text, try to snapshot the page
             if not final:
                 try:
-                    snap = await repl("return (await mini.snapshot()).text", client)
+                    snap = await repl("return (await page.accessibility.snapshot()).text", client)
                     snap_text = snap.get("value", "") or ""
                     if snap_text and "[ax-" in snap_text:
                         final = snap_text[:2000]
@@ -466,24 +467,19 @@ async def run(
 
         # ── Stuck detection ─────────────────────────────────────────────
         fp = _tool_call_fingerprint(call)
-        is_snapshot = call["name"] == "repl" and "mini.snapshot" in call["arguments"].get("code", "")
-        
-        stuck_error: str | None = None
-        if not is_snapshot:
-            recent_modifying_fps.append(fp)
-            if len(recent_modifying_fps) > 6:
-                recent_modifying_fps.pop(0)
-            
-            if recent_modifying_fps.count(fp) >= 3:
-                # The model is repeating the same action. Force it to try something else.
-                log.warning("Agent is stuck repeating %s. Injecting error.", fp)
-                stuck_error = (
-                    "SYSTEM ERROR: You are repeating the exact same action that is not working. "
-                    "Look at the latest snapshot and try a DIFFERENT approach or a DIFFERENT element. "
-                    "Do NOT repeat this action."
+        if fp == last_fingerprint:
+            consecutive_identical += 1
+            if consecutive_identical >= STUCK_THRESHOLD:
+                msg = (
+                    f"Agent appears stuck: the same action "
+                    f"'{call['name']}' was repeated {consecutive_identical} times."
                 )
-                # Clear the history so we don't infinitely trigger this if it tries again much later
-                recent_modifying_fps.clear()
+                audit.record_task_end("failure", msg)
+                audit.record_session_end("failure", time.monotonic() - t_start)
+                raise RuntimeError(msg)
+        else:
+            consecutive_identical = 0
+        last_fingerprint = fp
 
 
         # ── Approval check (category-based) ─────────────────────────────
@@ -512,16 +508,13 @@ async def run(
         autofill_credential_id: str | None = None
 
         try:
-            if stuck_error:
-                result = {"error": stuck_error}
-            else:
-                # Check for autofill before execution
-                code = call.get("arguments", {}).get("code", "")
-                if call["name"] == "repl" and is_signin_call(code):
-                    parsed = parse_signin_call(code)
-                    autofill_credential_id = parsed[0] if parsed else None
+            # Check for autofill before execution
+            code = call.get("arguments", {}).get("code", "")
+            if call["name"] == "repl" and is_signin_call(code):
+                parsed = parse_signin_call(code)
+                autofill_credential_id = parsed[0] if parsed else None
 
-                result = await _execute(call, client, audit, session_dir=session_dir)
+            result = await _execute(call, client, audit, session_dir=session_dir)
 
         except (AutofillUnavailableError, CredentialNotFoundError) as exc:
             # Autofill-specific failures: return error to model, do NOT fall back
