@@ -3,6 +3,7 @@
 // agent-facing surface (index.ts) needs to talk to a real browser.
 import * as ChromeLauncher from 'chrome-launcher'
 import CDP from 'chrome-remote-interface'
+import { existsSync } from 'node:fs'
 import * as path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -19,6 +20,8 @@ export interface LaunchOpts {
   /** default: 1440x900 — pinned so the model sees a stable, training-shaped page */
   viewport?: Viewport
   userAgent?: string
+  /** Chrome/BrowserOS binary path. Defaults to CHROME_PATH, then bundled BrowserOS. */
+  chromePath?: string
   /** extra Chrome flags, e.g. ['--no-sandbox'] in Docker/CI/root environments */
   chromeFlags?: string[]
 }
@@ -33,6 +36,21 @@ export interface Session {
 
 const DEFAULT_VIEWPORT: Viewport = { width: 1440, height: 900 }
 const DEFAULT_USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36'
+const BUNDLED_BROWSEROS = path.resolve(__dirname, '../browseros/browseros')
+const sleep = (ms: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, ms))
+
+async function connectCdp(port: number, target?: string): Promise<CDP.Client> {
+  let lastError: unknown
+  for (let attempt = 0; attempt < 50; attempt++) {
+    try {
+      return await CDP(target ? { port, target } : { port })
+    } catch (err) {
+      lastError = err
+      await sleep(100)
+    }
+  }
+  throw lastError
+}
 
 async function enableDomains(cdp: CDP.Client): Promise<void> {
   const { Page, DOM, Runtime, Network, Accessibility } = cdp
@@ -96,8 +114,9 @@ export async function launchChrome(opts: LaunchOpts = {}): Promise<Session> {
   if (opts.chromeFlags) flags.push(...opts.chromeFlags)
 
   const userAgent = opts.userAgent ?? DEFAULT_USER_AGENT
-  const chrome = await ChromeLauncher.launch({ chromeFlags: flags, ignoreDefaultFlags: true })
-  const cdp = await CDP({ port: chrome.port })
+  const chromePath = opts.chromePath ?? process.env.CHROME_PATH ?? (existsSync(BUNDLED_BROWSEROS) ? BUNDLED_BROWSEROS : undefined)
+  const chrome = await ChromeLauncher.launch({ chromeFlags: flags, ignoreDefaultFlags: true, chromePath })
+  const cdp = await connectCdp(chrome.port)
   await enableDomains(cdp)
   await applyViewport(cdp, viewport, userAgent, headless)
   return { cdp, chrome, viewport, userAgent, headless }
@@ -106,7 +125,7 @@ export async function launchChrome(opts: LaunchOpts = {}): Promise<Session> {
 /** Repoint the session's protocol connection at another tab (target). */
 export async function switchTarget(session: Session, targetId: string): Promise<void> {
   await session.cdp.close()
-  const cdp = await CDP({ port: session.chrome.port, target: targetId })
+  const cdp = await connectCdp(session.chrome.port, targetId)
   await enableDomains(cdp)
   await applyViewport(cdp, session.viewport, session.userAgent, session.headless)
   session.cdp = cdp
