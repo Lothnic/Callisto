@@ -37,3 +37,6 @@ chrome/
 
 # Marketing / Blog drafts
 /How we built the SOTA browser agent that outperforms Fable.md
+
+# BrowserOS local binary dependencies
+/packages/mini/browseros/
