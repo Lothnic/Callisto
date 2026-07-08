@@ -5,6 +5,7 @@ import asyncio
 import json
 import logging
 import os
+import random
 from typing import Any
 
 import aiohttp
@@ -12,7 +13,17 @@ import aiohttp
 from . import Response, ToolCall
 
 _API_URL = "https://api.groq.com/openai/v1/chat/completions"
-_DEFAULT_MODEL = "llama-3.3-70b-versatile"
+_DEFAULT_MODEL = "meta-llama/llama-4-scout-17b-16e-instruct"
+
+# Retry settings for 429 rate limits
+_MAX_RETRIES = 10
+_INITIAL_BACKOFF = 5.0
+_MAX_BACKOFF = 60.0
+
+# Proactive pacing: if remaining tokens drop below this threshold,
+# add a short pre-request delay to let the rate-limit window refill.
+_LOW_TOKENS_THRESHOLD = 2000
+_PROACTIVE_DELAY_SECS = 8.0
 
 log = logging.getLogger("callisto.groq")
 
@@ -62,27 +73,58 @@ class GroqModel:
             "Content-Type": "application/json",
         }
 
-        max_retries = 4
-        backoff = 3.0
         data = None
+        last_remaining_tokens: int | None = None
 
-        for attempt in range(max_retries):
+        for attempt in range(_MAX_RETRIES):
+            # Proactive pacing: if the previous response said tokens are critically low,
+            # wait before hammering the API again — avoids burning retries on 429s.
+            if last_remaining_tokens is not None and last_remaining_tokens < _LOW_TOKENS_THRESHOLD:
+                log.info(
+                    "Groq low remaining tokens (%d). Pausing %.1fs before next request.",
+                    last_remaining_tokens, _PROACTIVE_DELAY_SECS,
+                )
+                await asyncio.sleep(_PROACTIVE_DELAY_SECS)
+
             async with aiohttp.ClientSession() as session:
                 async with session.post(_API_URL, json=payload, headers=headers) as resp:
-                    if resp.status == 429:
-                        # Inspect Retry-After header if present, otherwise use backoff
-                        retry_after_str = resp.headers.get("Retry-After")
+                    # Log rate-limit diagnostic headers when present
+                    remaining_reqs = resp.headers.get("x-ratelimit-remaining-requests")
+                    remaining_tokens_str = resp.headers.get("x-ratelimit-remaining-tokens")
+                    if remaining_reqs or remaining_tokens_str:
+                        log.info(
+                            "Groq rate-limit state: requests_remaining=%s, tokens_remaining=%s",
+                            remaining_reqs, remaining_tokens_str,
+                        )
+                    # Track remaining tokens for proactive pacing on next iteration
+                    if remaining_tokens_str:
                         try:
-                            retry_after = float(retry_after_str) if retry_after_str else backoff
+                            last_remaining_tokens = int(remaining_tokens_str)
                         except ValueError:
-                            retry_after = backoff
+                            pass
+
+                    if resp.status in (429, 413):
+                        # 429 = RPM exceeded, 413 = payload too large
+                        # Use Retry-After header if present, otherwise exponential backoff + jitter
+                        retry_after_str = resp.headers.get("Retry-After")
+                        if retry_after_str:
+                            try:
+                                sleep_secs = float(retry_after_str)
+                            except ValueError:
+                                sleep_secs = _INITIAL_BACKOFF
+                        else:
+                            # Exponential backoff with random jitter (±25%)
+                            base = _INITIAL_BACKOFF * (2.0 ** attempt)
+                            jitter = base * 0.25 * random.random()
+                            sleep_secs = min(base + jitter, _MAX_BACKOFF)
 
                         log.warning(
-                            "Groq API rate-limited (429). Retrying in %.1f seconds... (Attempt %d/%d)",
-                            retry_after, attempt + 1, max_retries
+                            "Groq API rate-limited (%d). Remaining: requests=%s, tokens=%s. "
+                            "Retrying in %.1fs (attempt %d/%d)",
+                            resp.status, remaining_reqs or "?", remaining_tokens_str or "?",
+                            sleep_secs, attempt + 1, _MAX_RETRIES,
                         )
-                        await asyncio.sleep(retry_after)
-                        backoff *= 2.0
+                        await asyncio.sleep(sleep_secs)
                         continue
 
                     if resp.status >= 400:
@@ -99,7 +141,15 @@ class GroqModel:
                     break
 
         if data is None:
-            raise RuntimeError("Failed to get response from Groq API after multiple retries.")
+            total_estimate = sum(
+                min(_INITIAL_BACKOFF * (2 ** i), _MAX_BACKOFF)
+                for i in range(_MAX_RETRIES)
+            )
+            raise RuntimeError(
+                f"Groq API rate limit exceeded after {_MAX_RETRIES} retries "
+                f"(~{total_estimate}s total wait). "
+                "Try reducing request frequency, using a smaller model, or upgrading your Groq plan."
+            )
 
         choice = data["choices"][0]
         msg = choice["message"]

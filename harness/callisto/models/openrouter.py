@@ -5,6 +5,7 @@ import asyncio
 import json
 import logging
 import os
+import random
 from typing import Any
 
 import aiohttp
@@ -12,7 +13,12 @@ import aiohttp
 from . import Response, ToolCall
 
 _API_URL = "https://openrouter.ai/api/v1/chat/completions"
-_DEFAULT_MODEL = "anthropic/claude-3.5-sonnet"
+_DEFAULT_MODEL = "meta-llama/llama-4-scout-17b-16e-instruct"
+
+# Retry settings for 429 rate limits
+_MAX_RETRIES = 8
+_INITIAL_BACKOFF = 5.0
+_MAX_BACKOFF = 60.0
 
 log = logging.getLogger("callisto.openrouter")
 
@@ -64,27 +70,29 @@ class OpenRouterModel:
             "X-Title": "callisto",
         }
 
-        max_retries = 4
-        backoff = 3.0
         data = None
 
-        for attempt in range(max_retries):
+        for attempt in range(_MAX_RETRIES):
             async with aiohttp.ClientSession() as session:
                 async with session.post(_API_URL, json=payload, headers=headers) as resp:
                     if resp.status == 429:
-                        # Inspect Retry-After header if present, otherwise use backoff
+                        # Use Retry-After header if present, otherwise exponential backoff + jitter
                         retry_after_str = resp.headers.get("Retry-After")
-                        try:
-                            retry_after = float(retry_after_str) if retry_after_str else backoff
-                        except ValueError:
-                            retry_after = backoff
+                        if retry_after_str:
+                            try:
+                                sleep_secs = float(retry_after_str)
+                            except ValueError:
+                                sleep_secs = _INITIAL_BACKOFF
+                        else:
+                            base = _INITIAL_BACKOFF * (2.0 ** attempt)
+                            jitter = base * 0.25 * random.random()
+                            sleep_secs = min(base + jitter, _MAX_BACKOFF)
 
                         log.warning(
-                            "OpenRouter API rate-limited (429). Retrying in %.1f seconds... (Attempt %d/%d)",
-                            retry_after, attempt + 1, max_retries
+                            "OpenRouter API rate-limited (429). Retrying in %.1fs (attempt %d/%d)",
+                            sleep_secs, attempt + 1, _MAX_RETRIES,
                         )
-                        await asyncio.sleep(retry_after)
-                        backoff *= 2.0
+                        await asyncio.sleep(sleep_secs)
                         continue
 
                     if resp.status >= 400:
@@ -101,7 +109,15 @@ class OpenRouterModel:
                     break
 
         if data is None:
-            raise RuntimeError("Failed to get response from OpenRouter API after multiple retries.")
+            total_estimate = sum(
+                min(_INITIAL_BACKOFF * (2 ** i), _MAX_BACKOFF)
+                for i in range(_MAX_RETRIES)
+            )
+            raise RuntimeError(
+                f"OpenRouter API rate limit exceeded after {_MAX_RETRIES} retries "
+                f"(~{total_estimate}s total wait). "
+                "Try reducing request frequency or upgrading your plan."
+            )
 
         choice = data["choices"][0]
         msg = choice["message"]

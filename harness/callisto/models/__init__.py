@@ -28,3 +28,6 @@ class ChatModel(Protocol):
 # Expose concrete implementations
 from .openrouter import OpenRouterModel
 from .groq import GroqModel
+from .ollama import OllamaModel
+from .siliconflow import SiliconFlowModel
+from .generalcompute import GeneralComputeModel
