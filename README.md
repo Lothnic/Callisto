@@ -3,7 +3,7 @@
 **An open-source agentic browser with reproducible eval scores.**
 
 [![CI](https://github.com/Lothnic/callisto/actions/workflows/ci.yml/badge.svg)](https://github.com/Lothnic/callisto/actions/workflows/ci.yml)
-![status](https://img.shields.io/badge/status-WIP%20%C2%B7%20Phase%202%20of%205-orange)
+![status](https://img.shields.io/badge/status-WIP%20%C2%B7%20Phase%204%20of%205-orange)
 ![license](https://img.shields.io/badge/license-MIT-blue)
 
 > ⚠️ **Work in progress.** Harness-first build toward v1. See the [roadmap](roadmap.md).
@@ -59,7 +59,7 @@ existence is the promise.
 | Package         | Language   | What it is                                        |
 | --------------- | ---------- | ------------------------------------------------- |
 | `packages/mini` | TypeScript | CDP wrapper — the agent's hands and eyes          |
-| `harness/`      | Python     | The agent loop, tools, CLI *(Phase 3)*            |
+| `harness/`      | Python     | The agent loop, tools, CLI *(done)*                |
 | `eval/`         | Python     | Public benchmark kit *(Phase 5)*                  |
 
 ## Roadmap
@@ -70,10 +70,10 @@ Phases 1–5 are the MVP. See [roadmap.md](roadmap.md) for the full plan and
 | Phase | Deliverable                                        |
 | ----- | -------------------------------------------------- |
 | 1     | Mini Playwright wrapper *(done)*                    |
-| 2     | Custom a11y tree *(in progress)*                    |
-| 3     | Agent loop (two tools, scratchpad, recovery)       |
-| 4     | Auth, safety, memory, audit log                    |
-| 5     | Public benchmarks + leaderboard                    |
+| 2     | Custom a11y tree *(done)*                           |
+| 3     | Agent loop (two tools, scratchpad, recovery) *(done)* |
+| 4     | Auth, safety, memory, audit log *(done)*            |
+| 5     | Public benchmarks + leaderboard *(in progress)*    |
 
 ## Contributing
 
