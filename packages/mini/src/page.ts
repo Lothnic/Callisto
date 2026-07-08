@@ -1,5 +1,5 @@
 import { writeFile } from 'node:fs/promises'
-import type { ClickOpts, Mini, TypeOpts, WaitOpts } from './index.js'
+import type { ClickOpts, Mini, SnapshotOpts, TypeOpts, WaitOpts } from './index.js'
 import type { Point, Ref, Target } from './elements.js'
 
 export interface LocatorOptions {
@@ -223,7 +223,7 @@ export class Page {
   }
 
   accessibility = {
-    snapshot: () => this.#mini.snapshot(),
+    snapshot: (opts: SnapshotOpts = {}) => this.#mini.snapshot(opts),
   }
 
   mouse = {

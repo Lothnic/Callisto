@@ -51,18 +51,58 @@ await mini.close()
 ## Snapshot format
 
 `page.accessibility.snapshot().text` (backed by `mini.snapshot()`) is a pruned accessibility tree — `[ref] role "name" {state}
-=value`, two-space indent per depth. Only interactive nodes get refs. Design:
+=value`, two-space indent per depth. Actionable nodes are sorted before passive context so buttons, inputs, dialogs, and links appear before landmarks. Design:
 [rfcs/0002](../../rfcs/0002-a11y-tree.md).
 
 ```
-[ax-3] button "Add to Cart" {focused}
+[ax-3] button "Add to Cart" {focused,clickable}
+[ax-12] textbox "Search" =laptop
 navigation "Main"
   [ax-7] link "Sign in"
-[ax-12] textbox "Search" =laptop
 ```
 
-Rough density (approx tokens, `chars/4`): example.com ~40, github.com ~2.8k,
-news.ycombinator.com ~4.3k. Reproduce with `scripts/tokens.mjs <url…>`.
+Repeated perception turns can request a ref-keyed diff instead of the full tree:
+
+```ts
+await page.accessibility.snapshot()              // full baseline
+await page.accessibility.snapshot({ diff: true }) // changed/new/removed refs
+```
+
+Diff output keeps critical changes upfront:
+
+```
+[changed] ax-42 button "Add to Cart" {checked}
+[new]     ax-91 dialog "Confirm"
+[removed] ax-7 link "Sign in"
+```
+
+### Snapshot density comparator
+
+Build first, then run the comparator from the repo root:
+
+```bash
+npm --prefix packages/mini run build
+node packages/mini/scripts/tokens.mjs \
+  https://github.com https://linear.app https://amazon.com
+```
+
+Callisto defaults to the bundled `packages/mini/browseros/browseros` binary.
+`CHROME_PATH` can override it. In root/Docker environments, set
+`CALLISTO_NO_SANDBOX=1`.
+
+Measured with BrowserOS 142.0.7552.49 on this repo. Agent-browser / Playwright MCP
+columns are intentionally `TBD` until the same URLs are run with those tools. Do
+not publish guessed comparison numbers.
+
+| URL | Callisto chars | Callisto ~tokens | agent-browser ~tokens | Playwright MCP ~tokens |
+| --- | ---: | ---: | ---: | ---: |
+| https://github.com | 1,183 | 296 | TBD | TBD |
+| https://linear.app | 2,881 | 721 | TBD | TBD |
+| https://amazon.com | 0 | 0 | TBD | TBD |
+
+`amazon.com` returned an empty pruned AX snapshot in this run, likely due to site
+blocking or an empty accessibility tree under automation. Keep it in the table as
+a visibility issue, not a success claim.
 
 ## API
 
@@ -78,7 +118,7 @@ they are stable by DOM node, so a ref survives clicks and state changes.
 | `click` / `fill` / `press` | `(locatorOrRef, ...) => Promise<void>` |
 | `locator` | `('[callisto-ref="ax-N"]') => Locator` |
 | `getByRole` / `getByText` / `getByLabel` | resolves against the latest snapshot refs |
-| `accessibility.snapshot` | `() => Promise<{ url, title, text }>` — Callisto's pruned tree |
+| `accessibility.snapshot` | `({ diff?: boolean }?) => Promise<{ url, title, text }>` — Callisto's pruned tree or ref-keyed diff |
 | `screenshot` | `({ fullPage?, path? }?) => Promise<Buffer>` |
 | `evaluate` | `(fn: string \| Function, ...args) => Promise<T>` |
 | `waitForTimeout` / `waitForFunction` | minimal wait helpers |
@@ -114,7 +154,7 @@ they are stable by DOM node, so a ref survives clicks and state changes.
 | Method | Signature |
 | --- | --- |
 | `screenshot` | `({ fullPage? }?) => Promise<Buffer>` |
-| `snapshot` | `() => Promise<{ url, title, text }>` — pruned, ref-annotated a11y tree |
+| `snapshot` | `({ diff?: boolean }?) => Promise<{ url, title, text }>` — pruned tree or ref-keyed diff |
 | `evaluate<T>` | `(fn: string \| Function, ...args) => Promise<T>` |
 
 ### Tabs / wait

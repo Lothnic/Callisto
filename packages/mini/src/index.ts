@@ -10,6 +10,7 @@ import {
 } from './client.js'
 import { isPoint, type Target, type Point, type Ref } from './elements.js'
 import { RefRegistry, type RefLookup } from './ax-refs.js'
+import { formatDiff } from './ax-diff.js'
 import { snapshot, type Snapshot } from './snapshot.js'
 export { Page, Locator } from './page.js'
 export type { LocatorOptions } from './page.js'
@@ -41,6 +42,10 @@ export interface CookieParam {
   httpOnly?: boolean
   expires?: number
 }
+export interface SnapshotOpts {
+  /** Return a ref-keyed diff from the previous full snapshot. First call returns full text. */
+  diff?: boolean
+}
 
 const sleep = (ms: number): Promise<void> => new Promise((r) => setTimeout(r, ms))
 
@@ -56,6 +61,8 @@ function keyExtras(key: string): { text?: string } {
 }
 
 export class Mini {
+  private lastSnapshotText: string | undefined
+
   private constructor(
     private session: Session,
     private refs: RefRegistry,
@@ -89,6 +96,7 @@ export class Mini {
       opts.waitUntil === 'domcontentloaded' ? Page.domContentEventFired() : Page.loadEventFired()
     await Page.navigate({ url })
     await settled
+    this.resetSnapshotBaseline()
   }
 
   async back(): Promise<void> {
@@ -102,13 +110,17 @@ export class Mini {
   async reload(): Promise<void> {
     await this.cdp.Page.reload({})
     await this.cdp.Page.loadEventFired()
+    this.resetSnapshotBaseline()
   }
 
   private async historyGo(delta: number): Promise<void> {
     const { Page } = this.cdp
     const { currentIndex, entries } = await Page.getNavigationHistory()
     const target = entries[currentIndex + delta]
-    if (target) await Page.navigateToHistoryEntry({ entryId: target.id })
+    if (target) {
+      await Page.navigateToHistoryEntry({ entryId: target.id })
+      this.resetSnapshotBaseline()
+    }
   }
 
   // --- interaction ---
@@ -235,8 +247,11 @@ export class Mini {
   }
 
   /** Pruned, ref-annotated a11y tree as indented text (rfcs/0002). */
-  async snapshot(): Promise<Snapshot> {
-    return snapshot(this.session, this.refs)
+  async snapshot(opts: SnapshotOpts = {}): Promise<Snapshot> {
+    const snap = await snapshot(this.session, this.refs)
+    const previous = this.lastSnapshotText
+    this.lastSnapshotText = snap.text
+    return opts.diff ? { ...snap, text: formatDiff(previous, snap.text) } : snap
   }
 
   async evaluate<T = unknown>(
@@ -267,6 +282,7 @@ export class Mini {
     },
     switch: async (targetId: string): Promise<void> => {
       await switchTarget(this.session, targetId)
+      this.resetSnapshotBaseline()
     },
     close: async (targetId: string): Promise<void> => {
       await this.cdp.Target.closeTarget({ targetId })
@@ -314,6 +330,10 @@ export class Mini {
   }
 
   // --- internals ---
+
+  private resetSnapshotBaseline(): void {
+    this.lastSnapshotText = undefined
+  }
 
   /** Find a snapshot ref by accessible metadata for the Playwright-shaped facade. */
   ref(query: RefLookup): Ref | undefined {

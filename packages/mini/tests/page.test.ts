@@ -26,7 +26,10 @@ function fakeMini() {
       calls.push(['screenshot', ...args])
       return Buffer.from('png')
     },
-    snapshot: async () => ({ url: 'https://example.test', title: 'Example', text: '[ax-2] button "Go"' }),
+    snapshot: async (...args: unknown[]) => {
+      calls.push(['snapshot', ...args])
+      return { url: 'https://example.test', title: 'Example', text: '[ax-2] button "Go"' }
+    },
     evaluate: async () => 'ok',
     waitFor: async (...args: unknown[]) => {
       calls.push(['waitFor', ...args])
@@ -91,6 +94,15 @@ test('page.accessibility.snapshot returns the custom Callisto snapshot', async (
     title: 'Example',
     text: '[ax-2] button "Go"',
   })
+})
+
+test('page.accessibility.snapshot forwards diff option', async () => {
+  const mini = fakeMini()
+  const page = new Page(mini as never)
+
+  await page.accessibility.snapshot({ diff: true })
+
+  assert.deepEqual(mini.calls, [['snapshot', { diff: true }]])
 })
 
 test('page.screenshot returns bytes and writes path when requested', async () => {

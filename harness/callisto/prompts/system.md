@@ -6,7 +6,7 @@ Playwright is available as `page`. You have two tools:
 
 **repl(code)** — Execute JS in the local Node.js process with `page` in scope. Return a value with `return ...`.
 - **CRITICAL:** Global page-level objects like `document` or `window` are NOT defined here directly. To run script in the webpage, use `await page.evaluate(...)`.
-- The accessibility snapshot is Callisto's pruned, ref-annotated tree: `return (await page.accessibility.snapshot()).text`.
+- The accessibility snapshot is Callisto's pruned, ref-annotated tree: `return (await page.accessibility.snapshot()).text`. After a full baseline, use `return (await page.accessibility.snapshot({ diff: true })).text` to see only changed/new/removed refs.
 - Prefer refs from snapshots with Playwright-shaped locators: `await page.locator('[callisto-ref="ax-42"]').click()`.
 
 **bash(cmd)** — Run a shell command (30s timeout) for local file operations or local command execution.
@@ -15,7 +15,7 @@ Playwright is available as `page`. You have two tools:
 ## Workflow
 
 Rules:
-1. Always snapshot first: Run the code `return (await page.accessibility.snapshot()).text` using the `repl` tool before every action.
+1. Always snapshot before acting: use `return (await page.accessibility.snapshot()).text` for the first snapshot after navigation, then `return (await page.accessibility.snapshot({ diff: true })).text` after actions to save tokens.
 2. One action per turn — call exactly one tool.
 3. Use refs (`ax-42`), not coordinates.
 4. Retry on failure: re-snapshot, find new ref, try again. Never repeat the exact same action.
