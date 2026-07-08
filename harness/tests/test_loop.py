@@ -125,6 +125,26 @@ async def test_tool_error_is_returned_to_model_not_raised(fake_sidecar_client):
 
 
 @pytest.mark.asyncio
+async def test_progress_events_include_readable_summaries(fake_sidecar_client):
+    events = []
+    model = FakeModel([
+        _resp_tool(_repl_call("return (await page.accessibility.snapshot()).text")),
+        _resp_done("done"),
+    ])
+    client = fake_sidecar_client(eval_result={"value": '[ax-1] button "Go"'})
+
+    async def progress(event):
+        events.append(event)
+
+    await run("task", model, client, require_approval=False, progress_callback=progress)
+
+    start = next(e for e in events if e["type"] == "step_start")
+    end = next(e for e in events if e["type"] == "step_end")
+    assert start["summary"]["title"] == "Snapshot page"
+    assert end["summary"]["title"] == "Snapshot: 1 refs, 1 lines"
+
+
+@pytest.mark.asyncio
 async def test_max_steps_exceeded(fake_sidecar_client):
     """Loop raises RuntimeError if max_steps is reached without a final answer."""
     # Model always returns a tool call, never finishes

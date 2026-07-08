@@ -136,7 +136,10 @@ async function handleEval(params: Record<string, unknown>): Promise<Record<strin
   try {
     const raw = await Promise.race([fn(pageProxy) as Promise<unknown>, timeout])
     const { value, truncated } = safeSerialise(raw)
-    return truncated ? { value, truncated: true } : { value }
+    const signals = mini.drainSignals()
+    const result: Record<string, unknown> = truncated ? { value, truncated: true } : { value }
+    if (signals.length) result._signals = signals
+    return result
   } finally {
     clearTimeout(timer!)
   }

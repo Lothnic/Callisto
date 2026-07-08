@@ -106,6 +106,15 @@ export class Locator {
   }
 }
 
+export interface CapturedRequest {
+  method: string
+  url: string
+  status?: number
+  requestHeaders?: Record<string, string>
+  responseHeaders?: Record<string, string>
+  postData?: string
+}
+
 /**
  * Playwright-shaped facade over Mini. Mini remains the CDP engine; Page is the
  * API face shown to agents.
@@ -236,6 +245,56 @@ export class Page {
     type: (text: string, opts: TypeOpts = {}) => this.#mini.type(text, opts),
     down: (key: string) => this.#mini.keyDown(key),
     up: (key: string) => this.#mini.keyUp(key),
+  }
+
+  network = {
+    recent: (n: number): CapturedRequest[] => this.#mini.network.recent(n),
+  }
+
+  request = {
+    post: async (
+      url: string,
+      opts: { data?: string | Record<string, unknown>; headers?: Record<string, string> } = {},
+    ): Promise<unknown> => {
+      return this.evaluate(
+        async (url: string, data: unknown, headers?: Record<string, string>) => {
+          const body = typeof data === 'string' ? data : JSON.stringify(data)
+          const res = await fetch(url, {
+            method: 'POST',
+            body: body,
+            headers: {
+              'Content-Type': typeof data === 'string' ? 'application/x-www-form-urlencoded' : 'application/json',
+              ...headers,
+            },
+          })
+          try {
+            return await res.json()
+          } catch {
+            return await res.text()
+          }
+        },
+        url,
+        opts.data,
+        opts.headers,
+      )
+    },
+    get: async (url: string, opts: { headers?: Record<string, string> } = {}): Promise<unknown> => {
+      return this.evaluate(
+        async (url: string, headers?: Record<string, string>) => {
+          const res = await fetch(url, {
+            method: 'GET',
+            headers,
+          })
+          try {
+            return await res.json()
+          } catch {
+            return await res.text()
+          }
+        },
+        url,
+        opts.headers,
+      )
+    },
   }
 
   private locatorOrRef(selector: string): Locator {

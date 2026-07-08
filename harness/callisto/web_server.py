@@ -362,18 +362,25 @@ async def sidebar_html_handler(request: web.Request) -> web.Response:
         const stepNum = data.step;
         const toolName = data.call.name;
         const args = JSON.stringify(data.call.arguments, null, 2);
+        const summary = data.summary || {};
+        const title = summary.title || `executing ${toolName}`;
+        const detail = summary.detail || args;
         
         card.innerHTML = `
           <div class="step-header" onclick="toggleDetails(this)">
             <div class="step-title">
               <span class="step-icon">⚡</span>
-              <span>Step ${stepNum}: executing ${toolName}</span>
+              <span>Step ${stepNum}: ${escapeHtml(title)}</span>
             </div>
             <span class="step-arrow">▶</span>
           </div>
           <div class="step-details" style="display: none;">
-            <div>Arguments:</div>
-            <pre>${escapeHtml(args)}</pre>
+            <div>Doing:</div>
+            <pre>${escapeHtml(detail)}</pre>
+            <details>
+              <summary>Raw tool call</summary>
+              <pre>${escapeHtml(args)}</pre>
+            </details>
             <div class="step-result-placeholder"></div>
           </div>
         `;
@@ -390,12 +397,19 @@ async def sidebar_html_handler(request: web.Request) -> web.Response:
           
           const resultStr = JSON.stringify(data.result, null, 2);
           const hasError = data.result.error !== undefined;
+          const summary = data.summary || {};
+          const resultTitle = summary.title || (hasError ? 'Error' : 'Success');
+          const resultDetail = summary.detail || resultStr;
           
           placeholder.innerHTML = `
             <div class="step-result ${hasError ? 'error' : 'success'}">
-              ${hasError ? '❌ Error' : '✅ Success'}
+              ${hasError ? '❌' : '✅'} ${escapeHtml(resultTitle)}
             </div>
-            <pre>${escapeHtml(resultStr)}</pre>
+            ${resultDetail ? `<pre>${escapeHtml(resultDetail)}</pre>` : ''}
+            <details>
+              <summary>Raw result</summary>
+              <pre>${escapeHtml(resultStr)}</pre>
+            </details>
           `;
           
           currentStepCard = null;

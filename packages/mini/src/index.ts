@@ -8,11 +8,13 @@ import {
   type LaunchOpts,
   type Session,
 } from './client.js'
+import { tmpdir } from 'node:os'
 import { isPoint, type Target, type Point, type Ref } from './elements.js'
 import { RefRegistry, type RefLookup } from './ax-refs.js'
 import { formatDiff } from './ax-diff.js'
 import { snapshot, type Snapshot } from './snapshot.js'
-export { Page, Locator } from './page.js'
+import type { CapturedRequest } from './page.js'
+export { Page, Locator, type CapturedRequest } from './page.js'
 export type { LocatorOptions } from './page.js'
 
 export type { LaunchOpts, Viewport } from './client.js'
@@ -46,8 +48,23 @@ export interface SnapshotOpts {
   /** Return a ref-keyed diff from the previous full snapshot. First call returns full text. */
   diff?: boolean
 }
+export type AgentSignalType = 'dialog' | 'popup' | 'download' | 'tab'
+export interface AgentSignal {
+  type: AgentSignalType
+  message: string
+  url?: string
+  filename?: string
+  targetId?: string
+}
 
 const sleep = (ms: number): Promise<void> => new Promise((r) => setTimeout(r, ms))
+const MAX_SIGNALS = 20
+
+type CdpEvent = Record<string, unknown>
+
+function asString(value: unknown): string | undefined {
+  return typeof value === 'string' && value ? value : undefined
+}
 
 const BUTTON_MASK: Record<MouseButton, number> = { left: 1, right: 2, middle: 4 }
 
@@ -62,6 +79,10 @@ function keyExtras(key: string): { text?: string } {
 
 export class Mini {
   private lastSnapshotText: string | undefined
+  private signals: AgentSignal[] = []
+  private knownTargets = new Set<string>()
+  private targetUrls = new Map<string, string>()
+  private networkHistory: CapturedRequest[] = []
 
   private constructor(
     private session: Session,
@@ -70,7 +91,10 @@ export class Mini {
 
   static async launch(opts: LaunchOpts = {}): Promise<Mini> {
     const session = await launchChrome(opts)
-    return new Mini(session, new RefRegistry())
+    const mini = new Mini(session, new RefRegistry())
+    await mini.installSignalListeners()
+    mini.drainSignals()
+    return mini
   }
 
   async close(): Promise<void> {
@@ -282,6 +306,7 @@ export class Mini {
     },
     switch: async (targetId: string): Promise<void> => {
       await switchTarget(this.session, targetId)
+      await this.installSignalListeners()
       this.resetSnapshotBaseline()
     },
     close: async (targetId: string): Promise<void> => {
@@ -329,10 +354,173 @@ export class Mini {
       ),
   }
 
+  network = {
+    recent: (n: number): CapturedRequest[] => {
+      return this.networkHistory.slice(-n).reverse()
+    }
+  }
+
   // --- internals ---
 
   private resetSnapshotBaseline(): void {
     this.lastSnapshotText = undefined
+  }
+
+  drainSignals(): AgentSignal[] {
+    const out = this.signals
+    this.signals = []
+    return out
+  }
+
+  private queueSignal(signal: AgentSignal): void {
+    this.signals.push(signal)
+    if (this.signals.length > MAX_SIGNALS) this.signals.shift()
+  }
+
+  private async installSignalListeners(): Promise<void> {
+    const cdp = this.cdp as unknown as {
+      Page?: {
+        javascriptDialogOpening?: (cb: (event: CdpEvent) => void) => void
+        windowOpen?: (cb: (event: CdpEvent) => void) => void
+      }
+      Browser?: {
+        downloadWillBegin?: (cb: (event: CdpEvent) => void) => void
+        setDownloadBehavior?: (params: Record<string, unknown>) => Promise<void>
+      }
+      Target?: {
+        getTargets?: () => Promise<{ targetInfos: Array<{ targetId: string; type: string; url?: string; title?: string }> }>
+        setDiscoverTargets?: (params: { discover: boolean }) => Promise<void>
+        targetCreated?: (cb: (event: { targetInfo?: { targetId: string; type: string; url?: string; title?: string } }) => void) => void
+        targetDestroyed?: (cb: (event: { targetId?: string }) => void) => void
+        targetInfoChanged?: (cb: (event: { targetInfo?: { targetId: string; type: string; url?: string; title?: string } }) => void) => void
+      }
+      Network?: {
+        requestWillBeSent?: (cb: (event: {
+          requestId: string
+          request: { url: string; method: string; headers: Record<string, string>; postData?: string }
+          type?: string
+        }) => void) => void
+        responseReceived?: (cb: (event: {
+          requestId: string
+          response: { url: string; status: number; headers: Record<string, string> }
+        }) => void) => void
+      }
+    }
+
+    const pendingRequests = new Map<string, CapturedRequest>()
+
+    cdp.Network?.requestWillBeSent?.((event) => {
+      if (event.type === 'XHR' || event.type === 'Fetch') {
+        const req = event.request
+        const captured: CapturedRequest = {
+          method: req.method,
+          url: req.url,
+          requestHeaders: req.headers,
+          postData: req.postData,
+        }
+        pendingRequests.set(event.requestId, captured)
+        this.networkHistory.push(captured)
+        if (this.networkHistory.length > 100) {
+          this.networkHistory.shift()
+        }
+      }
+    })
+
+    cdp.Network?.responseReceived?.((event) => {
+      const captured = pendingRequests.get(event.requestId)
+      if (captured) {
+        captured.status = event.response.status
+        captured.responseHeaders = event.response.headers
+        pendingRequests.delete(event.requestId)
+      }
+    })
+
+    try {
+      const targets = await cdp.Target?.getTargets?.()
+      for (const target of targets?.targetInfos ?? []) {
+        this.knownTargets.add(target.targetId)
+        if (target.url) this.targetUrls.set(target.targetId, target.url)
+      }
+    } catch {
+      // Target discovery is best-effort; signals are advisory.
+    }
+
+    cdp.Page?.javascriptDialogOpening?.((event) => {
+      this.queueSignal({
+        type: 'dialog',
+        message: asString(event.message) ?? asString(event.type) ?? 'dialog opened',
+        url: asString(event.url),
+      })
+    })
+
+    cdp.Page?.windowOpen?.((event) => {
+      this.queueSignal({
+        type: 'popup',
+        message: 'popup opened',
+        url: asString(event.url),
+      })
+    })
+
+    cdp.Browser?.downloadWillBegin?.((event) => {
+      this.queueSignal({
+        type: 'download',
+        message: 'download started',
+        url: asString(event.url),
+        filename: asString(event.suggestedFilename),
+      })
+    })
+
+    cdp.Target?.targetCreated?.((event) => {
+      const info = event.targetInfo
+      if (!info || info.type !== 'page') return
+      const alreadyKnown = this.knownTargets.has(info.targetId)
+      this.knownTargets.add(info.targetId)
+      if (info.url) this.targetUrls.set(info.targetId, info.url)
+      if (alreadyKnown) return
+      if (!info.url || info.url === 'about:blank') return
+      this.queueSignal({
+        type: 'tab',
+        message: 'tab opened',
+        url: info.url,
+        targetId: info.targetId,
+      })
+    })
+
+    cdp.Target?.targetDestroyed?.((event) => {
+      if (!event.targetId || !this.knownTargets.has(event.targetId)) return
+      const url = this.targetUrls.get(event.targetId)
+      this.knownTargets.delete(event.targetId)
+      this.targetUrls.delete(event.targetId)
+      this.queueSignal({
+        type: 'tab',
+        message: 'tab closed',
+        url,
+        targetId: event.targetId,
+      })
+    })
+
+    cdp.Target?.targetInfoChanged?.((event) => {
+      const info = event.targetInfo
+      if (!info || info.type !== 'page') return
+      this.knownTargets.add(info.targetId)
+      if (info.url) this.targetUrls.set(info.targetId, info.url)
+    })
+
+    try {
+      await cdp.Target?.setDiscoverTargets?.({ discover: true })
+    } catch {
+      // Ignore: some Chromium builds reject Target discovery from target sessions.
+    }
+
+    try {
+      await cdp.Browser?.setDownloadBehavior?.({
+        behavior: 'allow',
+        downloadPath: tmpdir(),
+        eventsEnabled: true,
+      })
+    } catch {
+      // Ignore: downloads still work, only the advisory signal may be missing.
+    }
   }
 
   /** Find a snapshot ref by accessible metadata for the Playwright-shaped facade. */

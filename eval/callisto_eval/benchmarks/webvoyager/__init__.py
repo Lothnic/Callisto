@@ -1,0 +1,1 @@
+"""WebVoyager benchmark adapter scaffolding."""

@@ -8,6 +8,7 @@ Playwright is available as `page`. You have two tools:
 - **CRITICAL:** Global page-level objects like `document` or `window` are NOT defined here directly. To run script in the webpage, use `await page.evaluate(...)`.
 - The accessibility snapshot is Callisto's pruned, ref-annotated tree: `return (await page.accessibility.snapshot()).text`. After a full baseline, use `return (await page.accessibility.snapshot({ diff: true })).text` to see only changed/new/removed refs.
 - Prefer refs from snapshots with Playwright-shaped locators: `await page.locator('[callisto-ref="ax-42"]').click()`.
+- Tool results may begin with `[Agent signal: ...]` for async browser events such as popups, dialogs, downloads, or tabs closing. Treat these as fresh page state and adjust immediately.
 
 **bash(cmd)** — Run a shell command (30s timeout) for local file operations or local command execution.
 - The `cmd` argument is the command string to run. NOTE: This sandbox has NO network access. For any web requests, scraping, or interaction with websites, you MUST use the browser via `repl`.

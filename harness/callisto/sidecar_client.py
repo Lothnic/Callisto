@@ -7,6 +7,7 @@ restart, per-call timeout, UUID-correlated JSON-RPC.
 from __future__ import annotations
 
 import asyncio
+import contextlib
 import json
 import logging
 import shutil
@@ -71,6 +72,7 @@ class SidecarClient:
             stdin=asyncio.subprocess.PIPE,
             stdout=asyncio.subprocess.PIPE,
             stderr=asyncio.subprocess.DEVNULL,  # quieten sidecar diagnostics for CLI/harness
+            limit=1024 * 1024,  # support response lines up to 1MB (e.g. truncated output at 100KB)
         )
         log.debug("sidecar PID %d started", self._process.pid)
         self._reader_task = asyncio.create_task(self._reader(), name="sidecar-reader")
@@ -119,6 +121,23 @@ class SidecarClient:
         for task in (self._reader_task, self._watchdog_task):
             if task and not task.done():
                 task.cancel()
+
+    async def aclose(self) -> None:
+        """Async teardown that waits for subprocess transports before loop close."""
+        if self._process and self._process.returncode is None:
+            self._process.terminate()
+            with contextlib.suppress(asyncio.TimeoutError):
+                await asyncio.wait_for(self._process.wait(), timeout=5)
+            if self._process.returncode is None:
+                self._process.kill()
+                with contextlib.suppress(asyncio.TimeoutError):
+                    await asyncio.wait_for(self._process.wait(), timeout=5)
+
+        for task in (self._reader_task, self._watchdog_task):
+            if task and not task.done():
+                task.cancel()
+                with contextlib.suppress(asyncio.CancelledError):
+                    await task
 
     # ------------------------------------------------------------------
     # Internal tasks

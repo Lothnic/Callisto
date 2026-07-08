@@ -1,0 +1,3 @@
+{"id":"webvoyager-smoke-001","benchmark":"webvoyager","site":"example.com","start_url":"https://example.com","instruction":"Find the main heading on the page.","expected":"Example Domain","metadata":{"source":"phase5-scaffold","scorer":"contains"}}
+{"id":"webvoyager-smoke-002","benchmark":"webvoyager","site":"github.com","start_url":"https://github.com","instruction":"Identify the site name shown by the page.","expected":"GitHub","metadata":{"source":"phase5-scaffold","scorer":"contains"}}
+{"id":"webvoyager-smoke-003","benchmark":"webvoyager","site":"linear.app","start_url":"https://linear.app","instruction":"Identify the product or company name on the page.","expected":"Linear","metadata":{"source":"phase5-scaffold","scorer":"contains"}}

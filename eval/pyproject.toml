@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "callisto-eval"
+version = "0.1.0"
+description = "Reproducible benchmark runner for Callisto."
+license = { text = "MIT" }
+requires-python = ">=3.11"
+dependencies = [
+    "click>=8.1",
+]
+
+[project.scripts]
+callisto-eval = "callisto_eval.cli:cli"
+
+[tool.setuptools.packages.find]
+where = ["."]
+
+[tool.setuptools.package-data]
+callisto_eval = ["benchmarks/**/*.jsonl"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

@@ -94,21 +94,36 @@ Measured with BrowserOS 142.0.7552.49 on this repo. Agent-browser / Playwright M
 columns are intentionally `TBD` until the same URLs are run with those tools. Do
 not publish guessed comparison numbers.
 
-| URL | Callisto chars | Callisto ~tokens | agent-browser ~tokens | Playwright MCP ~tokens |
-| --- | ---: | ---: | ---: | ---: |
-| https://github.com | 1,183 | 296 | TBD | TBD |
-| https://linear.app | 2,881 | 721 | TBD | TBD |
-| https://amazon.com | 0 | 0 | TBD | TBD |
+| URL | Callisto chars | Callisto ~tokens | agent-browser ~tokens | Playwright MCP ~tokens | Notes |
+| --- | ---: | ---: | ---: | ---: | --- |
+| https://github.com | 1,308 | 327 | TBD | TBD | Full accessibility layout captured with stable refs |
+| https://linear.app | 2,882 | 721 | TBD | TBD | Full accessibility layout captured with stable refs |
+| https://amazon.com | 212 | 53 | TBD | TBD | CAPTCHA / anti-bot page in headless mode |
 
-`amazon.com` returned an empty pruned AX snapshot in this run, likely due to site
-blocking or an empty accessibility tree under automation. Keep it in the table as
-a visibility issue, not a success claim.
+`amazon.com` is not representative of the real homepage in this run: Amazon
+served an anti-bot CAPTCHA page under headless automation, yielding a small
+53-token layout. Keep it in the table as a visibility issue, not a success claim.
 
 ## API
 
 Targets are `{ x, y }` coordinates or opaque string refs (`ax-N`). Refs come
 from the snapshot and resolve to the element's box-model center at action time;
 they are stable by DOM node, so a ref survives clicks and state changes.
+
+### Agent signals
+
+The sidecar listens to asynchronous CDP browser events and attaches them to the
+next `repl` result as steering lines, without adding another tool:
+
+```text
+[Agent signal: popup opened at https://example.com/]
+[Agent signal: dialog opened: Are you sure?]
+[Agent signal: download started: report.pdf]
+[Agent signal: tab closed at https://old.example/]
+```
+
+Signals currently cover JavaScript dialogs, popups/window opens, downloads, tab
+opens, and tab closes.
 
 ### Page facade
 | Method | Signature |

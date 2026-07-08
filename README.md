@@ -3,7 +3,7 @@
 **An open-source agentic browser with reproducible eval scores.**
 
 [![CI](https://github.com/Lothnic/callisto/actions/workflows/ci.yml/badge.svg)](https://github.com/Lothnic/callisto/actions/workflows/ci.yml)
-![status](https://img.shields.io/badge/status-WIP%20%C2%B7%20Phase%204%20of%205-orange)
+![status](https://img.shields.io/badge/status-WIP%20%C2%B7%20Phase%205%20of%205-orange)
 ![license](https://img.shields.io/badge/license-MIT-blue)
 
 > ⚠️ **Work in progress.** Harness-first build toward v1. See the [roadmap](roadmap.md).
@@ -21,7 +21,7 @@ anyone can reproduce.
   agent spends reasoning.
 - **Reproducible numbers.** Every benchmark ships with the kit that produced
   it. Pinned models, pinned deps, pinned commit SHA. See
-  [BENCHMARKS.md](BENCHMARKS.md) (coming in Phase 5).
+  [BENCHMARKS.md](BENCHMARKS.md) and the Phase 5 [`eval/`](eval/) kit.
 - **Safety is a feature, not a footnote.** Keychain-backed autofill (the LLM
   never sees the password), approval gates on sensitive actions, sandboxing,
   and a full audit log. See [SECURITY.md](SECURITY.md).
@@ -46,13 +46,16 @@ CALLISTO_SMOKE=1 npm test        # needs a local Chrome/Chromium
 
 ## Benchmarks
 
-| Benchmark       | Callisto | browser-use | Operator |
-| --------------- | -------- | ----------- | -------- |
-| WebVoyager      | TBD      | ~89%        | ~87%     |
-| Mind2Web (live) | TBD      | ~97.7%      | ~92.8%   |
+| Benchmark          | Callisto | browser-use | Operator |
+| ------------------ | -------- | ----------- | -------- |
+| WebVoyager smoke   | 100% live (`siliconflow/tencent/Hy3`, 3 tasks) | n/a | n/a |
+| WebVoyager smoke   | 100% fake/offline | n/a | n/a |
+| WebVoyager full    | TBD      | ~89%        | ~87%     |
+| Mind2Web (live)    | TBD      | ~97.7%      | ~92.8%   |
 
-Numbers are reproducible from the eval kit (Phase 5). Empty today — the table's
-existence is the promise.
+Numbers are reproducible from the eval kit (Phase 5). The first live row is a
+3-task smoke run only; full benchmark runs still land as `TBD` until published
+with manifests.
 
 ## Architecture
 
@@ -60,7 +63,7 @@ existence is the promise.
 | --------------- | ---------- | ------------------------------------------------- |
 | `packages/mini` | TypeScript | CDP wrapper — the agent's hands and eyes          |
 | `harness/`      | Python     | The agent loop, tools, CLI *(done)*                |
-| `eval/`         | Python     | Public benchmark kit *(Phase 5)*                  |
+| `eval/`         | Python     | Public benchmark kit *(Phase 5 started)*          |
 
 ## Roadmap
 

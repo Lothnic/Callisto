@@ -59,6 +59,12 @@ function fakeMini() {
     keyUp: async (...args: unknown[]) => {
       calls.push(['keyUp', ...args])
     },
+    network: {
+      recent: (n: number) => {
+        calls.push(['network.recent', n])
+        return [{ method: 'POST', url: 'https://example.test/search', status: 200 }]
+      }
+    }
   }
 }
 
@@ -121,3 +127,14 @@ test('page.screenshot returns bytes and writes path when requested', async () =>
     await rm(dir, { recursive: true, force: true })
   }
 })
+
+test('page.network.recent forwards call to Mini', async () => {
+  const mini = fakeMini()
+  const page = new Page(mini as never)
+
+  const reqs = page.network.recent(5)
+
+  assert.deepEqual(reqs, [{ method: 'POST', url: 'https://example.test/search', status: 200 }])
+  assert.deepEqual(mini.calls, [['network.recent', 5]])
+})
+

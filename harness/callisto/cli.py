@@ -15,6 +15,26 @@ from .models.openrouter import OpenRouterModel
 from .sidecar_client import SidecarClient, SidecarDead
 
 
+async def _broadcast_and_echo(progress: dict, broadcast) -> None:
+    await broadcast(progress)
+    typ = progress.get("type")
+    if typ == "step_start":
+        summary = progress.get("summary") or {}
+        step = progress.get("step")
+        title = summary.get("title") or progress.get("call", {}).get("name", "tool")
+        click.echo(click.style(f"[step {step}] {title}", fg="yellow"))
+    elif typ == "step_end":
+        summary = progress.get("summary") or {}
+        step = progress.get("step")
+        ok = summary.get("ok", True)
+        title = summary.get("title") or ("Success" if ok else "Error")
+        fg = "green" if ok else "red"
+        click.echo(click.style(f"[step {step}] {'✓' if ok else '✗'} {title}", fg=fg))
+        detail = summary.get("detail")
+        if isinstance(detail, str) and detail and "[Agent signal:" in detail:
+            click.echo(click.style(detail, fg="cyan"))
+
+
 @click.group()
 @click.option("--debug", is_flag=True, help="Enable debug logging.")
 def cli(debug: bool) -> None:
@@ -152,6 +172,9 @@ async def _run_async(
         await client.start()
         await client.call("launch", {"headless": headless, "chromeFlags": chrome_flags})
 
+        async def progress(progress_event: dict) -> None:
+            await _broadcast_and_echo(progress_event, broadcast)
+
         result = await run(
             task=task,
             model=model,
@@ -162,7 +185,7 @@ async def _run_async(
             budget=budget,
             memory=memory,
             token_budget=token_budget,
-            progress_callback=broadcast,
+            progress_callback=progress,
             verbose=verbose,
         )
         click.echo(result)
@@ -392,6 +415,9 @@ async def _chat_async(
                     break
 
                 try:
+                    async def progress(progress_event: dict) -> None:
+                        await _broadcast_and_echo(progress_event, broadcast)
+
                     result = await run(
                         task=task,
                         model=model,
@@ -403,7 +429,7 @@ async def _chat_async(
                         memory=memory,
                         history=history,
                         token_budget=token_budget,
-                        progress_callback=broadcast,
+                        progress_callback=progress,
                         verbose=verbose,
                     )
                     click.echo(f"\n[callisto] {result}")
