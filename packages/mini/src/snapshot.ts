@@ -41,6 +41,7 @@ const STATE_PROPS = new Set([
   'pressed',
   'readonly',
   'invalid',
+  'clickable',
 ])
 
 function strval(v?: { value?: unknown }): string {

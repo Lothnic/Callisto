@@ -2,6 +2,7 @@ import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { pruneForest, type RawNode } from '../src/ax-prune.js'
 import { formatTree } from '../src/ax-format.js'
+import { formatDiff } from '../src/ax-diff.js'
 import { RefRegistry } from '../src/ax-refs.js'
 
 // Build a byId map from terse fixtures. Each fixture: [id, role, name, children].
@@ -92,4 +93,46 @@ test('format emits [ref] role "name" {state} =value', () => {
   const lines = out.split('\n')
   assert.equal(lines[0], 'navigation "Main"')
   assert.match(lines[1], /^ {2}\[ax-\d+\] textbox "Email" \{required,focused\} =a@b\.c$/)
+})
+
+test('format puts interactive siblings before passive context', () => {
+  const { roots, byId } = forest([
+    ['1', 'navigation', 'Main', []],
+    ['2', 'heading', 'Welcome', []],
+    ['3', 'button', 'Start', []],
+  ], { '3': 3 })
+  const refs = new RefRegistry()
+  const out = formatTree(refs.annotate(pruneForest(roots, byId))).split('\n')
+
+  assert.match(out[0], /^\[ax-\d+\] button "Start"$/)
+  assert.equal(out[1], 'navigation "Main"')
+  assert.equal(out[2], 'heading "Welcome"')
+})
+
+test('dialogs are ref-annotated so new modal surfaces appear in diffs', () => {
+  const { roots, byId } = forest([['1', 'dialog', 'Confirm', []]], { '1': 1 })
+  const refs = new RefRegistry()
+  const out = formatTree(refs.annotate(pruneForest(roots, byId)))
+
+  assert.match(out, /^\[ax-\d+\] dialog "Confirm"$/)
+})
+
+test('formatDiff reports changed, new, and removed ref lines', () => {
+  const previous = [
+    '[ax-1] button "Add to Cart"',
+    '[ax-2] link "Sign in"',
+  ].join('\n')
+  const current = [
+    '[ax-1] button "Add to Cart" {checked}',
+    '[ax-3] dialog "Confirm"',
+  ].join('\n')
+
+  assert.equal(
+    formatDiff(previous, current),
+    [
+      '[changed] ax-1 button "Add to Cart" {checked}',
+      '[new]     ax-3 dialog "Confirm"',
+      '[removed] ax-2 link "Sign in"',
+    ].join('\n'),
+  )
 })

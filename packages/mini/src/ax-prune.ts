@@ -63,6 +63,9 @@ const INTERACTIVE = new Set([
   'slider',
   'spinbutton',
   'scrollbar',
+  // Critical surfaces that should appear in diffs even when they are containers.
+  'dialog',
+  'alertdialog',
 ])
 
 // Structural / landmark roles — kept for context, not reffed. Landmarks live
