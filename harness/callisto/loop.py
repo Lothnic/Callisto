@@ -18,6 +18,7 @@ while not done and steps < max_steps:
 """
 from __future__ import annotations
 
+import asyncio
 import json
 import logging
 import time
@@ -281,6 +282,8 @@ async def run(
     memory: MemoryStore | None = None,
     history: list[dict[str, Any]] | None = None,
     token_budget: int = 80000,
+    progress_callback: Callable[[dict[str, Any]], Any] | None = None,
+    verbose: bool = False,
 ) -> str:
     """
     Run the agent loop for `task`.
@@ -336,8 +339,7 @@ async def run(
             log.warning("memory retrieval failed: %s", exc)
             audit.record_error("memory_retrieve", str(exc))
 
-    last_fingerprint: str | None = None
-    consecutive_identical = 0
+    recent_modifying_fps: list[str] = []
 
     for step in range(max_steps):
         # Prune older accessibility snapshots from history to save tokens and payload size
@@ -361,16 +363,21 @@ async def run(
         except SidecarDead:
             audit.record_task_end("error", "SidecarDead mid-chat")
             raise
-
+        except Exception as exc:
+            log.error("model.chat() raised: %s", exc, exc_info=True)
+            raise RuntimeError(f"model.chat() failed: {exc}") from exc
+        
         # ── Audit model output ──────────────────────────────────────────
         audit.record_model_output({
             "text": resp.get("text", "")[:500] if resp.get("text") else None,
-            "tool_calls": [
-                {"name": tc["name"], "arguments": tc["arguments"]}
-                for tc in resp.get("tool_calls", [])
-            ],
+            "tool_calls": resp.get("tool_calls"),
         })
 
+        if verbose:
+            import click
+            if resp.get("text"):
+                click.echo(click.style(f"\n[thought] {resp['text']}", fg="cyan"))
+        
         # ── Budget tracking ─────────────────────────────────────────────
         # Rough token estimate from response size
         resp_json = json.dumps(resp, default=str)
@@ -392,6 +399,22 @@ async def run(
         # ── No tool call → done ─────────────────────────────────────────
         if not resp["tool_calls"]:
             final = resp["text"] or ""
+
+            # If the model returned empty text, try to snapshot the page
+            if not final:
+                try:
+                    snap = await repl("return (await mini.snapshot()).text", client)
+                    snap_text = snap.get("value", "") or ""
+                    if snap_text and "[ax-" in snap_text:
+                        final = snap_text[:2000]
+                    elif snap_text:
+                        final = snap_text[:2000]
+                    else:
+                        final = "Task completed."
+                except Exception:
+                    final = "Task completed."
+
+            log.info("step %d: no tool calls, final text=%.100r", step, final)
             audit.record_task_end("success", final[:500])
 
             # Store to memory on success
@@ -406,7 +429,11 @@ async def run(
             audit.record_session_end("success", duration_s)
             
             # Append final message to history to preserve assistant response
-            history.append({"role": "assistant", "content": final, "tool_calls": None})
+            history.append({"role": "assistant", "content": final})
+            if progress_callback:
+                res = progress_callback({"type": "final", "text": final})
+                if asyncio.iscoroutine(res):
+                    await res
             return final
 
         # ── Single-action discipline ────────────────────────────────────
@@ -428,21 +455,36 @@ async def run(
                 len(tool_calls), step
             )
 
+        if verbose:
+            import click
+            click.echo(click.style(f"  [tool call] {call['name']}({json.dumps(call['arguments'], indent=2)})", fg="yellow"))
+
+        if progress_callback:
+            res = progress_callback({"type": "step_start", "step": step, "call": call})
+            if asyncio.iscoroutine(res):
+                await res
+
         # ── Stuck detection ─────────────────────────────────────────────
         fp = _tool_call_fingerprint(call)
-        if fp == last_fingerprint:
-            consecutive_identical += 1
-            if consecutive_identical >= STUCK_THRESHOLD:
-                msg = (
-                    f"Agent appears stuck: the same action "
-                    f"'{call['name']}' was repeated {consecutive_identical} times."
+        is_snapshot = call["name"] == "repl" and "mini.snapshot" in call["arguments"].get("code", "")
+        
+        stuck_error: str | None = None
+        if not is_snapshot:
+            recent_modifying_fps.append(fp)
+            if len(recent_modifying_fps) > 6:
+                recent_modifying_fps.pop(0)
+            
+            if recent_modifying_fps.count(fp) >= 3:
+                # The model is repeating the same action. Force it to try something else.
+                log.warning("Agent is stuck repeating %s. Injecting error.", fp)
+                stuck_error = (
+                    "SYSTEM ERROR: You are repeating the exact same action that is not working. "
+                    "Look at the latest snapshot and try a DIFFERENT approach or a DIFFERENT element. "
+                    "Do NOT repeat this action."
                 )
-                audit.record_task_end("failure", msg)
-                audit.record_session_end("failure", time.monotonic() - t_start)
-                raise RuntimeError(msg)
-        else:
-            consecutive_identical = 0
-        last_fingerprint = fp
+                # Clear the history so we don't infinitely trigger this if it tries again much later
+                recent_modifying_fps.clear()
+
 
         # ── Approval check (category-based) ─────────────────────────────
         if require_approval:
@@ -470,13 +512,16 @@ async def run(
         autofill_credential_id: str | None = None
 
         try:
-            # Check for autofill before execution
-            code = call.get("arguments", {}).get("code", "")
-            if call["name"] == "repl" and is_signin_call(code):
-                parsed = parse_signin_call(code)
-                autofill_credential_id = parsed[0] if parsed else None
+            if stuck_error:
+                result = {"error": stuck_error}
+            else:
+                # Check for autofill before execution
+                code = call.get("arguments", {}).get("code", "")
+                if call["name"] == "repl" and is_signin_call(code):
+                    parsed = parse_signin_call(code)
+                    autofill_credential_id = parsed[0] if parsed else None
 
-            result = await _execute(call, client, audit, session_dir=session_dir)
+                result = await _execute(call, client, audit, session_dir=session_dir)
 
         except (AutofillUnavailableError, CredentialNotFoundError) as exc:
             # Autofill-specific failures: return error to model, do NOT fall back
@@ -513,6 +558,21 @@ async def run(
             duration_ms,
         )
 
+        if verbose:
+            import click
+            res_str = json.dumps(result, indent=2)
+            if "error" in result:
+                click.echo(click.style(f"  [result] Error: {result['error']}", fg="red"))
+            else:
+                if len(res_str) > 2000:
+                    res_str = res_str[:2000] + "\n... (truncated)"
+                click.echo(click.style(f"  [result] Success:\n{res_str}", fg="green"))
+
+        if progress_callback:
+            res = progress_callback({"type": "step_end", "step": step, "result": result})
+            if asyncio.iscoroutine(res):
+                await res
+
         history.append(_assistant_tool_calls_msg(tool_calls))
         history.append(_tool_result_msg(call["id"], result))
 
@@ -531,4 +591,8 @@ async def run(
     msg = f"Agent did not finish within {max_steps} steps."
     audit.record_task_end("failure", msg)
     audit.record_session_end("failure", time.monotonic() - t_start)
+    if progress_callback:
+        res = progress_callback({"type": "final", "text": f"Error: {msg}"})
+        if asyncio.iscoroutine(res):
+            await res
     raise RuntimeError(msg)

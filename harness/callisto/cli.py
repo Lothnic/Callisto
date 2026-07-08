@@ -33,10 +33,10 @@ def cli(debug: bool) -> None:
 
 @cli.command()
 @click.argument("task")
-@click.option("--provider", type=click.Choice(["openrouter", "groq"]), default="openrouter", show_default=True,
+@click.option("--provider", type=click.Choice(["openrouter", "groq", "ollama", "siliconflow", "generalcompute"]), default="groq", show_default=True,
               help="Inference provider.")
-@click.option("--model", default="anthropic/claude-3.5-sonnet", show_default=True,
-              help="Model slug/ID (defaults to anthropic/claude-3.5-sonnet for OpenRouter, llama-3.3-70b-versatile for Groq).")
+@click.option("--model", default="meta-llama/llama-4-scout-17b-16e-instruct", show_default=True,
+              help="Model slug/ID.")
 @click.option("--headless/--no-headless", default=True, show_default=True,
               help="Run browser headless.")
 @click.option("--no-sandbox", is_flag=True,
@@ -59,6 +59,8 @@ def cli(debug: bool) -> None:
               help="Keep the browser open after the task completes.")
 @click.option("--token-budget", type=int, default=None,
               help="Max tokens for context history before triggering compaction.")
+@click.option("--verbose", is_flag=True,
+              help="Enable verbose execution output.")
 def run_task(
     task: str,
     provider: str,
@@ -74,13 +76,14 @@ def run_task(
     max_tokens: int | None,
     keep_open: bool,
     token_budget: int | None,
+    verbose: bool,
 ) -> None:
     """Run TASK in the browser and print the result."""
-    if provider == "groq" and model == "anthropic/claude-3.5-sonnet":
-        model = "llama-3.3-70b-versatile"
 
     if token_budget is None:
-        token_budget = 6500 if provider == "groq" else 80000
+        # llama-4-scout-17b has 30K TPM on Groq free tier; budget 20K to leave
+        # headroom for output tokens and any concurrent usage.
+        token_budget = 20000 if provider == "groq" else 80000
 
     asyncio.run(
         _run_async(
@@ -98,6 +101,7 @@ def run_task(
             max_tokens=max_tokens,
             keep_open=keep_open,
             token_budget=token_budget,
+            verbose=verbose,
         )
     )
 
@@ -117,17 +121,30 @@ async def _run_async(
     max_tokens: int | None = None,
     keep_open: bool = False,
     token_budget: int = 80000,
+    verbose: bool = False,
 ) -> None:
     from .models.groq import GroqModel
+    from .models.ollama import OllamaModel
+    from .models.siliconflow import SiliconFlowModel
+    from .models.generalcompute import GeneralComputeModel
 
     if provider_name == "groq":
         model = GroqModel(model=model_name, max_tokens=max_tokens)
+    elif provider_name == "ollama":
+        model = OllamaModel(model=model_name, max_tokens=max_tokens)
+    elif provider_name == "siliconflow":
+        model = SiliconFlowModel(model=model_name, max_tokens=max_tokens)
+    elif provider_name == "generalcompute":
+        model = GeneralComputeModel(model=model_name, max_tokens=max_tokens)
     else:
         model = OpenRouterModel(model=model_name, max_tokens=max_tokens)
 
     client = SidecarClient()
     budget = BudgetTracker(max_cost=max_cost, max_turns=max_turns)
     memory = MemoryStore() if enable_memory else None
+
+    from .web_server import start_server, broadcast
+    web_runner = await start_server(54321)
 
     chrome_flags = ["--no-sandbox"] if no_sandbox else []
 
@@ -145,6 +162,8 @@ async def _run_async(
             budget=budget,
             memory=memory,
             token_budget=token_budget,
+            progress_callback=broadcast,
+            verbose=verbose,
         )
         click.echo(result)
 
@@ -171,6 +190,10 @@ async def _run_async(
         except Exception:  # noqa: BLE001
             pass
         client.terminate()
+        try:
+            await web_runner.cleanup()
+        except Exception:
+            pass
 
 
 # ---------------------------------------------------------------------------
@@ -229,10 +252,10 @@ def creds_remove(credential_id: str) -> None:
 # ---------------------------------------------------------------------------
 
 @cli.command()
-@click.option("--provider", type=click.Choice(["openrouter", "groq"]), default="openrouter", show_default=True,
+@click.option("--provider", type=click.Choice(["openrouter", "groq", "ollama", "siliconflow", "generalcompute"]), default="groq", show_default=True,
               help="Inference provider.")
-@click.option("--model", default="anthropic/claude-3.5-sonnet", show_default=True,
-              help="Model slug/ID (defaults to anthropic/claude-3.5-sonnet for OpenRouter, llama-3.3-70b-versatile for Groq).")
+@click.option("--model", default="meta-llama/llama-4-scout-17b-16e-instruct", show_default=True,
+              help="Model slug/ID.")
 @click.option("--headless/--no-headless", default=True, show_default=True,
               help="Run browser headless.")
 @click.option("--no-sandbox", is_flag=True,
@@ -253,6 +276,8 @@ def creds_remove(credential_id: str) -> None:
               help="Explicit token limit per LLM completion (useful for free tier keys).")
 @click.option("--token-budget", type=int, default=None,
               help="Max tokens for context history before triggering compaction.")
+@click.option("--verbose", is_flag=True,
+              help="Enable verbose execution output.")
 def chat(
     provider: str,
     model: str,
@@ -266,13 +291,14 @@ def chat(
     no_memory: bool,
     max_tokens: int | None,
     token_budget: int | None,
+    verbose: bool,
 ) -> None:
     """Start an interactive multi-turn chat session with Callisto."""
-    if provider == "groq" and model == "anthropic/claude-3.5-sonnet":
-        model = "llama-3.3-70b-versatile"
 
     if token_budget is None:
-        token_budget = 6500 if provider == "groq" else 80000
+        # llama-4-scout-17b has 30K TPM on Groq free tier; budget 20K to leave
+        # headroom for output tokens and any concurrent usage.
+        token_budget = 20000 if provider == "groq" else 80000
 
     asyncio.run(
         _chat_async(
@@ -288,6 +314,7 @@ def chat(
             enable_memory=not no_memory,
             max_tokens=max_tokens,
             token_budget=token_budget,
+            verbose=verbose,
         )
     )
 
@@ -305,13 +332,26 @@ async def _chat_async(
     enable_memory: bool,
     max_tokens: int | None,
     token_budget: int = 80000,
+    verbose: bool = False,
 ) -> None:
     from .models.groq import GroqModel
+    from .models.ollama import OllamaModel
+    from .models.siliconflow import SiliconFlowModel
+    from .models.generalcompute import GeneralComputeModel
 
     if provider_name == "groq":
         model = GroqModel(model=model_name, max_tokens=max_tokens)
+    elif provider_name == "ollama":
+        model = OllamaModel(model=model_name, max_tokens=max_tokens)
+    elif provider_name == "siliconflow":
+        model = SiliconFlowModel(model=model_name, max_tokens=max_tokens)
+    elif provider_name == "generalcompute":
+        model = GeneralComputeModel(model=model_name, max_tokens=max_tokens)
     else:
         model = OpenRouterModel(model=model_name, max_tokens=max_tokens)
+
+    from .web_server import start_server, broadcast, task_queue
+    web_runner = await start_server(54321)
 
     client = SidecarClient()
     budget = BudgetTracker(max_cost=max_cost, max_turns=max_turns)
@@ -323,41 +363,55 @@ async def _chat_async(
         await client.call("launch", {"headless": headless, "chromeFlags": chrome_flags})
 
         click.echo("======================================================================")
-        click.echo("Callisto Multi-turn Interactive Chat Mode")
-        click.echo("Type your task instruction and press Enter. Type 'exit' or 'quit' to close.")
+        click.echo("Callisto Multi-turn Interactive Chat/Sidebar Web UI Mode")
+        click.echo("Type your task instruction in terminal or sidebar and press Enter.")
+        click.echo("Type 'exit' or 'quit' to close.")
         click.echo("======================================================================")
 
         history: list[dict[str, Any]] = []
 
-        while True:
-            try:
-                task = await asyncio.to_thread(input, "\ncallisto > ")
-                task = task.strip()
-            except (KeyboardInterrupt, EOFError):
-                click.echo("\nExiting...", err=True)
-                break
+        async def handle_cli_input():
+            while True:
+                try:
+                    task = await asyncio.to_thread(input, "\ncallisto > ")
+                    task = task.strip()
+                    if task:
+                        await task_queue.put(task)
+                        if task.lower() in ("exit", "quit"):
+                            break
+                except (KeyboardInterrupt, EOFError):
+                    await task_queue.put("exit")
+                    break
 
-            if not task:
-                continue
-            if task.lower() in ("exit", "quit"):
-                break
+        cli_input_task = asyncio.create_task(handle_cli_input())
 
-            try:
-                result = await run(
-                    task=task,
-                    model=model,
-                    client=client,
-                    max_steps=max_steps,
-                    require_approval=require_approval,
-                    auto_approve=auto_approve_categories,
-                    budget=budget,
-                    memory=memory,
-                    history=history,
-                    token_budget=token_budget,
-                )
-                click.echo(f"\n[callisto] {result}")
-            except Exception as turn_exc:
-                click.echo(f"\n[callisto] Error during turn: {turn_exc}", err=True)
+        try:
+            while True:
+                task = await task_queue.get()
+                if task.lower() in ("exit", "quit"):
+                    break
+
+                try:
+                    result = await run(
+                        task=task,
+                        model=model,
+                        client=client,
+                        max_steps=max_steps,
+                        require_approval=require_approval,
+                        auto_approve=auto_approve_categories,
+                        budget=budget,
+                        memory=memory,
+                        history=history,
+                        token_budget=token_budget,
+                        progress_callback=broadcast,
+                        verbose=verbose,
+                    )
+                    click.echo(f"\n[callisto] {result}")
+                except Exception as turn_exc:
+                    click.echo(f"\n[callisto] Error during turn: {turn_exc}", err=True)
+                    await broadcast({"type": "final", "text": f"Error: {turn_exc}"})
+        finally:
+            cli_input_task.cancel()
 
     except SidecarDead as exc:
         click.echo(f"[callisto] Browser session died: {exc}", err=True)
@@ -368,6 +422,10 @@ async def _chat_async(
         except Exception:
             pass
         client.terminate()
+        try:
+            await web_runner.cleanup()
+        except Exception:
+            pass
 
 
 # Allow `python -m callisto.cli` as well
