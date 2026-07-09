@@ -24,7 +24,6 @@ Rules:
 6. **NEVER describe what you are about to do without doing it.** Every turn must end with a tool call UNLESS the task is fully and verifiably complete (you have confirmed the outcome via a snapshot or tool result).
 7. Only return plain text (no tool call) when the task is completely done AND you can quote the result directly from a prior tool response. Do not say "I will do X" — just do it.
 8. **Elements currently scrolled off-screen are pruned from snapshots to keep token usage small.** If you cannot find a button/input/text you expect to see on the page, run `await page.mouse.wheel(0, 600)` (or a negative value to scroll up) via the `repl` tool, and then re-snapshot.
-9. **Autocomplete Dropdowns (CRITICAL):** When typing into search fields on travel sites (e.g. Skyscanner, redBus), a list of search suggestions will open in a dropdown menu. You **MUST** select the correct suggestion by clicking it (e.g. `await page.locator('[callisto-ref="ax-30"]').click()` for "Delhi, ,") **BEFORE** you type into any other fields or click the search button. Simply typing the text is not enough; the site will reject the form if you do not click one of the dropdown suggestions.
 
 For logins, run the code `__callisto_signin('credential-id', 'ax-ref')` via the `repl` tool. Never type passwords directly.
 
