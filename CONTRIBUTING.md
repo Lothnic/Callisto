@@ -20,18 +20,42 @@ Thanks for helping. This project favors small, sharp diffs and honest numbers.
 2. Branch from `main`. Keep the branch scoped to one change.
 3. Use [Conventional Commits](https://www.conventionalcommits.org/):
    `feat:`, `fix:`, `docs:`, `refactor:`, `test:`, `chore:`.
-4. Make CI green: `npm run typecheck` in `packages/mini` (and `pytest` once the
-   harness exists).
+4. Make CI green (see below).
 5. Open a PR. Describe *what* and *why*, link the issue/RFC.
 
 ## Local setup
 
 ```bash
+# Mini (TypeScript)
 cd packages/mini
 npm install
 npm run typecheck
-CALLISTO_SMOKE=1 npm test    # network + local Chrome required
+npm test
+# CALLISTO_SMOKE=1 npm test    # needs local Chrome + network
+
+# Harness (Python)
+cd ../../harness
+python3 -m venv .venv
+.venv/bin/pip install -e ".[dev]"
+.venv/bin/ruff check callisto tests
+.venv/bin/pytest
+
+# Eval kit (optional)
+cd ../eval
+../harness/.venv/bin/pip install -e ".[dev]"
+../harness/.venv/bin/pytest
 ```
+
+Copy [`.env.example`](.env.example) to `.env` for live agent runs. See the
+root [README](README.md) quickstart and `./run.sh --help`.
+
+## CI expectations
+
+| Job | Commands |
+| --- | --- |
+| `packages/mini` | `npm ci && npm run typecheck && npm test` |
+| `harness` | `pip install -e ".[dev]" && ruff check && pytest` |
+| `eval` | `pip install -e ".[dev]" && ruff check && pytest` + fake smoke run |
 
 ## Good first issues
 

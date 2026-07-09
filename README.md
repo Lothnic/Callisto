@@ -28,20 +28,47 @@ anyone can reproduce.
 
 ## Quickstart
 
-> Placeholder — the CLI lands in Phase 3. This shows the intended shape.
+From a clone of this repo (editable install; PyPI packaging is still `0.x`):
 
 ```bash
-# Python harness (Phase 3+)
-pip install callisto
-callisto run "find the pricing page for linear.app"
-```
-
-```bash
-# TypeScript browser runtime (Phase 1, this repo)
+# 1. Browser runtime (Node ≥ 20)
 cd packages/mini
 npm install
-npm run typecheck
-CALLISTO_SMOKE=1 npm test        # needs a local Chrome/Chromium
+npm run build
+
+# 2. Python harness
+cd ../../harness
+python3 -m venv .venv
+.venv/bin/pip install -e ".[dev]"
+
+# 3. API key
+cp ../.env.example ../.env
+# edit ../.env — set GROQ_API_KEY (default) or another provider key
+
+# 4. Run a task (loads harness + Chrome via run.sh)
+cd ..
+./run.sh "find the pricing page for linear.app"
+```
+
+Useful variants:
+
+```bash
+./run.sh --visible "open github.com and list open issues"
+./run.sh --ollama "open skyscanner for flights from delhi to goa"
+./run.sh --siliconflow --model tencent/Hy3 "what is on example.com"
+./run.sh --chat                         # multi-turn session
+```
+
+Provider flags: `--groq` (default), `--openrouter`, `--siliconflow`,
+`--generalcompute`, `--ollama`. Docker/CI may need `--no-sandbox` (pass through
+the harness CLI; see `harness/.venv/bin/callisto run-task --help`).
+
+Offline tests without a browser or API key:
+
+```bash
+cd harness && .venv/bin/pytest
+cd packages/mini && npm test
+cd eval && pip install -e ".[dev]" && pytest
 ```
 
 ## Benchmarks
@@ -55,7 +82,7 @@ CALLISTO_SMOKE=1 npm test        # needs a local Chrome/Chromium
 
 Numbers are reproducible from the eval kit (Phase 5). The first live row is a
 3-task smoke run only; full benchmark runs still land as `TBD` until published
-with manifests.
+with manifests. See [BENCHMARKS.md](BENCHMARKS.md).
 
 ## Architecture
 
@@ -64,6 +91,10 @@ with manifests.
 | `packages/mini` | TypeScript | CDP wrapper — the agent's hands and eyes          |
 | `harness/`      | Python     | The agent loop, tools, CLI *(done)*                |
 | `eval/`         | Python     | Public benchmark kit *(Phase 5 started)*          |
+
+Installable package names today: `callisto-harness` and `callisto-eval`
+(console scripts: `callisto`, `callisto-eval`). The top-level name `callisto`
+is reserved for a future unified release.
 
 ## Roadmap
 
