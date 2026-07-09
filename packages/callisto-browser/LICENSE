@@ -1,0 +1,13 @@
+Callisto Browser package
+
+This package (build wrappers, branding, Callisto-specific Chromium patches)
+is licensed under the GNU Affero General Public License v3.0 (AGPL-3.0).
+
+It is designed to be applied on top of BrowserOS
+(https://github.com/browseros-ai/BrowserOS), which is also AGPL-3.0.
+
+See the root NOTICE and the upstream BrowserOS LICENSE for full terms.
+A copy of AGPL-3.0 is available at: https://www.gnu.org/licenses/agpl-3.0.html
+
+IMPORTANT: The rest of the Callisto monorepo (packages/mini, harness/, eval/)
+remains MIT unless noted otherwise. Do not copy AGPL sources into MIT packages.

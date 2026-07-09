@@ -40,3 +40,7 @@ chrome/
 
 # BrowserOS local binary dependencies
 /packages/mini/browseros/
+
+# Callisto Browser build worktree (synced BrowserOS + Chromium out/)
+/packages/callisto-browser/.work/
+/packages/callisto-browser/out/

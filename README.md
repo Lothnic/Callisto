@@ -6,7 +6,9 @@
 ![status](https://img.shields.io/badge/status-WIP%20%C2%B7%20Phase%205%20of%205-orange)
 ![license](https://img.shields.io/badge/license-MIT-blue)
 
-> ⚠️ **Work in progress.** Harness-first build toward v1. See the [roadmap](roadmap.md).
+> ⚠️ **Work in progress.** Product direction is **browser-first** (Callisto Browser on a
+> BrowserOS fork — [RFC 0006](rfcs/0006-callisto-browser-browseros-fork.md)). The CLI and
+> eval kit remain for developers. See [packages/callisto-browser](packages/callisto-browser/).
 
 Callisto drives a real Chromium over the Chrome DevTools Protocol and hands an
 LLM agent a tiny, token-cheap surface to perceive and act on the web. The bet:
@@ -41,11 +43,11 @@ cd ../../harness
 python3 -m venv .venv
 .venv/bin/pip install -e ".[dev]"
 
-# 3. API key
+# 3. API key (default provider: SiliconFlow)
 cp ../.env.example ../.env
-# edit ../.env — set GROQ_API_KEY (default) or another provider key
+# edit ../.env — set SILICONFLOW_KEY (or SILICONFLOW_API_KEY)
 
-# 4. Run a task (loads harness + Chrome via run.sh)
+# 4. Run a task (loads .env + harness + BrowserOS via run.sh)
 cd ..
 ./run.sh "find the pricing page for linear.app"
 ```
@@ -55,14 +57,15 @@ Useful variants:
 ```bash
 ./run.sh --visible "open github.com and list open issues"
 ./run.sh --ollama "open skyscanner for flights from delhi to goa"
-./run.sh --siliconflow --model tencent/Hy3 "what is on example.com"
+./run.sh --groq --model meta-llama/llama-4-scout-17b-16e-instruct "what is on example.com"
 ./run.sh --chat                         # multi-turn session
 ```
 
-Provider flags: `--groq` (default), `--openrouter`, `--siliconflow`,
-`--generalcompute`, `--ollama`. Safety defaults: Chrome sandbox and human
-approval are **on**. For Docker/CI only: `./run.sh --no-sandbox --no-approval
-"..."`. See `harness/.venv/bin/callisto run-task --help` for the full CLI.
+Default provider is **SiliconFlow** (`tencent/Hy3`). Other flags: `--groq`,
+`--openrouter`, `--generalcompute`, `--ollama`. Safety defaults: Chrome sandbox
+and human approval are **on**. For Docker/CI only:
+`./run.sh --no-sandbox --no-approval "..."`. See
+`harness/.venv/bin/callisto run-task --help` for the full CLI.
 
 Offline tests without a browser or API key:
 
@@ -87,11 +90,12 @@ with manifests. See [BENCHMARKS.md](BENCHMARKS.md).
 
 ## Architecture
 
-| Package         | Language   | What it is                                        |
-| --------------- | ---------- | ------------------------------------------------- |
-| `packages/mini` | TypeScript | CDP wrapper — the agent's hands and eyes          |
-| `harness/`      | Python     | The agent loop, tools, CLI *(done)*                |
-| `eval/`         | Python     | Public benchmark kit *(Phase 5 started)*          |
+| Package                    | Language   | What it is                                        |
+| -------------------------- | ---------- | ------------------------------------------------- |
+| `packages/callisto-browser`| —          | **Callisto Browser** (BrowserOS fork, AGPL) — product shell |
+| `packages/mini`            | TypeScript | CDP wrapper — the agent's hands and eyes          |
+| `harness/`                 | Python     | The agent loop, tools, CLI                        |
+| `eval/`                    | Python     | Public benchmark kit *(Phase 5)*                  |
 
 Installable package names today: `callisto-harness` and `callisto-eval`
 (console scripts: `callisto`, `callisto-eval`). The top-level name `callisto`

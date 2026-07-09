@@ -1,0 +1,11 @@
+COMPANY_FULLNAME=Callisto
+COMPANY_SHORTNAME=Callisto
+PRODUCT_FULLNAME=Callisto Dev
+PRODUCT_SHORTNAME=CallistoDev
+PRODUCT_INSTALLER_FULLNAME=Callisto Dev Installer
+PRODUCT_INSTALLER_SHORTNAME=CallistoDevInstaller
+COPYRIGHT=Copyright $YEAR Callisto Contributors. Portions Copyright The Chromium Authors and BrowserOS contributors.
+MAC_BUNDLE_ID=com.callisto.dev.browser
+MAC_CREATOR_CODE=Csto
+MAC_TEAM_ID=
+LINUX_PRODUCT_NAME=callisto-dev

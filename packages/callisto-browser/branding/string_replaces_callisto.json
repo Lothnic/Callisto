@@ -1,0 +1,13 @@
+{
+  "description": "Applied after BrowserOS string_replaces. Maps product strings to Callisto.",
+  "replacements": [
+    { "from": "BrowserOS Dev", "to": "Callisto Dev" },
+    { "from": "BrowserOS", "to": "Callisto" },
+    { "from": "browseros", "to": "callisto" },
+    { "from": "com.browseros", "to": "com.callisto" }
+  ],
+  "notes": [
+    "Run only on the working tree after sync-upstream.sh",
+    "Review diffs — aggressive replace can break identifiers; prefer BRANDING files + targeted patches"
+  ]
+}

@@ -1,0 +1,35 @@
+# Callisto-only Chromium features layered on BrowserOS.
+# Applied after BrowserOS baseline patches when using scripts/build-linux.sh.
+version: "1.0"
+
+features:
+  callisto-branding:
+    description: "chore: Callisto product name, executable, version files"
+    files:
+      - branding/BRANDING.release
+      - branding/BRANDING.debug
+      - branding/string_replaces_callisto.json
+      - CALLISTO_BROWSER_VERSION
+
+  callisto-stealth-baseline:
+    description: "fix: document + reaffirm webdriver=false (BrowserOS already has navigator.cc)"
+    notes:
+      - BrowserOS ships third_party/blink/.../navigator.cc webdriver() => false
+      - Callisto does not re-ship that patch; we verify it remains after sync
+      - Future Callisto-only stealth patches land under chromium_patches/
+
+  callisto-agent-viewport:
+    description: "feat: fixed 1440x900 for agent-owned targets (planned)"
+    status: planned
+    files: []
+
+  callisto-agent-focus:
+    description: "feat: agent tabs do not steal user focus (planned)"
+    status: planned
+    files: []
+
+  callisto-extension-bundle:
+    description: "feat: ship Callisto side panel extension instead of generic stub"
+    status: planned
+    files:
+      - ../../packages/mini/callisto-extension/

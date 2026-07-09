@@ -1,0 +1,23 @@
+Callisto Browser — third-party notices
+======================================
+
+1. BrowserOS
+   Copyright (c) BrowserOS contributors
+   License: AGPL-3.0
+   Source: https://github.com/browseros-ai/BrowserOS
+   Local reference tree used for development:
+     ~/Desktop/OpenSource/BrowserOS
+
+2. Chromium
+   Copyright (c) The Chromium Authors
+   License: BSD-style (see Chromium LICENSE)
+
+3. ungoogled-chromium patches (via BrowserOS series_patches)
+   License: BSD-3-Clause (see BrowserOS LICENSE.ungoogled_chromium)
+
+4. Callisto-specific patches and branding in this package
+   Copyright (c) Callisto contributors
+   License: AGPL-3.0 (this package only)
+
+When distributing Callisto Browser binaries, you must provide Corresponding
+Source under AGPL-3.0 for all AGPL-covered components.
