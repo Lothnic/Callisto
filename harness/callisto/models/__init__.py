@@ -26,6 +26,7 @@ class ChatModel(Protocol):
 
 
 # Expose concrete implementations
+from .openai_compat import OpenAICompatibleModel
 from .openrouter import OpenRouterModel
 from .groq import GroqModel
 from .ollama import OllamaModel
