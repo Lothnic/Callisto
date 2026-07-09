@@ -31,6 +31,7 @@ if [ $# -eq 0 ]; then
   echo "  --visible        Run with visible browser (not headless)"
   echo "  --no-sandbox     Pass --no-sandbox to Chrome (Docker/CI only)"
   echo "  --no-approval    Skip approval prompts (CI / non-interactive)"
+  echo "  --ui             Start BrowserOS sidebar WebSocket server (port 54321)"
   echo "  --ollama         Use local Ollama inference (no API key needed)"
   echo "  --groq           Use Groq API (default)"
   echo "  --openrouter     Use OpenRouter API"
@@ -56,6 +57,7 @@ MODE="run"
 VERBOSE=""
 NO_SANDBOX=""
 NO_APPROVAL=""
+UI=""
 
 args=()
 while [ $# -gt 0 ]; do
@@ -65,6 +67,7 @@ while [ $# -gt 0 ]; do
     --visible) HEADLESS="--no-headless" ;;
     --no-sandbox) NO_SANDBOX="--no-sandbox" ;;
     --no-approval) NO_APPROVAL="--no-approval" ;;
+    --ui) UI="--ui" ;;
     --ollama)
       PROVIDER="ollama"
       MODEL="llama3.2:3b"
@@ -95,7 +98,7 @@ done
 
 if [ "$MODE" = "chat" ]; then
   exec "$CALLISTO_HARNESS" chat \
-    $HEADLESS $NO_SANDBOX $NO_APPROVAL $VERBOSE \
+    $HEADLESS $NO_SANDBOX $NO_APPROVAL $UI $VERBOSE \
     --provider "$PROVIDER" --model "$MODEL" \
     --max-steps "$MAX_STEPS" --max-cost 0
 else
@@ -104,7 +107,7 @@ else
     exit 1
   fi
   exec "$CALLISTO_HARNESS" run-task "${args[0]}" \
-    $HEADLESS $NO_SANDBOX $NO_APPROVAL $VERBOSE \
+    $HEADLESS $NO_SANDBOX $NO_APPROVAL $UI $VERBOSE \
     --provider "$PROVIDER" --model "$MODEL" \
     --max-steps "$MAX_STEPS" --max-cost 0
 fi

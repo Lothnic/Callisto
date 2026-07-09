@@ -519,7 +519,7 @@ class TestTwoToolSurface:
             commands_run.append(cmd)
             return {"stdout": "success", "stderr": "", "exit_code": 0}
 
-        monkeypatch.setattr("callisto.loop.bash", _fake_bash)
+        monkeypatch.setattr("callisto.tools.dispatch.bash", _fake_bash)
 
         model = FakeModel([
             _resp_tool({

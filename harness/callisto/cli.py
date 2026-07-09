@@ -16,8 +16,7 @@ from .models.openrouter import OpenRouterModel
 from .sidecar_client import SidecarClient, SidecarDead
 
 
-async def _broadcast_and_echo(progress: dict, broadcast) -> None:
-    await broadcast(progress)
+async def _echo_progress(progress: dict) -> None:
     typ = progress.get("type")
     if typ == "step_start":
         summary = progress.get("summary") or {}
@@ -34,6 +33,12 @@ async def _broadcast_and_echo(progress: dict, broadcast) -> None:
         detail = summary.get("detail")
         if isinstance(detail, str) and detail and "[Agent signal:" in detail:
             click.echo(click.style(detail, fg="cyan"))
+
+
+async def _broadcast_and_echo(progress: dict, broadcast) -> None:
+    if broadcast is not None:
+        await broadcast(progress)
+    await _echo_progress(progress)
 
 
 @click.group()
@@ -82,6 +87,8 @@ def cli(debug: bool) -> None:
               help="Max tokens for context history before triggering compaction.")
 @click.option("--verbose", is_flag=True,
               help="Enable verbose execution output.")
+@click.option("--ui", is_flag=True,
+              help="Start the BrowserOS sidebar WebSocket server on port 54321.")
 def run_task(
     task: str,
     provider: str,
@@ -98,6 +105,7 @@ def run_task(
     keep_open: bool,
     token_budget: int | None,
     verbose: bool,
+    ui: bool,
 ) -> None:
     """Run TASK in the browser and print the result."""
 
@@ -123,6 +131,7 @@ def run_task(
             keep_open=keep_open,
             token_budget=token_budget,
             verbose=verbose,
+            enable_ui=ui,
         )
     )
 
@@ -143,6 +152,7 @@ async def _run_async(
     keep_open: bool = False,
     token_budget: int = 80000,
     verbose: bool = False,
+    enable_ui: bool = False,
 ) -> None:
     from .models.groq import GroqModel
     from .models.ollama import OllamaModel
@@ -164,8 +174,12 @@ async def _run_async(
     budget = BudgetTracker(max_cost=max_cost, max_turns=max_turns)
     memory = MemoryStore() if enable_memory else None
 
-    from .web_server import start_server, broadcast
-    web_runner = await start_server(54321)
+    broadcast = None
+    web_runner = None
+    if enable_ui:
+        from .web_server import start_server, broadcast as _broadcast
+        broadcast = _broadcast
+        web_runner = await start_server(54321)
 
     chrome_flags = ["--no-sandbox"] if no_sandbox else []
 
@@ -214,10 +228,11 @@ async def _run_async(
         except Exception:  # noqa: BLE001
             pass
         client.terminate()
-        try:
-            await web_runner.cleanup()
-        except Exception:
-            pass
+        if web_runner is not None:
+            try:
+                await web_runner.cleanup()
+            except Exception:
+                pass
 
 
 # ---------------------------------------------------------------------------
@@ -302,6 +317,8 @@ def creds_remove(credential_id: str) -> None:
               help="Max tokens for context history before triggering compaction.")
 @click.option("--verbose", is_flag=True,
               help="Enable verbose execution output.")
+@click.option("--ui", is_flag=True,
+              help="Start the BrowserOS sidebar WebSocket server on port 54321.")
 def chat(
     provider: str,
     model: str,
@@ -316,6 +333,7 @@ def chat(
     max_tokens: int | None,
     token_budget: int | None,
     verbose: bool,
+    ui: bool,
 ) -> None:
     """Start an interactive multi-turn chat session with Callisto."""
 
@@ -339,6 +357,7 @@ def chat(
             max_tokens=max_tokens,
             token_budget=token_budget,
             verbose=verbose,
+            enable_ui=ui,
         )
     )
 
@@ -357,6 +376,7 @@ async def _chat_async(
     max_tokens: int | None,
     token_budget: int = 80000,
     verbose: bool = False,
+    enable_ui: bool = False,
 ) -> None:
     from .models.groq import GroqModel
     from .models.ollama import OllamaModel
@@ -374,8 +394,16 @@ async def _chat_async(
     else:
         model = OpenRouterModel(model=model_name, max_tokens=max_tokens)
 
-    from .web_server import start_server, broadcast, task_queue
-    web_runner = await start_server(54321)
+    broadcast = None
+    web_runner = None
+    # Local queue when UI is off; shared web_server queue when --ui is on.
+    local_queue: asyncio.Queue[str] = asyncio.Queue()
+    task_queue = local_queue
+    if enable_ui:
+        from .web_server import start_server, broadcast as _broadcast, task_queue as ui_queue
+        broadcast = _broadcast
+        task_queue = ui_queue
+        web_runner = await start_server(54321)
 
     client = SidecarClient()
     budget = BudgetTracker(max_cost=max_cost, max_turns=max_turns)
@@ -387,8 +415,12 @@ async def _chat_async(
         await client.call("launch", {"headless": headless, "chromeFlags": chrome_flags})
 
         click.echo("======================================================================")
-        click.echo("Callisto Multi-turn Interactive Chat/Sidebar Web UI Mode")
-        click.echo("Type your task instruction in terminal or sidebar and press Enter.")
+        if enable_ui:
+            click.echo("Callisto multi-turn chat + sidebar Web UI (port 54321)")
+            click.echo("Type a task in the terminal or sidebar and press Enter.")
+        else:
+            click.echo("Callisto multi-turn interactive chat")
+            click.echo("Type a task and press Enter. Pass --ui to enable the sidebar server.")
         click.echo("Type 'exit' or 'quit' to close.")
         click.echo("======================================================================")
 
@@ -436,7 +468,8 @@ async def _chat_async(
                     click.echo(f"\n[callisto] {result}")
                 except Exception as turn_exc:
                     click.echo(f"\n[callisto] Error during turn: {turn_exc}", err=True)
-                    await broadcast({"type": "final", "text": f"Error: {turn_exc}"})
+                    if broadcast is not None:
+                        await broadcast({"type": "final", "text": f"Error: {turn_exc}"})
         finally:
             cli_input_task.cancel()
 
@@ -449,10 +482,11 @@ async def _chat_async(
         except Exception:
             pass
         client.terminate()
-        try:
-            await web_runner.cleanup()
-        except Exception:
-            pass
+        if web_runner is not None:
+            try:
+                await web_runner.cleanup()
+            except Exception:
+                pass
 
 
 # Allow `python -m callisto.cli` as well
