@@ -1,52 +1,35 @@
-# Build status (mayank machine)
+# Build status
 
-Last updated: 2026-07-09 ~13:21 UTC
+Last successful Linux build: **2026-07-09** (mayank host).
 
-## Machine
+## Result
 
-- Workspace: `/home/mayank/callisto`
-- Disk: ~883 GB free — OK for Chromium
-- RAM: 15 GB
+| Item | Path / note |
+|------|-------------|
+| Chromium pin | 148.0.7778.97 |
+| Upstream product | BrowserOS 0.47.9 (pipeline version) |
+| Callisto package version | 0.1.0.0 (`CALLISTO_BROWSER_VERSION`) |
+| Binary | `$CHROMIUM_SRC/out/Default_browseros_x64/browseros` |
+| ChromeDriver | `…/chromedriver` |
+| `.deb` | `.work/browseros/releases/0.47.9/BrowserOS_v0.47.9_amd64.deb` (~200 MB) |
+| AppImage | Failed (needs FUSE / `libfuse.so.2`) |
 
-## In progress
-
-| Step | Status |
-|------|--------|
-| Clone BrowserOS | **Done** → `~/src/BrowserOS` |
-| BrowserOS CLI venv | **Done** → `~/src/browseros-venv` |
-| `browseros source ensure` (Chromium **148.0.7778.97** shallow) | **Running** |
-| Log | `~/src/logs/chromium-source-ensure.log` |
-| Root | `~/src/chromium` |
-
-Watch:
+Use with Callisto Mini/harness:
 
 ```bash
-tail -f ~/src/logs/chromium-source-ensure.log
-du -sh ~/src/chromium
+export CALLISTO_BROWSER_PATH=$HOME/src/chromium/src/out/Default_browseros_x64/browseros
 ```
 
-After ensure exits 0, `gclient sync` may still grow the tree substantially.
+## Build notes (low-RAM / WSL)
 
-## You must run (sudo)
+- Default autoninja `-j ~nproc` can **OOM** on ~15 GB hosts. Use:
+  - `BROWSEROS_NINJA_JOBS=3` (auto-capped by `build-linux.sh` when unset), or
+  - `./scripts/compile-resilient.sh --jobs 3`
+- Without R2 credentials, fetch public CDN server resources:
+  - `./scripts/fetch-cdn-resources.sh linux-x64`
+  - then build with `--no-download`
+- Prefer Chromium checkout `depot_tools` + `buildtools/linux64/gn` on `PATH` (`build-linux.sh` handles this).
 
-Compile needs system packages (no passwordless sudo here):
+## Branding
 
-```bash
-sudo ~/callisto/packages/callisto-browser/scripts/install-linux-deps.sh
-# and preferably after src exists:
-# cd ~/src/chromium/src && build/install-build-deps.sh
-```
-
-## Then compile
-
-```bash
-export PATH="$HOME/.local/bin:$HOME/src/depot_tools:$PATH"
-source ~/src/browseros-venv/bin/activate
-export BROWSEROS_SRC=$HOME/src/BrowserOS/packages/browseros
-
-cd ~/callisto/packages/callisto-browser
-./scripts/sync-upstream.sh
-./scripts/build-linux.sh --chromium-src $HOME/src/chromium/src --no-download
-```
-
-Expect multi-hour compile. Binary under `~/src/chromium/src/out/…/browseros`.
+Callisto branding files live under `branding/`; the first Linux binary is still **BrowserOS-named** (`browseros` executable / `.deb`). Wiring Callisto product strings into the prep pipeline is follow-up work.

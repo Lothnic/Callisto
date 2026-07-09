@@ -55,7 +55,21 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-export PATH="${HOME}/.local/bin:${HOME}/src/depot_tools:${PATH:-}"
+# Prefer Chromium-checkout depot_tools (bootstrapped by gclient) and the real
+# `gn` under buildtools/linux64. A bare ~/src/depot_tools may lack
+# python3_bin_reldir.txt; depot_tools' gn wrapper needs the real binary first.
+_DT="${CHROMIUM_ROOT}/depot_tools"
+_GN_DIR=""
+if [[ -x "${CHROMIUM_ROOT}/src/buildtools/linux64/gn" ]]; then
+  _GN_DIR="${CHROMIUM_ROOT}/src/buildtools/linux64"
+elif [[ -n "${CHROMIUM_SRC:-}" && -x "${CHROMIUM_SRC}/buildtools/linux64/gn" ]]; then
+  _GN_DIR="${CHROMIUM_SRC}/buildtools/linux64"
+fi
+_PATH_PREFIX="${HOME}/.local/bin"
+[[ -n "$_GN_DIR" ]] && _PATH_PREFIX="${_GN_DIR}:${_PATH_PREFIX}"
+[[ -d "$_DT" ]] && _PATH_PREFIX="${_PATH_PREFIX}:${_DT}"
+export PATH="${_PATH_PREFIX}:${HOME}/src/depot_tools:${PATH:-}"
+unset _DT _GN_DIR _PATH_PREFIX
 
 if [[ -x "$ROOT/scripts/check-env.sh" ]]; then
   BROWSEROS_SRC="$BROWSEROS_SRC" "$ROOT/scripts/check-env.sh" || true
@@ -128,6 +142,26 @@ fi
 echo "→ building Callisto Browser via BrowserOS pipeline"
 echo "  CHROMIUM_SRC=$CHROMIUM_SRC"
 echo "  BUILD_PKG=$BUILD_PKG"
+
+# Cap ninja parallelism on low-RAM Linux (WSL ~15 GB). Default autoninja uses
+# ~nproc jobs; clang++ OOMs and the host dies/reboots. Override with
+# BROWSEROS_NINJA_JOBS. See scripts/compile-resilient.sh for auto-retry.
+if [[ -z "${BROWSEROS_NINJA_JOBS:-}" ]]; then
+  if [[ -r /proc/meminfo ]]; then
+    _mem_gb=$(awk '/MemTotal/ {printf "%d", $2/1024/1024}' /proc/meminfo)
+    # ~4 GB peak per clang job (same heuristic BrowserOS uses on Windows)
+    if ((_mem_gb > 0)); then
+      _jobs=$((_mem_gb / 4))
+      ((_jobs < 1)) && _jobs=1
+      ((_jobs > 8)) && _jobs=8
+      export BROWSEROS_NINJA_JOBS="$_jobs"
+      echo "  BROWSEROS_NINJA_JOBS=$BROWSEROS_NINJA_JOBS (auto from ${_mem_gb}G RAM)"
+    fi
+    unset _mem_gb _jobs
+  fi
+else
+  echo "  BROWSEROS_NINJA_JOBS=$BROWSEROS_NINJA_JOBS"
+fi
 
 # Prefer no-sign/no-upload for local operator builds
 browseros build \
