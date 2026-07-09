@@ -35,6 +35,14 @@ function fakeMini() {
       calls.push(['waitFor', ...args])
     },
     pages: async () => [{ id: 't1', url: 'about:blank', title: '' }],
+    tabs: {
+      switch: async (...args: unknown[]) => {
+        calls.push(['tabs.switch', ...args])
+      },
+      close: async (...args: unknown[]) => {
+        calls.push(['tabs.close', ...args])
+      },
+    },
     goto: async (...args: unknown[]) => {
       calls.push(['goto', ...args])
     },
@@ -67,6 +75,24 @@ function fakeMini() {
     }
   }
 }
+
+test('page.content returns document HTML via evaluate', async () => {
+  const mini = fakeMini()
+  const page = new Page(mini as never)
+
+  const html = await page.content()
+
+  assert.equal(html, 'ok')
+})
+
+test('page.tabs.switch forwards to Mini.tabs.switch', async () => {
+  const mini = fakeMini()
+  const page = new Page(mini as never)
+
+  await page.tabs.switch('target-42')
+
+  assert.deepEqual(mini.calls, [['tabs.switch', 'target-42']])
+})
 
 test('page.locator bridges [callisto-ref="ax-N"] to Mini refs', async () => {
   const mini = fakeMini()

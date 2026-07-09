@@ -83,6 +83,14 @@ export class Mini {
   private knownTargets = new Set<string>()
   private targetUrls = new Map<string, string>()
   private networkHistory: CapturedRequest[] = []
+  /** CDP target currently attached (session.cdp). */
+  private currentTargetId: string | undefined
+  /**
+   * Newest page target the agent should focus (popup / new tab).
+   * Applied in flushPendingFocus() before the next snapshot/eval return.
+   */
+  private pendingFocusTargetId: string | undefined
+  private signalListenersInstalled = false
 
   private constructor(
     private session: Session,
@@ -93,7 +101,14 @@ export class Mini {
     const session = await launchChrome(opts)
     const mini = new Mini(session, new RefRegistry())
     await mini.installSignalListeners()
-    mini.drainSignals()
+    // Seed current target so popup auto-focus has a baseline.
+    try {
+      const pages = await mini.pages()
+      if (pages[0]) mini.currentTargetId = pages[0].id
+    } catch {
+      /* ignore */
+    }
+    await mini.drainSignals()
     return mini
   }
 
@@ -106,6 +121,7 @@ export class Mini {
   }
 
   async pages(): Promise<Array<{ id: string; url: string; title: string }>> {
+    await this.flushPendingFocus()
     const { targetInfos } = await this.cdp.Target.getTargets()
     return targetInfos
       .filter((t) => t.type === 'page')
@@ -272,6 +288,7 @@ export class Mini {
 
   /** Pruned, ref-annotated a11y tree as indented text (rfcs/0002). */
   async snapshot(opts: SnapshotOpts = {}): Promise<Snapshot> {
+    await this.flushPendingFocus()
     const snap = await snapshot(this.session, this.refs)
     const previous = this.lastSnapshotText
     this.lastSnapshotText = snap.text
@@ -305,13 +322,63 @@ export class Mini {
       return targetId
     },
     switch: async (targetId: string): Promise<void> => {
-      await switchTarget(this.session, targetId)
-      await this.installSignalListeners()
-      this.resetSnapshotBaseline()
+      this.pendingFocusTargetId = undefined
+      await this.attachTarget(targetId)
     },
     close: async (targetId: string): Promise<void> => {
       await this.cdp.Target.closeTarget({ targetId })
+      if (this.pendingFocusTargetId === targetId) this.pendingFocusTargetId = undefined
+      if (this.currentTargetId === targetId) this.currentTargetId = undefined
     },
+  }
+
+  /** Attach CDP session to a page target and reset snapshot baseline. */
+  private async attachTarget(targetId: string): Promise<void> {
+    if (this.currentTargetId === targetId) return
+    await switchTarget(this.session, targetId)
+    this.currentTargetId = targetId
+    // switchTarget opens a new CDP client — re-bind signal listeners on it.
+    this.signalListenersInstalled = false
+    await this.installSignalListeners()
+    this.resetSnapshotBaseline()
+    this.refs = new RefRegistry()
+  }
+
+  /**
+   * If a popup/new tab opened during the last action, focus it so the next
+   * snapshot/actions hit the page the agent almost certainly cares about.
+   */
+  async flushPendingFocus(): Promise<void> {
+    const targetId = this.pendingFocusTargetId
+    if (!targetId || targetId === this.currentTargetId) {
+      this.pendingFocusTargetId = undefined
+      return
+    }
+    try {
+      const { targetInfos } = await this.cdp.Target.getTargets()
+      const stillOpen = targetInfos.some((t) => t.targetId === targetId && t.type === 'page')
+      if (!stillOpen) {
+        this.pendingFocusTargetId = undefined
+        return
+      }
+      const info = targetInfos.find((t) => t.targetId === targetId)
+      await this.attachTarget(targetId)
+      this.pendingFocusTargetId = undefined
+      this.queueSignal({
+        type: 'tab',
+        message: 'focused new tab',
+        url: info?.url ?? this.targetUrls.get(targetId),
+        targetId,
+      })
+    } catch {
+      // Best-effort: leave pending for a later attempt.
+    }
+  }
+
+  private requestFocus(targetId: string, url?: string): void {
+    if (targetId === this.currentTargetId) return
+    this.pendingFocusTargetId = targetId
+    if (url) this.targetUrls.set(targetId, url)
   }
 
   async waitFor(predicate: string | (() => boolean), opts: WaitOpts = {}): Promise<void> {
@@ -366,7 +433,8 @@ export class Mini {
     this.lastSnapshotText = undefined
   }
 
-  drainSignals(): AgentSignal[] {
+  async drainSignals(): Promise<AgentSignal[]> {
+    await this.flushPendingFocus()
     const out = this.signals
     this.signals = []
     return out
@@ -378,6 +446,10 @@ export class Mini {
   }
 
   private async installSignalListeners(): Promise<void> {
+    // Only register CDP listeners once per Mini — re-registering stacks handlers.
+    if (this.signalListenersInstalled) return
+    this.signalListenersInstalled = true
+
     const cdp = this.cdp as unknown as {
       Page?: {
         javascriptDialogOpening?: (cb: (event: CdpEvent) => void) => void
@@ -455,11 +527,26 @@ export class Mini {
     })
 
     cdp.Page?.windowOpen?.((event) => {
+      const url = asString(event.url)
       this.queueSignal({
         type: 'popup',
         message: 'popup opened',
-        url: asString(event.url),
+        url,
       })
+      // Match an already-created page target by URL when possible.
+      void this.cdp.Target.getTargets()
+        .then(({ targetInfos }) => {
+          const pages = targetInfos.filter((t) => t.type === 'page')
+          const byUrl = url
+            ? pages.find((t) => t.url === url && t.targetId !== this.currentTargetId)
+            : undefined
+          const newest = [...pages].reverse().find((t) => t.targetId !== this.currentTargetId)
+          const pick = byUrl ?? newest
+          if (pick) this.requestFocus(pick.targetId, pick.url || url)
+        })
+        .catch(() => {
+          /* advisory */
+        })
     })
 
     cdp.Browser?.downloadWillBegin?.((event) => {
@@ -478,13 +565,16 @@ export class Mini {
       this.knownTargets.add(info.targetId)
       if (info.url) this.targetUrls.set(info.targetId, info.url)
       if (alreadyKnown) return
-      if (!info.url || info.url === 'about:blank') return
-      this.queueSignal({
-        type: 'tab',
-        message: 'tab opened',
-        url: info.url,
-        targetId: info.targetId,
-      })
+      // New page (popup often starts about:blank) — mark for auto-focus.
+      this.requestFocus(info.targetId, info.url)
+      if (info.url && info.url !== 'about:blank') {
+        this.queueSignal({
+          type: 'tab',
+          message: 'tab opened',
+          url: info.url,
+          targetId: info.targetId,
+        })
+      }
     })
 
     cdp.Target?.targetDestroyed?.((event) => {
@@ -492,6 +582,7 @@ export class Mini {
       const url = this.targetUrls.get(event.targetId)
       this.knownTargets.delete(event.targetId)
       this.targetUrls.delete(event.targetId)
+      if (this.pendingFocusTargetId === event.targetId) this.pendingFocusTargetId = undefined
       this.queueSignal({
         type: 'tab',
         message: 'tab closed',
@@ -503,8 +594,23 @@ export class Mini {
     cdp.Target?.targetInfoChanged?.((event) => {
       const info = event.targetInfo
       if (!info || info.type !== 'page') return
+      const prevUrl = this.targetUrls.get(info.targetId)
       this.knownTargets.add(info.targetId)
       if (info.url) this.targetUrls.set(info.targetId, info.url)
+      // Popup navigated from about:blank → real URL: surface a tab signal + focus.
+      const becameReal =
+        info.url &&
+        info.url !== 'about:blank' &&
+        (!prevUrl || prevUrl === 'about:blank')
+      if (becameReal && info.targetId !== this.currentTargetId) {
+        this.requestFocus(info.targetId, info.url)
+        this.queueSignal({
+          type: 'tab',
+          message: 'tab opened',
+          url: info.url,
+          targetId: info.targetId,
+        })
+      }
     })
 
     try {

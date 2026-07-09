@@ -202,10 +202,31 @@ export class Page {
     return this.#mini.evaluate<string>(() => document.title)
   }
 
-  context(): { pages: () => ReturnType<Mini['pages']> } {
+  /**
+   * Full HTML of the current document (Playwright-shaped). Prefer
+   * `page.accessibility.snapshot()` for agent perception — raw HTML is huge
+   * and often blocked/obfuscated by bot walls.
+   */
+  async content(): Promise<string> {
+    return this.#mini.evaluate<string>(() => document.documentElement.outerHTML)
+  }
+
+  context(): {
+    pages: () => ReturnType<Mini['pages']>
+  } {
     return {
       pages: () => this.#mini.pages(),
     }
+  }
+
+  /**
+   * Tab helpers for multi-window flows (popups, target=_blank).
+   * Prefer re-snapshotting after a popup signal — Mini auto-focuses new tabs.
+   */
+  tabs = {
+    list: (): ReturnType<Mini['pages']> => this.#mini.pages(),
+    switch: (targetId: string): Promise<void> => this.#mini.tabs.switch(targetId),
+    close: (targetId: string): Promise<void> => this.#mini.tabs.close(targetId),
   }
 
   getByRole(role: string, opts: LocatorOptions = {}): Locator {
