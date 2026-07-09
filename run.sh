@@ -29,6 +29,8 @@ if [ $# -eq 0 ]; then
   echo "Options:"
   echo "  --chat           Start interactive multi-turn chat session"
   echo "  --visible        Run with visible browser (not headless)"
+  echo "  --no-sandbox     Pass --no-sandbox to Chrome (Docker/CI only)"
+  echo "  --no-approval    Skip approval prompts (CI / non-interactive)"
   echo "  --ollama         Use local Ollama inference (no API key needed)"
   echo "  --groq           Use Groq API (default)"
   echo "  --openrouter     Use OpenRouter API"
@@ -36,6 +38,9 @@ if [ $# -eq 0 ]; then
   echo "  --generalcompute Use General Compute API"
   echo "  --model NAME     Set model (default: meta-llama/llama-4-scout-17b-16e-instruct)"
   echo "  --steps N        Max tool-call turns (default: 40)"
+  echo ""
+  echo "Safety defaults: Chrome sandbox ON, human approval ON, cost unlimited (0)."
+  echo "Opt into weaker defaults only when you understand the tradeoff."
   echo ""
   echo "Environment:"
   echo "  GROQ_API_KEY        Required for Groq provider"
@@ -49,6 +54,8 @@ HEADLESS="--headless"
 MAX_STEPS=40
 MODE="run"
 VERBOSE=""
+NO_SANDBOX=""
+NO_APPROVAL=""
 
 args=()
 while [ $# -gt 0 ]; do
@@ -56,6 +63,8 @@ while [ $# -gt 0 ]; do
     --chat) MODE="chat" ;;
     --verbose) VERBOSE="--verbose" ;;
     --visible) HEADLESS="--no-headless" ;;
+    --no-sandbox) NO_SANDBOX="--no-sandbox" ;;
+    --no-approval) NO_APPROVAL="--no-approval" ;;
     --ollama)
       PROVIDER="ollama"
       MODEL="llama3.2:3b"
@@ -84,16 +93,18 @@ while [ $# -gt 0 ]; do
   shift
 done
 
-NO_SANDBOX="--no-sandbox"
-
 if [ "$MODE" = "chat" ]; then
   exec "$CALLISTO_HARNESS" chat \
-    $HEADLESS $NO_SANDBOX $VERBOSE \
+    $HEADLESS $NO_SANDBOX $NO_APPROVAL $VERBOSE \
     --provider "$PROVIDER" --model "$MODEL" \
-    --no-approval --max-steps "$MAX_STEPS" --max-cost 0
+    --max-steps "$MAX_STEPS" --max-cost 0
 else
+  if [ ${#args[@]} -eq 0 ]; then
+    echo "Error: missing task string. See $0 --help" >&2
+    exit 1
+  fi
   exec "$CALLISTO_HARNESS" run-task "${args[0]}" \
-    $HEADLESS $NO_SANDBOX $VERBOSE \
+    $HEADLESS $NO_SANDBOX $NO_APPROVAL $VERBOSE \
     --provider "$PROVIDER" --model "$MODEL" \
-    --no-approval --max-steps "$MAX_STEPS" --max-cost 0
+    --max-steps "$MAX_STEPS" --max-cost 0
 fi

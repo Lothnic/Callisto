@@ -1,9 +1,15 @@
 from __future__ import annotations
 
 import asyncio
+import json
 from typing import Any
 
 from .types import EvalTask, TaskResult
+
+
+def goto_eval_code(url: str) -> str:
+    """Build a page.goto call with a JSON-escaped URL (no string interpolation)."""
+    return f"await page.goto({json.dumps(url)})"
 
 
 class FakeAgent:
@@ -94,8 +100,10 @@ class CallistoAgent:
 
         try:
             await client.start()
-            await client.call("launch", {"headless": self.headless, "chromeFlags": chrome_flags})
-            await client.call("eval", {"code": f"await page.goto('{task.start_url}')"})
+            await client.call(
+                "launch", {"headless": self.headless, "chromeFlags": chrome_flags}
+            )
+            await client.call("eval", {"code": goto_eval_code(task.start_url)})
             final_answer = await run(
                 task=instruction,
                 model=model_obj,

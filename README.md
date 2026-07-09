@@ -60,8 +60,9 @@ Useful variants:
 ```
 
 Provider flags: `--groq` (default), `--openrouter`, `--siliconflow`,
-`--generalcompute`, `--ollama`. Docker/CI may need `--no-sandbox` (pass through
-the harness CLI; see `harness/.venv/bin/callisto run-task --help`).
+`--generalcompute`, `--ollama`. Safety defaults: Chrome sandbox and human
+approval are **on**. For Docker/CI only: `./run.sh --no-sandbox --no-approval
+"..."`. See `harness/.venv/bin/callisto run-task --help` for the full CLI.
 
 Offline tests without a browser or API key:
 
