@@ -1,5 +1,6 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
+import { createServer } from 'node:http'
 import { isPoint } from '../src/elements.js'
 import { Mini } from '../src/index.js'
 
@@ -95,3 +96,63 @@ test('smoke: iframe stitching grafts nested frame content', { skip: !process.env
     await mini.close()
   }
 })
+
+test('smoke: network capture and api reverse engineering', { skip: !process.env.CALLISTO_SMOKE }, async () => {
+  const server = createServer((req, res) => {
+    if (req.url === '/') {
+      res.writeHead(200, { 'Content-Type': 'text/html' })
+      res.end(`
+        <h1>API Test</h1>
+        <script>
+          async function runFetch() {
+            await fetch("/api/search", {
+              method: "POST",
+              body: JSON.stringify({ query: "lasagna" }),
+              headers: { "Content-Type": "application/json" }
+            });
+          }
+        </script>
+        <button id="btn" onclick="runFetch()">Trigger Fetch</button>
+      `)
+    } else if (req.url === '/api/search') {
+      res.writeHead(200, { 'Content-Type': 'application/json' })
+      res.end(JSON.stringify({ ok: true }))
+    } else {
+      res.writeHead(404)
+      res.end()
+    }
+  })
+
+  await new Promise<void>((resolve) => server.listen(0, '127.0.0.1', () => resolve()))
+  const address = server.address() as { port: number }
+  const port = address.port
+
+  const mini = await Mini.launch({ headless: true, chromeFlags })
+  try {
+    await mini.goto(`http://127.0.0.1:${port}/`, { waitUntil: 'load' })
+
+    // Capture baseline (should be empty network log for XHR/Fetch)
+    assert.equal(mini.network.recent(10).length, 0)
+
+    // Trigger the fetch request
+    const snap = await mini.snapshot()
+    const btnRef = snap.text.split('\n').find((l) => /button "Trigger Fetch"/.test(l))!.match(/\[(ax-\d+)\]/)![1]
+    await mini.click(btnRef)
+
+    // Wait a brief moment for the request to fire
+    await new Promise((r) => setTimeout(r, 500))
+
+    // Read captured network requests
+    const reqs = mini.network.recent(10)
+    assert.ok(reqs.length >= 1, 'Should capture at least 1 request')
+
+    const searchReq = reqs.find((r) => r.url.endsWith('/api/search'))
+    assert.ok(searchReq, 'Should capture request to /api/search')
+    assert.equal(searchReq.method, 'POST')
+    assert.equal(searchReq.postData, '{"query":"lasagna"}')
+  } finally {
+    await mini.close()
+    await new Promise<void>((resolve) => server.close(() => resolve()))
+  }
+})
+

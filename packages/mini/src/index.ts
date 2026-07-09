@@ -410,7 +410,8 @@ export class Mini {
     const pendingRequests = new Map<string, CapturedRequest>()
 
     cdp.Network?.requestWillBeSent?.((event) => {
-      if (event.type === 'XHR' || event.type === 'Fetch') {
+      const type = event.type?.toLowerCase()
+      if (type === 'xhr' || type === 'fetch') {
         const req = event.request
         const captured: CapturedRequest = {
           method: req.method,
