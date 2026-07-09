@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+from typing import Any
 
 from .types import EvalTask, TaskResult
 
@@ -53,7 +54,7 @@ class CallistoAgent:
             cost_usd=budget.total_cost,
         )
 
-    async def _run_async(self, task: EvalTask) -> tuple[str, BudgetTracker]:
+    async def _run_async(self, task: EvalTask) -> tuple[str, Any]:
         try:
             from callisto.budget import BudgetTracker
             from callisto.loop import run

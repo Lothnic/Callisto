@@ -24,3 +24,40 @@ jobs:
       # Unit tests only. The browser smoke test (CALLISTO_SMOKE=1) needs a real
       # Chrome + network and is run locally, not in CI.
       - run: npm test
+
+  harness:
+    name: harness (lint + test)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: harness
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: harness/pyproject.toml
+      - run: python -m pip install --upgrade pip
+      - run: pip install -e ".[dev]"
+      - run: ruff check callisto tests
+      - run: pytest
+
+  eval:
+    name: eval (offline tests)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: eval
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: eval/pyproject.toml
+      - run: python -m pip install --upgrade pip
+      - run: pip install -e ".[dev]"
+      - run: ruff check callisto_eval tests
+      - run: pytest
+      - run: python -m callisto_eval run webvoyager --subset smoke --agent fake --out runs/ci-webvoyager-smoke

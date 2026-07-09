@@ -9,6 +9,8 @@ from __future__ import annotations
 
 import json
 import re
+from typing import Any
+
 import pytest
 
 from callisto.approvals import ApprovalRule, check_approval, DEFAULT_RULES

@@ -12,6 +12,12 @@ dependencies = [
     "click>=8.1",
 ]
 
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.6",
+]
+
 [project.scripts]
 callisto-eval = "callisto_eval.cli:cli"
 
@@ -23,3 +29,10 @@ callisto_eval = ["benchmarks/**/*.jsonl"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E9", "F63", "F7", "F82"]

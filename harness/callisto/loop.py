@@ -24,7 +24,7 @@ import logging
 import time
 import uuid
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 
 from .approvals import ApprovalRule, check_approval
 from .audit import AuditLog
