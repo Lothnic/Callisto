@@ -429,15 +429,23 @@ class TestLoopApproval:
         monkeypatch.setattr("callisto.tools.ask.ask", _track_ask)
 
         model = FakeModel([
-            # First turn: model gets snapshot
-            _resp_tool(_repl_call("return (await page.accessibility.snapshot()).text")),
-            # Second turn: model clicks a delete element
+            # Search first (allowed), grounding example.com, then open it.
+            _resp_tool(_repl_call(
+                "await page.goto('https://www.google.com/search?q=delete'); "
+                "return 'https://example.com [ax-12] button Delete Account'"
+            )),
+            _resp_tool(_repl_call(
+                "await page.goto('https://example.com'); "
+                "return (await page.accessibility.snapshot()).text"
+            )),
+            # Click a delete element
             _resp_tool(_repl_call("await page.locator('[callisto-ref=\"ax-12\"]').click()")),
             _resp_done("done"),
         ])
 
-        # Sidecar returns the snapshot text containing a delete element
-        client = fake_sidecar_client(eval_result={"value": '[ax-12] button "Delete Account"'})
+        client = fake_sidecar_client(
+            eval_result={"value": "https://example.com [ax-12] button \"Delete Account\""}
+        )
 
         await run("task", model, client, require_approval=True)
 

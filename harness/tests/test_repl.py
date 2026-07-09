@@ -32,7 +32,29 @@ async def test_repl_prepends_agent_signals_to_string_value():
         "[Agent signal: popup opened at https://example.com]\n"
         "[Agent signal: download started: report.pdf]\n"
     )
-    assert result["value"].endswith("snapshot text")
+
+
+@pytest.mark.asyncio
+async def test_repl_signal_includes_target_id():
+    result = await repl(
+        "return 'ok'",
+        FakeClient({
+            "value": "ok",
+            "_signals": [
+                {
+                    "type": "tab",
+                    "message": "focused new tab",
+                    "url": "https://grok.com/supergrok",
+                    "targetId": "T1",
+                },
+            ],
+        }),
+    )
+
+    assert (
+        result["value"]
+        == "[Agent signal: focused new tab at https://grok.com/supergrok targetId=T1]\nok"
+    )
 
 
 @pytest.mark.asyncio

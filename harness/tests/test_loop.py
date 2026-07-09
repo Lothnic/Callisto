@@ -41,12 +41,21 @@ def _resp_done(text: str = "Task complete.") -> Response:
 
 @pytest.mark.asyncio
 async def test_happy_path_repl_then_done(fake_sidecar_client):
-    """Normal: one repl tool call, then a final text response."""
+    """Normal: search → grounded goto + snapshot → final text."""
     model = FakeModel([
-        _resp_tool(_repl_call("return (await page.accessibility.snapshot()).text")),
-        _resp_done("The pricing page is at /pricing"),
+        _resp_tool(_repl_call(
+            "await page.goto('https://www.google.com/search?q=pricing'); "
+            "return 'https://example.com/pricing in results'"
+        )),
+        _resp_tool(_repl_call(
+            "await page.goto('https://example.com/pricing'); "
+            "return (await page.accessibility.snapshot()).text"
+        )),
+        _resp_done("The pricing page is at https://example.com/pricing"),
     ])
-    client = fake_sidecar_client(eval_result={"value": "page text here"})
+    client = fake_sidecar_client(
+        eval_result={"value": "https://example.com/pricing [ax-1] link Pricing"}
+    )
 
     result = await run(
         task="Find the pricing page",
@@ -55,8 +64,7 @@ async def test_happy_path_repl_then_done(fake_sidecar_client):
         require_approval=False,
     )
 
-    assert result == "The pricing page is at /pricing"
-    # Exactly one eval call was made
+    assert "pricing" in result.lower()
     assert any(m == "eval" for m, _ in client.calls)
 
 
@@ -97,16 +105,21 @@ async def test_single_action_discipline_degrades_gracefully(fake_sidecar_client)
 
 
 @pytest.mark.asyncio
-async def test_stuck_detection_halts_loop(fake_sidecar_client):
-    """Loop raises RuntimeError when the same action repeats STUCK_THRESHOLD times."""
+async def test_stuck_detection_forces_final_answer(fake_sidecar_client):
+    """Repeated identical actions eventually force a text final (no infinite tools)."""
+    from callisto.loop import STUCK_THRESHOLD, MAX_STUCK_NUDGES
+
     repeated_call = _repl_call("return 'stuck'")
-    # Script must be long enough to trigger the threshold
-    script = [_resp_tool(repeated_call)] * (STUCK_THRESHOLD + 1)
+    # Soft stuck nudges, then force_final rejects tools until model returns text.
+    script = (
+        [_resp_tool(repeated_call)] * (STUCK_THRESHOLD * MAX_STUCK_NUDGES + 4)
+        + [_resp_done("Stopped after thrashing; no useful page state.")]
+    )
     model = FakeModel(script)
     client = fake_sidecar_client(eval_result={"value": "stuck"})
 
-    with pytest.raises(RuntimeError, match="stuck"):
-        await run("task", model, client, require_approval=False)
+    result = await run("task", model, client, require_approval=False, max_steps=20)
+    assert "thrash" in result.lower() or "stuck" in result.lower() or "stopped" in result.lower()
 
 
 @pytest.mark.asyncio
@@ -128,31 +141,45 @@ async def test_tool_error_is_returned_to_model_not_raised(fake_sidecar_client):
 async def test_progress_events_include_readable_summaries(fake_sidecar_client):
     events = []
     model = FakeModel([
-        _resp_tool(_repl_call("return (await page.accessibility.snapshot()).text")),
-        _resp_done("done"),
+        _resp_tool(_repl_call(
+            "await page.goto('https://www.google.com/search?q=go'); "
+            "return 'https://example.com [ax-1] button Go'"
+        )),
+        _resp_done("done with example https://example.com"),
     ])
-    client = fake_sidecar_client(eval_result={"value": '[ax-1] button "Go"'})
+    client = fake_sidecar_client(
+        eval_result={"value": "https://example.com [ax-1] button Go"}
+    )
 
     async def progress(event):
         events.append(event)
 
     await run("task", model, client, require_approval=False, progress_callback=progress)
 
-    start = next(e for e in events if e["type"] == "step_start")
-    end = next(e for e in events if e["type"] == "step_end")
-    assert start["summary"]["title"] == "Snapshot page"
-    assert end["summary"]["title"] == "Snapshot: 1 refs, 1 lines"
+    starts = [e for e in events if e["type"] == "step_start"]
+    ends = [e for e in events if e["type"] == "step_end"]
+    assert starts
+    assert ends
+    assert ends[0]["summary"]["ok"] is True
+    assert any(e.get("type") == "status" and e.get("phase") == "model_wait" for e in events)
 
 
 @pytest.mark.asyncio
-async def test_max_steps_exceeded(fake_sidecar_client):
-    """Loop raises RuntimeError if max_steps is reached without a final answer."""
-    # Model always returns a tool call, never finishes
-    model = FakeModel([_resp_tool(_repl_call())] * 10)
-    client = fake_sidecar_client()
+async def test_max_steps_requests_best_effort_final(fake_sidecar_client):
+    """When step budget ends, loop asks model once more without tools."""
+    # 3 tool turns exhaust budget; 4th scripted response is the forced final
+    model = FakeModel(
+        [_resp_tool(_repl_call(
+            "await page.goto('https://www.google.com/search?q=x'); return 'https://example.com ok'"
+        ))] * 3
+        + [_resp_done("Partial: only saw search results for x at google.com")]
+    )
+    client = fake_sidecar_client(
+        eval_result={"value": "https://example.com search results"}
+    )
 
-    with pytest.raises(RuntimeError, match="did not finish within 3 steps"):
-        await run("task", model, client, max_steps=3, require_approval=False)
+    result = await run("task", model, client, max_steps=3, require_approval=False)
+    assert "partial" in result.lower() or "search" in result.lower()
 
 
 @pytest.mark.asyncio

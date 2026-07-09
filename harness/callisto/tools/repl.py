@@ -12,8 +12,11 @@ def _format_signal(signal: dict[str, Any]) -> str:
     url = signal.get("url")
     filename = signal.get("filename")
 
+    target_id = signal.get("targetId")
+    tid = f" targetId={target_id}" if target_id else ""
+
     if typ == "popup":
-        detail = f"popup opened at {url}" if url else "popup opened"
+        detail = f"popup opened at {url}{tid}" if url else f"popup opened{tid}"
     elif typ == "dialog":
         detail = f"dialog opened: {message}"
     elif typ == "download":
@@ -24,7 +27,10 @@ def _format_signal(signal: dict[str, Any]) -> str:
         else:
             detail = f"download started at {url}" if url else "download started"
     elif typ == "tab":
-        detail = f"{message} at {url}" if url else str(message)
+        if url:
+            detail = f"{message} at {url}{tid}"
+        else:
+            detail = f"{message}{tid}" if tid else str(message)
     else:
         detail = f"{message} at {url}" if url else str(message)
 
