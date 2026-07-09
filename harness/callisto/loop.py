@@ -93,24 +93,7 @@ TOOL_SCHEMAS: list[dict[str, Any]] = [
             },
         },
     },
-    {
-        "type": "function",
-        "function": {
-            "name": "repo.exec",
-            "description": "Execute a shell command in the workspace.",
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "cmd": {
-                        "type": "array",
-                        "items": {"type": "string"},
-                        "description": "Command and arguments to run.",
-                    }
-                },
-                "required": ["cmd"],
-            },
-        },
-    },
+    # Two tools only (RFC 0003 / CONTRIBUTING). Do not advertise a third.
 ]
 
 
@@ -137,13 +120,15 @@ async def _execute(
     if call["name"] == "bash":
         return await bash(call["arguments"].get("cmd", ""), session_dir=session_dir)
 
+    # Legacy alias: some models still emit repo.exec from older prompts/traces.
+    # Not in TOOL_SCHEMAS — never advertised to the model as a third tool.
     if call["name"] == "repo.exec":
         cmd_arg = call["arguments"].get("cmd", "")
         if isinstance(cmd_arg, list):
             if len(cmd_arg) >= 3 and cmd_arg[0] == "bash" and cmd_arg[1] in ("-c", "-lc"):
                 cmd_str = cmd_arg[2]
             else:
-                cmd_str = " ".join(cmd_arg)
+                cmd_str = " ".join(str(part) for part in cmd_arg)
         else:
             cmd_str = str(cmd_arg)
         return await bash(cmd_str, session_dir=session_dir)

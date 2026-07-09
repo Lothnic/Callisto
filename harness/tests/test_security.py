@@ -501,10 +501,18 @@ class TestPruneSnapshots:
         assert "pruned" not in c2_msg["content"]
 
 
-class TestRepoExecTranslation:
+class TestTwoToolSurface:
+    def test_tool_schemas_are_exactly_bash_and_repl(self):
+        from callisto.loop import TOOL_SCHEMAS
+
+        names = [t["function"]["name"] for t in TOOL_SCHEMAS]
+        assert names == ["repl", "bash"]
+
     @pytest.mark.asyncio
-    async def test_repo_exec_translates_to_bash(self, fake_sidecar_client, monkeypatch):
-        """repo.exec tool calls are translated to bash calls."""
+    async def test_legacy_repo_exec_still_dispatches_to_bash(
+        self, fake_sidecar_client, monkeypatch
+    ):
+        """Legacy repo.exec calls still run as bash (not advertised in schemas)."""
         commands_run = []
 
         async def _fake_bash(cmd: str, session_dir: str = "") -> dict[str, Any]:
