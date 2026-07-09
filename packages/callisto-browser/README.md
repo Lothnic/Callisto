@@ -23,19 +23,31 @@ The full Chromium tree is **not** in git. Sync from a local BrowserOS checkout.
 ## Quick start (operators)
 
 ```bash
-# 0) Environment
-export BROWSEROS_SRC="$HOME/Desktop/OpenSource/BrowserOS/packages/browseros"
-./scripts/check-env.sh
+# 0) Clone BrowserOS (once) + system deps (needs sudo)
+git clone https://github.com/browseros-ai/BrowserOS.git ~/src/BrowserOS
+export BROWSEROS_SRC="$HOME/src/BrowserOS/packages/browseros"
+./scripts/install-linux-deps.sh   # sudo — build-essential, nss, gtk, …
 
 # 1) Sync BrowserOS → .work/browseros + overlay Callisto branding
 ./scripts/sync-upstream.sh
 
-# 2) Prep only (no 100GB compile yet)
+# 2) Prep CLI venv
 ./scripts/build-linux.sh --prep-only
 
-# 3) Full Linux build (requires Chromium src @ CHROMIUM_VERSION)
-export CHROMIUM_SRC=/path/to/chromium/src
-./scripts/build-linux.sh --chromium-src "$CHROMIUM_SRC"
+# 3) Fetch Chromium @ CHROMIUM_VERSION (multi-hour, ~50GB+)
+./scripts/build-linux.sh --ensure-source
+
+# 4) Full Linux build (compile multi-hour; ~50GB more)
+./scripts/build-linux.sh --chromium-src "$HOME/src/chromium/src" --no-download
+```
+
+Or use BrowserOS CLI directly after prep:
+
+```bash
+source ~/src/browseros-venv/bin/activate
+browseros source ensure --root ~/src/chromium --strategy shallow
+browseros build --preset release --chromium-src ~/src/chromium/src \
+  --provision none --no-sign --no-upload --no-download --no-clean
 ```
 
 ## Using the binary with Callisto agent

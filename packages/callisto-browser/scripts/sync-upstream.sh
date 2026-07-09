@@ -1,14 +1,18 @@
 #!/usr/bin/env bash
-# Sync BrowserOS packages/browseros into a local work tree, then overlay Callisto branding.
+# Sync BrowserOS packages/browseros into a local work tree, overlay Callisto branding.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-BROWSEROS_SRC="${BROWSEROS_SRC:-$HOME/Desktop/OpenSource/BrowserOS/packages/browseros}"
+BROWSEROS_SRC="${BROWSEROS_SRC:-$HOME/src/BrowserOS/packages/browseros}"
+# Fallbacks for older machines
+if [[ ! -d "$BROWSEROS_SRC" && -d "$HOME/Desktop/OpenSource/BrowserOS/packages/browseros" ]]; then
+  BROWSEROS_SRC="$HOME/Desktop/OpenSource/BrowserOS/packages/browseros"
+fi
 WORK="${CALLISTO_BROWSER_WORK:-$ROOT/.work/browseros}"
 
 if [[ ! -d "$BROWSEROS_SRC" ]]; then
   echo "error: BROWSEROS_SRC not found: $BROWSEROS_SRC" >&2
-  echo "Set BROWSEROS_SRC or clone BrowserOS to ~/Desktop/OpenSource/BrowserOS" >&2
+  echo "Clone: git clone https://github.com/browseros-ai/BrowserOS.git ~/src/BrowserOS" >&2
   exit 1
 fi
 
@@ -19,30 +23,34 @@ rsync -a --delete \
   --exclude '__pycache__' \
   --exclude '*.pyc' \
   --exclude '.work' \
+  --exclude '.venv' \
   "$BROWSEROS_SRC/" "$WORK/"
 
 echo "→ overlay Callisto version pins"
-cp -f "$ROOT/CHROMIUM_VERSION" "$WORK/CHROMIUM_VERSION" 2>/dev/null || true
-cp -f "$ROOT/CALLISTO_BROWSER_VERSION" "$WORK/resources/CALLISTO_BROWSER_VERSION"
+if [[ -f "$ROOT/CHROMIUM_VERSION" ]]; then
+  cp -f "$ROOT/CHROMIUM_VERSION" "$WORK/CHROMIUM_VERSION"
+fi
+if [[ -f "$ROOT/CALLISTO_BROWSER_VERSION" ]]; then
+  mkdir -p "$WORK/resources"
+  cp -f "$ROOT/CALLISTO_BROWSER_VERSION" "$WORK/resources/CALLISTO_BROWSER_VERSION"
+fi
 
 echo "→ overlay branding files"
-mkdir -p "$WORK/chromium_files/chrome/app/theme/chromium"
-# Map Callisto BRANDING into the paths BrowserOS packaging expects when present.
-if [[ -f "$ROOT/branding/BRANDING.release" ]]; then
-  # BrowserOS uses BRANDING.release under theme/chromium/ — write Callisto values
-  # as a drop-in companion for operators applying string_replaces later.
-  cp -f "$ROOT/branding/BRANDING.release" "$WORK/chromium_files/chrome/app/theme/chromium/BRANDING.callisto-release"
-  cp -f "$ROOT/branding/BRANDING.debug" "$WORK/chromium_files/chrome/app/theme/chromium/BRANDING.callisto-debug"
+if [[ -d "$ROOT/branding" ]]; then
+  mkdir -p "$WORK/chromium_files/chrome/app/theme/chromium"
+  cp -f "$ROOT/branding/BRANDING.release" \
+    "$WORK/chromium_files/chrome/app/theme/chromium/BRANDING.callisto-release" 2>/dev/null || true
+  cp -f "$ROOT/branding/BRANDING.debug" \
+    "$WORK/chromium_files/chrome/app/theme/chromium/BRANDING.callisto-debug" 2>/dev/null || true
 fi
 
 echo "→ copy Callisto-only patches (if any)"
 if [[ -d "$ROOT/chromium_patches" ]]; then
   mkdir -p "$WORK/chromium_patches_callisto"
   rsync -a "$ROOT/chromium_patches/" "$WORK/chromium_patches_callisto/" \
-    --exclude 'README.md'
+    --exclude 'README.md' || true
 fi
 
-echo "→ write overlay stamp"
 cat > "$WORK/CALLISTO_OVERLAY.json" <<EOF
 {
   "synced_at": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
@@ -53,7 +61,4 @@ cat > "$WORK/CALLISTO_OVERLAY.json" <<EOF
 EOF
 
 echo
-echo "Sync complete."
-echo "  work tree: $WORK"
-echo "  next: ./scripts/build-linux.sh --chromium-src \"\$CHROMIUM_SRC\""
-echo "  or:   cd $WORK && pip install -e . && browseros build --help"
+echo "Sync complete: $WORK"

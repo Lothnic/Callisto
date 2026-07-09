@@ -5,14 +5,21 @@ Callisto Browser is **option B** from RFC 0006: a branded fork of BrowserOS.
 ## Default local path
 
 ```text
-BROWSEROS_ROOT=$HOME/Desktop/OpenSource/BrowserOS
+BROWSEROS_ROOT=$HOME/src/BrowserOS
 BROWSEROS_BROWSER=$BROWSEROS_ROOT/packages/browseros
+# Fallback also tried: $HOME/Desktop/OpenSource/BrowserOS
 ```
 
 Override with:
 
 ```bash
 export BROWSEROS_SRC=/path/to/BrowserOS/packages/browseros
+```
+
+Clone if missing:
+
+```bash
+git clone https://github.com/browseros-ai/BrowserOS.git ~/src/BrowserOS
 ```
 
 ## Observed pins (sync when upgrading)
