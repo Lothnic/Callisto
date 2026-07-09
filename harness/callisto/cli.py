@@ -13,32 +13,8 @@ from .budget import BudgetExceededError, BudgetTracker
 from .loop import run
 from .memory import MemoryStore
 from .models.openrouter import OpenRouterModel
+from .progress_ui import ProgressPrinter, make_progress_callback
 from .sidecar_client import SidecarClient, SidecarDead
-
-
-async def _echo_progress(progress: dict) -> None:
-    typ = progress.get("type")
-    if typ == "step_start":
-        summary = progress.get("summary") or {}
-        step = progress.get("step")
-        title = summary.get("title") or progress.get("call", {}).get("name", "tool")
-        click.echo(click.style(f"[step {step}] {title}", fg="yellow"))
-    elif typ == "step_end":
-        summary = progress.get("summary") or {}
-        step = progress.get("step")
-        ok = summary.get("ok", True)
-        title = summary.get("title") or ("Success" if ok else "Error")
-        fg = "green" if ok else "red"
-        click.echo(click.style(f"[step {step}] {'✓' if ok else '✗'} {title}", fg=fg))
-        detail = summary.get("detail")
-        if isinstance(detail, str) and detail and "[Agent signal:" in detail:
-            click.echo(click.style(detail, fg="cyan"))
-
-
-async def _broadcast_and_echo(progress: dict, broadcast) -> None:
-    if broadcast is not None:
-        await broadcast(progress)
-    await _echo_progress(progress)
 
 
 @click.group()
@@ -59,9 +35,9 @@ def cli(debug: bool) -> None:
 
 @cli.command()
 @click.argument("task")
-@click.option("--provider", type=click.Choice(["openrouter", "groq", "ollama", "siliconflow", "generalcompute"]), default="groq", show_default=True,
+@click.option("--provider", type=click.Choice(["openrouter", "groq", "ollama", "siliconflow", "generalcompute"]), default="siliconflow", show_default=True,
               help="Inference provider.")
-@click.option("--model", default="meta-llama/llama-4-scout-17b-16e-instruct", show_default=True,
+@click.option("--model", default="tencent/Hy3", show_default=True,
               help="Model slug/ID.")
 @click.option("--headless/--no-headless", default=True, show_default=True,
               help="Run browser headless.")
@@ -182,13 +158,48 @@ async def _run_async(
         web_runner = await start_server(54321)
 
     chrome_flags = ["--no-sandbox"] if no_sandbox else []
+    printer = ProgressPrinter(verbose=verbose)
+    printer.echo_banner(
+        task=task,
+        provider=provider_name,
+        model=model_name,
+        headless=headless,
+        max_steps=max_steps,
+        no_sandbox=no_sandbox,
+        ui=enable_ui,
+    )
 
     try:
         await client.start()
         await client.call("launch", {"headless": headless, "chromeFlags": chrome_flags})
 
-        async def progress(progress_event: dict) -> None:
-            await _broadcast_and_echo(progress_event, broadcast)
+        # Prove the browser is alive (critical when headless — no window to stare at).
+        browser_url = "about:blank"
+        try:
+            url_probe = await client.call(
+                "eval", {"code": "return await page.url()"}
+            )
+            if isinstance(url_probe.get("value"), str):
+                browser_url = url_probe["value"]
+        except Exception as exc:
+            click.echo(
+                click.style(
+                    f"  ⚠ Browser launched but probe failed: {exc}", fg="red"
+                ),
+                err=True,
+            )
+
+        progress = make_progress_callback(printer, broadcast)
+        await progress({
+            "type": "session",
+            "headless": headless,
+            "url": browser_url,
+            "note": (
+                "No window expected — follow URL lines below to verify progress."
+                if headless
+                else "A browser window should be open on your display."
+            ),
+        })
 
         result = await run(
             task=task,
@@ -203,7 +214,8 @@ async def _run_async(
             progress_callback=progress,
             verbose=verbose,
         )
-        click.echo(result)
+        # Final answer already printed by ProgressPrinter; keep exit code clean.
+        _ = result
 
         if keep_open:
             await asyncio.to_thread(
@@ -227,7 +239,7 @@ async def _run_async(
             await client.call("close", {})
         except Exception:  # noqa: BLE001
             pass
-        client.terminate()
+        await client.aclose()
         if web_runner is not None:
             try:
                 await web_runner.cleanup()
@@ -291,9 +303,9 @@ def creds_remove(credential_id: str) -> None:
 # ---------------------------------------------------------------------------
 
 @cli.command()
-@click.option("--provider", type=click.Choice(["openrouter", "groq", "ollama", "siliconflow", "generalcompute"]), default="groq", show_default=True,
+@click.option("--provider", type=click.Choice(["openrouter", "groq", "ollama", "siliconflow", "generalcompute"]), default="siliconflow", show_default=True,
               help="Inference provider.")
-@click.option("--model", default="meta-llama/llama-4-scout-17b-16e-instruct", show_default=True,
+@click.option("--model", default="tencent/Hy3", show_default=True,
               help="Model slug/ID.")
 @click.option("--headless/--no-headless", default=True, show_default=True,
               help="Run browser headless.")
@@ -409,22 +421,28 @@ async def _chat_async(
     budget = BudgetTracker(max_cost=max_cost, max_turns=max_turns)
     memory = MemoryStore() if enable_memory else None
     chrome_flags = ["--no-sandbox"] if no_sandbox else []
+    printer = ProgressPrinter(verbose=verbose)
 
     try:
         await client.start()
         await client.call("launch", {"headless": headless, "chromeFlags": chrome_flags})
 
+        mode = "HEADLESS" if headless else "VISIBLE"
         click.echo("======================================================================")
+        click.echo(f"Callisto chat  |  browser={mode}  |  {provider_name}/{model_name}")
         if enable_ui:
-            click.echo("Callisto multi-turn chat + sidebar Web UI (port 54321)")
-            click.echo("Type a task in the terminal or sidebar and press Enter.")
+            click.echo("Sidebar Web UI on port 54321 — type tasks in terminal or sidebar.")
         else:
-            click.echo("Callisto multi-turn interactive chat")
-            click.echo("Type a task and press Enter. Pass --ui to enable the sidebar server.")
+            click.echo("Type a task and press Enter. Pass --ui for the sidebar server.")
+        if headless:
+            click.echo("Headless: no window — watch URL/step lines to verify progress.")
+        else:
+            click.echo("Visible: a BrowserOS/Chrome window should appear.")
         click.echo("Type 'exit' or 'quit' to close.")
         click.echo("======================================================================")
 
         history: list[dict[str, Any]] = []
+        progress = make_progress_callback(printer, broadcast)
 
         async def handle_cli_input():
             while True:
@@ -448,10 +466,16 @@ async def _chat_async(
                     break
 
                 try:
-                    async def progress(progress_event: dict) -> None:
-                        await _broadcast_and_echo(progress_event, broadcast)
-
-                    result = await run(
+                    printer.echo_banner(
+                        task=task,
+                        provider=provider_name,
+                        model=model_name,
+                        headless=headless,
+                        max_steps=max_steps,
+                        no_sandbox=no_sandbox,
+                        ui=enable_ui,
+                    )
+                    await run(
                         task=task,
                         model=model,
                         client=client,
@@ -465,7 +489,6 @@ async def _chat_async(
                         progress_callback=progress,
                         verbose=verbose,
                     )
-                    click.echo(f"\n[callisto] {result}")
                 except Exception as turn_exc:
                     click.echo(f"\n[callisto] Error during turn: {turn_exc}", err=True)
                     if broadcast is not None:
@@ -481,7 +504,7 @@ async def _chat_async(
             await client.call("close", {})
         except Exception:
             pass
-        client.terminate()
+        await client.aclose()
         if web_runner is not None:
             try:
                 await web_runner.cleanup()

@@ -71,11 +71,13 @@ class SidecarClient:
             SIDECAR_BIN,
             stdin=asyncio.subprocess.PIPE,
             stdout=asyncio.subprocess.PIPE,
-            stderr=asyncio.subprocess.DEVNULL,  # quieten sidecar diagnostics for CLI/harness
+            # Surface Chrome/BrowserOS launch diagnostics (sandbox failures, etc.)
+            stderr=asyncio.subprocess.PIPE,
             limit=1024 * 1024,  # support response lines up to 1MB (e.g. truncated output at 100KB)
         )
         log.debug("sidecar PID %d started", self._process.pid)
         self._reader_task = asyncio.create_task(self._reader(), name="sidecar-reader")
+        self._stderr_task = asyncio.create_task(self._stderr_reader(), name="sidecar-stderr")
         self._watchdog_task = asyncio.create_task(self._watchdog(), name="sidecar-watchdog")
 
     async def call(
@@ -114,30 +116,56 @@ class SidecarClient:
             self._pending.pop(call_id, None)
             raise SidecarTimeout(f"call '{method}' exceeded {timeout}s")
 
+    def _cancel_tasks(self) -> list[asyncio.Task[None]]:
+        tasks: list[asyncio.Task[None]] = []
+        for task in (self._reader_task, getattr(self, "_stderr_task", None), self._watchdog_task):
+            if task is not None and not task.done():
+                task.cancel()
+                tasks.append(task)
+        return tasks
+
     def terminate(self) -> None:
         """Best-effort synchronous teardown (call from finally blocks)."""
         if self._process and self._process.returncode is None:
             self._process.terminate()
-        for task in (self._reader_task, self._watchdog_task):
-            if task and not task.done():
-                task.cancel()
+        self._cancel_tasks()
 
     async def aclose(self) -> None:
         """Async teardown that waits for subprocess transports before loop close."""
-        if self._process and self._process.returncode is None:
-            self._process.terminate()
-            with contextlib.suppress(asyncio.TimeoutError):
-                await asyncio.wait_for(self._process.wait(), timeout=5)
-            if self._process.returncode is None:
-                self._process.kill()
-                with contextlib.suppress(asyncio.TimeoutError):
-                    await asyncio.wait_for(self._process.wait(), timeout=5)
+        proc = self._process
+        if proc is not None:
+            # Close stdin first so the sidecar sees EOF and exits cleanly.
+            if proc.stdin and not proc.stdin.is_closing():
+                with contextlib.suppress(Exception):
+                    proc.stdin.write_eof()
+                    await proc.stdin.drain()
+                with contextlib.suppress(Exception):
+                    proc.stdin.close()
+                    await proc.stdin.wait_closed()
 
-        for task in (self._reader_task, self._watchdog_task):
-            if task and not task.done():
-                task.cancel()
-                with contextlib.suppress(asyncio.CancelledError):
-                    await task
+            if proc.returncode is None:
+                with contextlib.suppress(asyncio.TimeoutError):
+                    await asyncio.wait_for(proc.wait(), timeout=3)
+            if proc.returncode is None:
+                proc.terminate()
+                with contextlib.suppress(asyncio.TimeoutError):
+                    await asyncio.wait_for(proc.wait(), timeout=3)
+            if proc.returncode is None:
+                proc.kill()
+                with contextlib.suppress(asyncio.TimeoutError):
+                    await asyncio.wait_for(proc.wait(), timeout=3)
+
+            # Drain remaining pipes so transports are closed before the loop dies.
+            if proc.stdout:
+                with contextlib.suppress(Exception):
+                    await proc.stdout.read()
+            if proc.stderr:
+                with contextlib.suppress(Exception):
+                    await proc.stderr.read()
+
+        for task in self._cancel_tasks():
+            with contextlib.suppress(asyncio.CancelledError, asyncio.TimeoutError):
+                await asyncio.wait_for(task, timeout=1)
 
     # ------------------------------------------------------------------
     # Internal tasks
@@ -164,6 +192,17 @@ class SidecarClient:
                     future.set_result(msg.get("result", {}))
                 else:
                     future.set_exception(SidecarError(msg.get("error", "unknown error")))
+
+    async def _stderr_reader(self) -> None:
+        """Forward sidecar/Chrome diagnostics to the harness logger."""
+        assert self._process and self._process.stderr
+        async for raw in self._process.stderr:
+            line = raw.decode(errors="replace").rstrip()
+            if not line:
+                continue
+            # Always useful for launch failures; keep at warning so CLI users see it
+            # under default INFO-level logging via root handlers that include warnings.
+            log.warning("sidecar: %s", line)
 
     async def _watchdog(self) -> None:
         """Waits for the process to exit; marks session dead and fails pending calls."""
