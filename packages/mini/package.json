@@ -4,26 +4,37 @@
   "description": "Token-lean CDP wrapper over Chromium for browser agents.",
   "type": "module",
   "license": "MIT",
-  "engines": { "node": ">=20" },
+  "engines": {
+    "node": ">=20"
+  },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "files": ["dist", "src/sidecar.ts"],
+  "files": [
+    "dist"
+  ],
   "bin": {
-    "callisto-sidecar": "./src/sidecar.ts"
+    "callisto-sidecar": "./dist/sidecar.js",
+    "callisto-mcp": "./dist/mcp.js"
   },
   "scripts": {
     "build": "tsc",
     "typecheck": "tsc --noEmit",
     "test": "node --import tsx --test tests/*.test.ts",
-    "sidecar": "tsx src/sidecar.ts"
+    "sidecar": "tsx src/sidecar.ts",
+    "mcp": "node dist/mcp.js",
+    "benchmark:playwright": "npm run build && node scripts/compare-playwright.mjs"
   },
   "dependencies": {
+    "@modelcontextprotocol/server": "^2.4.0",
     "chrome-launcher": "^1.1.2",
-    "chrome-remote-interface": "^0.33.3"
+    "chrome-remote-interface": "^0.33.3",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
+    "@modelcontextprotocol/client": "^2.4.0",
     "@types/chrome-remote-interface": "^0.31.14",
     "@types/node": "^20.14.0",
+    "playwright-core": "^1.65.0",
     "tsx": "^4.19.0",
     "typescript": "^5.6.0"
   }

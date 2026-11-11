@@ -443,17 +443,25 @@ async def _chat_async(
 
         history: list[dict[str, Any]] = []
         progress = make_progress_callback(printer, broadcast)
+        # Only show the prompt when idle — otherwise input races the turn output
+        # and queues the next line while the previous task is still running.
+        idle = asyncio.Event()
+        idle.set()
 
         async def handle_cli_input():
             while True:
+                await idle.wait()
                 try:
                     task = await asyncio.to_thread(input, "\ncallisto > ")
                     task = task.strip()
-                    if task:
-                        await task_queue.put(task)
-                        if task.lower() in ("exit", "quit"):
-                            break
+                    if not task:
+                        continue
+                    idle.clear()
+                    await task_queue.put(task)
+                    if task.lower() in ("exit", "quit"):
+                        break
                 except (KeyboardInterrupt, EOFError):
+                    idle.clear()
                     await task_queue.put("exit")
                     break
 
@@ -493,6 +501,8 @@ async def _chat_async(
                     click.echo(f"\n[callisto] Error during turn: {turn_exc}", err=True)
                     if broadcast is not None:
                         await broadcast({"type": "final", "text": f"Error: {turn_exc}"})
+                finally:
+                    idle.set()
         finally:
             cli_input_task.cancel()
 

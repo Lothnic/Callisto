@@ -1,0 +1,921 @@
+{
+  "generatedAt": "2026-11-11T15:56:05.145Z",
+  "chromeVersion": "150.0.7871.46",
+  "playwrightVersion": "1.65.0",
+  "repetitions": 10,
+  "caveats": "Warm browser, local deterministic fixture, no LLM, snapshots use different formats; timings include assertions and are not task-agent results.",
+  "summary": {
+    "mini:navigation": {
+      "success": 10,
+      "total": 10,
+      "medianMs": 13.22
+    },
+    "mini:form": {
+      "success": 10,
+      "total": 10,
+      "medianMs": 35.58
+    },
+    "mini:keyboard selection": {
+      "success": 10,
+      "total": 10,
+      "medianMs": 17.38
+    },
+    "mini:offscreen click": {
+      "success": 10,
+      "total": 10,
+      "medianMs": 15.16
+    },
+    "mini:snapshot or aria": {
+      "success": 10,
+      "total": 10,
+      "medianMs": 2.65
+    },
+    "mini:delayed target": {
+      "success": 10,
+      "total": 10,
+      "medianMs": 147.07
+    },
+    "mini:ambiguous target rejected": {
+      "success": 10,
+      "total": 10,
+      "medianMs": 23.57
+    },
+    "playwright:navigation": {
+      "success": 10,
+      "total": 10,
+      "medianMs": 15.94
+    },
+    "playwright:form": {
+      "success": 10,
+      "total": 10,
+      "medianMs": 67.26
+    },
+    "playwright:keyboard selection": {
+      "success": 10,
+      "total": 10,
+      "medianMs": 10.67
+    },
+    "playwright:offscreen click": {
+      "success": 10,
+      "total": 10,
+      "medianMs": 38.43
+    },
+    "playwright:snapshot or aria": {
+      "success": 10,
+      "total": 10,
+      "medianMs": 6.35
+    },
+    "playwright:delayed target": {
+      "success": 10,
+      "total": 10,
+      "medianMs": 227.73
+    },
+    "playwright:ambiguous target rejected": {
+      "success": 10,
+      "total": 10,
+      "medianMs": 49.92
+    }
+  },
+  "results": [
+    {
+      "engine": "mini",
+      "name": "navigation",
+      "ok": true,
+      "ms": 29.33
+    },
+    {
+      "engine": "mini",
+      "name": "form",
+      "ok": true,
+      "ms": 56.28
+    },
+    {
+      "engine": "mini",
+      "name": "keyboard selection",
+      "ok": true,
+      "ms": 17.38
+    },
+    {
+      "engine": "mini",
+      "name": "offscreen click",
+      "ok": true,
+      "ms": 15.16
+    },
+    {
+      "engine": "mini",
+      "name": "snapshot or aria",
+      "ok": true,
+      "ms": 2.48
+    },
+    {
+      "engine": "mini",
+      "name": "delayed target",
+      "ok": true,
+      "ms": 147.91
+    },
+    {
+      "engine": "mini",
+      "name": "ambiguous target rejected",
+      "ok": true,
+      "ms": 23.69
+    },
+    {
+      "engine": "playwright",
+      "name": "navigation",
+      "ok": true,
+      "ms": 36.49
+    },
+    {
+      "engine": "playwright",
+      "name": "form",
+      "ok": true,
+      "ms": 98.76
+    },
+    {
+      "engine": "playwright",
+      "name": "keyboard selection",
+      "ok": true,
+      "ms": 17.71
+    },
+    {
+      "engine": "playwright",
+      "name": "offscreen click",
+      "ok": true,
+      "ms": 43.27
+    },
+    {
+      "engine": "playwright",
+      "name": "snapshot or aria",
+      "ok": true,
+      "ms": 10.04
+    },
+    {
+      "engine": "playwright",
+      "name": "delayed target",
+      "ok": true,
+      "ms": 240.21
+    },
+    {
+      "engine": "playwright",
+      "name": "ambiguous target rejected",
+      "ok": true,
+      "ms": 52.95
+    },
+    {
+      "engine": "playwright",
+      "name": "navigation",
+      "ok": true,
+      "ms": 15.94
+    },
+    {
+      "engine": "playwright",
+      "name": "form",
+      "ok": true,
+      "ms": 65.68
+    },
+    {
+      "engine": "playwright",
+      "name": "keyboard selection",
+      "ok": true,
+      "ms": 9.87
+    },
+    {
+      "engine": "playwright",
+      "name": "offscreen click",
+      "ok": true,
+      "ms": 38.43
+    },
+    {
+      "engine": "playwright",
+      "name": "snapshot or aria",
+      "ok": true,
+      "ms": 6.42
+    },
+    {
+      "engine": "playwright",
+      "name": "delayed target",
+      "ok": true,
+      "ms": 226.41
+    },
+    {
+      "engine": "playwright",
+      "name": "ambiguous target rejected",
+      "ok": true,
+      "ms": 49.18
+    },
+    {
+      "engine": "mini",
+      "name": "navigation",
+      "ok": true,
+      "ms": 13.13
+    },
+    {
+      "engine": "mini",
+      "name": "form",
+      "ok": true,
+      "ms": 35.2
+    },
+    {
+      "engine": "mini",
+      "name": "keyboard selection",
+      "ok": true,
+      "ms": 17.96
+    },
+    {
+      "engine": "mini",
+      "name": "offscreen click",
+      "ok": true,
+      "ms": 14.78
+    },
+    {
+      "engine": "mini",
+      "name": "snapshot or aria",
+      "ok": true,
+      "ms": 2.73
+    },
+    {
+      "engine": "mini",
+      "name": "delayed target",
+      "ok": true,
+      "ms": 147.04
+    },
+    {
+      "engine": "mini",
+      "name": "ambiguous target rejected",
+      "ok": true,
+      "ms": 23.94
+    },
+    {
+      "engine": "mini",
+      "name": "navigation",
+      "ok": true,
+      "ms": 14.04
+    },
+    {
+      "engine": "mini",
+      "name": "form",
+      "ok": true,
+      "ms": 45.88
+    },
+    {
+      "engine": "mini",
+      "name": "keyboard selection",
+      "ok": true,
+      "ms": 17.92
+    },
+    {
+      "engine": "mini",
+      "name": "offscreen click",
+      "ok": true,
+      "ms": 15.23
+    },
+    {
+      "engine": "mini",
+      "name": "snapshot or aria",
+      "ok": true,
+      "ms": 2.53
+    },
+    {
+      "engine": "mini",
+      "name": "delayed target",
+      "ok": true,
+      "ms": 147.07
+    },
+    {
+      "engine": "mini",
+      "name": "ambiguous target rejected",
+      "ok": true,
+      "ms": 23.69
+    },
+    {
+      "engine": "playwright",
+      "name": "navigation",
+      "ok": true,
+      "ms": 15.53
+    },
+    {
+      "engine": "playwright",
+      "name": "form",
+      "ok": true,
+      "ms": 67.26
+    },
+    {
+      "engine": "playwright",
+      "name": "keyboard selection",
+      "ok": true,
+      "ms": 12.09
+    },
+    {
+      "engine": "playwright",
+      "name": "offscreen click",
+      "ok": true,
+      "ms": 34.06
+    },
+    {
+      "engine": "playwright",
+      "name": "snapshot or aria",
+      "ok": true,
+      "ms": 6.12
+    },
+    {
+      "engine": "playwright",
+      "name": "delayed target",
+      "ok": true,
+      "ms": 228.07
+    },
+    {
+      "engine": "playwright",
+      "name": "ambiguous target rejected",
+      "ok": true,
+      "ms": 53.51
+    },
+    {
+      "engine": "playwright",
+      "name": "navigation",
+      "ok": true,
+      "ms": 14.22
+    },
+    {
+      "engine": "playwright",
+      "name": "form",
+      "ok": true,
+      "ms": 67.84
+    },
+    {
+      "engine": "playwright",
+      "name": "keyboard selection",
+      "ok": true,
+      "ms": 11.94
+    },
+    {
+      "engine": "playwright",
+      "name": "offscreen click",
+      "ok": true,
+      "ms": 35.27
+    },
+    {
+      "engine": "playwright",
+      "name": "snapshot or aria",
+      "ok": true,
+      "ms": 6.89
+    },
+    {
+      "engine": "playwright",
+      "name": "delayed target",
+      "ok": true,
+      "ms": 226.27
+    },
+    {
+      "engine": "playwright",
+      "name": "ambiguous target rejected",
+      "ok": true,
+      "ms": 49.92
+    },
+    {
+      "engine": "mini",
+      "name": "navigation",
+      "ok": true,
+      "ms": 12.18
+    },
+    {
+      "engine": "mini",
+      "name": "form",
+      "ok": true,
+      "ms": 35.58
+    },
+    {
+      "engine": "mini",
+      "name": "keyboard selection",
+      "ok": true,
+      "ms": 17.84
+    },
+    {
+      "engine": "mini",
+      "name": "offscreen click",
+      "ok": true,
+      "ms": 14.53
+    },
+    {
+      "engine": "mini",
+      "name": "snapshot or aria",
+      "ok": true,
+      "ms": 2.84
+    },
+    {
+      "engine": "mini",
+      "name": "delayed target",
+      "ok": true,
+      "ms": 147.77
+    },
+    {
+      "engine": "mini",
+      "name": "ambiguous target rejected",
+      "ok": true,
+      "ms": 24.18
+    },
+    {
+      "engine": "mini",
+      "name": "navigation",
+      "ok": true,
+      "ms": 13.05
+    },
+    {
+      "engine": "mini",
+      "name": "form",
+      "ok": true,
+      "ms": 31.12
+    },
+    {
+      "engine": "mini",
+      "name": "keyboard selection",
+      "ok": true,
+      "ms": 16.28
+    },
+    {
+      "engine": "mini",
+      "name": "offscreen click",
+      "ok": true,
+      "ms": 14.76
+    },
+    {
+      "engine": "mini",
+      "name": "snapshot or aria",
+      "ok": true,
+      "ms": 2.97
+    },
+    {
+      "engine": "mini",
+      "name": "delayed target",
+      "ok": true,
+      "ms": 146.91
+    },
+    {
+      "engine": "mini",
+      "name": "ambiguous target rejected",
+      "ok": true,
+      "ms": 22.97
+    },
+    {
+      "engine": "playwright",
+      "name": "navigation",
+      "ok": true,
+      "ms": 15.03
+    },
+    {
+      "engine": "playwright",
+      "name": "form",
+      "ok": true,
+      "ms": 66.71
+    },
+    {
+      "engine": "playwright",
+      "name": "keyboard selection",
+      "ok": true,
+      "ms": 7.89
+    },
+    {
+      "engine": "playwright",
+      "name": "offscreen click",
+      "ok": true,
+      "ms": 42.34
+    },
+    {
+      "engine": "playwright",
+      "name": "snapshot or aria",
+      "ok": true,
+      "ms": 7.17
+    },
+    {
+      "engine": "playwright",
+      "name": "delayed target",
+      "ok": true,
+      "ms": 224.02
+    },
+    {
+      "engine": "playwright",
+      "name": "ambiguous target rejected",
+      "ok": true,
+      "ms": 47.31
+    },
+    {
+      "engine": "playwright",
+      "name": "navigation",
+      "ok": true,
+      "ms": 14.13
+    },
+    {
+      "engine": "playwright",
+      "name": "form",
+      "ok": true,
+      "ms": 57.74
+    },
+    {
+      "engine": "playwright",
+      "name": "keyboard selection",
+      "ok": true,
+      "ms": 10.98
+    },
+    {
+      "engine": "playwright",
+      "name": "offscreen click",
+      "ok": true,
+      "ms": 36.6
+    },
+    {
+      "engine": "playwright",
+      "name": "snapshot or aria",
+      "ok": true,
+      "ms": 5.83
+    },
+    {
+      "engine": "playwright",
+      "name": "delayed target",
+      "ok": true,
+      "ms": 227.67
+    },
+    {
+      "engine": "playwright",
+      "name": "ambiguous target rejected",
+      "ok": true,
+      "ms": 48.77
+    },
+    {
+      "engine": "mini",
+      "name": "navigation",
+      "ok": true,
+      "ms": 11.88
+    },
+    {
+      "engine": "mini",
+      "name": "form",
+      "ok": true,
+      "ms": 37.03
+    },
+    {
+      "engine": "mini",
+      "name": "keyboard selection",
+      "ok": true,
+      "ms": 17.23
+    },
+    {
+      "engine": "mini",
+      "name": "offscreen click",
+      "ok": true,
+      "ms": 15.65
+    },
+    {
+      "engine": "mini",
+      "name": "snapshot or aria",
+      "ok": true,
+      "ms": 2.39
+    },
+    {
+      "engine": "mini",
+      "name": "delayed target",
+      "ok": true,
+      "ms": 147.06
+    },
+    {
+      "engine": "mini",
+      "name": "ambiguous target rejected",
+      "ok": true,
+      "ms": 23.57
+    },
+    {
+      "engine": "mini",
+      "name": "navigation",
+      "ok": true,
+      "ms": 13.93
+    },
+    {
+      "engine": "mini",
+      "name": "form",
+      "ok": true,
+      "ms": 30.82
+    },
+    {
+      "engine": "mini",
+      "name": "keyboard selection",
+      "ok": true,
+      "ms": 16.31
+    },
+    {
+      "engine": "mini",
+      "name": "offscreen click",
+      "ok": true,
+      "ms": 15.31
+    },
+    {
+      "engine": "mini",
+      "name": "snapshot or aria",
+      "ok": true,
+      "ms": 2.51
+    },
+    {
+      "engine": "mini",
+      "name": "delayed target",
+      "ok": true,
+      "ms": 130.4
+    },
+    {
+      "engine": "mini",
+      "name": "ambiguous target rejected",
+      "ok": true,
+      "ms": 22.23
+    },
+    {
+      "engine": "playwright",
+      "name": "navigation",
+      "ok": true,
+      "ms": 16.37
+    },
+    {
+      "engine": "playwright",
+      "name": "form",
+      "ok": true,
+      "ms": 66.49
+    },
+    {
+      "engine": "playwright",
+      "name": "keyboard selection",
+      "ok": true,
+      "ms": 10.67
+    },
+    {
+      "engine": "playwright",
+      "name": "offscreen click",
+      "ok": true,
+      "ms": 37.11
+    },
+    {
+      "engine": "playwright",
+      "name": "snapshot or aria",
+      "ok": true,
+      "ms": 6.19
+    },
+    {
+      "engine": "playwright",
+      "name": "delayed target",
+      "ok": true,
+      "ms": 227.73
+    },
+    {
+      "engine": "playwright",
+      "name": "ambiguous target rejected",
+      "ok": true,
+      "ms": 49.42
+    },
+    {
+      "engine": "playwright",
+      "name": "navigation",
+      "ok": true,
+      "ms": 17.02
+    },
+    {
+      "engine": "playwright",
+      "name": "form",
+      "ok": true,
+      "ms": 68.89
+    },
+    {
+      "engine": "playwright",
+      "name": "keyboard selection",
+      "ok": true,
+      "ms": 10.02
+    },
+    {
+      "engine": "playwright",
+      "name": "offscreen click",
+      "ok": true,
+      "ms": 37.47
+    },
+    {
+      "engine": "playwright",
+      "name": "snapshot or aria",
+      "ok": true,
+      "ms": 6.35
+    },
+    {
+      "engine": "playwright",
+      "name": "delayed target",
+      "ok": true,
+      "ms": 226.82
+    },
+    {
+      "engine": "playwright",
+      "name": "ambiguous target rejected",
+      "ok": true,
+      "ms": 49.84
+    },
+    {
+      "engine": "mini",
+      "name": "navigation",
+      "ok": true,
+      "ms": 12.05
+    },
+    {
+      "engine": "mini",
+      "name": "form",
+      "ok": true,
+      "ms": 36.37
+    },
+    {
+      "engine": "mini",
+      "name": "keyboard selection",
+      "ok": true,
+      "ms": 17.68
+    },
+    {
+      "engine": "mini",
+      "name": "offscreen click",
+      "ok": true,
+      "ms": 14.85
+    },
+    {
+      "engine": "mini",
+      "name": "snapshot or aria",
+      "ok": true,
+      "ms": 2.6
+    },
+    {
+      "engine": "mini",
+      "name": "delayed target",
+      "ok": true,
+      "ms": 148.32
+    },
+    {
+      "engine": "mini",
+      "name": "ambiguous target rejected",
+      "ok": true,
+      "ms": 21.77
+    },
+    {
+      "engine": "mini",
+      "name": "navigation",
+      "ok": true,
+      "ms": 14.1
+    },
+    {
+      "engine": "mini",
+      "name": "form",
+      "ok": true,
+      "ms": 31.25
+    },
+    {
+      "engine": "mini",
+      "name": "keyboard selection",
+      "ok": true,
+      "ms": 17.16
+    },
+    {
+      "engine": "mini",
+      "name": "offscreen click",
+      "ok": true,
+      "ms": 14.84
+    },
+    {
+      "engine": "mini",
+      "name": "snapshot or aria",
+      "ok": true,
+      "ms": 2.65
+    },
+    {
+      "engine": "mini",
+      "name": "delayed target",
+      "ok": true,
+      "ms": 147.6
+    },
+    {
+      "engine": "mini",
+      "name": "ambiguous target rejected",
+      "ok": true,
+      "ms": 22.56
+    },
+    {
+      "engine": "playwright",
+      "name": "navigation",
+      "ok": true,
+      "ms": 14.46
+    },
+    {
+      "engine": "playwright",
+      "name": "form",
+      "ok": true,
+      "ms": 67.14
+    },
+    {
+      "engine": "playwright",
+      "name": "keyboard selection",
+      "ok": true,
+      "ms": 8.83
+    },
+    {
+      "engine": "playwright",
+      "name": "offscreen click",
+      "ok": true,
+      "ms": 39.01
+    },
+    {
+      "engine": "playwright",
+      "name": "snapshot or aria",
+      "ok": true,
+      "ms": 6.22
+    },
+    {
+      "engine": "playwright",
+      "name": "delayed target",
+      "ok": true,
+      "ms": 227.99
+    },
+    {
+      "engine": "playwright",
+      "name": "ambiguous target rejected",
+      "ok": true,
+      "ms": 50.37
+    },
+    {
+      "engine": "playwright",
+      "name": "navigation",
+      "ok": true,
+      "ms": 15.94
+    },
+    {
+      "engine": "playwright",
+      "name": "form",
+      "ok": true,
+      "ms": 68.02
+    },
+    {
+      "engine": "playwright",
+      "name": "keyboard selection",
+      "ok": true,
+      "ms": 8.74
+    },
+    {
+      "engine": "playwright",
+      "name": "offscreen click",
+      "ok": true,
+      "ms": 39.28
+    },
+    {
+      "engine": "playwright",
+      "name": "snapshot or aria",
+      "ok": true,
+      "ms": 6.09
+    },
+    {
+      "engine": "playwright",
+      "name": "delayed target",
+      "ok": true,
+      "ms": 227.91
+    },
+    {
+      "engine": "playwright",
+      "name": "ambiguous target rejected",
+      "ok": true,
+      "ms": 51.66
+    },
+    {
+      "engine": "mini",
+      "name": "navigation",
+      "ok": true,
+      "ms": 13.22
+    },
+    {
+      "engine": "mini",
+      "name": "form",
+      "ok": true,
+      "ms": 33.12
+    },
+    {
+      "engine": "mini",
+      "name": "keyboard selection",
+      "ok": true,
+      "ms": 16.91
+    },
+    {
+      "engine": "mini",
+      "name": "offscreen click",
+      "ok": true,
+      "ms": 15.58
+    },
+    {
+      "engine": "mini",
+      "name": "snapshot or aria",
+      "ok": true,
+      "ms": 2.83
+    },
+    {
+      "engine": "mini",
+      "name": "delayed target",
+      "ok": true,
+      "ms": 146.91
+    },
+    {
+      "engine": "mini",
+      "name": "ambiguous target rejected",
+      "ok": true,
+      "ms": 23.54
+    }
+  ]
+}

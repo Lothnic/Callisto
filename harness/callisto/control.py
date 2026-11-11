@@ -296,6 +296,17 @@ def normalize_url_key(url: str) -> str:
         return url.strip().lower().rstrip("/")
 
 
+# Bare hostnames in tasks ("open wikipedia.org") — no scheme required.
+_HOST_IN_TEXT_RE = re.compile(
+    r"\b(?:www\.)?(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,}\b",
+    re.I,
+)
+# Tokens that look like hostnames but are prose abbreviations / loopback.
+_HOST_DENY = frozenset({
+    "e.g", "i.e", "etc", "localhost",
+})
+
+
 def extract_urls_from_text(text: str) -> set[str]:
     found: set[str] = set()
     for m in _URL_IN_TEXT_RE.findall(text or ""):
@@ -311,7 +322,55 @@ def extract_urls_from_text(text: str) -> set[str]:
                 found.add(normalize_url_key(f"{p.scheme}://{p.netloc}"))
         except Exception:
             pass
+    # Seed bare domains from user tasks so "go to wikipedia.org" grounds navigation.
+    for host in _HOST_IN_TEXT_RE.findall(text or ""):
+        h = host.lower().rstrip(".")
+        if h in _HOST_DENY or h.endswith(".e.g") or h.endswith(".i.e"):
+            continue
+        if h.count(".") < 1:
+            continue
+        found.add(normalize_url_key(f"https://{h}/"))
+        found.add(normalize_url_key(f"https://{h}"))
+        if not h.startswith("www."):
+            found.add(normalize_url_key(f"https://www.{h}/"))
     return found
+
+
+def _base_domain(host: str) -> str:
+    """Best-effort registrable domain (last two labels). Good enough for agent grounding."""
+    host = host.lower().removeprefix("www.")
+    parts = [p for p in host.split(".") if p]
+    if len(parts) >= 2:
+        return ".".join(parts[-2:])
+    return host
+
+
+def host_is_grounded(host: str, grounded_urls: set[str], grounded_text: str = "") -> bool:
+    """True if host (or its base domain / a sibling subdomain) was seen in evidence."""
+    host = (host or "").lower()
+    if not host:
+        return False
+    bare = host.removeprefix("www.")
+    blob = (grounded_text or "").lower()
+    if host in blob or bare in blob:
+        return True
+    base = _base_domain(host)
+    if base and (base in blob or f".{base}" in blob):
+        return True
+    for g in grounded_urls:
+        gl = g.lower()
+        if any(
+            marker in gl
+            for marker in (
+                f"://{host}",
+                f"://www.{bare}",
+                f"://{bare}",
+            )
+        ):
+            return True
+        if base and base in gl:
+            return True
+    return False
 
 
 def parse_goto_url(code: str) -> str | None:
@@ -367,18 +426,16 @@ def invented_goto_reason(
         ]
         if path != "/" and path.lower().lstrip("/") in blob:
             # weak: only if multi-char path token appears — still require host nearby
-            if host in blob or host.removeprefix("www.") in blob:
+            if host_is_grounded(host, grounded_urls, blob):
                 return None
         if any(c and c in blob for c in candidates):
             return None
 
-    # Homepage of a host we've already seen is OK
+    # Homepage of a host (or known sibling subdomain, e.g. en.wikipedia.org
+    # after wikipedia.org) is OK once the site is grounded.
     root_key = normalize_url_key(f"{p.scheme}://{p.netloc}/")
     root_key2 = normalize_url_key(f"{p.scheme}://{p.netloc}")
-    host_seen = any(
-        g.startswith(f"http://{host}") or g.startswith(f"https://{host}")
-        for g in grounded_urls
-    ) or (host in blob) or (host.removeprefix("www.") in blob)
+    host_seen = host_is_grounded(host, grounded_urls, blob)
 
     if path == "/" and (root_key in grounded_urls or root_key2 in grounded_urls or host_seen):
         return None

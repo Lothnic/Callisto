@@ -16,6 +16,59 @@ CALLISTO_SMOKE=1 npm test    # + browser smoke (needs local Chrome + network)
 
 Chrome discovery is handled by `chrome-launcher`; set `CHROME_PATH` to override.
 
+## Connect a host agent with MCP
+
+The local MCP server lets the host agent drive Mini without a separate model
+API key. Install and build from this repository:
+
+```bash
+npm --prefix packages/mini ci
+npm --prefix packages/mini run build
+```
+
+The repository's `opencode.json` registers the server for OpenCode in this
+project. Start or reopen OpenCode from the repository root; after the server
+connects its tools are available under `callisto`. Other MCP clients can launch
+`node /absolute/path/to/callisto/packages/mini/dist/mcp.js` over stdio. Set
+`CHROME_PATH` in the host environment if Chrome is not discovered; set
+`CALLISTO_MCP_HEADLESS=0` for a visible window.
+
+Each MCP server process owns one isolated browser, launched lazily on the first
+browser action. `callisto_navigate` and `callisto_snapshot` return accessibility
+trees with `ax-N` refs; use those refs with `callisto_click` and `callisto_fill`.
+Snapshots returned over MCP default to 12,000 characters; use `nextOffset` with
+`callisto_snapshot` for subsequent pages of the last captured snapshot, or
+`callisto_find` to search the full tree. A new capture replaces that cached
+snapshot, and refs may become stale when the page changes. `callisto_batch` executes up to
+10 structured actions in order, including role-based targets; earlier actions
+are not rolled back if a later one fails. The server also exposes
+`callisto_press`, `callisto_scroll`, `callisto_screenshot`, and `callisto_close`.
+Calls are serialized. Closing the
+session removes its browser state; a subsequent call creates a fresh session.
+
+This first interface exposes structured actions rather than arbitrary JavaScript.
+It does not attach to the user's existing browser or preserve its logins. It is
+not a complete Playwright API or a sandbox for untrusted pages; browser actions
+can modify websites. Same-origin iframe ref actions are supported; cross-origin
+or transformed frames can fail closed.
+
+### Current compatibility limits
+
+This is a subset, not a Playwright replacement. Semantic locators refresh the
+accessibility registry and wait up to two seconds for a match, rejecting
+ambiguous matches. Ref-based click and fill check visibility, stability,
+enabled state, hit testing and (for fill) editability, with a two-second
+default action timeout. These are a subset of Playwright's actionability
+checks and locator semantics; cross-origin iframe actions can fail closed.
+Coordinate actions bypass these checks. CSS selectors and `networkidle` are
+unsupported.
+Snapshot output includes offscreen nodes, and password input values and their
+accessibility descendants are redacted. Do not treat snapshots, screenshots,
+arbitrary page evaluation, or network capture as a general secret filter.
+
+For a small repeatable comparison with real Playwright, set `CHROME_PATH` and run
+`npm run benchmark:playwright`. See the [results and limitations](../../research/2026-11-mini-playwright-fixture-benchmark.md).
+
 ### Getting a usable Chrome (Linux / snap trap)
 
 `chrome-launcher` needs a Chrome that speaks CDP over a debug port. **Ubuntu's

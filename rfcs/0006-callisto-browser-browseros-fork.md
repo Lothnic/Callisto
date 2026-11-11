@@ -1,6 +1,7 @@
 # RFC 0006 — Callisto Browser (BrowserOS fork)
 
-- **Status:** Accepted (Phase 0 decision: option B)
+- **Status:** Superseded as product direction; retained as historical design
+- **Current direction:** [Runtime roadmap](../roadmap.md)
 - **Phase:** Browser product / post-MVP
 - **Author:** Lothnic
 - **Depends:** RFC 0001–0005 (agent surface remains; distribution flips)

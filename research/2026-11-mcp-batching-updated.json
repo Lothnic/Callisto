@@ -1,0 +1,54 @@
+{
+  "date": "2026-11-11T17:34:54.549Z",
+  "notes": "Fixed host-scripted local form; both engines batch actions into one MCP call; differing browser profiles and human input settings; not an LLM task.",
+  "rows": [
+    {
+      "engine": "callisto",
+      "trial": 0,
+      "success": true,
+      "error": null,
+      "toolCalls": 1,
+      "elapsedMs": 746
+    },
+    {
+      "engine": "browse",
+      "trial": 0,
+      "success": true,
+      "error": null,
+      "toolCalls": 1,
+      "elapsedMs": 980
+    },
+    {
+      "engine": "browse",
+      "trial": 1,
+      "success": true,
+      "error": null,
+      "toolCalls": 1,
+      "elapsedMs": 2348
+    },
+    {
+      "engine": "callisto",
+      "trial": 1,
+      "success": true,
+      "error": null,
+      "toolCalls": 1,
+      "elapsedMs": 162
+    },
+    {
+      "engine": "callisto",
+      "trial": 2,
+      "success": true,
+      "error": null,
+      "toolCalls": 1,
+      "elapsedMs": 161
+    },
+    {
+      "engine": "browse",
+      "trial": 2,
+      "success": true,
+      "error": null,
+      "toolCalls": 1,
+      "elapsedMs": 2471
+    }
+  ]
+}

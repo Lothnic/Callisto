@@ -5,6 +5,11 @@ import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { Page } from '../src/index.js'
 
+test('networkidle reports that it is unsupported instead of pretending the page is idle', async () => {
+  const page = new Page(fakeMini() as never)
+  await assert.rejects(page.waitForLoadState('networkidle'), /not supported/)
+})
+
 function fakeMini() {
   const calls: Array<[string, ...unknown[]]> = []
   return {
@@ -13,6 +18,7 @@ function fakeMini() {
       calls.push(['ref', query])
       return 'ax-2'
     },
+    refreshLocators: async () => { calls.push(['refreshLocators']) },
     click: async (...args: unknown[]) => {
       calls.push(['click', ...args])
     },
@@ -110,6 +116,7 @@ test('getByRole resolves against the Mini ref registry at action time', async ()
   await page.getByRole('button', { name: 'Go' }).click()
 
   assert.deepEqual(mini.calls, [
+    ['refreshLocators'],
     ['ref', { role: 'button', name: 'Go', exact: undefined }],
     ['click', 'ax-2', {}],
   ])

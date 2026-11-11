@@ -1,0 +1,1135 @@
+{
+  "date": "2026-11-11T17:10:19.247Z",
+  "repeat": 3,
+  "origin": "http://127.0.0.1:39597",
+  "notes": "Scripted host actions, not an autonomous agent; local fixtures, different browser binaries/profiles; timing includes MCP and page operations, not model latency.",
+  "toolCatalog": {
+    "callisto": [
+      {
+        "name": "callisto_navigate",
+        "description": "Open an HTTP(S) URL in an isolated Callisto browser and return its accessibility snapshot. The browser starts on the first call.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "url": {
+              "type": "string",
+              "format": "uri"
+            }
+          },
+          "required": [
+            "url"
+          ],
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      },
+      {
+        "name": "callisto_snapshot",
+        "description": "Get the current page URL, title and accessibility tree with ax-N action refs. Set diff=true to show changes since the previous snapshot.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "diff": {
+              "default": false,
+              "type": "boolean"
+            }
+          },
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      },
+      {
+        "name": "callisto_click",
+        "description": "Click a snapshot ref after checking visibility, stability, enabled state and whether it receives events. Return an updated snapshot.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "ref": {
+              "type": "string",
+              "pattern": "^ax-\\d+$",
+              "description": "An ax-N ref from the latest Callisto snapshot"
+            }
+          },
+          "required": [
+            "ref"
+          ],
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      },
+      {
+        "name": "callisto_fill",
+        "description": "Replace the value of an editable snapshot ref and return an updated snapshot.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "ref": {
+              "type": "string",
+              "pattern": "^ax-\\d+$",
+              "description": "An ax-N ref from the latest Callisto snapshot"
+            },
+            "value": {
+              "type": "string",
+              "maxLength": 100000
+            }
+          },
+          "required": [
+            "ref",
+            "value"
+          ],
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      },
+      {
+        "name": "callisto_press",
+        "description": "Press a supported key or chord, such as Enter, Escape, ArrowDown or Control+A, on the focused element; return an updated snapshot.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "key": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 40
+            }
+          },
+          "required": [
+            "key"
+          ],
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      },
+      {
+        "name": "callisto_scroll",
+        "description": "Scroll by pixel deltas at the viewport center and return an updated snapshot.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "delta_x": {
+              "default": 0,
+              "type": "number"
+            },
+            "delta_y": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "delta_y"
+          ],
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      },
+      {
+        "name": "callisto_screenshot",
+        "description": "Capture the current browser viewport as a PNG image.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {},
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      },
+      {
+        "name": "callisto_close",
+        "description": "Close the isolated browser session. A later browser call starts a fresh session.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {},
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    ],
+    "browse": [
+      {
+        "name": "execute",
+        "description": "Execute Playwright JavaScript against the browse session. Code runs in a restricted JavaScript realm on the relay without process, require, import(), fs, child_process, http/https or Node fetch; save and read files with the files helper inside the execute file roots, and cookie access is limited to the session's pages. Synchronous code stops after about 2 seconds. It is not a security boundary, so treat code as running as the user. The result includes console logs, warnings, a bounded execution-context diagnostic when relevant, and an aftermath summary (URL movement, navigations, error counts, handoffs, and a bot challenge or block page when one appears: hand interactive ones to the user with handoff(), never solve or retry-loop them).",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "description": "JavaScript code to execute. It receives browser, context, page, state, modules (path, url, util, crypto, buffer, zlib, events, stream), files (dir and roots properties; path(name), write(target, data), read(target, encoding?)), fillInput, fillInputs, snapshot(options?) for compact semantic outlines (options: find to search them, diff or delta for changes), persistent compatible ref(id) locators, webmcp (list/call), screenshotWithLabels(options?) and screenshotDiff(options) for screenshots, ariaSnapshot, ghostCursor, handoff, demonstrate, network (start/status/stop/cancel), pageConsole (start/stop capturing the page's own console messages and errors, off by default because pages can detect it), and secrets.type(locator, name) to type a stored site secret (see secrets_list) only on its allowed origins, without seeing it. There is no location, document or fetch global (they belong to the page: use page.url() or page.evaluate(...)), and no structuredClone."
+            },
+            "session": {
+              "type": "string",
+              "description": "Optional existing browse session id. Explicit ids must already exist; omit this field to use your current session (each agent has its own), which is created when needed."
+            },
+            "targetUrl": {
+              "type": "string",
+              "description": "Optional URL substring selecting an existing attached page. This does not navigate or open a URL; use page.goto() for that."
+            },
+            "targetIndex": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Optional zero-based attached page index selector."
+            },
+            "browser": {
+              "type": "string",
+              "description": "Optional browser id for a new session's tabs; omit for the default browser. A session stays in its browser. Call status to list the connected browsers."
+            },
+            "timeoutMs": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Optional overall script timeout in milliseconds (paused while handoff() waits on the user); defaults to 60000, 0 disables."
+            }
+          },
+          "required": [
+            "code"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "status",
+        "description": "Return relay, extension, target, session, and connected browser status.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {},
+          "required": [],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "session_new",
+        "description": "Create a browse session and make it your current one. Other agents keep theirs.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "browser": {
+              "type": "string",
+              "description": "Optional browser id for a new session's tabs; omit for the default browser. A session stays in its browser. Call status to list the connected browsers."
+            },
+            "id": {
+              "type": "string",
+              "description": "Optional lowercase session id."
+            },
+            "readOnly": {
+              "type": "boolean",
+              "description": "Create a read-only session: adopt a tab the user has lent you, then snapshot, screenshot and read it; CDP input, navigation, new pages and cookie writes are refused."
+            },
+            "allowedOrigins": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Optional domain allowlist: hosts or origins this session's tabs may load (example.com, *.example.com, https://app.example.com, http://localhost:3000). Navigations elsewhere are refused or sent back to about:blank; private and loopback addresses need an exact entry."
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "session_allowlist",
+        "description": "Set the domain allowlist of a session (the current one by default): the hosts or origins its tabs may load. Pass an empty list to remove it. Use it before typing secrets or working on sites with untrusted content.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "session": {
+              "type": "string",
+              "description": "Session id; defaults to the current session."
+            },
+            "allowedOrigins": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Patterns: example.com, *.example.com, https://app.example.com, http://localhost:3000. Empty removes the allowlist."
+            }
+          },
+          "required": [
+            "allowedOrigins"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "session_list",
+        "description": "List browse sessions.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {},
+          "required": [],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "session_use",
+        "description": "Make an existing browse session your current one, for calls that don't name a session. Other agents keep theirs; pass `session` explicitly to share one deliberately.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Existing browse session id."
+            }
+          },
+          "required": [
+            "id"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "session_reset",
+        "description": "Reset a browse session's state and page.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Optional session id. Defaults to this MCP server's current session."
+            },
+            "session": {
+              "type": "string",
+              "description": "Same as id."
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "session_delete",
+        "description": "Delete a browse session.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Optional session id. Defaults to this MCP server's current session."
+            },
+            "session": {
+              "type": "string",
+              "description": "Same as id."
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "session_adopt",
+        "description": "Make an attached tab the browse session's default page for subsequent bare execute calls. Omit targetUrl and targetIndex when only one user-attached tab is available.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "session": {
+              "type": "string",
+              "description": "Optional existing browse session id. Explicit ids must already exist; omit this field to use your current session, which is created when needed."
+            },
+            "targetUrl": {
+              "type": "string",
+              "description": "Adopt an existing attached page whose URL contains this text. Omit when only one user-attached tab is available. This does not navigate or open a URL."
+            },
+            "targetIndex": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Adopt the attached page at this zero-based target index."
+            },
+            "tabId": {
+              "type": "integer",
+              "description": "Adopt the user's tab with this Chrome tab id (the tab= value in status)."
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "network",
+        "description": "Start, inspect, stop, or cancel session-scoped network capture. browse records normalized Playwright exchanges; HAR is only the optional export format. Bodies are embedded by default with per-body and total memory limits. Actions: start begins a capture; status returns bounded metadata for the active capture without captured values; stop ends it and optionally writes a credential-redacted HAR and stores lossless credential values in a reusable secret profile (at least one of outputPath or secrets is required); cancel ends it and discards the in-memory exchanges.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "action": {
+              "type": "string",
+              "enum": [
+                "start",
+                "status",
+                "stop",
+                "cancel"
+              ],
+              "description": "start begins a capture, status reports its bounded metadata, stop writes a redacted HAR and/or secret profile, cancel discards it."
+            },
+            "session": {
+              "type": "string",
+              "description": "Optional session id. Defaults to this MCP server's current session; start creates it when missing."
+            },
+            "urlFilter": {
+              "type": "string",
+              "description": "For start: capture only request URLs containing this text."
+            },
+            "resourceTypes": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "For start: optional Playwright resource types such as fetch and xhr."
+            },
+            "content": {
+              "type": "string",
+              "enum": [
+                "embed",
+                "omit"
+              ],
+              "description": "For start: request and response body mode. Defaults to embed."
+            },
+            "maxBodyBytes": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "For start: maximum bytes captured from each body. Defaults to 1000000."
+            },
+            "maxTotalBodyBytes": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "For start: maximum body bytes retained for the capture. Defaults to 25000000."
+            },
+            "maxEntries": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "For start: maximum captured requests. Defaults to 1000."
+            },
+            "maxDurationMs": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 86400000,
+              "description": "For start: the capture ends by itself, discarding what it captured, after this long. Defaults to 1800000 (30 minutes). It also ends when this MCP server exits."
+            },
+            "outputPath": {
+              "type": "string",
+              "description": "For stop: optional artifact path, resolved against the MCP process working directory. The HAR contains stable ${BC_SECRET_N} references (and redaction-only ${BC_REDACTED_N} for passwords, one-time codes and token-like URL path segments), not captured values."
+            },
+            "secrets": {
+              "type": "string",
+              "description": "For stop: optional reusable profile name for captured credential values."
+            }
+          },
+          "required": [
+            "action"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "recording",
+        "description": "Record the current session tab. Actions: start begins recording (CDP mode records video to WebM or MP4; tab-capture mode supports WebM and optional audio; outputPath is required); stop finalizes the artifact; status returns bounded status and quality counters; cancel discards the unfinished artifact.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "action": {
+              "type": "string",
+              "enum": [
+                "start",
+                "stop",
+                "status",
+                "cancel"
+              ],
+              "description": "start begins, stop finalizes, status reports, cancel discards the recording."
+            },
+            "session": {
+              "type": "string",
+              "description": "Optional session id. Defaults to this MCP server's current session."
+            },
+            "outputPath": {
+              "type": "string",
+              "description": "For start: recording artifact path, resolved against the MCP process working directory."
+            },
+            "mode": {
+              "type": "string",
+              "enum": [
+                "auto",
+                "tab-capture",
+                "cdp"
+              ],
+              "description": "For start: recording backend. Defaults to auto."
+            },
+            "audio": {
+              "type": "boolean",
+              "description": "For start: capture tab audio in tab-capture mode."
+            },
+            "frameRate": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 60,
+              "description": "For start: requested frame rate."
+            },
+            "maxDurationMs": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "For start: maximum recording duration in milliseconds."
+            },
+            "cursor": {
+              "type": "boolean",
+              "description": "For start: draw the ghost cursor in the recording, for demo videos. Off by default: recordings show only the page, with nothing from browse in the frame."
+            }
+          },
+          "required": [
+            "action"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "tabs_cleanup",
+        "description": "Close tabs agents opened that nobody has used for a while (no agent command and not visited by the user). Tabs the user shared or pinned, the active tab, tabs playing audio, recording, or waiting for a handoff stay open. `idleMinutes` applies to your own sessions' tabs; other agents' tabs close only once idle for the user's setting too. To finish your own work, `session_reset` or `session_delete` is more direct. browse also does this automatically after the user's idle setting (10 minutes unless they changed it).",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "idleMinutes": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Close your own sessions' tabs idle at least this long; 0 closes all of them. Defaults to the user's setting (10 minutes; still 10 when the user set automatic cleanup to never)."
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "settings",
+        "description": "Read or change the user's browse settings from the extension's options page: where agent tabs open (window), how they're grouped (grouping), when untouched agent tabs close (idleMinutes), the agent cursor (cursor), human-like input (humanInput) and handoff notifications (handoffNotifications). Update behaviour is not available here: only the user changes it, with `browse settings` or the extension's options page, and `status` reports its current value. Use this tool only when the user asks to change how browse behaves, never on your own initiative. Without `set` it returns each setting's stored value, the value in effect, and the relay environment variable that overrides it, if any. With `set` it validates every value strictly, applies the change at once (the options page updates live) and returns what changed: tell the user what you changed. A setting an environment variable fixes is not changed, and the result says so. Security switches (OPENCODE_BROWSER_ALLOW_NODE, OPENCODE_BROWSER_ALLOW_ALL_COOKIES, OPENCODE_BROWSER_ALLOW_FOREGROUND, OPENCODE_BROWSER_ALLOW_ALL_STORAGE, OPENCODE_BROWSER_ALLOW_FILE_URLS, OPENCODE_BROWSER_UPDATE_CHECK) are environment-only and can never be read or changed here.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "set": {
+              "type": "object",
+              "description": "Settings to change; omit to only read them.",
+              "properties": {
+                "window": {
+                  "enum": [
+                    "current",
+                    "separate"
+                  ],
+                  "description": "Where agents open their tabs (current: the user's window; separate: an unfocused window of their own)"
+                },
+                "grouping": {
+                  "enum": [
+                    "shared",
+                    "session",
+                    "none"
+                  ],
+                  "description": "How agent tabs are grouped (one shared group, one group per session, or none)"
+                },
+                "idleMinutes": {
+                  "enum": [
+                    10,
+                    30,
+                    60,
+                    "never"
+                  ],
+                  "description": "Close agent tabs untouched for this many minutes"
+                },
+                "cursor": {
+                  "enum": [
+                    "off",
+                    "always"
+                  ],
+                  "description": "Agent cursor on agent tabs outside recordings (pages can detect it)"
+                },
+                "humanInput": {
+                  "enum": [
+                    "on",
+                    "off"
+                  ],
+                  "description": "Human-like input (off is faster, but easier for sites to flag)"
+                },
+                "handoffNotifications": {
+                  "enum": [
+                    "recording",
+                    "always"
+                  ],
+                  "description": "System notification on a handoff (only while recorded, or every handoff)"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "flight_recorder",
+        "description": "Keep a rolling in-memory video buffer for the current session tab. Actions: start begins buffering; status returns bounded rolling-buffer duration, frame, byte and drop counters; save_last encodes and saves the most recent buffered video without stopping the buffer (outputPath is required); cancel stops and discards the buffer.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "action": {
+              "type": "string",
+              "enum": [
+                "start",
+                "status",
+                "save_last",
+                "cancel"
+              ],
+              "description": "start begins buffering, status reports, save_last saves a clip, cancel discards the buffer."
+            },
+            "session": {
+              "type": "string",
+              "description": "Optional session id. Defaults to this MCP server's current session."
+            },
+            "retentionMs": {
+              "type": "integer",
+              "minimum": 1000,
+              "maximum": 120000,
+              "description": "For start: rolling retention window. Defaults to 60000."
+            },
+            "frameRate": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 60,
+              "description": "For start: saved clip frame rate. Defaults to 60."
+            },
+            "cursor": {
+              "type": "boolean",
+              "description": "For start: draw the ghost cursor in the buffered video. Off by default."
+            },
+            "outputPath": {
+              "type": "string",
+              "description": "For save_last: fresh .webm or .mp4 path, resolved against the MCP process working directory."
+            },
+            "durationMs": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "For save_last: recent duration to save. Defaults to 30000 and cannot exceed retention."
+            }
+          },
+          "required": [
+            "action"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "secrets_list",
+        "description": "List what agents may type without seeing: site secrets the user stored (names, kinds and allowed origins; type them with secrets.type(target, name) in execute; only the user adds them with `browse secrets add`).",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "session": {
+              "type": "string",
+              "description": "Optional session id. Defaults to this MCP server's current session."
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "secrets_status",
+        "description": "Return secret profile references, sources, and expiration metadata without revealing credential values.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "Secret profile name."
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "secrets_refresh",
+        "description": "Reload a session page, observe fresh credentials, and update a secret profile while preserving stable BC_SECRET_N references.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "Existing secret profile name."
+            },
+            "session": {
+              "type": "string",
+              "description": "Optional session id. Defaults to this MCP server's current session."
+            },
+            "urlFilter": {
+              "type": "string",
+              "description": "Observe credentials only on matching request URLs."
+            },
+            "timeoutMs": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Reload timeout. Defaults to 30000."
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "secrets_run",
+        "description": "Run a local command with a captured profile injected as BC_SECRET_N environment variables. Known values are replaced with their references in stdout and stderr, which keeps them out of transcripts. The command receives the real values, so redaction does not protect them from a command that deliberately sends or encodes them: run only commands you wrote or trust.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "Secret profile name."
+            },
+            "command": {
+              "type": "string",
+              "description": "Executable path or command name."
+            },
+            "args": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Command arguments."
+            },
+            "cwd": {
+              "type": "string",
+              "description": "Optional child working directory."
+            },
+            "timeoutMs": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Child timeout. Defaults to 120000."
+            }
+          },
+          "required": [
+            "name",
+            "command"
+          ],
+          "additionalProperties": false
+        }
+      }
+    ]
+  },
+  "rows": [
+    {
+      "engine": "callisto",
+      "task": "snapshot",
+      "trial": 0,
+      "success": true,
+      "error": null,
+      "toolCalls": 1,
+      "successfulToolMs": 658,
+      "elapsedMs": 658,
+      "outputChars": 249,
+      "snapshotChars": 83
+    },
+    {
+      "engine": "browse",
+      "task": "snapshot",
+      "trial": 0,
+      "success": true,
+      "error": null,
+      "toolCalls": 1,
+      "successfulToolMs": 420,
+      "elapsedMs": 420,
+      "outputChars": 131,
+      "snapshotChars": 96
+    },
+    {
+      "engine": "browse",
+      "task": "form",
+      "trial": 0,
+      "success": true,
+      "error": null,
+      "toolCalls": 3,
+      "successfulToolMs": 1313,
+      "elapsedMs": 1313,
+      "outputChars": 249,
+      "snapshotChars": 51
+    },
+    {
+      "engine": "callisto",
+      "task": "form",
+      "trial": 0,
+      "success": true,
+      "error": null,
+      "toolCalls": 3,
+      "successfulToolMs": 162,
+      "elapsedMs": 163,
+      "outputChars": 791,
+      "snapshotChars": 107
+    },
+    {
+      "engine": "callisto",
+      "task": "disabled",
+      "trial": 0,
+      "success": true,
+      "error": null,
+      "toolCalls": 2,
+      "successfulToolMs": 1323,
+      "elapsedMs": 1323,
+      "outputChars": 369,
+      "snapshotChars": 35
+    },
+    {
+      "engine": "browse",
+      "task": "disabled",
+      "trial": 0,
+      "success": false,
+      "error": "Timeout 3000ms exceeded.\nCall log:\n  - waiting for getByRole('button', { name: 'Continue', exact: true })\n    - locator resolved to <button disabled onclick=\"fetch('/mark?key=browse-disabled-0')\">Continue</button>\n  - attempting click action\n    2 × waiting for element to be visible, enabled and stable\n      - element is not enabled\n    - retrying click action\n    - waiting 20ms\n    2 × waiting for element to be visible, enabled and stable\n      - element is not enabled\n    - retrying click action\n      - waiting 100ms\n    2 × waiting for element to be visible, enabled and stable\n      - eleme",
+      "toolCalls": 2,
+      "successfulToolMs": 75,
+      "elapsedMs": 3112,
+      "outputChars": 66,
+      "snapshotChars": 37
+    },
+    {
+      "engine": "browse",
+      "task": "covered",
+      "trial": 0,
+      "success": false,
+      "error": "Timeout 3000ms exceeded.\nCall log:\n  - waiting for getByRole('button', { name: 'Confirm', exact: true })\n    - locator resolved to <button onclick=\"fetch('/mark?key=browse-covered-0')\">Confirm</button>\n  - attempting click action\n    2 × waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <div id=\"cover\"></div> intercepts pointer events\n    - retrying click action\n    - waiting 20ms\n    2 × waiting for element to be visible, enabled and stable\n      - element is visible, enable",
+      "toolCalls": 2,
+      "successfulToolMs": 70,
+      "elapsedMs": 3105,
+      "outputChars": 56,
+      "snapshotChars": 27
+    },
+    {
+      "engine": "callisto",
+      "task": "covered",
+      "trial": 0,
+      "success": true,
+      "error": null,
+      "toolCalls": 2,
+      "successfulToolMs": 1319,
+      "elapsedMs": 1319,
+      "outputChars": 350,
+      "snapshotChars": 23
+    },
+    {
+      "engine": "callisto",
+      "task": "iframe",
+      "trial": 0,
+      "success": false,
+      "error": "click: target ax-1 not actionable after 2000ms (iframe actionability is unsupported)",
+      "toolCalls": 2,
+      "successfulToolMs": 28,
+      "elapsedMs": 2030,
+      "outputChars": 228,
+      "snapshotChars": 69
+    },
+    {
+      "engine": "browse",
+      "task": "iframe",
+      "trial": 0,
+      "success": true,
+      "error": null,
+      "toolCalls": 2,
+      "successfulToolMs": 3118,
+      "elapsedMs": 3118,
+      "outputChars": 128,
+      "snapshotChars": 35
+    },
+    {
+      "engine": "browse",
+      "task": "link",
+      "trial": 0,
+      "success": true,
+      "error": null,
+      "toolCalls": 2,
+      "successfulToolMs": 765,
+      "elapsedMs": 765,
+      "outputChars": 166,
+      "snapshotChars": 64
+    },
+    {
+      "engine": "callisto",
+      "task": "link",
+      "trial": 0,
+      "success": true,
+      "error": null,
+      "toolCalls": 2,
+      "successfulToolMs": 103,
+      "elapsedMs": 103,
+      "outputChars": 366,
+      "snapshotChars": 46
+    },
+    {
+      "engine": "browse",
+      "task": "snapshot",
+      "trial": 1,
+      "success": true,
+      "error": null,
+      "toolCalls": 1,
+      "successfulToolMs": 84,
+      "elapsedMs": 84,
+      "outputChars": 131,
+      "snapshotChars": 96
+    },
+    {
+      "engine": "callisto",
+      "task": "snapshot",
+      "trial": 1,
+      "success": true,
+      "error": null,
+      "toolCalls": 1,
+      "successfulToolMs": 22,
+      "elapsedMs": 22,
+      "outputChars": 249,
+      "snapshotChars": 83
+    },
+    {
+      "engine": "callisto",
+      "task": "form",
+      "trial": 1,
+      "success": true,
+      "error": null,
+      "toolCalls": 3,
+      "successfulToolMs": 148,
+      "elapsedMs": 148,
+      "outputChars": 791,
+      "snapshotChars": 107
+    },
+    {
+      "engine": "browse",
+      "task": "form",
+      "trial": 1,
+      "success": true,
+      "error": null,
+      "toolCalls": 3,
+      "successfulToolMs": 1929,
+      "elapsedMs": 1929,
+      "outputChars": 249,
+      "snapshotChars": 51
+    },
+    {
+      "engine": "browse",
+      "task": "disabled",
+      "trial": 1,
+      "success": false,
+      "error": "Timeout 3000ms exceeded.\nCall log:\n  - waiting for getByRole('button', { name: 'Continue', exact: true })\n    - locator resolved to <button disabled onclick=\"fetch('/mark?key=browse-disabled-1')\">Continue</button>\n  - attempting click action\n    2 × waiting for element to be visible, enabled and stable\n      - element is not enabled\n    - retrying click action\n    - waiting 20ms\n    2 × waiting for element to be visible, enabled and stable\n      - element is not enabled\n    - retrying click action\n      - waiting 100ms\n    2 × waiting for element to be visible, enabled and stable\n      - eleme",
+      "toolCalls": 2,
+      "successfulToolMs": 73,
+      "elapsedMs": 3107,
+      "outputChars": 67,
+      "snapshotChars": 38
+    },
+    {
+      "engine": "callisto",
+      "task": "disabled",
+      "trial": 1,
+      "success": true,
+      "error": null,
+      "toolCalls": 2,
+      "successfulToolMs": 1307,
+      "elapsedMs": 1307,
+      "outputChars": 369,
+      "snapshotChars": 35
+    },
+    {
+      "engine": "callisto",
+      "task": "covered",
+      "trial": 1,
+      "success": true,
+      "error": null,
+      "toolCalls": 2,
+      "successfulToolMs": 1311,
+      "elapsedMs": 1311,
+      "outputChars": 350,
+      "snapshotChars": 23
+    },
+    {
+      "engine": "browse",
+      "task": "covered",
+      "trial": 1,
+      "success": false,
+      "error": "Timeout 3000ms exceeded.\nCall log:\n  - waiting for getByRole('button', { name: 'Confirm', exact: true })\n    - locator resolved to <button onclick=\"fetch('/mark?key=browse-covered-1')\">Confirm</button>\n  - attempting click action\n    2 × waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <div id=\"cover\"></div> intercepts pointer events\n    - retrying click action\n    - waiting 20ms\n    2 × waiting for element to be visible, enabled and stable\n      - element is visible, enable",
+      "toolCalls": 2,
+      "successfulToolMs": 168,
+      "elapsedMs": 3298,
+      "outputChars": 57,
+      "snapshotChars": 28
+    },
+    {
+      "engine": "browse",
+      "task": "iframe",
+      "trial": 1,
+      "success": true,
+      "error": null,
+      "toolCalls": 2,
+      "successfulToolMs": 1268,
+      "elapsedMs": 1268,
+      "outputChars": 128,
+      "snapshotChars": 35
+    },
+    {
+      "engine": "callisto",
+      "task": "iframe",
+      "trial": 1,
+      "success": false,
+      "error": "click: target ax-1 not actionable after 2000ms (iframe actionability is unsupported)",
+      "toolCalls": 2,
+      "successfulToolMs": 30,
+      "elapsedMs": 2031,
+      "outputChars": 228,
+      "snapshotChars": 69
+    },
+    {
+      "engine": "callisto",
+      "task": "link",
+      "trial": 1,
+      "success": true,
+      "error": null,
+      "toolCalls": 2,
+      "successfulToolMs": 105,
+      "elapsedMs": 105,
+      "outputChars": 366,
+      "snapshotChars": 46
+    },
+    {
+      "engine": "browse",
+      "task": "link",
+      "trial": 1,
+      "success": true,
+      "error": null,
+      "toolCalls": 2,
+      "successfulToolMs": 698,
+      "elapsedMs": 698,
+      "outputChars": 167,
+      "snapshotChars": 65
+    },
+    {
+      "engine": "callisto",
+      "task": "snapshot",
+      "trial": 2,
+      "success": true,
+      "error": null,
+      "toolCalls": 1,
+      "successfulToolMs": 17,
+      "elapsedMs": 17,
+      "outputChars": 249,
+      "snapshotChars": 83
+    },
+    {
+      "engine": "browse",
+      "task": "snapshot",
+      "trial": 2,
+      "success": true,
+      "error": null,
+      "toolCalls": 1,
+      "successfulToolMs": 69,
+      "elapsedMs": 69,
+      "outputChars": 132,
+      "snapshotChars": 97
+    },
+    {
+      "engine": "browse",
+      "task": "form",
+      "trial": 2,
+      "success": true,
+      "error": null,
+      "toolCalls": 3,
+      "successfulToolMs": 1903,
+      "elapsedMs": 1903,
+      "outputChars": 255,
+      "snapshotChars": 53
+    },
+    {
+      "engine": "callisto",
+      "task": "form",
+      "trial": 2,
+      "success": true,
+      "error": null,
+      "toolCalls": 3,
+      "successfulToolMs": 147,
+      "elapsedMs": 148,
+      "outputChars": 791,
+      "snapshotChars": 107
+    },
+    {
+      "engine": "callisto",
+      "task": "disabled",
+      "trial": 2,
+      "success": true,
+      "error": null,
+      "toolCalls": 2,
+      "successfulToolMs": 1315,
+      "elapsedMs": 1315,
+      "outputChars": 369,
+      "snapshotChars": 35
+    },
+    {
+      "engine": "browse",
+      "task": "disabled",
+      "trial": 2,
+      "success": false,
+      "error": "Timeout 3000ms exceeded.\nCall log:\n  - waiting for getByRole('button', { name: 'Continue', exact: true })\n    - locator resolved to <button disabled onclick=\"fetch('/mark?key=browse-disabled-2')\">Continue</button>\n  - attempting click action\n    2 × waiting for element to be visible, enabled and stable\n      - element is not enabled\n    - retrying click action\n    - waiting 20ms\n    2 × waiting for element to be visible, enabled and stable\n      - element is not enabled\n    - retrying click action\n      - waiting 100ms\n    2 × waiting for element to be visible, enabled and stable\n      - eleme",
+      "toolCalls": 2,
+      "successfulToolMs": 71,
+      "elapsedMs": 3115,
+      "outputChars": 67,
+      "snapshotChars": 38
+    },
+    {
+      "engine": "browse",
+      "task": "covered",
+      "trial": 2,
+      "success": false,
+      "error": "Timeout 3000ms exceeded.\nCall log:\n  - waiting for getByRole('button', { name: 'Confirm', exact: true })\n    - locator resolved to <button onclick=\"fetch('/mark?key=browse-covered-2')\">Confirm</button>\n  - attempting click action\n    2 × waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <div id=\"cover\"></div> intercepts pointer events\n    - retrying click action\n    - waiting 20ms\n    2 × waiting for element to be visible, enabled and stable\n      - element is visible, enable",
+      "toolCalls": 2,
+      "successfulToolMs": 76,
+      "elapsedMs": 3140,
+      "outputChars": 57,
+      "snapshotChars": 28
+    },
+    {
+      "engine": "callisto",
+      "task": "covered",
+      "trial": 2,
+      "success": true,
+      "error": null,
+      "toolCalls": 2,
+      "successfulToolMs": 1306,
+      "elapsedMs": 1306,
+      "outputChars": 350,
+      "snapshotChars": 23
+    },
+    {
+      "engine": "callisto",
+      "task": "iframe",
+      "trial": 2,
+      "success": false,
+      "error": "click: target ax-1 not actionable after 2000ms (iframe actionability is unsupported)",
+      "toolCalls": 2,
+      "successfulToolMs": 27,
+      "elapsedMs": 2029,
+      "outputChars": 228,
+      "snapshotChars": 69
+    },
+    {
+      "engine": "browse",
+      "task": "iframe",
+      "trial": 2,
+      "success": true,
+      "error": null,
+      "toolCalls": 2,
+      "successfulToolMs": 3134,
+      "elapsedMs": 3134,
+      "outputChars": 128,
+      "snapshotChars": 35
+    },
+    {
+      "engine": "browse",
+      "task": "link",
+      "trial": 2,
+      "success": true,
+      "error": null,
+      "toolCalls": 2,
+      "successfulToolMs": 753,
+      "elapsedMs": 753,
+      "outputChars": 167,
+      "snapshotChars": 65
+    },
+    {
+      "engine": "callisto",
+      "task": "link",
+      "trial": 2,
+      "success": true,
+      "error": null,
+      "toolCalls": 2,
+      "successfulToolMs": 105,
+      "elapsedMs": 105,
+      "outputChars": 366,
+      "snapshotChars": 46
+    }
+  ]
+}

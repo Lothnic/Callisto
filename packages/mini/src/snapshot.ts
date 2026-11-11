@@ -107,41 +107,7 @@ export async function snapshot(session: Session, refs: RefRegistry): Promise<Sna
     getFrameOwner(p: { frameId: string }): Promise<{ backendNodeId: number }>
   }
 
-  // Hide offscreen elements
-  try {
-    await cdp.Runtime.evaluate({
-      expression: `(() => {
-        if (!document.body) return;
-        const hiddenElements = [];
-        const walk = (el) => {
-          if (el.tagName === 'SCRIPT' || el.tagName === 'STYLE') return;
-          const rect = el.getBoundingClientRect();
-          const isOffscreen = (
-            rect.bottom <= 0 ||
-            rect.top >= window.innerHeight ||
-            rect.right <= 0 ||
-            rect.left >= window.innerWidth
-          );
-          if (isOffscreen && rect.width > 0 && rect.height > 0) {
-            const prev = el.getAttribute('aria-hidden');
-            el.setAttribute('aria-hidden', 'true');
-            hiddenElements.push({ el, prev });
-            return;
-          }
-          for (let i = 0; i < el.children.length; i++) {
-            walk(el.children[i]);
-          }
-        };
-        walk(document.body);
-        window.__callisto_hidden = hiddenElements;
-      })()`,
-      awaitPromise: true,
-    });
-  } catch {
-    // Ignore evaluation failures
-  }
-
-  try {
+  {
     const { frameTree } = await cdp.Page.getFrameTree()
     const frames = flattenFrames(frameTree as unknown as FrameTreeNode)
     const mainId = frames[0].id
@@ -151,7 +117,35 @@ export async function snapshot(session: Session, refs: RefRegistry): Promise<Sna
     for (const f of frames) {
       try {
         const { nodes } = await ax.getFullAXTree({ frameId: f.id })
-        const root = normalizeFrame(nodes, f.id, byId)
+        // AX exposes password fields as textboxes in Chromium. Inspect the DOM
+        // type for nodes with values and fail closed if inspection is unavailable.
+        await Promise.all(nodes.filter((n) => n.value && (n.role?.value === 'textbox' || n.role?.value === 'searchbox')).map(async (n) => {
+          try {
+            if (n.backendDOMNodeId == null) throw new Error('missing DOM node')
+            const { node } = await cdp.DOM.describeNode({ backendNodeId: n.backendDOMNodeId })
+            const attributes = node.attributes ?? []
+            const typeIndex = attributes.findIndex((a, i) => i % 2 === 0 && a.toLowerCase() === 'type')
+            if (typeIndex >= 0 && attributes[typeIndex + 1]?.toLowerCase() === 'password') n.value = { value: '[REDACTED]' }
+          } catch {
+            n.value = { value: '[REDACTED]' }
+          }
+        }))
+        // Password fields can also expose masked text as AX descendants. Omit
+        // those descendants, including their length, from the snapshot.
+        const byNodeId = new Map(nodes.map((n) => [n.nodeId, n]))
+        const excluded = new Set<string>()
+        const exclude = (id: string): void => {
+          if (excluded.has(id)) return
+          excluded.add(id)
+          for (const child of byNodeId.get(id)?.childIds ?? []) exclude(child)
+        }
+        for (const n of nodes) {
+          if (n.value?.value === '[REDACTED]') {
+            for (const child of n.childIds ?? []) exclude(child)
+            n.childIds = []
+          }
+        }
+        const root = normalizeFrame(nodes.filter((n) => !excluded.has(n.nodeId)), f.id, byId)
         if (root) frameRoot.set(f.id, root)
       } catch {
         // frame went away mid-snapshot; skip it
@@ -191,26 +185,5 @@ export async function snapshot(session: Session, refs: RefRegistry): Promise<Sna
     })
     const { url, title } = JSON.parse(meta.result.value as string) as { url: string; title: string }
     return { url, title, text }
-  } finally {
-    // Revert offscreen elements hiding
-    try {
-      await cdp.Runtime.evaluate({
-        expression: `(() => {
-          if (window.__callisto_hidden) {
-            for (const x of window.__callisto_hidden) {
-              if (x.prev === null) {
-                x.el.removeAttribute('aria-hidden');
-              } else {
-                x.el.setAttribute('aria-hidden', x.prev);
-              }
-            }
-            delete window.__callisto_hidden;
-          }
-        })()`,
-        awaitPromise: true,
-      });
-    } catch {
-      // Ignore evaluation failures
-    }
   }
 }

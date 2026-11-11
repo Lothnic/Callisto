@@ -1,0 +1,131 @@
+{
+  "createdAt": "2026-11-11T16:09:13.929Z",
+  "provider": "openrouter",
+  "model": "meta-llama/llama-4-scout-17b-16e-instruct",
+  "protocol": "Same model, JSON action policy, observation and fixture; isolated warm Chrome instances; one trial each.",
+  "results": [
+    {
+      "engine": "browse",
+      "task": "click",
+      "success": true,
+      "answer": "done",
+      "error": null,
+      "calls": 2,
+      "usage": {
+        "prompt_tokens": 289,
+        "completion_tokens": 20
+      },
+      "elapsedMs": 3346,
+      "trace": [
+        {
+          "action": {
+            "action": "click",
+            "role": "button",
+            "name": "Confirm"
+          },
+          "ok": true
+        },
+        {
+          "action": {
+            "action": "done"
+          }
+        }
+      ]
+    },
+    {
+      "engine": "browse",
+      "task": "form",
+      "success": true,
+      "answer": "done",
+      "error": null,
+      "calls": 5,
+      "usage": {
+        "prompt_tokens": 1529,
+        "completion_tokens": 59
+      },
+      "elapsedMs": 9534,
+      "trace": [
+        {
+          "action": {
+            "action": "fill",
+            "role": "textbox",
+            "name": "Fruit",
+            "value": "mango"
+          },
+          "ok": true
+        },
+        {
+          "action": {
+            "action": "click",
+            "role": "button",
+            "name": "Save"
+          },
+          "ok": false,
+          "error": "Command failed: browse execute --json --session callisto-eval-1794413332624 --timeout-ms 10000 await page.getByRole(\"button\",{\"name\":\"Save\",\"exact\":true}).click({timeout:2000}); return null\nbrowse: Timeout 2000ms exceeded.\n"
+        },
+        {
+          "action": {
+            "action": "wait"
+          },
+          "ok": true
+        },
+        {
+          "action": {
+            "action": "click",
+            "role": "button",
+            "name": "Save"
+          },
+          "ok": true
+        },
+        {
+          "action": {
+            "action": "done"
+          }
+        }
+      ]
+    },
+    {
+      "engine": "browse",
+      "task": "delayed",
+      "success": true,
+      "answer": "done",
+      "error": null,
+      "calls": 4,
+      "usage": {
+        "prompt_tokens": 878,
+        "completion_tokens": 40
+      },
+      "elapsedMs": 8363,
+      "trace": [
+        {
+          "action": {
+            "action": "wait"
+          },
+          "ok": true
+        },
+        {
+          "action": {
+            "action": "click",
+            "role": "button",
+            "name": "Continue"
+          },
+          "ok": false,
+          "error": "Command failed: browse execute --json --session callisto-eval-1794413332624 --timeout-ms 10000 await page.getByRole(\"button\",{\"name\":\"Continue\",\"exact\":true}).click({timeout:2000}); return null\nbrowse: Timeout 2000ms exceeded.\n"
+        },
+        {
+          "action": {
+            "action": "click",
+            "role": "button",
+            "name": "Continue"
+          },
+          "ok": true
+        },
+        {
+          "action": {
+            "action": "done"
+          }
+        }
+      ]
+    }
+  ]
+}

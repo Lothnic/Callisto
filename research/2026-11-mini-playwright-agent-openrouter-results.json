@@ -1,0 +1,206 @@
+{
+  "createdAt": "2026-11-11T16:08:23.631Z",
+  "provider": "openrouter",
+  "model": "meta-llama/llama-4-scout-17b-16e-instruct",
+  "protocol": "Same model, JSON action policy, observation and fixture; isolated warm Chrome instances; one trial each.",
+  "results": [
+    {
+      "engine": "mini",
+      "task": "click",
+      "success": true,
+      "answer": "done",
+      "error": null,
+      "calls": 2,
+      "usage": {
+        "prompt_tokens": 289,
+        "completion_tokens": 20
+      },
+      "elapsedMs": 2927,
+      "trace": [
+        {
+          "action": {
+            "action": "click",
+            "role": "button",
+            "name": "Confirm"
+          },
+          "ok": true
+        },
+        {
+          "action": {
+            "action": "done"
+          }
+        }
+      ]
+    },
+    {
+      "engine": "playwright",
+      "task": "click",
+      "success": true,
+      "answer": "done",
+      "error": null,
+      "calls": 2,
+      "usage": {
+        "prompt_tokens": 289,
+        "completion_tokens": 20
+      },
+      "elapsedMs": 1734,
+      "trace": [
+        {
+          "action": {
+            "action": "click",
+            "role": "button",
+            "name": "Confirm"
+          },
+          "ok": true
+        },
+        {
+          "action": {
+            "action": "done"
+          }
+        }
+      ]
+    },
+    {
+      "engine": "mini",
+      "task": "form",
+      "success": true,
+      "answer": "done",
+      "error": null,
+      "calls": 3,
+      "usage": {
+        "prompt_tokens": 625,
+        "completion_tokens": 39
+      },
+      "elapsedMs": 2412,
+      "trace": [
+        {
+          "action": {
+            "action": "fill",
+            "role": "textbox",
+            "name": "Fruit",
+            "value": "mango"
+          },
+          "ok": true
+        },
+        {
+          "action": {
+            "action": "click",
+            "role": "button",
+            "name": "Save"
+          },
+          "ok": true
+        },
+        {
+          "action": {
+            "action": "done"
+          }
+        }
+      ]
+    },
+    {
+      "engine": "playwright",
+      "task": "form",
+      "success": true,
+      "answer": "done",
+      "error": null,
+      "calls": 3,
+      "usage": {
+        "prompt_tokens": 625,
+        "completion_tokens": 39
+      },
+      "elapsedMs": 3599,
+      "trace": [
+        {
+          "action": {
+            "action": "fill",
+            "role": "textbox",
+            "name": "Fruit",
+            "value": "mango"
+          },
+          "ok": true
+        },
+        {
+          "action": {
+            "action": "click",
+            "role": "button",
+            "name": "Save"
+          },
+          "ok": true
+        },
+        {
+          "action": {
+            "action": "done"
+          }
+        }
+      ]
+    },
+    {
+      "engine": "mini",
+      "task": "delayed",
+      "success": true,
+      "answer": "done",
+      "error": null,
+      "calls": 3,
+      "usage": {
+        "prompt_tokens": 500,
+        "completion_tokens": 26
+      },
+      "elapsedMs": 3228,
+      "trace": [
+        {
+          "action": {
+            "action": "wait"
+          },
+          "ok": true
+        },
+        {
+          "action": {
+            "action": "click",
+            "role": "button",
+            "name": "Continue"
+          },
+          "ok": true
+        },
+        {
+          "action": {
+            "action": "done"
+          }
+        }
+      ]
+    },
+    {
+      "engine": "playwright",
+      "task": "delayed",
+      "success": true,
+      "answer": "done",
+      "error": null,
+      "calls": 3,
+      "usage": {
+        "prompt_tokens": 500,
+        "completion_tokens": 26
+      },
+      "elapsedMs": 2513,
+      "trace": [
+        {
+          "action": {
+            "action": "wait"
+          },
+          "ok": true
+        },
+        {
+          "action": {
+            "action": "click",
+            "role": "button",
+            "name": "Continue"
+          },
+          "ok": true
+        },
+        {
+          "action": {
+            "action": "done"
+          }
+        }
+      ]
+    }
+  ]
+}

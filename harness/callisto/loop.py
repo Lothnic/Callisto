@@ -43,6 +43,7 @@ from .control import (
     extract_urls_from_text,
     invented_goto_reason,
     is_acceptable_final,
+    is_blank_url,
     is_pingpong,
     navigation_failure_note,
     parse_goto_url,
@@ -62,7 +63,7 @@ from .memory import MemoryStore
 from .models import ChatModel
 from .prompt import system_message
 from .scratchpad import write_scratchpad
-from .sidecar_client import SidecarClient, SidecarDead
+from .sidecar_client import SidecarClient, SidecarDead, SidecarError
 from .tools import ask as ask_tool
 from .tools.dispatch import TOOL_SCHEMAS, execute, tool_call_fingerprint
 from .tools.repl import repl
@@ -92,6 +93,26 @@ MAX_STUCK_NUDGES = 2
 
 # Backward-compatible private alias used by tests.
 _tool_call_fingerprint = tool_call_fingerprint
+
+
+def _is_websocket_disconnection(exc: SidecarError) -> bool:
+    """Check if a SidecarError indicates a CDP WebSocket disconnection.
+
+    The sidecar executes eval code via CDP which uses a WebSocket. If that
+    connection drops (Chrome crash, idle timeout, etc.), the error message
+    from chrome-remote-interface / ws will contain these keywords.
+    """
+    err = str(exc).lower()
+    keywords = (
+        "websocket is not open",
+        "readystate",
+        "closed connection",
+        "econnreset",
+        "socket hang up",
+        "write epipe",
+        "cdp connection",
+    )
+    return any(kw in err for kw in keywords)
 
 
 async def _emit(progress_callback: Callable | None, event: dict[str, Any]) -> None:
@@ -137,6 +158,18 @@ async def run(
     audit.record_session_start(task, getattr(model, "model", "unknown"))
 
     is_new_session = history is None
+    # Tracked so we can block blank-page no-ops and avoid useless URL probes.
+    # Chat continuations re-enter run() with a live browser — probe the real URL.
+    current_url: str | None = "about:blank"
+    if not is_new_session:
+        try:
+            probe = await client.call("eval", {"code": "return await page.url()"})
+            val = probe.get("value")
+            if isinstance(val, str) and val.strip():
+                current_url = val.strip()
+        except Exception as exc:
+            log.debug("chat continuation URL probe failed: %s", exc)
+
     if history is None:
         # Seed browser state so the model does not burn turns on blank-page no-ops.
         history = [user_msg(
@@ -147,7 +180,11 @@ async def run(
             "then snapshot. Do not snapshot or call page.url() while still on about:blank."
         )]
     else:
-        history.append(user_msg(task))
+        history.append(user_msg(
+            f"{task}\n\n"
+            f"[Browser state] Current URL: {current_url}. "
+            "Continue from this page unless the task needs a different site."
+        ))
 
     if is_new_session and memory and memory.available:
         try:
@@ -177,8 +214,6 @@ async def run(
     family_history: list[str] = []
     last_click_ref: str | None = None
     same_click_count = 0
-    # Tracked so we can block blank-page no-ops and avoid useless URL probes.
-    current_url: str | None = "about:blank"
     # URLs / text observed in tool results — goto targets must be grounded.
     grounded_urls: set[str] = set()
     grounded_text_parts: list[str] = []
@@ -188,11 +223,13 @@ async def run(
             grounded_urls.update(extract_urls_from_text(text))
             grounded_text_parts.append(text)
 
-    # Seed any URLs already present in history (chat continuations).
+    # Seed any URLs already present in history (chat continuations) + live URL.
     for msg in history:
         content = msg.get("content")
         if isinstance(content, str):
             _ingest_grounding(content)
+    if current_url and not is_blank_url(current_url):
+        _ingest_grounding(current_url)
 
     for step in range(max_steps):
         # Near end of budget: one-time force-decide message
@@ -629,6 +666,40 @@ async def run(
                 raise SidecarDead(
                     f"Sidecar crashed and restart failed: {restart_exc}"
                 ) from exc
+
+        except SidecarError as exc:
+            # CDP / WebSocket disconnection — re-launch the browser without
+            # killing the sidecar process (which is still healthy).
+            err_str = str(exc)
+            log.warning("sidecar error during tool call: %s", err_str[:200])
+            if _is_websocket_disconnection(exc):
+                log.warning(
+                    "CDP/WebSocket connection lost — re-launching browser"
+                )
+                try:
+                    await client.relaunch_browser()
+                    result = {
+                        "error": (
+                            "Browser's debug connection was lost and has been "
+                            "restored. The page was reset to about:blank. "
+                            "Please navigate back to your target page and "
+                            "continue."
+                        )
+                    }
+                except Exception as r_exc:
+                    log.error("browser re-launch failed: %s", r_exc)
+                    audit.record_task_end(
+                        "error",
+                        f"Browser re-launch failed: {r_exc}",
+                    )
+                    audit.record_session_end(
+                        "error", time.monotonic() - t_start
+                    )
+                    raise SidecarDead(
+                        f"Browser re-launch failed: {r_exc}"
+                    ) from exc
+            else:
+                result = {"error": err_str}
 
         except Exception as exc:  # noqa: BLE001
             result = {"error": str(exc)}

@@ -1,124 +1,76 @@
 # Callisto
 
-**An open-source agentic browser with reproducible eval scores.**
+**A lean browser runtime for agents you already use.**
 
-[![CI](https://github.com/Lothnic/callisto/actions/workflows/ci.yml/badge.svg)](https://github.com/Lothnic/callisto/actions/workflows/ci.yml)
-![status](https://img.shields.io/badge/status-WIP%20%C2%B7%20Phase%205%20of%205-orange)
-![license](https://img.shields.io/badge/license-MIT-blue)
+Callisto gives an existing host agent an isolated Chromium session through a
+local MCP server. Its TypeScript engine, `@callisto/mini`, uses the Chrome
+DevTools Protocol and an accessibility snapshot with actionable references.
+The runtime does not require a separate model API key; the host supplies the
+agent.
 
-> ⚠️ **Work in progress.** Product direction is **browser-first** (Callisto Browser on a
-> BrowserOS fork — [RFC 0006](rfcs/0006-callisto-browser-browseros-fork.md)). The CLI and
-> eval kit remain for developers. See [packages/callisto-browser](packages/callisto-browser/).
+Callisto is experimental. Its Playwright-shaped API is a subset, not a drop-in
+replacement for Playwright, and it does not yet attach to your logged-in
+browser like browse. Performance and reliability claims are still being tested.
 
-Callisto drives a real Chromium over the Chrome DevTools Protocol and hands an
-LLM agent a tiny, token-cheap surface to perceive and act on the web. The bet:
-a lean perception layer (a custom accessibility tree) plus a disciplined
-two-tool agent loop beats a fat wrapper every time — measured on public evals
-anyone can reproduce.
+## Get started
 
-## Why another one
-
-- **Token-lean by construction.** The Mini wrapper is ~15–20 methods described
-  in <2K tokens (raw Playwright is ~13K). Every token saved is a token the
-  agent spends reasoning.
-- **Reproducible numbers.** Every benchmark ships with the kit that produced
-  it. Pinned models, pinned deps, pinned commit SHA. See
-  [BENCHMARKS.md](BENCHMARKS.md) and the Phase 5 [`eval/`](eval/) kit.
-- **Safety is a feature, not a footnote.** Keychain-backed autofill (the LLM
-  never sees the password), approval gates on sensitive actions, sandboxing,
-  and a full audit log. See [SECURITY.md](SECURITY.md).
-
-## Quickstart
-
-From a clone of this repo (editable install; PyPI packaging is still `0.x`):
+From the repository root, with Node.js 20+ and a Chromium/Chrome binary:
 
 ```bash
-# 1. Browser runtime (Node ≥ 20)
-cd packages/mini
-npm install
-npm run build
-
-# 2. Python harness
-cd ../../harness
-python3 -m venv .venv
-.venv/bin/pip install -e ".[dev]"
-
-# 3. API key (default provider: SiliconFlow)
-cp ../.env.example ../.env
-# edit ../.env — set SILICONFLOW_KEY (or SILICONFLOW_API_KEY)
-
-# 4. Run a task (loads .env + harness + BrowserOS via run.sh)
-cd ..
-./run.sh "find the pricing page for linear.app"
+npm --prefix packages/mini ci
+npm --prefix packages/mini run build
 ```
 
-Useful variants:
+The included [OpenCode project configuration](opencode.json) registers the
+local MCP server. Start or reopen OpenCode in this project and use the
+`callisto` tools. For another MCP host, launch:
 
 ```bash
-./run.sh --visible "open github.com and list open issues"
-./run.sh --ollama "open skyscanner for flights from delhi to goa"
-./run.sh --groq --model meta-llama/llama-4-scout-17b-16e-instruct "what is on example.com"
-./run.sh --chat                         # multi-turn session
+node /absolute/path/to/callisto/packages/mini/dist/mcp.js
 ```
 
-Default provider is **SiliconFlow** (`tencent/Hy3`). Other flags: `--groq`,
-`--openrouter`, `--generalcompute`, `--ollama`. Safety defaults: Chrome sandbox
-and human approval are **on**. For Docker/CI only:
-`./run.sh --no-sandbox --no-approval "..."`. See
-`harness/.venv/bin/callisto run-task --help` for the full CLI.
+The server starts a fresh browser on the first browser tool call and closes it
+when the session ends. Set `CHROME_PATH` in the host environment if Chrome is
+not discovered, or `CALLISTO_MCP_HEADLESS=0` to show the window. See the
+[Mini guide](packages/mini/README.md) for the available tools and limitations.
 
-Offline tests without a browser or API key:
+## Project layout
+
+| Path | Purpose |
+| --- | --- |
+| [`packages/mini/`](packages/mini/) | CDP engine, accessibility snapshots and local MCP server |
+| [`harness/`](harness/) | Optional reference agent and CLI, not required for MCP |
+| [`eval/`](eval/) | Evaluation tools and reproducible comparison scripts |
+| [`research/`](research/) | Findings, historical notes and benchmark evidence |
+| [`packages/callisto-browser/`](packages/callisto-browser/) | Historical BrowserOS fork experiment; not the product runtime |
+
+## Status and evidence
+
+The current MCP interface has structured actions, bounded snapshots, text
+search and action batches. Same-origin iframe actions are supported; cross-origin
+frame coverage, browser attachment, human handoff and full Playwright
+compatibility remain open work. Browser actions can change websites; the MCP
+server does not supply an approval or security boundary.
+
+Read the [runtime roadmap](roadmap.md), [benchmark index](BENCHMARKS.md), and
+[research index](research/README.md) for current priorities and test caveats.
+In particular, local fixture timings are not proof of agent success or of an
+advantage over browse.
+
+## Development
 
 ```bash
-cd harness && .venv/bin/pytest
-cd packages/mini && npm test
-cd eval && pip install -e ".[dev]" && pytest
+npm --prefix packages/mini test
+npm --prefix packages/mini run typecheck
 ```
 
-## Benchmarks
-
-| Benchmark          | Callisto | browser-use | Operator |
-| ------------------ | -------- | ----------- | -------- |
-| WebVoyager smoke   | 100% live (`siliconflow/tencent/Hy3`, 3 tasks) | n/a | n/a |
-| WebVoyager smoke   | 100% fake/offline | n/a | n/a |
-| WebVoyager full    | TBD      | ~89%        | ~87%     |
-| Mind2Web (live)    | TBD      | ~97.7%      | ~92.8%   |
-
-Numbers are reproducible from the eval kit (Phase 5). The first live row is a
-3-task smoke run only; full benchmark runs still land as `TBD` until published
-with manifests. See [BENCHMARKS.md](BENCHMARKS.md).
-
-## Architecture
-
-| Package                    | Language   | What it is                                        |
-| -------------------------- | ---------- | ------------------------------------------------- |
-| `packages/callisto-browser`| —          | **Callisto Browser** (BrowserOS fork, AGPL) — product shell |
-| `packages/mini`            | TypeScript | CDP wrapper — the agent's hands and eyes          |
-| `harness/`                 | Python     | The agent loop, tools, CLI                        |
-| `eval/`                    | Python     | Public benchmark kit *(Phase 5)*                  |
-
-Installable package names today: `callisto-harness` and `callisto-eval`
-(console scripts: `callisto`, `callisto-eval`). The top-level name `callisto`
-is reserved for a future unified release.
-
-## Roadmap
-
-Phases 1–5 are the MVP. See [roadmap.md](roadmap.md) for the full plan and
-[rfcs/](rfcs/) for design decisions.
-
-| Phase | Deliverable                                        |
-| ----- | -------------------------------------------------- |
-| 1     | Mini Playwright wrapper *(done)*                    |
-| 2     | Custom a11y tree *(done)*                           |
-| 3     | Agent loop (two tools, scratchpad, recovery) *(done)* |
-| 4     | Auth, safety, memory, audit log *(done)*            |
-| 5     | Public benchmarks + leaderboard *(in progress)*    |
-
-## Contributing
-
-See [CONTRIBUTING.md](CONTRIBUTING.md). Design changes get an
-[RFC](rfcs/) first. Be kind; reject slop, accept people.
+Browser tests are opt-in: set `CALLISTO_SMOKE=1` and `CHROME_PATH` to a local
+Chrome binary. See [the Mini guide](packages/mini/README.md) for details. The
+optional reference harness and eval package have their own Python dependencies.
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+The root project is MIT ([LICENSE](LICENSE)). The separately marked
+[`packages/callisto-browser`](packages/callisto-browser/) experiment has its own
+AGPL-3.0 license and third-party notices; check those terms before distributing
+its code or binaries.

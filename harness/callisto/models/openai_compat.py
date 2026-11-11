@@ -10,6 +10,7 @@ import json
 import logging
 import os
 import random
+import re
 from typing import Any
 
 import aiohttp
@@ -21,18 +22,50 @@ _INITIAL_BACKOFF = 5.0
 _MAX_BACKOFF = 60.0
 
 
+def _parse_tool_arguments(raw: Any) -> dict[str, Any]:
+    """Parse tool-call arguments; tolerate empty/malformed JSON from remote models."""
+    if raw is None or raw == "":
+        return {}
+    if isinstance(raw, dict):
+        return raw
+    if not isinstance(raw, str):
+        return {"_raw": raw}
+    try:
+        parsed = json.loads(raw)
+        return parsed if isinstance(parsed, dict) else {"_raw": parsed}
+    except json.JSONDecodeError:
+        # Common model glitch: trailing commas / partial JSON. Best-effort salvage.
+        stripped = raw.strip()
+        if stripped.startswith("{") and stripped.endswith("}"):
+            try:
+                repaired = re.sub(r",\s*}", "}", stripped)
+                repaired = re.sub(r",\s*]", "]", repaired)
+                parsed = json.loads(repaired)
+                if isinstance(parsed, dict):
+                    return parsed
+            except Exception:
+                pass
+        return {"_raw": raw}
+
+
 def _parse_response(data: dict[str, Any]) -> Response:
-    choice = data["choices"][0]
-    msg = choice["message"]
+    choices = data.get("choices") or []
+    if not choices:
+        raise RuntimeError(f"provider returned no choices: {data!r}"[:500])
+    choice = choices[0]
+    msg = choice.get("message") or {}
 
     tool_calls: list[ToolCall] = []
     for tc in msg.get("tool_calls") or []:
-        args = tc["function"].get("arguments", "{}")
+        fn = tc.get("function") or {}
+        name = fn.get("name") or ""
+        if not name:
+            continue
         tool_calls.append(
             ToolCall(
-                id=tc["id"],
-                name=tc["function"]["name"],
-                arguments=json.loads(args) if isinstance(args, str) else args,
+                id=tc.get("id") or f"call_{len(tool_calls)}",
+                name=name,
+                arguments=_parse_tool_arguments(fn.get("arguments", "{}")),
             )
         )
 

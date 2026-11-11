@@ -1,5 +1,14 @@
 # Security Policy
 
+**Current MCP scope:** the local MCP server launches an isolated browser and
+exposes structured actions to the connected host. It does not implement the
+Python reference harness's approval, audit, keychain or bash controls described
+below. A host can perform actions on websites through the server; treat page
+content as untrusted, and do not assume screenshots, evaluated content or network
+data are secret-filtered. The sidecar's JavaScript evaluator runs with the local
+user's privileges and is not a security sandbox. Chrome sandbox behavior is
+controlled by the runtime's launch configuration and host environment.
+
 Callisto drives a real browser with user credentials. Security is a
 first-class concern. This document states the threat model honestly —
 what is protected, what is not, and how to report issues.

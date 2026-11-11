@@ -38,6 +38,8 @@ class SiliconFlowModel(OpenAICompatibleModel):
     api_key_env = "SILICONFLOW_KEY"
     provider_name = "SiliconFlow"
     send_stream_false = True
+    # Transient gateway / overload errors are common on free-tier traffic.
+    extra_retry_statuses = frozenset({500, 502, 503, 504})
 
     def __init__(
         self,

@@ -73,19 +73,24 @@ export class Locator {
   }
 
   first(): Locator {
-    return this
+    throw new Error('locator.first() is not supported; use a more specific locator')
   }
 
   async #target(): Promise<Target> {
     if (this.#query.kind === 'ref') return this.#query.ref
 
-    const ref = this.#resolveRef()
-    if (!ref) {
-      throw new Error(
-        `locator ${targetLabel(this.#query)} not found — call page.accessibility.snapshot() first.`,
-      )
-    }
-    return ref
+    const deadline = Date.now() + 2_000
+    do {
+      // Refresh the registry so locators can see content rendered after an
+      // earlier snapshot. Snapshot refs themselves remain stable for a node.
+      await this.#mini.refreshLocators()
+      const ref = this.#resolveRef()
+      if (ref) return ref
+      await new Promise((resolve) => setTimeout(resolve, 50))
+    } while (Date.now() < deadline)
+    throw new Error(
+      `locator ${targetLabel(this.#query)} not found within 2000ms.`,
+    )
   }
 
   #resolveRef(): Ref | undefined {
@@ -126,7 +131,7 @@ export class Page {
     this.#mini = mini
   }
 
-  async goto(url: string, opts: { waitUntil?: 'load' | 'domcontentloaded' } = {}): Promise<void> {
+  async goto(url: string, opts: { waitUntil?: 'load' | 'domcontentloaded'; timeout?: number } = {}): Promise<void> {
     await this.#mini.goto(url, opts)
   }
 
@@ -188,8 +193,7 @@ export class Page {
       return
     }
     if (state === 'networkidle') {
-      await this.waitForTimeout(500)
-      return
+      throw new Error('waitForLoadState("networkidle") is not supported; wait for a specific page condition instead.')
     }
     await this.#mini.waitFor(() => document.readyState === 'complete')
   }

@@ -1,6 +1,11 @@
 # Callisto Browser
 
-**Browser-first distribution (RFC 0006 option B).**  
+**Historical experiment; not the current product path.** The runtime and MCP
+interface in [`packages/mini`](../mini/) are the active focus. This directory
+is retained with its separate license and notices; see the
+[current roadmap](../../roadmap.md).
+
+**Former browser-first distribution (RFC 0006 option B).**
 A Callisto-branded browser built on **BrowserOS** (Chromium fork), for real users
 who never open a CLI.
 

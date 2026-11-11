@@ -1,0 +1,142 @@
+{
+  "createdAt": "2026-11-11T16:07:38.449Z",
+  "model": "tencent/Hy3",
+  "protocol": "Same model, JSON action policy, observation and fixture; isolated warm Chrome instances; one trial each.",
+  "results": [
+    {
+      "engine": "mini",
+      "task": "click",
+      "success": true,
+      "answer": "done",
+      "error": null,
+      "calls": 2,
+      "usage": {
+        "prompt_tokens": 266,
+        "completion_tokens": 131
+      },
+      "elapsedMs": 7193,
+      "trace": [
+        {
+          "action": {
+            "action": "click",
+            "role": "button",
+            "name": "Confirm"
+          },
+          "ok": true
+        },
+        {
+          "action": {
+            "action": "done"
+          }
+        }
+      ]
+    },
+    {
+      "engine": "playwright",
+      "task": "click",
+      "success": true,
+      "answer": "done",
+      "error": null,
+      "calls": 2,
+      "usage": {
+        "prompt_tokens": 266,
+        "completion_tokens": 126
+      },
+      "elapsedMs": 5910,
+      "trace": [
+        {
+          "action": {
+            "action": "click",
+            "role": "button",
+            "name": "Confirm"
+          },
+          "ok": true
+        },
+        {
+          "action": {
+            "action": "done"
+          }
+        }
+      ]
+    },
+    {
+      "engine": "mini",
+      "task": "form",
+      "success": false,
+      "answer": null,
+      "error": "model returned invalid action JSON",
+      "calls": 1,
+      "usage": {
+        "prompt_tokens": 137,
+        "completion_tokens": 256
+      },
+      "elapsedMs": 5231,
+      "trace": [
+        {
+          "content": "",
+          "error": "model returned invalid action JSON"
+        }
+      ]
+    },
+    {
+      "engine": "playwright",
+      "task": "form",
+      "success": true,
+      "answer": null,
+      "error": "model request HTTP 402: error",
+      "calls": 2,
+      "usage": {
+        "prompt_tokens": 337,
+        "completion_tokens": 256
+      },
+      "elapsedMs": 8203,
+      "trace": [
+        {
+          "action": {
+            "action": "fill",
+            "role": "textbox",
+            "name": "Fruit",
+            "value": "mango"
+          },
+          "ok": true
+        },
+        {
+          "action": {
+            "action": "click",
+            "role": "button",
+            "name": "Save"
+          },
+          "ok": true
+        }
+      ]
+    },
+    {
+      "engine": "mini",
+      "task": "delayed",
+      "success": false,
+      "answer": null,
+      "error": "model request HTTP 402: error",
+      "calls": 0,
+      "usage": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0
+      },
+      "elapsedMs": 383,
+      "trace": []
+    },
+    {
+      "engine": "playwright",
+      "task": "delayed",
+      "success": false,
+      "answer": null,
+      "error": "model request HTTP 402: error",
+      "calls": 0,
+      "usage": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0
+      },
+      "elapsedMs": 361,
+      "trace": []
+    }
+  ]
+}

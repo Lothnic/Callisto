@@ -1,0 +1,39 @@
+# A lean Playwright-shaped alternative to browse
+
+**Research, not a spec · 2026-11-11.** This is an independent primary-source assessment of the original product idea. It supplements and corrects portions of the earlier positioning note. No new performance benchmark was run for this note. Local code observations refer to commit `a594806` plus the current working tree.
+
+## Verdict
+
+The bet is reasonable: a small browser runtime designed for agents, exposing a carefully chosen Playwright-compatible JavaScript subset with compact, useful observations, could be valuable. It can compete directly with browse. Neither a thin CDP implementation nor a shorter snapshot establishes an advantage by itself: the result must complete real tasks with fewer errors, less latency or lower cost, while preserving the workflows its intended users need. The evidence currently available does not establish that Callisto does so.
+
+The customer should be explicit. For **local coding agents testing a project**, a fast isolated browser, clear setup, reliable interactions, and actionable debugging are a plausible starting point. For **personal browsing across logged-in accounts**, browse's real-browser integration is part of the product, not incidental overhead. A standalone isolated runtime is not a full substitute until it supports those workflows or clearly excludes them.
+
+## What the market actually offers
+
+| Tool | Relevant primary-source facts | Implication |
+|---|---|---|
+| [browse](https://github.com/anomalyco/browse) | Local MCP/CLI, real Chromium browser through extension and relay, Playwright/Patchright JS execution, snapshots and refs, named sessions, human handoff, allowlists, and configurable human-like input. | It already has the Playwright vocabulary and compact-agent-interface premise. Benchmark both default settings and fast-input settings; preserve meaningful security and workflow differences. |
+| [Playwright CLI](https://github.com/microsoft/playwright-cli) | Agent-oriented CLI, snapshots, persistent profiles, plus attach via extension or CDP. | A lean agent-facing interface and real-browser access are not new or unique. Compare against a real Playwright-backed baseline. |
+| [Playwright MCP](https://github.com/microsoft/playwright-mcp) | Supports extension access to logged-in browser tabs, isolated contexts with storage state, and a background option. | Earlier notes overstated that only a patched Chromium fork could provide background automation and that portable stored state was wholly missing. Behavior varies by platform and use case. |
+| [agent-browser](https://github.com/vercel-labs/agent-browser) | CLI/daemon drives browsers over CDP; supports headless runs, sessions, CDP attachment and an MCP interface. | Direct CDP, minimal output and headless operation are credible approaches, but not a differentiated claim on their own. |
+| [Aside](https://aside.com/blog/how-we-built-the-sota-browser-agent-that-outperforms-fable) | Describes Playwright-syntax code execution, its own CDP-based implementation, compact accessibility snapshots, signals and visual fallback. Its benchmark and interface-equivalence claims are its own. | Strong validation that an experienced team considers the approach viable; it does not prove that Callisto's subset or a thin wrapper alone causes benchmark results. |
+
+The prior note's statement that browse structurally cannot provide policy or concurrent/unattended runs is too strong: browse documents allowlists, named sessions, script execution, and other controls. Its suitability for a specific unattended CI deployment must be measured, not ruled out by assertion. Similarly, [Playwright supports saving authenticated state](https://playwright.dev/docs/auth), including optional IndexedDB, and loading it into isolated contexts. Extracting a user's existing profile safely is a distinct unsolved engineering problem; expiry, session storage, device binding, server-side changes and bot checks prevent treating exported state as deterministic authentication.
+
+## The real design bet
+
+Playwright's advantage is behavior, not merely familiar method names. For example, its documented [`locator.click()`](https://playwright.dev/docs/actionability) waits for a unique, visible, stable, enabled target that receives events. A model expecting this contract can be misled by a namesake that clicks coordinates immediately. Commit to a small *honest subset*: preserve semantics for supported common calls, explicitly reject unsupported combinations with an actionable error, and document intentional differences. Test behavior against Playwright on controlled fixtures. A JavaScript REPL plus `page`, semantic locators, refs, and `snapshot()` can retain composability without exposing dozens of tools.
+
+Source inspection indicates current work is early: `packages/mini/src/page.ts` resolves semantic locators against a snapshot registry, restricts `locator()`, and implements `networkidle` as a fixed delay; `packages/mini/src/sidecar.ts` uses `Object.create(mini)` while snapshot state is assigned on `this`; `packages/mini/src/snapshot.ts` checks password-like AX roles for redaction. These are code observations, not fresh confirmations of all earlier runtime reports. Verify fixes with end-to-end tests before making a compatibility or security claim.
+
+Keep perception useful as well as small: report missing/offscreen content, retain text and structure needed for task decisions, offer targeted expansion and screenshot fallback, and avoid mutating the page merely to shrink the snapshot. A small tree that hides the necessary target can cost more agent turns than a larger one.
+
+## What to measure before deciding
+
+First run a cheap controlled ablation: **same model, harness, prompt budget, site state and Playwright-shaped actions**, with (A) Callisto/CDP and (B) real Playwright, using the same snapshot design as far as feasible. This isolates the runtime decision. A second ablation compares snapshot policies with the same action backend. Then compare complete products—Callisto, browse default and fast-input mode, Playwright CLI/MCP, and agent-browser—on the same task suite, explicitly noting authentication and tooling differences. A full-product comparison cannot isolate why one wins.
+
+Use seeded local fixtures for stable regressions (forms, delayed content, iframes, scrolling, SPA navigation, dynamic targets) plus a separately reported live-site suite including authenticated workflows. Reset state per run, counterbalance order, pin versions and viewport, repeat trials across multiple sites and preferably multiple models; log failures rather than silently retrying. Published numbers should include per-task outcomes and uncertainty. Thirty tasks can be a useful discovery sample but is too small for confident universal rankings.
+
+Measure task success and harmful/wrong actions; time to completion (median and tail, including setup and cold/warm starts); total tokens and model spend per task and per success; agent turns and retries; snapshot bytes/tokens **and task-relevant coverage**; runtime resource use; and reproducible traces. For snapshot microbenchmarks use identical DOM state and repeated runs. Treat prior-hit rate as one diagnostic, with an explicit definition and sampled calls, not a proven proxy for success.
+
+Suggested decision rule: continue the custom engine if it delivers a predeclared, practically meaningful improvement on the target users' real tasks at comparable success and acceptable safety, and its ongoing compatibility maintenance is affordable. If the same agent experience works as well with real Playwright, retain the concise interface and perception layer and use Playwright underneath. If profile-dependent tasks dominate, prototype browser attachment before claiming to replace browse.

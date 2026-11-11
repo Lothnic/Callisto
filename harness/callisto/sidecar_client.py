@@ -47,8 +47,9 @@ class SidecarClient:
         client.terminate()
     """
 
-    def __init__(self, restart_budget: int = 1) -> None:
+    def __init__(self, restart_budget: int = 1, relaunch_budget: int = 2) -> None:
         self._restart_budget = restart_budget
+        self._relaunch_budget = relaunch_budget
         self._process: asyncio.subprocess.Process | None = None
         self._dead = False
         self._pending: dict[str, Future[dict[str, Any]]] = {}
@@ -234,3 +235,30 @@ class SidecarClient:
         await self.start()
         await self.call("launch", self._launch_params)
         log.info("sidecar restarted successfully")
+
+    async def relaunch_browser(self) -> None:
+        """
+        Re-launch the browser session without restarting the sidecar process.
+
+        Sends a new 'launch' call to the sidecar, which closes the existing
+        Mini session (killing the old Chrome process) and creates a new one
+        with a fresh Chrome process and CDP connection.
+
+        This is a recovery path for CDP/WebSocket disconnections where the
+        sidecar process is still alive but Chrome's debug protocol connection
+        has been lost.
+
+        Uses a separate budget from maybe_restart() so browser-only re-launches
+        don't consume the sidecar crash recovery budget.
+        """
+        if not hasattr(self, "_launch_params"):
+            raise SidecarDead("cannot re-launch browser — was never launched")
+        if self._relaunch_budget <= 0:
+            raise SidecarDead("browser re-launch budget exhausted")
+        self._relaunch_budget -= 1
+        log.info(
+            "re-launching browser session (budget remaining: %d)",
+            self._relaunch_budget,
+        )
+        await self.call("launch", self._launch_params)
+        log.info("browser re-launched successfully")

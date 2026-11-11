@@ -1,0 +1,171 @@
+{
+  "createdAt": "2026-11-11T16:30:59.552Z",
+  "model": "nvidia/nemotron-3.5-lightning:free",
+  "tasks": [
+    {
+      "id": "example-purpose",
+      "url": "https://example.com/",
+      "question": "What is this domain intended for?",
+      "expected": "documentation|example"
+    },
+    {
+      "id": "rfc-title",
+      "url": "https://www.rfc-editor.org/rfc/rfc9110.html",
+      "question": "What is the title of RFC 9110?",
+      "expected": "http semantics"
+    },
+    {
+      "id": "iana-domains",
+      "url": "https://www.iana.org/domains/reserved",
+      "question": "Name one domain reserved for use in examples.",
+      "expected": "example\\.(com|org|net)"
+    },
+    {
+      "id": "gutenberg-author",
+      "url": "https://www.gutenberg.org/ebooks/1342",
+      "question": "Who wrote this book?",
+      "expected": "jane austen"
+    },
+    {
+      "id": "ada-year",
+      "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+      "question": "In what year was Ada Lovelace born?",
+      "expected": "1815"
+    },
+    {
+      "id": "grace-year",
+      "url": "https://en.wikipedia.org/wiki/Grace_Hopper",
+      "question": "In what year was Grace Hopper born?",
+      "expected": "1906"
+    },
+    {
+      "id": "mdn-http",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP",
+      "question": "What does HTTP stand for?",
+      "expected": "hypertext transfer protocol"
+    },
+    {
+      "id": "python-about",
+      "url": "https://www.python.org/about/",
+      "question": "What is Python according to this page?",
+      "expected": "programming language"
+    },
+    {
+      "id": "w3c-name",
+      "url": "https://www.w3.org/",
+      "question": "What does W3C stand for?",
+      "expected": "world wide web consortium"
+    },
+    {
+      "id": "kernel",
+      "url": "https://www.kernel.org/",
+      "question": "Which operating system kernel is this site an archive for?",
+      "expected": "linux"
+    },
+    {
+      "id": "follow-example",
+      "url": "https://example.com/",
+      "question": "Follow the Learn more link. What organization manages these example domains?",
+      "expected": "iana|internet assigned numbers authority",
+      "mustNavigate": true
+    }
+  ],
+  "results": [
+    {
+      "engine": "mini",
+      "task": "example-purpose",
+      "success": false,
+      "answerCorrect": false,
+      "evidenceVerified": false,
+      "clicked": false,
+      "answer": "",
+      "evidence": "",
+      "error": "invalid JSON from model",
+      "calls": 1,
+      "promptTokens": 383,
+      "completionTokens": 300,
+      "elapsedMs": 6207,
+      "trace": [
+        {
+          "action": "invalid-model-output",
+          "content": ""
+        }
+      ],
+      "observations": [
+        "[ax-1] link \"Learn more\"\nStaticText \"This domain is for use in documentation examples without needing permission. This is not a service; avoid relying on it for testing and monitoring purposes.\"\nStaticText \"هذا النطاق مُخصص للاستخدام في أمثلة التوثيق دون الحاجة إلى إذن. هذه ليست خدمة، يُرجى تجنب الاعتماد عليها لأغراض الاختبار والمراقبة.\"\nStaticText \"该域名仅用于文档示例，无需获得许可。这并非一项服务，请勿将其用于测试和监控目的。\"\nStaticText \"L’usage de ce domaine est réservé à des exemples de documentation, sans autorisation préalable. Il ne s’agit pas d’un service ; son utilisation à des fins de test ou de surveillance est à éviter.\"\nStaticText \"Данный домен предназначен для использования в примерах документации без необходимости получения предварительного разрешения. Это не сервис; не рекомендуется его использование для тестирования и мониторинга.\"\nStaticText \"Este dominio está destinado al uso en ejemplos de documentación sin necesidad de permiso. Esto no es un servicio; evitar utilizarlo para realizar pruebas o monitoreos.\""
+      ]
+    },
+    {
+      "engine": "playwright",
+      "task": "example-purpose",
+      "success": false,
+      "answerCorrect": false,
+      "evidenceVerified": false,
+      "clicked": false,
+      "answer": "",
+      "evidence": "",
+      "error": "invalid JSON from model",
+      "calls": 1,
+      "promptTokens": 391,
+      "completionTokens": 300,
+      "elapsedMs": 6022,
+      "trace": [
+        {
+          "action": "invalid-model-output",
+          "content": ""
+        }
+      ],
+      "observations": [
+        "- paragraph: This domain is for use in documentation examples without needing permission. This is not a service; avoid relying on it for testing and monitoring purposes.\n- paragraph: هذا النطاق مُخصص للاستخدام في أمثلة التوثيق دون الحاجة إلى إذن. هذه ليست خدمة، يُرجى تجنب الاعتماد عليها لأغراض الاختبار والمراقبة.\n- paragraph: 该域名仅用于文档示例，无需获得许可。这并非一项服务，请勿将其用于测试和监控目的。\n- paragraph: L’usage de ce domaine est réservé à des exemples de documentation, sans autorisation préalable. Il ne s’agit pas d’un service ; son utilisation à des fins de test ou de surveillance est à éviter.\n- paragraph: Данный домен предназначен для использования в примерах документации без необходимости получения предварительного разрешения. Это не сервис; не рекомендуется его использование для тестирования и мониторинга.\n- paragraph: Este dominio está destinado al uso en ejemplos de documentación sin necesidad de permiso. Esto no es un servicio; evitar utilizarlo para realizar pruebas o monitoreos.\n- link \"Learn more\":\n  - /url: https://iana.org/help/example-domains"
+      ]
+    },
+    {
+      "engine": "browse",
+      "task": "example-purpose",
+      "success": false,
+      "answerCorrect": false,
+      "evidenceVerified": false,
+      "clicked": false,
+      "answer": "",
+      "evidence": "",
+      "error": "invalid JSON from model",
+      "calls": 1,
+      "promptTokens": 371,
+      "completionTokens": 300,
+      "elapsedMs": 6138,
+      "trace": [
+        {
+          "action": "invalid-model-output",
+          "content": ""
+        }
+      ],
+      "observations": [
+        "- p \"This domain is for use in documentation examples without needing permission. This is not a service; avoid relying on it for testing and monitoring purposes.\"\n- p \"هذا النطاق مُخصص للاستخدام في أمثلة التوثيق دون الحاجة إلى إذن. هذه ليست خدمة، يُرجى تجنب الاعتماد عليها لأغراض الاختبار والمراقبة.\"\n- p \"该域名仅用于文档示例，无需获得许可。这并非一项服务，请勿将其用于测试和监控目的。\"\n- p \"L’usage de ce domaine est réservé à des exemples de documentation, sans autorisation préalable. Il ne s’agit pas d’un service ; son utilisation à des fins de test ou de...\"\n- p \"Данный домен предназначен для использования в примерах документации без необходимости получения предварительного разрешения. Это не сервис; не рекомендуется его использование для...\"\n- p \"Este dominio está destinado al uso en ejemplos de documentación sin necesidad de permiso. Esto no es un servicio; evitar utilizarlo para realizar pruebas o monitoreos.\"\n- link \"Learn more\" [ref=e1]"
+      ]
+    },
+    {
+      "engine": "playwright",
+      "task": "rfc-title",
+      "success": false,
+      "answerCorrect": false,
+      "evidenceVerified": false,
+      "clicked": false,
+      "answer": "",
+      "evidence": "",
+      "error": "invalid JSON from model",
+      "calls": 1,
+      "promptTokens": 3330,
+      "completionTokens": 300,
+      "elapsedMs": 9590,
+      "trace": [
+        {
+          "action": "invalid-model-output",
+          "content": ""
+        }
+      ],
+      "observations": [
+        "- term: \"Stream:\"\n- definition: Internet Engineering Task Force (IETF)\n- term: \"RFC:\"\n- definition:\n  - link \"9110\":\n    - /url: https://www.rfc-editor.org/rfc/rfc9110\n- term: \"STD:\"\n- definition: \"97\"\n- term: \"Obsoletes:\"\n- definition:\n  - link \"2818\":\n    - /url: https://www.rfc-editor.org/rfc/rfc2818\n  - text: \",\"\n  - link \"7230\":\n    - /url: https://www.rfc-editor.org/rfc/rfc7230\n  - text: \",\"\n  - link \"7231\":\n    - /url: https://www.rfc-editor.org/rfc/rfc7231\n  - text: \",\"\n  - link \"7232\":\n    - /url: https://www.rfc-editor.org/rfc/rfc7232\n  - text: \",\"\n  - link \"7233\":\n    - /url: https://www.rfc-editor.org/rfc/rfc7233\n  - text: \",\"\n  - link \"7235\":\n    - /url: https://www.rfc-editor.org/rfc/rfc7235\n  - text: \",\"\n  - link \"7538\":\n    - /url: https://www.rfc-editor.org/rfc/rfc7538\n  - text: \",\"\n  - link \"7615\":\n    - /url: https://www.rfc-editor.org/rfc/rfc7615\n  - text: \",\"\n  - link \"7694\":\n    - /url: https://www.rfc-editor.org/rfc/rfc7694\n- term: \"Updates:\"\n- definition:\n  - link \"3864\":\n    - /url: https://www.rfc-editor.org/rfc/rfc3864\n- term: \"Category:\"\n- definition: Standards Track\n- term: \"Published:\"\n- definition:\n  - time: June 2022\n- term: \"ISSN:\"\n- definition: 2070-1721\n- term: \"Authors:\"\n- definition: R. Fielding, Ed. Adobe M. Nottingham, Ed. Fastly J. Reschke, Ed. greenbytes\n- heading \"RFC 9110\" [level=1]\n- heading \"HTTP Semantics\" [level=1]\n- heading \"Abstract\" [level=2]:\n  - link \"Abstract\":\n    - /url: \"#abstract\"\n- paragraph: The Hypertext Transfer Protocol (HTTP) is a stateless application-level protocol for distributed, collaborative, hypertext information systems. This document describes the overall architecture of HTTP, establishes common terminology, and defines aspects of the protocol that are shared by all versions. In this definition are core protocol elements, extensibility mechanisms, and the \"http\" and \"https\" Uniform Resource Identifier (URI) schemes.\n- paragraph: This document updates RFC 3864 and obsoletes RFCs 2818, 7231, 7232, 7233, 7235, 7538, 7615, 7694, and portions of 7230.\n- heading \"Status of This Memo\" [level=2]:\n  - link \"Status of This Memo\":\n    - /url: \"#name-status-of-this-memo\"\n- paragraph: This is an Internet Standards Track document.\n- paragraph: This document is a product of the Internet Engineering Task Force (IETF). It represents the consensus of the IETF community. It has received public review and has been approved for publication by the Internet Engineering Steering Group (IESG). Further information on Internet Standards is available in Section 2 of RFC 7841.\n- paragraph:\n  - text: Information about the current status of this document, any errata, and how to provide feedback on it may be obtained at\n  - link \"https://www.rfc-editor.org/info/rfc9110\":\n    - /url: https://www.rfc-editor.org/info/rfc9110\n  - text: .\n- heading \"Copyright Notice\" [level=2]:\n  - link \"Copyright Notice\":\n    - /url: \"#name-copyright-notice\"\n- paragraph: Copyright (c) 2022 IETF Trust and the persons identified as the document authors. All rights reserved.\n- paragraph:\n  - text: This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF Documents (\n  - link \"https://trustee.ietf.org/license-info\":\n    - /url: https://trustee.ietf.org/license-info\n  - text: ) in effect on the date of publication of this document. Please review these documents carefully, as they describe your rights and restrictions with respect to this document. Code Components extracted from this document must include Revised BSD License text as described in Section 4.e of the Trust Legal Provisions and are provided without warranty as described in the Revised BSD License.\n- paragraph: This document may contain material from IETF Documents or IETF Contributions published or made publicly available before November 10, 2008. The person(s) controlling the copyright in some of this material may not have granted the IETF Trust the right to allow modifications of such material outside the IETF Standards Process. Without obtaining an adequate license from the person(s) controlling the copyright in such materials, this document may not be modified outside the IETF Standards Process, and derivative works of it may not be created outside the IETF Standards Process, except to format it for publication as an RFC or to translate it into languages other than English.\n- link \"▲\":\n  - /url: \"#\"\n- heading \"Table of Contents\" [level=2]:\n  - link \"Table of Contents\":\n    - /url: \"#name-table-of-contents\"\n- navigation:\n  - list:\n    - listitem:\n      - paragraph:\n        - link \"1\":\n          - /url: \"#section-1\"\n        - text: .\n        - link \"Introduction\":\n          - /url: \"#name-introduction\"\n      - list:\n        - listitem:\n          - paragraph:\n            - link \"1.1\":\n              - /url: \"#section-1.1\"\n            - text: .\n            - link \"Purpose\":\n              - /url: \"#name-purpose\"\n        - listitem:\n          - paragraph:\n            - link \"1.2\":\n              - /url: \"#section-1.2\"\n            - text: .\n            - link \"History and Evolution\":\n              - /url: \"#name-history-and-evolution\"\n        - listitem:\n          - paragraph:\n            - link \"1.3\":\n              - /url: \"#section-1.3\"\n            - text: .\n            - link \"Core Semantics\":\n              - /url: \"#name-core-semantics\"\n        - listitem:\n          - paragraph:\n            - link \"1.4\":\n              - /url: \"#section-1.4\"\n            - text: .\n            - link \"Specifications Obsoleted by This Document\":\n              - /url: \"#name-specifications-obsoleted-by\"\n    - listitem:\n      - paragraph:\n        - link \"2\":\n          - /url: \"#section-2\"\n        - text: .\n        - link \"Conformance\":\n          - /url: \"#name-conformance\"\n      - list:\n        - listitem:\n          - paragraph:\n            - link \"2.1\":\n              - /url: \"#section-2.1\"\n            - text: .\n            - link \"Syntax Notation\":\n              - /url: \"#name-syntax-notation\"\n        - listitem:\n          - paragraph:\n            - link \"2.2\":\n              - /url: \"#section-2.2\"\n            - text: .\n            - link \"Requirements Notation\":\n              - /url: \"#name-requirements-notation\"\n        - listitem:\n          - paragraph:\n            - link \"2.3\":\n              - /url: \"#section-2.3\"\n            - text: .\n            - link \"Length Requirements\":\n              - /url: \"#name-length-requirements\"\n        - listitem:\n          - paragraph:\n            - link \"2.4\":\n              - /url: \"#section-2.4\"\n            - text: .\n            - link \"Error Handling\":\n              - /url: \"#name-error-handling\"\n        - listitem:\n          - paragraph:\n            - link \"2.5\":\n              - /url: \"#section-2.5\"\n            - text: .\n            - link \"Protocol Version\":\n              - /url: \"#name-protocol-version\"\n    - listitem:\n      - paragraph:\n        - link \"3\":\n          - /url: \"#section-3\"\n        - text: .\n        - link \"Terminology and Core Concepts\":\n          - /url: \"#name-terminology-and-core-concep\"\n      - list:\n        - listitem:\n          - paragraph:\n            - link \"3.1\":\n              - /url: \"#section-3.1\"\n            - text: .\n            - link \"Resources\":\n              - /url: \"#name-resources\"\n        - listitem:\n          - paragraph:\n            - link \"3.2\":\n              - /url: \"#section-3.2\"\n            - text: .\n            - link \"Representations\":\n              - /url: \"#name-representations\"\n        - listitem:\n          - paragraph:\n            - link \"3.3\":\n              - /url: \"#section-3.3\"\n            - text: .\n            - link \"Connections, Clients, and Servers\":\n              - /url: \"#name-connections-clients-and-ser\"\n        - listitem:\n          - paragraph:\n            - link \"3.4\":\n              - /url: \"#section-3.4\"\n            - text: .\n            - link \"Messages\":\n              - /url: \"#name-messages\"\n        - listitem:\n          - paragraph:\n            - link \"3.5\":\n              - /url: \"#section-3.5\"\n            - text: .\n            - link \"User Agents\":\n              - /url: \"#name-user-agents\"\n        - listitem:\n          - paragraph:\n            - link \"3.6\":\n              - /url: \"#section-3.6\"\n            - text: .\n            - link \"Origin Server\":\n              - /url: \"#name-origin-server\"\n        - listitem:\n          - paragraph:\n            - link \"3.7\":\n              - /url: \"#section-3.7\"\n            - text: .\n            - link \"Intermediaries\":\n              - /url: \"#name-intermediaries\"\n        - listitem:\n          - paragraph:\n            - link \"3.8\":\n              - /url: \"#section-3.8\"\n            - text: .\n            - link \"Caches\":\n              - /url: \"#name-caches\"\n        - listitem:\n          - paragraph:\n            - link \"3.9\":\n              - /url: \"#section-3.9\"\n            - text: .\n            - link \"Example Message Exchange\":\n              - /url: \"#name-example-message-exchange\"\n    - listitem:\n      - paragraph:\n        - link \"4\":\n          - /url: \"#section-4\"\n        - text: .\n        - link \"Identifiers in HTTP\":\n          - /url: \"#name-identifiers-in-http\"\n      - list:\n        - listitem:\n          - paragraph:\n            - link \"4.1\":\n              - /url: \"#section-4.1\"\n            - text: .\n            - link \"URI References\":\n              - /url: \"#name-uri-references\"\n        - listitem:\n          - paragraph:\n            - link \"4.2\":\n              - /url: \"#section-4.2\"\n            - text: .\n            - link \"HTTP-Related URI Schemes\":\n              - /url: \"#name-http-related-uri-schemes\"\n          - list:\n            - listitem:\n              - paragraph:\n                - link \"4.2.1\":\n                  - /url: \"#section-4.2.1\"\n                - text: .\n                - link \"http URI Scheme\":\n                  - /url: \"#name-http-uri-scheme\"\n            - listitem:\n              - paragraph:\n                - link \"4.2.2\":\n                  - /url: \"#section-4.2.2\"\n                - text: .\n                - link \"https URI Scheme\":\n                  - /url: \"#name-https-uri-scheme\"\n            - listitem:\n              - paragraph:\n                - link \"4.2.3\":\n                  - /url: \"#section-4.2.3\"\n                - text: .\n                - link \"http(s) Normalization and Comparison\":\n                  - /url: \"#name-https-normalization-and-com\"\n            - listitem:\n              - paragraph:\n                - link \"4.2.4\":\n                  - /url: \"#section-4.2.4\"\n                - text: .\n                - link \"Deprecation of userinfo in http(s) URIs\":\n                  - /url: \"#name-deprecation-of-userinfo-in-\"\n            - listitem:\n              - paragraph:\n                - link \"4.2.5\":\n                  - /url: \"#section-4.2.5\"\n                - text: .\n                - link \"http(s) References with Fragment Identifiers\":\n                  - /url: \"#name-https-references-with-fragm\"\n        - listitem:\n          - paragraph:\n            - link \"4.3\":\n              - /url: \"#section-4.3\"\n            - text: .\n            - link \"Authoritative Access\":\n              - /url: \"#name-authoritative-access\"\n          - list:\n            - listitem:\n              - paragraph:\n                - link \"4.3.1\":\n                  - /url: \"#section-4.3.1\"\n                - text: .\n                - link \"URI Origin\":\n                  - /url: \"#name-uri-origin\"\n            - listitem:\n              - paragraph:\n                - link \"4.3.2\":\n                  - /url: \"#section-4.3.2\"\n                - text: .\n                - link \"http Origins\":\n                  - /url: \"#name-http-origins\"\n            - listitem:\n              - paragraph:\n                - link \"4.3.3\":\n                  - /url: \"#section-4.3.3\"\n                - text: .\n                - link \"https Origins\":\n                  - /url: \"#name-https-origins\"\n            - listitem:\n              - paragraph:\n                - link \"4.3."
+      ]
+    }
+  ]
+}

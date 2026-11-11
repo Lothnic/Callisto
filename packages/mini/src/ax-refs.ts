@@ -21,6 +21,7 @@ export interface RefLookup {
 export class RefRegistry {
   private byBackend = new Map<number, RefInfo>()
   private byRef = new Map<string, RefInfo>()
+  private currentRefs = new Set<string>()
   private next = 1
 
   /** Stable ref for a backend node — allocated once, reused thereafter. */
@@ -42,9 +43,11 @@ export class RefRegistry {
    * node. Mutates in place and returns the same forest for chaining.
    */
   annotate(forest: PrunedNode[]): PrunedNode[] {
+    this.currentRefs.clear()
     const visit = (n: PrunedNode): void => {
       if (isInteractive(n.role) && n.backendDOMNodeId != null) {
         n.ref = this.intern(n.backendDOMNodeId, n.role, n.name, n.frameId)
+        this.currentRefs.add(n.ref)
       }
       n.children.forEach(visit)
     }
@@ -59,9 +62,11 @@ export class RefRegistry {
   find(query: RefLookup): RefInfo | undefined {
     const role = query.role?.toLowerCase()
     const candidates = [...this.byRef.values()].filter((info) => {
+      if (!this.currentRefs.has(info.ref)) return false
       if (role && info.role.toLowerCase() !== role) return false
       return this.matchesName(info.name, query.name, query.exact)
     })
+    if (candidates.length > 1) throw new Error(`locator matched ${candidates.length} elements; refine the role or name`)
     return candidates[0]
   }
 

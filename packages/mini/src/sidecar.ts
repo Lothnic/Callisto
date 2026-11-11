@@ -1,4 +1,4 @@
-#!/usr/bin/env -S npx tsx
+#!/usr/bin/env node
 /**
  * callisto-sidecar — stdio JSON-RPC bridge over @callisto/mini.
  *
@@ -113,15 +113,6 @@ async function handleEval(params: Record<string, unknown>): Promise<Record<strin
     throw new Error('EvalError: params.code must be a string')
   }
 
-  // Build the user's async function with page in scope. Mini stays internal and
-  // close() is stubbed out behind the facade — the sidecar owns the lifecycle.
-  const miniProxy = Object.create(mini) as Mini
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ;(miniProxy as any).close = () => {
-    throw new Error('EvalError: browser close is not callable from eval')
-  }
-  const pageProxy = new Page(miniProxy)
-
   // eslint-disable-next-line @typescript-eslint/no-implied-eval
   const fn = new Function('page', `return (async () => { ${code} })()`)
 
@@ -134,7 +125,7 @@ async function handleEval(params: Record<string, unknown>): Promise<Record<strin
   })
 
   try {
-    const raw = await Promise.race([fn(pageProxy) as Promise<unknown>, timeout])
+    const raw = await Promise.race([fn(page) as Promise<unknown>, timeout])
     // Focus any popup/new tab that opened during the action before returning.
     await mini.flushPendingFocus()
     const { value, truncated } = safeSerialise(raw)
@@ -142,6 +133,16 @@ async function handleEval(params: Record<string, unknown>): Promise<Record<strin
     const result: Record<string, unknown> = truncated ? { value, truncated: true } : { value }
     if (signals.length) result._signals = signals
     return result
+  } catch (error) {
+    if (error instanceof Error && error.message.startsWith('EvalTimeout:')) {
+      // Timed-out JavaScript cannot be cancelled safely. Retire its browser so
+      // it cannot continue issuing actions against the next request's session.
+      const expired = mini
+      mini = null
+      page = null
+      await expired.close().catch(() => undefined)
+    }
+    throw error
   } finally {
     clearTimeout(timer!)
   }
@@ -209,7 +210,8 @@ const rl = readline.createInterface({
   terminal: false,
 })
 
-rl.on('line', async (line: string) => {
+let pending = Promise.resolve()
+rl.on('line', (line: string) => {
   const trimmed = line.trim()
   if (!trimmed) return
 
@@ -221,12 +223,15 @@ rl.on('line', async (line: string) => {
     return
   }
 
-  const res = await dispatch(req)
-  send(res)
+  pending = pending.then(async () => {
+    const res = await dispatch(req)
+    send(res)
+  })
 })
 
 rl.on('close', async () => {
   // stdin closed (EOF) — clean up and exit
+  await pending
   if (mini) {
     try { await mini.close() } catch { /* best-effort */ }
   }

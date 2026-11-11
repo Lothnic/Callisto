@@ -31,6 +31,24 @@ else
   export LD_LIBRARY_PATH
 fi
 
+# Ensure local mini tooling is on PATH; provide a callisto-sidecar shim if needed.
+export PATH="$(pwd)/packages/mini/node_modules/.bin:${PATH}"
+if ! command -v callisto-sidecar >/dev/null 2>&1; then
+  if [[ -x "$(pwd)/packages/mini/node_modules/.bin/tsx" && -f "$(pwd)/packages/mini/src/sidecar.ts" ]]; then
+    SHIM_DIR="$(pwd)/.callisto-bin"
+    mkdir -p "$SHIM_DIR"
+    cat > "$SHIM_DIR/callisto-sidecar" <<EOF
+#!/usr/bin/env bash
+exec "$(pwd)/packages/mini/node_modules/.bin/tsx" "$(pwd)/packages/mini/src/sidecar.ts" "\$@"
+EOF
+    chmod +x "$SHIM_DIR/callisto-sidecar"
+    export PATH="$SHIM_DIR:${PATH}"
+  else
+    echo "Error: callisto-sidecar not found. From packages/mini run: npm install && npm run build && npm link" >&2
+    exit 1
+  fi
+fi
+
 # Load local secrets if present (does not override already-exported vars).
 if [ -f "$(pwd)/.env" ]; then
   set -a
@@ -125,6 +143,31 @@ while [ $# -gt 0 ]; do
   esac
   shift
 done
+
+# Provider key preflight (clearer than a mid-session ValueError).
+_need_key() {
+  local name="$1"
+  shift
+  for v in "$@"; do
+    if [[ -n "${!v:-}" ]]; then
+      return 0
+    fi
+  done
+  echo "Error: $name is required for --$PROVIDER. Set it in the environment or .env" >&2
+  exit 1
+}
+
+case "$PROVIDER" in
+  siliconflow) _need_key "SILICONFLOW_KEY (or SILICONFLOW_API_KEY)" SILICONFLOW_KEY SILICONFLOW_API_KEY SILICONFLOW_API ;;
+  groq) _need_key "GROQ_API_KEY" GROQ_API_KEY ;;
+  openrouter) _need_key "OPENROUTER_API_KEY" OPENROUTER_API_KEY ;;
+  generalcompute) _need_key "GENERALCOMPUTE_API_KEY" GENERALCOMPUTE_API_KEY ;;
+esac
+
+if [[ -z "${DISPLAY:-}" && "$HEADLESS" == "--no-headless" ]]; then
+  echo "Warning: --visible requested but DISPLAY is unset. Browser window may not appear." >&2
+  echo "         Try: export DISPLAY=:0   (or use without --visible for headless)." >&2
+fi
 
 if [ "$MODE" = "chat" ]; then
   exec "$CALLISTO_HARNESS" chat \

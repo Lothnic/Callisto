@@ -175,8 +175,9 @@ function buildChromeFlags(opts: LaunchOpts, extra: string[] = []): string[] {
     '--disable-gpu',
     '--disable-browseros-server',
     '--disable-blink-features=AutomationControlled',
-    `--load-extension=${path.resolve(__dirname, '../callisto-extension')}`,
   ]
+  const extension = path.resolve(__dirname, '../callisto-extension')
+  if (existsSync(extension)) flags.push(`--load-extension=${extension}`)
   if (headless) {
     flags.push(`--window-size=${(opts.viewport ?? DEFAULT_VIEWPORT).width},${(opts.viewport ?? DEFAULT_VIEWPORT).height}`)
     flags.push('--headless=new')

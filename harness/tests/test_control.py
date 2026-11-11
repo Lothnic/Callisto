@@ -102,6 +102,36 @@ def test_invented_goto_blocked_without_grounding():
     assert reason2 and "Ungrounded" in reason2
 
 
+def test_bare_domain_in_task_grounds_homepage_and_subdomain():
+    """User said 'wikipedia.org' → www/en.wikipedia.org homepages are allowed."""
+    task = "go to wikipedia.org, search for Python"
+    grounded = extract_urls_from_text(task)
+    assert any("wikipedia.org" in g for g in grounded)
+    assert (
+        invented_goto_reason(
+            "await page.goto('https://www.wikipedia.org/')",
+            grounded,
+            grounded_text=task,
+        )
+        is None
+    )
+    assert (
+        invented_goto_reason(
+            "await page.goto('https://en.wikipedia.org/')",
+            grounded,
+            grounded_text=task,
+        )
+        is None
+    )
+    # Deep invented path still blocked
+    reason = invented_goto_reason(
+        "await page.goto('https://en.wikipedia.org/wiki/MadeUpPath')",
+        grounded,
+        grounded_text=task,
+    )
+    assert reason and "Invented path" in reason
+
+
 def test_navigation_failure_note_detects_cert_errors():
     note = navigation_failure_note(
         {"value": '[ax-1] button "NET::ERR_CERT_COMMON_NAME_INVALID"'},

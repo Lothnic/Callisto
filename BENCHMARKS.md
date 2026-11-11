@@ -1,45 +1,40 @@
 # Callisto benchmarks
 
-Phase 5 is in progress. This file reports only runs that can be reproduced from
-this repository and linked artifacts.
+Measurements are experimental, not a claim that Callisto is better than browse
+or Playwright. The scripts, task outcomes, environments and limitations are kept
+with the associated notes.
 
-## Headline table
+| Comparison | What it measures | Results |
+| --- | --- | --- |
+| [Runtime upgrade follow-up](research/2026-11-runtime-upgrade-comparison.md) | Same-origin frames, batching and bounded snapshots | Current exploratory run; small sample |
+| [MCP vs browse](research/2026-11-callisto-mcp-vs-browse.md) | Scripted local interactions and public-page snapshots | Historical pre-upgrade baseline; small sample |
+| [Mini vs Playwright](research/2026-11-mini-playwright-fixture-benchmark.md) | Deterministic local fixture operations | Historical baseline; not an agent benchmark |
+| [Local model-driven tests](research/2026-11-actionability-agent-comparison.md) | Three synthetic tasks under a shared action policy | Exploratory single trials |
+| [Live-site agent tests](research/2026-11-live-browser-comparison.md) | Native page observations and generated answers | Inconclusive: model/provider limits |
 
-| Benchmark | Callisto | Tasks | Model | Date | Run |
-| --- | ---: | ---: | --- | --- | --- |
-| WebVoyager smoke | 100% | 3 | siliconflow/tencent/Hy3 | 2026-07-09 | `runs/webvoyager-live-smoke` |
-| WebVoyager smoke | 100% | 3 | fake/offline | 2026-07-09 | local scaffold |
-| WebVoyager full | TBD | TBD | TBD | TBD | TBD |
-| Online-Mind2Web | TBD | TBD | TBD | TBD | TBD |
-| BU-Bench-V1 | TBD | TBD | TBD | TBD | TBD |
-| Odyssey | TBD | TBD | TBD | TBD | TBD |
+## Reproduce the MCP comparison
 
-## Reproduce the scaffold run
+From the repository root, install and build `packages/mini`, set `CHROME_PATH`
+to a Chrome binary, and connect browse's extension. These scripts use the same
+MCP client without a model API key:
 
 ```bash
-cd eval
-pip install -e .
-python -m callisto_eval run webvoyager --subset smoke --agent fake --out runs/webvoyager-smoke
-python -m callisto_eval summarize runs/webvoyager-smoke
+npm --prefix packages/mini ci
+npm --prefix packages/mini run build
+CHROME_PATH=/path/to/chrome BROWSE_ACTION_TIMEOUT_MS=10000 \
+  BENCH_OUTPUT=/tmp/callisto-mcp-results.json node eval/agent-comparison/mcp-compare.mjs
+CHROME_PATH=/path/to/chrome BENCH_OUTPUT=/tmp/callisto-batching.json \
+  node eval/agent-comparison/mcp-batching.mjs
+CHROME_PATH=/path/to/chrome BENCH_OUTPUT=/tmp/callisto-live.json \
+  node eval/agent-comparison/mcp-live.mjs
 ```
 
-The live smoke row is the first real Callisto browser-agent run, but it is only
-three simple scaffold tasks (`example.com`, `github.com`, `linear.app`). Do not
-compare it with external systems or full WebVoyager.
+Set `CALLISTO_NO_SANDBOX=1` only if the environment requires it. The local
+scripts create and delete their own browse sessions; the public-page script
+uses the existing browser profile and public websites. See
+[`eval/agent-comparison/`](eval/agent-comparison/) for other experiments.
 
-The fake smoke row is an offline plumbing check, not a browser-agent benchmark
-claim.
-
-
-## Publication rules
-
-A real benchmark row requires:
-
-- commit SHA and dirty-worktree flag,
-- model/provider metadata,
-- dependency versions,
-- task subset hash,
-- per-task `results.jsonl`,
-- run `manifest.json`,
-- confidence interval,
-- documented exclusions.
+A defensible comparison should identify browser and model versions, task set,
+state, settings, failures, sample size and per-task results. Report model turns,
+context cost and task success only when an actual agent was run. A scripted tool
+call is not an agent task.

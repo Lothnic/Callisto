@@ -1,0 +1,194 @@
+{
+  "date": "2026-11-11T17:35:13.799Z",
+  "notes": "Host-scripted native MCP snapshots on dynamic public pages; one trial each; different browser profiles/binaries; no model.",
+  "tasks": [
+    {
+      "id": "example",
+      "url": "https://example.com/",
+      "expected": "documentation"
+    },
+    {
+      "id": "rfc9110",
+      "url": "https://www.rfc-editor.org/rfc/rfc9110.html",
+      "expected": "HTTP Semantics"
+    },
+    {
+      "id": "iana",
+      "url": "https://www.iana.org/domains/reserved",
+      "expected": "example.com"
+    },
+    {
+      "id": "gutenberg",
+      "url": "https://www.gutenberg.org/ebooks/1342",
+      "expected": "Jane Austen"
+    },
+    {
+      "id": "wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+      "expected": "1815"
+    },
+    {
+      "id": "mdn",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP",
+      "expected": "Hypertext Transfer Protocol"
+    }
+  ],
+  "rows": [
+    {
+      "engine": "callisto",
+      "task": "example",
+      "expected": "documentation",
+      "success": true,
+      "foundWithFallback": true,
+      "fallbackMs": 0,
+      "fallbackError": null,
+      "elapsedMs": 940,
+      "snapshotChars": 1003,
+      "expectedOffset": 58,
+      "error": null
+    },
+    {
+      "engine": "browse",
+      "task": "example",
+      "expected": "documentation",
+      "success": true,
+      "foundWithFallback": true,
+      "fallbackMs": 0,
+      "fallbackError": null,
+      "elapsedMs": 176,
+      "snapshotChars": 916,
+      "expectedOffset": 28,
+      "error": null
+    },
+    {
+      "engine": "browse",
+      "task": "rfc9110",
+      "expected": "HTTP Semantics",
+      "success": true,
+      "foundWithFallback": true,
+      "fallbackMs": 0,
+      "fallbackError": null,
+      "elapsedMs": 1855,
+      "snapshotChars": 3101,
+      "expectedOffset": 33,
+      "error": null
+    },
+    {
+      "engine": "callisto",
+      "task": "rfc9110",
+      "expected": "HTTP Semantics",
+      "success": false,
+      "foundWithFallback": true,
+      "fallbackMs": 794,
+      "fallbackError": null,
+      "elapsedMs": 3501,
+      "snapshotChars": 12000,
+      "expectedOffset": -1,
+      "error": null
+    },
+    {
+      "engine": "callisto",
+      "task": "iana",
+      "expected": "example.com",
+      "success": true,
+      "foundWithFallback": true,
+      "fallbackMs": 0,
+      "fallbackError": null,
+      "elapsedMs": 431,
+      "snapshotChars": 4751,
+      "expectedOffset": 1433,
+      "error": null
+    },
+    {
+      "engine": "browse",
+      "task": "iana",
+      "expected": "example.com",
+      "success": true,
+      "foundWithFallback": true,
+      "fallbackMs": 0,
+      "fallbackError": null,
+      "elapsedMs": 279,
+      "snapshotChars": 2770,
+      "expectedOffset": 253,
+      "error": null
+    },
+    {
+      "engine": "browse",
+      "task": "gutenberg",
+      "expected": "Jane Austen",
+      "success": true,
+      "foundWithFallback": true,
+      "fallbackMs": 0,
+      "fallbackError": null,
+      "elapsedMs": 1045,
+      "snapshotChars": 4237,
+      "expectedOffset": 162,
+      "error": null
+    },
+    {
+      "engine": "callisto",
+      "task": "gutenberg",
+      "expected": "Jane Austen",
+      "success": true,
+      "foundWithFallback": true,
+      "fallbackMs": 0,
+      "fallbackError": null,
+      "elapsedMs": 1973,
+      "snapshotChars": 5254,
+      "expectedOffset": 1027,
+      "error": null
+    },
+    {
+      "engine": "callisto",
+      "task": "wikipedia",
+      "expected": "1815",
+      "success": true,
+      "foundWithFallback": true,
+      "fallbackMs": 0,
+      "fallbackError": null,
+      "elapsedMs": 1587,
+      "snapshotChars": 12000,
+      "expectedOffset": 3313,
+      "error": null
+    },
+    {
+      "engine": "browse",
+      "task": "wikipedia",
+      "expected": "1815",
+      "success": false,
+      "foundWithFallback": true,
+      "fallbackMs": 95,
+      "fallbackError": null,
+      "elapsedMs": 938,
+      "snapshotChars": 3798,
+      "expectedOffset": -1,
+      "error": null
+    },
+    {
+      "engine": "browse",
+      "task": "mdn",
+      "expected": "Hypertext Transfer Protocol",
+      "success": true,
+      "foundWithFallback": true,
+      "fallbackMs": 0,
+      "fallbackError": null,
+      "elapsedMs": 788,
+      "snapshotChars": 7562,
+      "expectedOffset": 137,
+      "error": null
+    },
+    {
+      "engine": "callisto",
+      "task": "mdn",
+      "expected": "Hypertext Transfer Protocol",
+      "success": true,
+      "foundWithFallback": true,
+      "fallbackMs": 0,
+      "fallbackError": null,
+      "elapsedMs": 668,
+      "snapshotChars": 12000,
+      "expectedOffset": 721,
+      "error": null
+    }
+  ]
+}
