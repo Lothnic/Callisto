@@ -61,3 +61,9 @@ to be settled. Repeated host-agent comparisons and a security review are release
 gates; local fixture tests alone do not establish production readiness. See the
 [connected runtime plan](research/2026-11-connected-runtime-next-steps.md) for
 the proposed sequence.
+
+A second Gecko backend for Firefox and Zen is a candidate for launch in isolated
+owned-browser mode. Full connected takeover, handoff, and attach-to-daily-profile
+behavior remain post-launch work. See the
+[future work note](future.md#part-2--firefox-and-gecko-compatibility) for the
+market scan, implementation assessment, and staged plan.
