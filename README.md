@@ -9,8 +9,9 @@ The runtime does not require a separate model API key; the host supplies the
 agent.
 
 Callisto is experimental. Its Playwright-shaped API is a subset, not a drop-in
-replacement for Playwright, and it does not yet attach to your logged-in
-browser like browse. Performance and reliability claims are still being tested.
+replacement for Playwright. An experimental connection to an existing Chromium
+browser through browse's relay is available with significant limitations below.
+Performance and reliability claims are still being tested.
 
 ## Get started
 
@@ -33,6 +34,23 @@ The server starts a fresh browser on the first browser tool call and closes it
 when the session ends. Set `CHROME_PATH` in the host environment if Chrome is
 not discovered, or `CALLISTO_MCP_HEADLESS=0` to show the window. See the
 [Mini guide](packages/mini/README.md) for the available tools and limitations.
+
+### Experimental connected browser
+
+With the browse CLI and its paired Chromium extension already running, set
+`CALLISTO_MCP_BROWSER=connected` and `CALLISTO_ALLOWED_ORIGINS` to a
+comma-separated list of HTTP(S) origins in the MCP host environment. The server
+creates an agent-owned tab and session through browse's relay. It does not adopt
+existing tabs. `CALLISTO_BROWSE_COMMAND` can specify the browse CLI executable.
+
+This bridge can navigate and inspect allowed pages, but it does **not** yet
+integrate browse's execution, stop or human-handoff lifecycle. Input in a
+background tab is refused because the relay does not provide Mini's direct CDP
+connection with browse's focus handling. Foreground input and recovery are not
+yet adequately tested; this mode is experimental and is not production-ready.
+Closing Callisto closes its own tab and session, not the browser. The vendored
+[browse source and license](vendor/README.md) are a preserved upstream copy;
+the connected bridge currently uses the installed browse CLI and extension.
 
 ## Website
 
@@ -59,7 +77,7 @@ python3 -m http.server 8087 --directory site
 
 The current MCP interface has structured actions, bounded snapshots, text
 search and action batches. Same-origin iframe actions are supported; cross-origin
-frame coverage, browser attachment, human handoff and full Playwright
+frame coverage, connected-browser input, human handoff and full Playwright
 compatibility remain open work. Browser actions can change websites; the MCP
 server does not supply an approval or security boundary.
 
@@ -78,6 +96,8 @@ npm --prefix packages/mini run typecheck
 Browser tests are opt-in: set `CALLISTO_SMOKE=1` and `CHROME_PATH` to a local
 Chrome binary. See [the Mini guide](packages/mini/README.md) for details. The
 optional reference harness and eval package have their own Python dependencies.
+To run the connected smoke tests against a paired browse browser, set
+`CALLISTO_BROWSE_SMOKE=1`; they use a temporary local fixture and their own tab.
 
 ## License
 

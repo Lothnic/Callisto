@@ -33,7 +33,7 @@ connects its tools are available under `callisto`. Other MCP clients can launch
 `CHROME_PATH` in the host environment if Chrome is not discovered; set
 `CALLISTO_MCP_HEADLESS=0` for a visible window.
 
-Each MCP server process owns one isolated browser, launched lazily on the first
+By default, each MCP server process owns one isolated browser, launched lazily on the first
 browser action. `callisto_navigate` and `callisto_snapshot` return accessibility
 trees with `ax-N` refs; use those refs with `callisto_click` and `callisto_fill`.
 Snapshots returned over MCP default to 12,000 characters; use `nextOffset` with
@@ -46,9 +46,17 @@ are not rolled back if a later one fails. The server also exposes
 Calls are serialized. Closing the
 session removes its browser state; a subsequent call creates a fresh session.
 
-This first interface exposes structured actions rather than arbitrary JavaScript.
-It does not attach to the user's existing browser or preserve its logins. It is
-not a complete Playwright API or a sandbox for untrusted pages; browser actions
+This interface exposes structured actions rather than arbitrary JavaScript.
+An experimental connected mode can open its own tab in a browser paired with
+browse. Set `CALLISTO_MCP_BROWSER=connected` and `CALLISTO_ALLOWED_ORIGINS` to
+the comma-separated origins to allow, with the browse CLI and extension already
+installed and paired. Set `CALLISTO_BROWSE_COMMAND` if the CLI is not on PATH.
+This mode does not adopt existing tabs, integrate browse's handoff or stop
+controls, or reliably drive background tabs; input on hidden tabs is refused.
+Foreground input and recovery are not adequately tested. See the
+[project README](../../README.md#experimental-connected-browser) for status.
+
+Mini is not a complete Playwright API or a sandbox for untrusted pages; browser actions
 can modify websites. Same-origin iframe ref actions are supported; cross-origin
 or transformed frames can fail closed.
 

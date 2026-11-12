@@ -6,6 +6,10 @@ import CDP from 'chrome-remote-interface'
 import { existsSync, readFileSync } from 'node:fs'
 import * as path from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { randomUUID } from 'node:crypto'
+import { homedir } from 'node:os'
+import { Client } from '@modelcontextprotocol/client'
+import { StdioClientTransport, getDefaultEnvironment } from '@modelcontextprotocol/client/stdio'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -32,10 +36,20 @@ export interface LaunchOpts {
 
 export interface Session {
   cdp: CDP.Client
-  chrome: ChromeLauncher.LaunchedChrome
+  chrome?: ChromeLauncher.LaunchedChrome
   viewport: Viewport
   userAgent?: string
   headless: boolean
+  mode?: 'connected'
+  targetId?: string
+  dispose?: () => Promise<void>
+}
+
+export interface ConnectBrowseOpts {
+  /** Explicit navigation scope; no unrestricted connected sessions. */
+  allowedOrigins: string[]
+  /** The upstream browse CLI executable; defaults to the installed browse. */
+  browseCommand?: string
 }
 
 const DEFAULT_VIEWPORT: Viewport = { width: 1440, height: 900 }
@@ -252,6 +266,8 @@ export async function launchChrome(opts: LaunchOpts = {}): Promise<Session> {
 
 /** Repoint the session's protocol connection at another tab (target). */
 export async function switchTarget(session: Session, targetId: string): Promise<void> {
+  if (session.mode === 'connected') throw new Error('Switching tabs in connected mode is not supported yet')
+  if (!session.chrome) throw new Error('No owned Chrome process')
   await session.cdp.close()
   const cdp = await connectCdp(session.chrome.port, targetId)
   await enableDomains(cdp)
@@ -260,9 +276,84 @@ export async function switchTarget(session: Session, targetId: string): Promise<
 }
 
 export async function closeSession(session: Session): Promise<void> {
+  if (session.mode === 'connected') {
+    await session.dispose?.()
+    return
+  }
   try {
     await session.cdp.close()
   } finally {
-    await session.chrome.kill()
+    await session.chrome?.kill()
+  }
+}
+
+/** Attach a new, session-owned tab to the user's browser through browse's relay. */
+export async function connectBrowse(opts: ConnectBrowseOpts): Promise<Session> {
+  if (!opts.allowedOrigins.length) throw new Error('Connected mode requires at least one allowed origin')
+  const id = `callisto-${randomUUID()}`
+  const client = new Client({ name: 'callisto-connected', version: '0.1.0' })
+  const command = opts.browseCommand ?? process.env.CALLISTO_BROWSE_COMMAND ?? 'browse'
+  const env: Record<string, string> = { ...getDefaultEnvironment() }
+  for (const [name, value] of Object.entries(process.env)) {
+    if (value && (/^OPENCODE_BROWSER_/.test(name) || /^XDG_(CONFIG|DATA|STATE|CACHE)_HOME$/.test(name))) env[name] = value
+  }
+  const transport = new StdioClientTransport({ command, args: ['mcp'], env, stderr: 'pipe' })
+  // Drain diagnostics without exposing relay credentials or blocking the child.
+  transport.stderr?.on('data', () => {})
+  let raw: CDP.Client | undefined
+  let targetId: string | undefined
+  let created = false
+  const close = async () => {
+    if (raw && targetId) await raw.Target.closeTarget({ targetId }).catch(() => undefined)
+    if (raw) await raw.close().catch(() => undefined)
+    if (created) await client.callTool({ name: 'session_delete', arguments: { id } }).catch(() => undefined)
+    await client.close().catch(() => undefined)
+  }
+  try {
+    await client.connect(transport)
+    const result = await client.callTool({ name: 'session_new', arguments: { id, allowedOrigins: opts.allowedOrigins } })
+    if (result.isError) throw new Error('Could not create a connected browser session; check browse status and pairing')
+    created = true
+    const status = await client.callTool({ name: 'status', arguments: {} })
+    const endpoint = (status.structuredContent as { endpoint?: unknown } | undefined)?.endpoint
+    if (typeof endpoint !== 'string') throw new Error('browse did not report a relay endpoint')
+    const relayUrl = new URL(endpoint)
+    if (relayUrl.protocol !== 'http:' || !['127.0.0.1', 'localhost', '[::1]'].includes(relayUrl.hostname)) {
+      throw new Error('Connected mode only supports a local browse relay')
+    }
+    const base = process.env.OPENCODE_BROWSER_HOME || path.join(process.env.XDG_DATA_HOME || path.join(homedir(), '.local/share'), 'browse')
+    const token = readFileSync(path.join(base, 'relay-token'), 'utf8').trim()
+    const response = await fetch(new URL('/json/version', relayUrl), {
+      headers: { authorization: `Bearer ${token}`, 'opencode-browser-session-id': id },
+      signal: AbortSignal.timeout(10000),
+    })
+    if (!response.ok) throw new Error(`browse relay discovery failed (HTTP ${response.status})`)
+    const info = await response.json() as { webSocketDebuggerUrl?: unknown }
+    if (typeof info.webSocketDebuggerUrl !== 'string') throw new Error('browse relay did not provide a CDP endpoint')
+    const wsUrl = new URL(info.webSocketDebuggerUrl)
+    if (wsUrl.protocol !== 'ws:' || wsUrl.host !== relayUrl.host) throw new Error('Unexpected browse CDP endpoint')
+    // Do not propagate connection errors: the WebSocket URL contains the relay token.
+    try { raw = await CDP({ target: wsUrl.toString(), local: true }) }
+    catch { throw new Error('Could not connect to the browse CDP relay') }
+    const target = await raw.Target.createTarget({ url: 'about:blank' })
+    targetId = target.targetId
+    const attached = await raw.Target.attachToTarget({ targetId, flatten: true })
+    const pageSession = attached.sessionId
+    // The relay exposes a browser-level socket; Mini's page-domain commands
+    // must be routed to the one tab we created. Browser/Target calls stay root-scoped.
+    const originalSend = raw.send.bind(raw) as (...args: any[]) => any
+    const patched = raw as unknown as { send: (...args: any[]) => any }
+    patched.send = (method: string, params?: object, sessionOrCallback?: string | ((...args: any[]) => void), callback?: (...args: any[]) => void) => {
+      const explicit = typeof sessionOrCallback === 'string' ? sessionOrCallback : undefined
+      const cb = typeof sessionOrCallback === 'function' ? sessionOrCallback : callback
+      const route = explicit ?? (/^(Target|Browser)\./.test(method) ? undefined : pageSession)
+      return originalSend(method, params, route, cb)
+    }
+    await Promise.all([raw.Page.enable(), raw.DOM.enable(), raw.Runtime.enable(), raw.Network.enable(), raw.Accessibility.enable()])
+    // Do not alter the user's UA, viewport, browser-wide download settings or scripts.
+    return { cdp: raw, viewport: DEFAULT_VIEWPORT, headless: false, mode: 'connected', targetId, dispose: close }
+  } catch (error) {
+    await close()
+    throw error
   }
 }

@@ -19,7 +19,15 @@ function serial<T>(work: () => Promise<T>): Promise<T> {
 }
 async function browser(): Promise<Mini> {
   if (shuttingDown) throw new Error('Browser session is shutting down')
-  if (!mini) mini = await Mini.launch({ headless: process.env.CALLISTO_MCP_HEADLESS !== '0' })
+  if (!mini) {
+    const mode = process.env.CALLISTO_MCP_BROWSER ?? 'isolated'
+    if (mode === 'connected') {
+      const allowedOrigins = (process.env.CALLISTO_ALLOWED_ORIGINS ?? '').split(',').map(s => s.trim()).filter(Boolean)
+      mini = await Mini.connectBrowse({ allowedOrigins })
+    } else if (mode === 'isolated') {
+      mini = await Mini.launch({ headless: process.env.CALLISTO_MCP_HEADLESS !== '0' })
+    } else throw new Error('CALLISTO_MCP_BROWSER must be isolated or connected')
+  }
   return mini
 }
 function success(value: unknown) {
@@ -50,7 +58,7 @@ async function boundedSnapshot(m: Mini, options: { diff?: boolean; offset?: numb
 }
 
 server.registerTool('callisto_navigate', {
-  description: 'Open an HTTP(S) URL in an isolated Callisto browser and return its accessibility snapshot. The browser starts on the first call.',
+  description: 'Open an HTTP(S) URL in the configured Callisto browser session and return its accessibility snapshot. The browser session starts on the first call.',
   inputSchema: z.object({ url: httpUrl }),
   annotations,
 }, async ({ url }) => run(async m => { await m.goto(url, { waitUntil: 'domcontentloaded', timeout: 20_000 }); return boundedSnapshot(m) }))
@@ -141,7 +149,7 @@ server.registerTool('callisto_screenshot', {
 })
 
 server.registerTool('callisto_close', {
-  description: 'Close the isolated browser session. A later browser call starts a fresh session.',
+  description: 'Close the Callisto browser session and its agent-owned tab. A later browser call starts a fresh session.',
   inputSchema: z.object({}), annotations,
 }, async () => {
   try {

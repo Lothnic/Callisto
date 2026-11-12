@@ -3,9 +3,11 @@
 // See rfcs/0001 for the design and README.md for the API reference.
 import {
   launchChrome,
+  connectBrowse,
   closeSession,
   switchTarget,
   type LaunchOpts,
+  type ConnectBrowseOpts,
   type Session,
 } from './client.js'
 import { tmpdir } from 'node:os'
@@ -18,7 +20,7 @@ import type { CapturedRequest } from './page.js'
 export { Page, Locator, type CapturedRequest } from './page.js'
 export type { LocatorOptions } from './page.js'
 
-export type { LaunchOpts, Viewport } from './client.js'
+export type { LaunchOpts, Viewport, ConnectBrowseOpts } from './client.js'
 export type { Target, Point, Ref } from './elements.js'
 export type { Snapshot } from './snapshot.js'
 export type { RefLookup } from './ax-refs.js'
@@ -126,6 +128,16 @@ export class Mini {
     return mini
   }
 
+  /** Open a new agent-owned tab in a paired browser through browse's relay. */
+  static async connectBrowse(opts: ConnectBrowseOpts): Promise<Mini> {
+    const session = await connectBrowse(opts)
+    const mini = new Mini(session, new RefRegistry())
+    mini.currentTargetId = session.targetId
+    // Connected sessions deliberately avoid global browser changes and target
+    // auto-focus until ownership and takeover events are integrated.
+    return mini
+  }
+
   async close(): Promise<void> {
     await closeSession(this.session)
   }
@@ -138,7 +150,7 @@ export class Mini {
     await this.flushPendingFocus()
     const { targetInfos } = await this.cdp.Target.getTargets()
     return targetInfos
-      .filter((t) => t.type === 'page')
+      .filter((t) => t.type === 'page' && (this.session.mode !== 'connected' || t.targetId === this.session.targetId))
       .map((t) => ({ id: t.targetId, url: t.url, title: t.title }))
   }
 
@@ -215,6 +227,7 @@ export class Mini {
   }
 
   async dragTo(from: Target, to: Target): Promise<void> {
+    await this.requireConnectedInput()
     const a = await this.resolve(from)
     const b = await this.resolve(to)
     const { Input } = this.cdp
@@ -224,6 +237,7 @@ export class Mini {
   }
 
   async type(text: string, opts: TypeOpts = {}): Promise<void> {
+    await this.requireConnectedInput()
     if (!opts.delay) {
       await this.cdp.Input.insertText({ text })
       return
@@ -235,6 +249,7 @@ export class Mini {
   }
 
   async press(key: string): Promise<void> {
+    await this.requireConnectedInput()
     const aliases: Record<string, string> = { Ctrl: 'Control', Cmd: 'Meta', Command: 'Meta', Esc: 'Escape', ' ': 'Space' }
     const parts = key.split('+').map((part) => aliases[part] ?? part)
     const main = parts.pop()
@@ -271,10 +286,12 @@ export class Mini {
   }
 
   async keyDown(key: string): Promise<void> {
+    await this.requireConnectedInput()
     await this.cdp.Input.dispatchKeyEvent({ type: 'keyDown', key, ...keyExtras(key) })
   }
 
   async keyUp(key: string): Promise<void> {
+    await this.requireConnectedInput()
     await this.cdp.Input.dispatchKeyEvent({ type: 'keyUp', key, ...keyExtras(key) })
   }
 
@@ -287,6 +304,7 @@ export class Mini {
   }
 
   async scroll(deltaX: number, deltaY: number): Promise<void> {
+    await this.requireConnectedInput()
     const { width, height } = this.session.viewport
     await this.cdp.Input.dispatchMouseEvent({
       type: 'mouseWheel',
@@ -339,14 +357,17 @@ export class Mini {
 
   tabs = {
     new: async (url?: string): Promise<string> => {
+      if (this.session.mode === 'connected') throw new Error('Creating additional tabs is not supported in connected mode')
       const { targetId } = await this.cdp.Target.createTarget({ url: url ?? 'about:blank' })
       return targetId
     },
     switch: async (targetId: string): Promise<void> => {
+      if (this.session.mode === 'connected') throw new Error('Switching tabs is not supported in connected mode')
       this.pendingFocusTargetId = undefined
       await this.attachTarget(targetId)
     },
     close: async (targetId: string): Promise<void> => {
+      if (this.session.mode === 'connected') throw new Error('Closing tabs is not supported in connected mode')
       await this.cdp.Target.closeTarget({ targetId })
       if (this.pendingFocusTargetId === targetId) this.pendingFocusTargetId = undefined
       if (this.currentTargetId === targetId) this.currentTargetId = undefined
@@ -669,6 +690,7 @@ export class Mini {
 
   /** Bounded safety checks for ref targets. Raw coordinates are explicit and unchecked. */
   private async actionable(target: Target, action: 'click' | 'hover' | 'fill', timeout = 2_000): Promise<Point> {
+    await this.requireConnectedInput()
     if (isPoint(target)) return target
     const ref = target.replace(/^\[|\]$/g, '')
     const info = this.refs.get(ref)
@@ -772,5 +794,12 @@ export class Mini {
     await Input.dispatchMouseEvent({ type: 'mouseMoved', x: p.x, y: p.y })
     await Input.dispatchMouseEvent({ type: 'mousePressed', x: p.x, y: p.y, button, buttons, clickCount })
     await Input.dispatchMouseEvent({ type: 'mouseReleased', x: p.x, y: p.y, button, buttons, clickCount })
+  }
+
+  /** Raw CDP does not participate in browse's execution/focus lifecycle. */
+  private async requireConnectedInput(): Promise<void> {
+    if (this.session.mode !== 'connected') return
+    const visible = await this.evaluate<boolean>(() => document.visibilityState === 'visible')
+    if (!visible) throw new Error('Connected tab is in the background; raw CDP input cannot be delivered reliably. Activate the Callisto-owned tab or use browse until connected input is integrated.')
   }
 }
