@@ -200,7 +200,7 @@ be active. Input is synthetic; sites can reject it or behave differently.
 (1–10 regular files, 10 MiB total). It sets a synthetic FileList and emits input
 and change events; page handlers may upload immediately, without form submission.
 Directory inputs and native file dialogs are unsupported. This path has a
-disposable Chromium DOM test; real Firefox upload coverage remains outstanding.
+disposable Chromium DOM test and a disposable Firefox upload smoke test.
 
 `callisto_frames` lists the controlled tab's frames. `callisto_frame` selects a
 frame and returns a fresh snapshot; subsequent page operations target it.
@@ -290,7 +290,8 @@ geckodriver on loopback and run `GECKODRIVER_URL=http://127.0.0.1:4444 python3
 tests/firefox-bridge-smoke.py`. It installs a temporary test copy of the
 extension with `<all_urls>` and automated sharing to exercise real extension
 pairing, snapshot, fill, checkbox/select input, text search, screenshots, cookies,
-browser-data reads, tab creation/selection/closing, navigation and release. That broader permission is used
+browser-data reads, tab creation/selection/closing, multi-client ownership,
+file upload, frame input, handoff, navigation and release. That broader permission is used
 only in the test copy. The test does not verify the optional permission prompt,
 `activeTab`, the popup, real profiles or Zen.
 The automated test does not validate the normal `activeTab` permission flow.

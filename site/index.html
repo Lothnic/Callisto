@@ -6,13 +6,13 @@
 <title>Callisto — A lean browser runtime for agents</title>
 <meta name="description" content="Callisto is an experimental local browser runtime for agents. Connect over MCP to navigate Chromium, inspect accessibility snapshots, and act on page references.">
 <meta property="og:title" content="Callisto — A lean browser runtime for agents">
-<meta property="og:description" content="Give your agent a real browser. One MCP server, eleven structured tools, bounded accessibility snapshots.">
+<meta property="og:description" content="Give your agent browser tools over MCP, with experimental Chromium and Firefox/Zen runtimes.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://callisto.lothnic.dev/">
 <meta property="og:site_name" content="Callisto">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Callisto — A lean browser runtime for agents">
-<meta name="twitter:description" content="Give your agent a real browser. One MCP server, eleven structured tools, bounded accessibility snapshots.">
+<meta name="twitter:description" content="Give your agent browser tools over MCP, with experimental Chromium and Firefox/Zen runtimes.">
 <link rel="canonical" href="https://callisto.lothnic.dev/">
 <meta name="theme-color" content="#0a0a0a">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230a0a0a'/%3E%3Ccircle cx='32' cy='32' r='11' fill='none' stroke='%233b82f6' stroke-width='3'/%3E%3Cellipse cx='32' cy='32' rx='24' ry='9' fill='none' stroke='%23f0ede6' stroke-width='1.5' transform='rotate(-24 32 32)'/%3E%3Ccircle cx='49' cy='21' r='3' fill='%23f0ede6'/%3E%3C/svg%3E">
@@ -87,7 +87,7 @@
     <div class="hero-ticker-inner">
       <div class="hero-ticker-group">
         <span>MCP over stdio</span><span class="sep" aria-hidden="true">•</span>
-        <span>11 structured tools</span><span class="sep" aria-hidden="true">•</span>
+        <span>Structured MCP tools</span><span class="sep" aria-hidden="true">•</span>
         <span>ax-N refs</span><span class="sep" aria-hidden="true">•</span>
         <span>12,000-char bounded snapshots</span><span class="sep" aria-hidden="true">•</span>
         <span>1440 × 900 pinned viewport</span><span class="sep" aria-hidden="true">•</span>
@@ -97,7 +97,7 @@
       </div>
       <div class="hero-ticker-group" aria-hidden="true">
         <span>MCP over stdio</span><span class="sep">•</span>
-        <span>11 structured tools</span><span class="sep">•</span>
+        <span>Structured MCP tools</span><span class="sep">•</span>
         <span>ax-N refs</span><span class="sep">•</span>
         <span>12,000-char bounded snapshots</span><span class="sep">•</span>
         <span>1440 × 900 pinned viewport</span><span class="sep">•</span>
@@ -251,7 +251,7 @@
     <div class="container">
       <div class="intro-headline-wrap">
         <div class="badge">Introducing Callisto</div>
-        <h2 class="display intro-title">One Server.<br>Eleven Tools. A Real Browser.</h2>
+        <h2 class="display intro-title">Your Agent.<br>A Real Browser.</h2>
         <p class="intro-desc">
           Callisto runs a local Chromium and exposes it over MCP. The agent navigates,
           reads a bounded accessibility tree, and acts on page refs — without a
@@ -581,7 +581,7 @@
         <li>
           <div class="step-number">01 / BUILD</div>
           <h3>Install the engine.</h3>
-          <p>For isolated Chromium, install Git, Node.js 20+ and Chrome or Chromium, then run the installer. For an existing Firefox or Zen profile, follow the separate <a href="https://github.com/Lothnic/Callisto/blob/main/packages/firefox-rs/README.md">experimental bridge setup</a>.</p>
+          <p>For isolated Chromium, install Git, Node.js 20+ and Chrome or Chromium, then run the installer. For existing Zen or Firefox tabs and other hosts, follow the <a href="https://github.com/Lothnic/Callisto/blob/main/docs/getting-started.md">user and agent setup guide</a>.</p>
           <div class="code-block">
             <button type="button" class="copy-btn" data-copy="curl -fsSL https://callisto.lothnic.dev/install.sh | bash">Copy</button>
             <pre><code>curl -fsSL https://callisto.lothnic.dev/install.sh | bash</code></pre>

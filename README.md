@@ -23,6 +23,9 @@ Performance and reliability claims are still being tested.
 
 ## Get started
 
+For setup with Codex, Claude Code or OpenCode, including existing Zen tabs and
+pairing, start with the [user and agent setup guide](docs/getting-started.md).
+
 From the repository root, with Node.js 20+ and a Chromium/Chrome binary:
 
 ```bash
