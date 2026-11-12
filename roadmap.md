@@ -66,4 +66,11 @@ A second Gecko backend for Firefox and Zen is a candidate for launch in isolated
 owned-browser mode. Full connected takeover, handoff, and attach-to-daily-profile
 behavior remain post-launch work. See the
 [future work note](future.md#part-2--firefox-and-gecko-compatibility) for the
-market scan, implementation assessment, and staged plan.
+market scan and the [Firefox roadmap](future.md#part-4--firefox-implementation-roadmap)
+for the phased plan.
+
+A Rust rewrite is not planned before launch. The [Rust review](future.md#part-3--rust-feasibility)
+found that the measured speed gap comes from bypassing Playwright, which
+Callisto already does, and that the Firefox ecosystem is more mature in
+TypeScript. Distribution friction should be solved with a lean binary build
+before considering a rewrite.

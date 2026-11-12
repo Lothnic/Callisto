@@ -76,7 +76,7 @@ python3 -m http.server 8087 --directory site
 | [`harness/`](harness/) | Optional reference agent and CLI, not required for MCP |
 | [`eval/`](eval/) | Evaluation tools and reproducible comparison scripts |
 | [`research/`](research/) | Findings, historical notes and benchmark evidence |
-| [`future.md`](future.md) | Benchmark plan and Firefox/Gecko compatibility assessment |
+| [`future.md`](future.md) | Benchmark plan, Firefox/Gecko assessment, Rust review and Firefox roadmap |
 | [`packages/callisto-browser/`](packages/callisto-browser/) | Historical BrowserOS fork experiment; not the product runtime |
 
 ## Status and evidence
@@ -91,8 +91,9 @@ server does not supply an approval or security boundary.
 
 Read the [runtime roadmap](roadmap.md), [benchmark index](BENCHMARKS.md), and
 [research index](research/README.md) for current priorities and test caveats.
-The [future work note](future.md) covers the benchmark plan and the
-Firefox/Gecko compatibility assessment. In particular, local fixture timings are
+The [future work note](future.md) covers the benchmark plan, the
+Firefox/Gecko compatibility assessment, the Rust feasibility review, and the
+Firefox implementation roadmap. In particular, local fixture timings are
 not proof of agent success or of an advantage over browse.
 
 ## Development
