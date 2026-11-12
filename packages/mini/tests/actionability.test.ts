@@ -1,8 +1,60 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { Mini, Page } from '../src/index.js'
+import type { EventEmitter } from 'node:events'
 
 const enabled = Boolean(process.env.CALLISTO_SMOKE)
+
+test('browser: repeated Enter presses release navigation listeners', { skip: !enabled }, async () => {
+  const mini = await Mini.launch({headless:true, chromeFlags: process.env.CALLISTO_NO_SANDBOX ? ['--no-sandbox'] : []})
+  try {
+    await mini.goto('data:text/html,<input autofocus>')
+    const cdp = (mini as unknown as {session: {cdp: EventEmitter}}).session.cdp
+    const before = ['Page.frameNavigated', 'Page.loadEventFired'].map(event => cdp.listenerCount(event))
+    for (let i = 0; i < 3; i++) await mini.press('Enter')
+    assert.deepEqual(['Page.frameNavigated', 'Page.loadEventFired'].map(event => cdp.listenerCount(event)), before)
+  } finally { await mini.close() }
+})
+
+test('browser: Enter navigation updates the page after a form submission', { skip: !enabled }, async () => {
+  const { createServer } = await import('node:http')
+  const server = createServer((req, res) => {
+    res.setHeader('content-type', 'text/html')
+    res.end(req.url?.startsWith('/next') ? '<title>After submit</title><h1>Submitted</h1>' :
+      '<title>Before submit</title><form action="/next"><input name="query" autofocus></form>')
+  })
+  await new Promise<void>(resolve => server.listen(0, '127.0.0.1', resolve))
+  const mini = await Mini.launch({headless:true, chromeFlags: process.env.CALLISTO_NO_SANDBOX ? ['--no-sandbox'] : []})
+  try {
+    await mini.goto(`http://127.0.0.1:${(server.address() as {port: number}).port}/`)
+    await mini.evaluate(() => document.querySelector('input')?.focus())
+    await mini.press('Enter')
+    const result = await mini.snapshot()
+    assert.equal(result.title, 'After submit')
+    assert.match(result.text, /Submitted/)
+  } finally {
+    await mini.close()
+    server.closeAllConnections()
+    await new Promise<void>(resolve => server.close(() => resolve()))
+  }
+})
+
+test('browser: a covered drag destination fails before pressing the mouse', { skip: !enabled }, async () => {
+  const mini = await Mini.launch({headless:true, chromeFlags: process.env.CALLISTO_NO_SANDBOX ? ['--no-sandbox'] : []})
+  try {
+    const html = `<button id="source">Source</button>
+      <span style="position:relative;display:inline-block"><button>Destination</button>
+      <span style="position:absolute;inset:0;background:gray"></span></span>
+      <script>window.presses=0; document.addEventListener('mousedown',()=>window.presses++)</script>`
+    await mini.goto('data:text/html,' + encodeURIComponent(html))
+    await mini.snapshot()
+    const source = mini.ref({role:'button', name:'Source', exact:true})!
+    const destination = mini.ref({role:'button', name:'Destination', exact:true})!
+    assert.ok(source && destination)
+    await assert.rejects(mini.dragTo(source, destination), /covered|not receiving events/)
+    assert.equal(await mini.evaluate(() => (window as any).presses), 0)
+  } finally { await mini.close() }
+})
 
 test('browser: waits for enabled, uncovered and stable targets; fails safely otherwise', { skip: !enabled }, async () => {
   const mini = await Mini.launch({headless:true, chromeFlags: process.env.CALLISTO_NO_SANDBOX ? ['--no-sandbox'] : []})

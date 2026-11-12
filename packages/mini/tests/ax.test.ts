@@ -80,6 +80,17 @@ test('refs are stable by backendDOMNodeId across re-annotation', () => {
   assert.equal(b[0].ref, ref1)
 })
 
+test('a document reset retires refs without reusing their identifiers', () => {
+  const refs = new RefRegistry()
+  const before = forest([['1', 'button', 'Old', []]], {'1':100})
+  const oldRef = refs.annotate(pruneForest(before.roots, before.byId))[0].ref!
+  refs.reset()
+  const after = forest([['2', 'button', 'New', []]], {'2':100})
+  const newRef = refs.annotate(pruneForest(after.roots, after.byId))[0].ref!
+  assert.notEqual(newRef, oldRef)
+  assert.equal(refs.get(oldRef), undefined)
+})
+
 test('format emits [ref] role "name" {state} =value', () => {
   const { roots, byId } = forest([
     ['1', 'navigation', 'Main', ['2']],

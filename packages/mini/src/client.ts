@@ -42,7 +42,11 @@ export interface Session {
   headless: boolean
   mode?: 'connected'
   targetId?: string
+  connectedSessionId?: string
+  connectedPageSessionId?: string
   dispose?: () => Promise<void>
+  /** Run fixed, internally generated page actions under browse's lifecycle. */
+  connectedExecute?: (code: string, options?: { signal?: AbortSignal; timeout?: number }) => Promise<unknown>
 }
 
 export interface ConnectBrowseOpts {
@@ -314,6 +318,16 @@ export async function connectBrowse(opts: ConnectBrowseOpts): Promise<Session> {
     const result = await client.callTool({ name: 'session_new', arguments: { id, allowedOrigins: opts.allowedOrigins } })
     if (result.isError) throw new Error('Could not create a connected browser session; check browse status and pairing')
     created = true
+    // Let browse create and bind the session's default page. This retains its
+    // execution state, focus, stop and ownership lifecycle for later actions.
+    const initial = await client.callTool({ name: 'execute', arguments: {
+      session: id,
+      code: 'const c = await context.newCDPSession(page); try { const r = await c.send("Target.getTargetInfo"); return r.targetInfo.targetId } finally { await c.detach() }',
+    } })
+    if (initial.isError) throw new Error('Could not initialize the connected browser tab')
+    const initialTarget = (initial.structuredContent as {value?: unknown} | undefined)?.value
+    if (typeof initialTarget !== 'string' || !initialTarget) throw new Error('browse did not report the connected tab identity')
+    targetId = initialTarget
     const status = await client.callTool({ name: 'status', arguments: {} })
     const endpoint = (status.structuredContent as { endpoint?: unknown } | undefined)?.endpoint
     if (typeof endpoint !== 'string') throw new Error('browse did not report a relay endpoint')
@@ -335,8 +349,6 @@ export async function connectBrowse(opts: ConnectBrowseOpts): Promise<Session> {
     // Do not propagate connection errors: the WebSocket URL contains the relay token.
     try { raw = await CDP({ target: wsUrl.toString(), local: true }) }
     catch { throw new Error('Could not connect to the browse CDP relay') }
-    const target = await raw.Target.createTarget({ url: 'about:blank' })
-    targetId = target.targetId
     const attached = await raw.Target.attachToTarget({ targetId, flatten: true })
     const pageSession = attached.sessionId
     // The relay exposes a browser-level socket; Mini's page-domain commands
@@ -350,8 +362,19 @@ export async function connectBrowse(opts: ConnectBrowseOpts): Promise<Session> {
       return originalSend(method, params, route, cb)
     }
     await Promise.all([raw.Page.enable(), raw.DOM.enable(), raw.Runtime.enable(), raw.Network.enable(), raw.Accessibility.enable()])
+    const connectedExecute = async (code: string, options: { signal?: AbortSignal; timeout?: number } = {}): Promise<unknown> => {
+      // browse may create a replacement after a tab is closed or taken back.
+      // Never apply a stale Mini action to that replacement or another tab.
+      const verify = `const __c = await context.newCDPSession(page); try { const __i = await __c.send("Target.getTargetInfo"); if (__i.targetInfo.targetId !== ${JSON.stringify(targetId)}) throw new Error("The connected tab changed or was taken back; start a new session.") } finally { await __c.detach() }\n`
+      const result = await client.callTool({ name: 'execute', arguments: { session: id, code: verify + code } }, options)
+      if (result.isError) {
+        const detail = result.content?.find(item => item.type === 'text')
+        throw new Error(detail?.type === 'text' ? detail.text : 'Connected browser action failed')
+      }
+      return (result.structuredContent as {value?: unknown} | undefined)?.value
+    }
     // Do not alter the user's UA, viewport, browser-wide download settings or scripts.
-    return { cdp: raw, viewport: DEFAULT_VIEWPORT, headless: false, mode: 'connected', targetId, dispose: close }
+    return { cdp: raw, viewport: DEFAULT_VIEWPORT, headless: false, mode: 'connected', targetId, connectedSessionId: id, connectedPageSessionId: pageSession, dispose: close, connectedExecute }
   } catch (error) {
     await close()
     throw error

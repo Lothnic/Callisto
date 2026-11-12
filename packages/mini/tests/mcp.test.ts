@@ -20,11 +20,14 @@ test('MCP: initializes, lists browser tools and validates arguments without laun
   const client = await connect()
   try {
     const { tools } = await client.listTools()
-    for (const name of ['callisto_navigate', 'callisto_snapshot', 'callisto_find', 'callisto_batch', 'callisto_click', 'callisto_fill', 'callisto_press', 'callisto_scroll', 'callisto_screenshot', 'callisto_close']) {
+    for (const name of ['callisto_navigate', 'callisto_snapshot', 'callisto_find', 'callisto_batch', 'callisto_click', 'callisto_fill', 'callisto_press', 'callisto_scroll', 'callisto_handoff', 'callisto_screenshot', 'callisto_close']) {
       assert.ok(tools.some(tool => tool.name === name), `missing ${name}`)
     }
     const bad = await client.callTool({ name: 'callisto_click', arguments: { ref: 'not-a-ref' } })
     assert.equal(bad.isError, true)
+    const handoff = await client.callTool({ name: 'callisto_handoff', arguments: {message:'Complete the step'} })
+    assert.equal(handoff.isError, true)
+    assert.match(JSON.stringify(handoff.content), /connected browser session/)
   } finally { await client.close() }
 })
 
@@ -69,6 +72,16 @@ test('MCP: complete a local browser task through tools and close the session', {
     assert.equal(next.offset, 12000)
     const found = JSON.parse((await invoke('callisto_find', {query:'HiddenTargetPhrase'}))[0].text!)
     assert.match(found.matches[0].text, /HiddenTargetPhrase/)
+    const afterFind = await client.callTool({name:'callisto_snapshot', arguments:{offset:12000}})
+    assert.equal(afterFind.isError, true, 'find replaces the ref registry, so old pages must be discarded')
+    await invoke('callisto_navigate', {url:`http://127.0.0.1:${port}/long`})
+    const failedBatch = await client.callTool({name:'callisto_batch', arguments:{actions:[
+      {action:'navigate',url:`http://127.0.0.1:${port}/`},
+      {action:'click_ref',ref:'ax-999999'},
+    ]}})
+    assert.equal(failedBatch.isError, true)
+    const afterBatch = await client.callTool({name:'callisto_snapshot', arguments:{offset:12000}})
+    assert.equal(afterBatch.isError, true, 'a partially completed batch must invalidate cached pages')
     await invoke('callisto_close')
   } finally {
     await client.close()

@@ -8,6 +8,7 @@ with the associated notes.
 | --- | --- | --- |
 | [Runtime upgrade follow-up](research/2026-11-runtime-upgrade-comparison.md) | Same-origin frames, batching and bounded snapshots | Current exploratory run; small sample |
 | [MCP vs browse](research/2026-11-callisto-mcp-vs-browse.md) | Scripted local interactions and public-page snapshots | Historical pre-upgrade baseline; small sample |
+| [Connected Callisto vs browse](research/2026-11-connected-browse-repeated.md) | Scripted local tasks in the same paired browser | Three trials per case; two timer-dependent cases were unreliable |
 | [Mini vs Playwright](research/2026-11-mini-playwright-fixture-benchmark.md) | Deterministic local fixture operations | Historical baseline; not an agent benchmark |
 | [Local model-driven tests](research/2026-11-actionability-agent-comparison.md) | Three synthetic tasks under a shared action policy | Exploratory single trials |
 | [Live-site agent tests](research/2026-11-live-browser-comparison.md) | Native page observations and generated answers | Inconclusive: model/provider limits |
@@ -28,6 +29,11 @@ CHROME_PATH=/path/to/chrome BENCH_OUTPUT=/tmp/callisto-batching.json \
 CHROME_PATH=/path/to/chrome BENCH_OUTPUT=/tmp/callisto-live.json \
   node eval/agent-comparison/mcp-live.mjs
 ```
+
+Set `BENCH_CALLISTO_CONNECTED=1` for the first command to use Callisto's
+experimental connected mode against the same paired browser as browse. That
+mode delegates navigation and input to browse's executor; it is not a comparison
+of independent browser engines.
 
 Set `CALLISTO_NO_SANDBOX=1` only if the environment requires it. The local
 scripts create and delete their own browse sessions; the public-page script

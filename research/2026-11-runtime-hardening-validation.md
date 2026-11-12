@@ -1,0 +1,7 @@
+# Runtime hardening validation
+
+Local follow-up after snapshot pagination invalidation, input cleanup and frame capture reporting. The complete raw results are in [2026-11-runtime-hardening-playwright-results.json](2026-11-runtime-hardening-playwright-results.json).
+
+The existing deterministic local fixture was run three times per engine against the same Chrome binary, alternating order in warm browsers. All seven scenarios passed 3/3 on both Mini and Playwright: navigation, form interaction, keyboard selection, offscreen click, accessibility observation, delayed target and ambiguous-target rejection. This is a small scripted fixture, not a host-agent benchmark. Snapshot outputs differ, and the reported timings include differing work; they do not establish an overall speed advantage.
+
+Additional browser tests cover covered, disabled and moving elements; same-origin iframe interaction and covered frames; drag rejection before mouse-down; repeated Enter listener cleanup; partial batch snapshot invalidation; password redaction; timeout recovery; and sidecar state. Connected-browser smoke tests use an allowlisted temporary local fixture and a paired browse relay. They cover navigation, snapshot, rejection of an unallowed origin, cancellation, tab replacement, handoff timeout and cleanup; they do **not** establish background input, toolbar takeover, real-world handoff success, or 1.0 readiness.

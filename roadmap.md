@@ -25,8 +25,12 @@ preserved for historical context.
   failure semantics. Evaluate a Playwright-shaped JavaScript surface separately;
   the current MCP server intentionally does not expose arbitrary host code.
 - Improve packaging, setup, screenshots, navigation and multi-tab behavior.
-- Investigate attachment to an existing browser and human handoff. Neither is
-  implemented by the current isolated-browser MCP server.
+- Extend and test the connected-browser bridge's execution lifecycle, including
+  toolbar stop and take-back, focus, and broader human handoff. Connected
+  navigation and input use the installed browse executor; session reset
+  interruption, tab identity checks, handoff timeout and cancellation, and one
+  human-confirmed fixture handoff have coverage, while toolbar take-back and
+  reconnect recovery need further testing.
 
 ## 3. Evidence
 
@@ -46,3 +50,14 @@ Playwright proves more reliable at similar cost, use that evidence to choose the
 backend. The BrowserOS fork under `packages/callisto-browser` remains a historical
 experiment outside the runtime's critical path, with its own AGPL license and
 notices; do not redistribute its outputs as if they were MIT-only.
+
+## Before a 1.0 release
+
+The connected runtime needs tested execution ownership and cancellation,
+foreground and background input, user takeover and broader handoff coverage,
+tab and frame recovery, and reliable cleanup after disconnects. Its shipped relay and
+extension, upgrade path, dependency licenses, and supported platforms also need
+to be settled. Repeated host-agent comparisons and a security review are release
+gates; local fixture tests alone do not establish production readiness. See the
+[connected runtime plan](research/2026-11-connected-runtime-next-steps.md) for
+the proposed sequence.

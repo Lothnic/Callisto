@@ -24,6 +24,13 @@ export class RefRegistry {
   private currentRefs = new Set<string>()
   private next = 1
 
+  /** Drop document-local references without reusing their identifiers. */
+  reset(): void {
+    this.byBackend.clear()
+    this.byRef.clear()
+    this.currentRefs.clear()
+  }
+
   /** Stable ref for a backend node — allocated once, reused thereafter. */
   private intern(backendDOMNodeId: number, role: string, name: string, frameId: string): string {
     const existing = this.byBackend.get(backendDOMNodeId)

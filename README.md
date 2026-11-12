@@ -40,14 +40,19 @@ not discovered, or `CALLISTO_MCP_HEADLESS=0` to show the window. See the
 With the browse CLI and its paired Chromium extension already running, set
 `CALLISTO_MCP_BROWSER=connected` and `CALLISTO_ALLOWED_ORIGINS` to a
 comma-separated list of HTTP(S) origins in the MCP host environment. The server
-creates an agent-owned tab and session through browse's relay. It does not adopt
-existing tabs. `CALLISTO_BROWSE_COMMAND` can specify the browse CLI executable.
+creates an agent-owned tab in that browser profile, so the tab can use the
+profile's existing logged-in sessions. It does not adopt existing tabs.
+`CALLISTO_BROWSE_COMMAND` can specify the browse CLI executable.
 
-This bridge can navigate and inspect allowed pages, but it does **not** yet
-integrate browse's execution, stop or human-handoff lifecycle. Input in a
-background tab is refused because the relay does not provide Mini's direct CDP
-connection with browse's focus handling. Foreground input and recovery are not
-yet adequately tested; this mode is experimental and is not production-ready.
+Navigation and pointer and keyboard actions run through browse's execution
+lifecycle; Mini still captures and checks the page over CDP. A session reset
+interrupts an executing action, and actions reject a replaced tab. The bridge
+uses browse's Patchright-backed execution for these operations, so it is not a
+standalone Mini-only connected runtime. `callisto_handoff` delegates a human
+step to browse; timeout, cancellation, and one human-confirmed handoff on a
+local fixture have been tested. Toolbar take-back, interruptions during every
+action, and reconnect recovery still need end-to-end coverage. This mode is
+experimental and is not production-ready.
 Closing Callisto closes its own tab and session, not the browser. The vendored
 [browse source and license](vendor/README.md) are a preserved upstream copy;
 the connected bridge currently uses the installed browse CLI and extension.
@@ -76,8 +81,10 @@ python3 -m http.server 8087 --directory site
 ## Status and evidence
 
 The current MCP interface has structured actions, bounded snapshots, text
-search and action batches. Same-origin iframe actions are supported; cross-origin
-frame coverage, connected-browser input, human handoff and full Playwright
+search and action batches. Same-origin iframe actions are supported. An
+experimental connected mode adds navigation and input through browse's executor
+and a basic human-handoff tool, but cross-origin frame coverage, toolbar
+take-back, full interruption and reconnect handling, and full Playwright
 compatibility remain open work. Browser actions can change websites; the MCP
 server does not supply an approval or security boundary.
 

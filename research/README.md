@@ -5,6 +5,9 @@ Callisto's current direction is the [browser-runtime roadmap](../roadmap.md).
 
 | Note | Scope | Status |
 | --- | --- | --- |
+| [Connected Callisto and browse](2026-11-connected-browse-repeated.md) | Scripted local tasks on the same paired browser | Three trials per case; delayed conditions were inconsistent |
+| [Runtime hardening validation](2026-11-runtime-hardening-validation.md) | Fixture tests and Mini vs Playwright | Local scripted checks, not an agent benchmark |
+| [Connected runtime plan](2026-11-connected-runtime-next-steps.md) | Remaining work toward release | Active development |
 | [Runtime upgrade comparison](2026-11-runtime-upgrade-comparison.md) | Follow-up local MCP fixtures, batching and public-page snapshots | Current exploratory run; small sample |
 | [Stripped Playwright assessment](2026-11-stripped-playwright-browse-assessment.md) | Product hypothesis, primary sources and proposed comparisons | Context; conclusions remain hypotheses |
 | [Callisto MCP vs browse](2026-11-callisto-mcp-vs-browse.md) | Scripted MCP fixtures and public-page snapshots | Historical pre-upgrade baseline; see raw results |
@@ -19,6 +22,6 @@ The old comparisons reflect the code and environment at the time and must not be
 presented as results for the current runtime.
 
 Current open questions include cross-origin iframe behavior, snapshot coverage
-under a bounded context budget, real host-agent task success, attachment to an
-existing browser, and whether the custom CDP backend outperforms a
+under a bounded context budget, real host-agent task success, connected-browser
+handoff and recovery, and whether the custom CDP backend outperforms a
 Playwright-backed interface on meaningful tasks.

@@ -11,6 +11,8 @@ export interface Snapshot {
   title: string
   /** the pruned, ref-annotated a11y tree as indented text */
   text: string
+  /** Frames omitted or shown separately because they changed or could not be inspected. */
+  warnings?: string[]
 }
 
 // --- CDP shapes (typed locally; the shipped protocol types are incomplete for
@@ -114,6 +116,8 @@ export async function snapshot(session: Session, refs: RefRegistry): Promise<Sna
 
     const byId = new Map<string, RawNode>()
     const frameRoot = new Map<string, string>()
+    let skippedFrames = 0
+    let detachedFrames = 0
     for (const f of frames) {
       try {
         const { nodes } = await ax.getFullAXTree({ frameId: f.id })
@@ -146,9 +150,15 @@ export async function snapshot(session: Session, refs: RefRegistry): Promise<Sna
           }
         }
         const root = normalizeFrame(nodes.filter((n) => !excluded.has(n.nodeId)), f.id, byId)
-        if (root) frameRoot.set(f.id, root)
-      } catch {
-        // frame went away mid-snapshot; skip it
+        if (!root) throw new Error('Accessibility tree has no root')
+        frameRoot.set(f.id, root)
+      } catch (error) {
+        if (f.id === mainId) {
+          throw new Error('Could not capture the main frame accessibility tree', { cause: error })
+        }
+        // A child can disappear or be inaccessible between frame enumeration
+        // and capture. Report that the result may be incomplete.
+        skippedFrames++
       }
     }
 
@@ -165,8 +175,10 @@ export async function snapshot(session: Session, refs: RefRegistry): Promise<Sna
         const { backendNodeId } = await dom.getFrameOwner({ frameId: f.id })
         const ownerId = byBackend.get(backendNodeId)
         if (ownerId) byId.get(ownerId)!.childIds.push(childRoot)
+        else detachedFrames++
       } catch {
         // OOPIF / detached: leave the child frame as its own top-level root
+        detachedFrames++
       }
     }
 
@@ -184,6 +196,10 @@ export async function snapshot(session: Session, refs: RefRegistry): Promise<Sna
       returnByValue: true,
     })
     const { url, title } = JSON.parse(meta.result.value as string) as { url: string; title: string }
-    return { url, title, text }
+    const warnings = [
+      ...(skippedFrames ? [`${skippedFrames} child frame(s) could not be captured; page content may be missing.`] : []),
+      ...(detachedFrames ? [`${detachedFrames} child frame(s) could not be attached to their owners and may appear separately.`] : []),
+    ]
+    return { url, title, text, ...(warnings.length ? { warnings } : {}) }
   }
 }

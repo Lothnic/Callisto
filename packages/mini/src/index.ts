@@ -107,6 +107,8 @@ export class Mini {
    */
   private pendingFocusTargetId: string | undefined
   private signalListenersInstalled = false
+  private operationSignal: AbortSignal | undefined
+  private pageRevision = 0
 
   private constructor(
     private session: Session,
@@ -133,6 +135,11 @@ export class Mini {
     const session = await connectBrowse(opts)
     const mini = new Mini(session, new RefRegistry())
     mini.currentTargetId = session.targetId
+    // Navigation can also be triggered by a click or by the person during a
+    // handoff. Retire refs only for this tab, not another relay client.
+    session.cdp.on('Page.frameNavigated', (event: {frame?: {parentId?: string}}, cdpSessionId?: string) => {
+      if (cdpSessionId === session.connectedPageSessionId && event.frame && !event.frame.parentId) mini.resetPageState()
+    })
     // Connected sessions deliberately avoid global browser changes and target
     // auto-focus until ownership and takeover events are integrated.
     return mini
@@ -140,6 +147,30 @@ export class Mini {
 
   async close(): Promise<void> {
     await closeSession(this.session)
+  }
+
+  /** Changes when the current document or tab is replaced. */
+  getPageRevision(): number { return this.pageRevision }
+
+  /** Scope cancellation to one serialized host operation. */
+  async withAbortSignal<T>(signal: AbortSignal, work: () => Promise<T>): Promise<T> {
+    const previous = this.operationSignal
+    this.operationSignal = signal
+    try { return await work() } finally { this.operationSignal = previous }
+  }
+
+  /** Ask the person using a paired browser to complete a step in this tab. */
+  async handoff(message: string, options: {timeoutMs?: number; signal?: AbortSignal} = {}): Promise<void> {
+    if (this.session.mode !== 'connected' || !this.session.connectedExecute) throw new Error('Human handoff requires a connected browser session')
+    const timeoutMs = options.timeoutMs ?? 60_000
+    if (!message.trim() || message.length > 500) throw new Error('handoff: provide a message of at most 500 characters')
+    if (!Number.isInteger(timeoutMs) || timeoutMs < 1000 || timeoutMs > 120_000) throw new Error('handoff: timeout must be between 1000 and 120000ms')
+    try {
+      await this.session.connectedExecute(`await handoff(${JSON.stringify(message)}, {timeoutMs: ${timeoutMs}})`, {signal:options.signal, timeout:timeoutMs + 10_000})
+    } finally {
+      // The person may have changed or navigated the page, even on timeout.
+      this.resetPageState()
+    }
   }
 
   private get cdp() {
@@ -157,6 +188,12 @@ export class Mini {
   // --- navigation ---
 
   async goto(url: string, opts: { waitUntil?: 'load' | 'domcontentloaded'; timeout?: number } = {}): Promise<void> {
+    if (this.session.mode === 'connected') {
+      try {
+        await this.connectedAction(`await page.goto(${JSON.stringify(url)}, ${JSON.stringify({waitUntil:opts.waitUntil ?? 'load', timeout:opts.timeout ?? NAVIGATION_TIMEOUT})})`)
+      } finally { this.resetPageState() }
+      return
+    }
     const cdp = this.cdp
     const event = opts.waitUntil === 'domcontentloaded' ? 'Page.domContentEventFired' : 'Page.loadEventFired'
     let listener: () => void = () => undefined
@@ -184,6 +221,10 @@ export class Mini {
   }
 
   async reload(): Promise<void> {
+    if (this.session.mode === 'connected') {
+      try { await this.connectedAction('await page.reload()') } finally { this.resetPageState() }
+      return
+    }
     const cdp = this.cdp
     let listener: () => void = () => undefined
     const loaded = new Promise<void>((resolve) => { listener = resolve; cdp.on('Page.loadEventFired', listener) })
@@ -196,6 +237,11 @@ export class Mini {
   }
 
   private async historyGo(delta: number): Promise<void> {
+    if (this.session.mode === 'connected') {
+      try { await this.connectedAction(delta < 0 ? 'await page.goBack()' : 'await page.goForward()') }
+      finally { this.resetPageState() }
+      return
+    }
     const { Page } = this.cdp
     const { currentIndex, entries } = await Page.getNavigationHistory()
     const target = entries[currentIndex + delta]
@@ -223,13 +269,22 @@ export class Mini {
 
   async hover(target: Target): Promise<void> {
     const p = await this.actionable(target, 'hover')
+    if (this.session.mode === 'connected') {
+      await this.connectedAction(`await page.mouse.move(${p.x}, ${p.y})`)
+      return
+    }
     await this.cdp.Input.dispatchMouseEvent({ type: 'mouseMoved', x: p.x, y: p.y })
   }
 
   async dragTo(from: Target, to: Target): Promise<void> {
-    await this.requireConnectedInput()
-    const a = await this.resolve(from)
-    const b = await this.resolve(to)
+    // Check both ends before pressing the mouse: a covered destination must
+    // not leave behind a partial drag or start a destructive gesture.
+    const a = await this.actionable(from, 'click')
+    const b = await this.actionable(to, 'hover')
+    if (this.session.mode === 'connected') {
+      await this.connectedAction(`await page.mouse.move(${a.x}, ${a.y}); await page.mouse.down(); await page.mouse.move(${b.x}, ${b.y}); await page.mouse.up()`)
+      return
+    }
     const { Input } = this.cdp
     await Input.dispatchMouseEvent({ type: 'mousePressed', x: a.x, y: a.y, button: 'left', buttons: 1, clickCount: 1 })
     await Input.dispatchMouseEvent({ type: 'mouseMoved', x: b.x, y: b.y, button: 'left', buttons: 1 })
@@ -238,6 +293,10 @@ export class Mini {
 
   async type(text: string, opts: TypeOpts = {}): Promise<void> {
     await this.requireConnectedInput()
+    if (this.session.mode === 'connected') {
+      await this.connectedAction(opts.delay ? `await page.keyboard.type(${JSON.stringify(text)}, ${JSON.stringify({delay:opts.delay})})` : `await page.keyboard.insertText(${JSON.stringify(text)})`)
+      return
+    }
     if (!opts.delay) {
       await this.cdp.Input.insertText({ text })
       return
@@ -272,39 +331,73 @@ export class Mini {
       : undefined)
     if (!known) throw new Error(`press: unsupported key ${main}; use keyboard.type for text`)
     const [code, windowsVirtualKeyCode] = known
+    if (this.session.mode === 'connected') {
+      await this.connectedAction(`await page.keyboard.press(${JSON.stringify([...parts, main].join('+'))})`)
+      return
+    }
     const text = modifiers === 0 && main.length === 1 ? main : main === 'Enter' ? '\r' : undefined
     const event = { key: main === 'Space' ? ' ' : main, code, windowsVirtualKeyCode, modifiers }
-    const pendingNav = main === 'Enter' && modifiers === 0
-      ? Promise.race([
-          this.cdp.Page.frameNavigated().then(() => this.cdp.Page.loadEventFired()).then(() => true),
-          sleep(400).then(() => false),
-        ])
-      : null
-    await this.cdp.Input.dispatchKeyEvent({ type: 'keyDown', ...event, ...(text ? { text } : {}) })
-    await this.cdp.Input.dispatchKeyEvent({ type: 'keyUp', ...event })
-    if (pendingNav && await pendingNav) this.resetPageState()
+    const observeNav = main === 'Enter' && modifiers === 0
+    const cdpEvents = this.cdp as unknown as EventEmitter
+    let navigated = false
+    let timer: ReturnType<typeof setTimeout> | undefined
+    let onFrame: () => void = () => {}
+    let onLoad: () => void = () => {}
+    const pendingNav = observeNav ? new Promise<void>((resolve) => {
+      onFrame = () => { navigated = true }
+      onLoad = () => { if (navigated) resolve() }
+      cdpEvents.on('Page.frameNavigated', onFrame)
+      cdpEvents.on('Page.loadEventFired', onLoad)
+      timer = setTimeout(resolve, 400)
+    }) : undefined
+    try {
+      await this.cdp.Input.dispatchKeyEvent({ type: 'keyDown', ...event, ...(text ? { text } : {}) })
+      await this.cdp.Input.dispatchKeyEvent({ type: 'keyUp', ...event })
+      if (pendingNav) await pendingNav
+    } finally {
+      if (timer) clearTimeout(timer)
+      if (observeNav) {
+        cdpEvents.removeListener('Page.frameNavigated', onFrame)
+        cdpEvents.removeListener('Page.loadEventFired', onLoad)
+      }
+      // The document can change even if key dispatch subsequently fails.
+      if (navigated) this.resetPageState()
+    }
   }
 
   async keyDown(key: string): Promise<void> {
     await this.requireConnectedInput()
+    if (this.session.mode === 'connected') throw new Error('Holding keys across connected actions is not supported; use press instead')
     await this.cdp.Input.dispatchKeyEvent({ type: 'keyDown', key, ...keyExtras(key) })
   }
 
   async keyUp(key: string): Promise<void> {
     await this.requireConnectedInput()
+    if (this.session.mode === 'connected') throw new Error('Holding keys across connected actions is not supported; use press instead')
     await this.cdp.Input.dispatchKeyEvent({ type: 'keyUp', key, ...keyExtras(key) })
   }
 
   /** Focus the target, select its contents, and insert text through the browser. */
   async fill(target: Target, value: string): Promise<void> {
-    await this.mouse(await this.actionable(target, 'fill'), 'left', 1)
+    const point = await this.actionable(target, 'fill')
+    if (this.session.mode === 'connected') {
+      const selectAll = process.platform === 'darwin' ? 'Meta+A' : 'Control+A'
+      await this.connectedAction(`await page.mouse.click(${point.x}, ${point.y}); await page.keyboard.press(${JSON.stringify(selectAll)}); ${value ? `await page.keyboard.insertText(${JSON.stringify(value)})` : 'await page.keyboard.press("Backspace")'}`)
+      return
+    }
+    await this.mouse(point, 'left', 1)
     await this.press(process.platform === 'darwin' ? 'Meta+A' : 'Control+A')
-    if (value) await this.cdp.Input.insertText({ text: value })
+    if (value) await this.type(value)
     else await this.press('Backspace')
   }
 
   async scroll(deltaX: number, deltaY: number): Promise<void> {
     await this.requireConnectedInput()
+    if (!Number.isFinite(deltaX) || !Number.isFinite(deltaY)) throw new Error('scroll: deltas must be finite numbers')
+    if (this.session.mode === 'connected') {
+      await this.connectedAction(`const __v = await page.evaluate(() => ({width: innerWidth, height: innerHeight})); await page.mouse.move(__v.width / 2, __v.height / 2); await page.mouse.wheel(${deltaX}, ${deltaY})`)
+      return
+    }
     const { width, height } = this.session.viewport
     await this.cdp.Input.dispatchMouseEvent({
       type: 'mouseWheel',
@@ -476,8 +569,9 @@ export class Mini {
 
   /** Drop snapshot baseline + ref registry after a document change. */
   private resetPageState(): void {
+    this.pageRevision++
     this.resetSnapshotBaseline()
-    this.refs = new RefRegistry()
+    this.refs.reset()
   }
 
   async drainSignals(): Promise<AgentSignal[]> {
@@ -496,6 +590,10 @@ export class Mini {
     // Only register CDP listeners once per Mini — re-registering stacks handlers.
     if (this.signalListenersInstalled) return
     this.signalListenersInstalled = true
+
+    ;(this.cdp as unknown as EventEmitter).on('Page.frameNavigated', (event: {frame?: {parentId?: string}}) => {
+      if (event.frame && !event.frame.parentId) this.resetPageState()
+    })
 
     const cdp = this.cdp as unknown as {
       Page?: {
@@ -691,7 +789,10 @@ export class Mini {
   /** Bounded safety checks for ref targets. Raw coordinates are explicit and unchecked. */
   private async actionable(target: Target, action: 'click' | 'hover' | 'fill', timeout = 2_000): Promise<Point> {
     await this.requireConnectedInput()
-    if (isPoint(target)) return target
+    if (isPoint(target)) {
+      if (!Number.isFinite(target.x) || !Number.isFinite(target.y)) throw new Error(`${action}: coordinates must be finite numbers`)
+      return target
+    }
     const ref = target.replace(/^\[|\]$/g, '')
     const info = this.refs.get(ref)
     if (!info) throw new Error(`ref "${target}" unknown — call snapshot() first.`)
@@ -699,6 +800,7 @@ export class Mini {
     let lastReason = 'not ready'
     let previous: number[] | undefined
     while (Date.now() < deadline) {
+      if (this.operationSignal?.aborted) throw new Error(`${action}: request was cancelled`)
       let objectId: string | undefined
       try {
         await this.cdp.DOM.scrollIntoViewIfNeeded({ backendNodeId: info.backendDOMNodeId })
@@ -789,6 +891,10 @@ export class Mini {
   }
 
   private async mouse(p: Point, button: MouseButton, clickCount: number): Promise<void> {
+    if (this.session.mode === 'connected') {
+      await this.connectedAction(`await page.mouse.click(${p.x}, ${p.y}, ${JSON.stringify({button,clickCount})})`)
+      return
+    }
     const { Input } = this.cdp
     const buttons = BUTTON_MASK[button]
     await Input.dispatchMouseEvent({ type: 'mouseMoved', x: p.x, y: p.y })
@@ -796,10 +902,14 @@ export class Mini {
     await Input.dispatchMouseEvent({ type: 'mouseReleased', x: p.x, y: p.y, button, buttons, clickCount })
   }
 
-  /** Raw CDP does not participate in browse's execution/focus lifecycle. */
+  private async connectedAction(code: string): Promise<void> {
+    if (!this.session.connectedExecute) throw new Error('Connected browser execution lifecycle is unavailable')
+    await this.session.connectedExecute(code, {signal:this.operationSignal})
+  }
+
+  /** Never send connected input outside browse's execution lifecycle. */
   private async requireConnectedInput(): Promise<void> {
     if (this.session.mode !== 'connected') return
-    const visible = await this.evaluate<boolean>(() => document.visibilityState === 'visible')
-    if (!visible) throw new Error('Connected tab is in the background; raw CDP input cannot be delivered reliably. Activate the Callisto-owned tab or use browse until connected input is integrated.')
+    if (!this.session.connectedExecute) throw new Error('Connected browser execution lifecycle is unavailable')
   }
 }

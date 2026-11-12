@@ -29,6 +29,10 @@ const repeat=Number(process.env.BENCH_REPETITIONS||3)
 const browseTimeout=Number(process.env.BROWSE_ACTION_TIMEOUT_MS||3000)
 const output=process.env.BENCH_OUTPUT||'research/2026-11-mcp-comparison-results.json'
 const env={...process.env,OPENROUTER_API_KEY:'',SILICONFLOW_KEY:'',SILICONFLOW_API_KEY:''}
+if (process.env.BENCH_CALLISTO_CONNECTED === '1') {
+ env.CALLISTO_MCP_BROWSER='connected'
+ env.CALLISTO_ALLOWED_ORIGINS=origin
+}
 const clients={};const rows=[];let session
 async function client(command,args){const c=new Client({name:'callisto-mcp-comparison',version:'1.0'});await c.connect(new StdioClientTransport({command,args,env,stderr:'pipe'}));return c}
 async function tool(engine,name,args={}){
@@ -82,7 +86,7 @@ try{
  const toolCatalog={};for(const name of ['callisto','browse'])toolCatalog[name]=(await clients[name].listTools()).tools.map(t=>({name:t.name,description:t.description,inputSchema:t.inputSchema}))
  for(let i=0;i<repeat;i++)for(const [j,task] of cases.entries())for(const engine of ((i+j)%2?['browse','callisto']:['callisto','browse'])){
   const row=await trial(engine,task,i);rows.push(row);process.stderr.write(`${engine} ${task.id} ${i+1}: ${row.success?'PASS':'FAIL'}${row.error?' '+row.error.slice(0,100):''}\n`)
-  await writeFile(output,JSON.stringify({date:new Date().toISOString(),repeat,origin,browseTimeout,notes:'Scripted host actions, not an autonomous agent; local fixtures, different browser binaries/profiles; timing includes MCP and page operations, not model latency.',toolCatalog,rows},null,2)+'\n')
+  await writeFile(output,JSON.stringify({date:new Date().toISOString(),repeat,origin,browseTimeout,callistoMode:env.CALLISTO_MCP_BROWSER ?? 'isolated',notes:'Scripted host actions, not an autonomous agent; local fixtures; connected mode shares a paired browser with browse, while isolated mode may use another binary/profile. Timing includes MCP and page operations, not model latency.',toolCatalog,rows},null,2)+'\n')
  }
 }finally{
  if(clients.browse&&session)await tool('browse','session_delete',{id:session}).catch(()=>{})

@@ -39,10 +39,23 @@ trees with `ax-N` refs; use those refs with `callisto_click` and `callisto_fill`
 Snapshots returned over MCP default to 12,000 characters; use `nextOffset` with
 `callisto_snapshot` for subsequent pages of the last captured snapshot, or
 `callisto_find` to search the full tree. A new capture replaces that cached
-snapshot, and refs may become stale when the page changes. `callisto_batch` executes up to
-10 structured actions in order, including role-based targets; earlier actions
-are not rolled back if a later one fails. The server also exposes
+snapshot, and refs may become stale when the page changes. Snapshot refs are
+retired on document changes and their identifiers are not reused during the
+same Mini session. `callisto_batch` executes up to 10 structured actions in
+order, including role-based targets; earlier actions
+are not rolled back if a later one fails. Navigation, actions and search
+invalidate cached snapshot pages, including when an action fails; request a new
+snapshot before continuing pagination. The server also exposes
 `callisto_press`, `callisto_scroll`, `callisto_screenshot`, and `callisto_close`.
+Snapshots and search results include warnings when child frames could not be
+captured or attached to their owners. A failed main-frame capture is an error.
+In connected mode, `callisto_handoff` asks the user to complete a step in the
+owned tab and waits for confirmation. Its timeout is 1–120 seconds (default 60);
+the host's request timeout must be longer. A confirmation is not proof that the
+step succeeded: inspect the returned snapshot. Timeout, client cancellation,
+and host-disconnect cleanup are tested. One person confirmed a handoff on a
+local fixture; toolbar take-back and broader real-world workflows still need
+end-to-end verification.
 Calls are serialized. Closing the
 session removes its browser state; a subsequent call creates a fresh session.
 
@@ -51,9 +64,12 @@ An experimental connected mode can open its own tab in a browser paired with
 browse. Set `CALLISTO_MCP_BROWSER=connected` and `CALLISTO_ALLOWED_ORIGINS` to
 the comma-separated origins to allow, with the browse CLI and extension already
 installed and paired. Set `CALLISTO_BROWSE_COMMAND` if the CLI is not on PATH.
-This mode does not adopt existing tabs, integrate browse's handoff or stop
-controls, or reliably drive background tabs; input on hidden tabs is refused.
-Foreground input and recovery are not adequately tested. See the
+This mode creates its own tab and runs navigation and input through browse's
+execution lifecycle, using browse's Patchright-backed executor. It does not
+adopt existing tabs. Session reset and changed-tab rejection are covered by
+connected tests; handoff timeout and cancellation and one human-confirmed
+fixture handoff are covered. Toolbar take-back and reconnect recovery are not
+yet adequately tested. See the
 [project README](../../README.md#experimental-connected-browser) for status.
 
 Mini is not a complete Playwright API or a sandbox for untrusted pages; browser actions
