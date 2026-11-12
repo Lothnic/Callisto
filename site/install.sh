@@ -2,7 +2,7 @@
 # Install the pinned experimental Callisto MCP runtime from its public repository.
 set -euo pipefail
 
-revision='f36ee0fe625ca842773671089f3b8ac8cf342291'
+revision='2e889d291254aeb8d0773e113c5aba2c46f8d877'
 repository='https://github.com/Lothnic/Callisto.git'
 install_dir="${CALLISTO_INSTALL_DIR:-${XDG_DATA_HOME:-${HOME:?HOME is required}/.local/share}/callisto}"
 

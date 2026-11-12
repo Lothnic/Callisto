@@ -6,13 +6,13 @@
 <title>Callisto — A lean browser runtime for agents</title>
 <meta name="description" content="Callisto is an experimental local browser runtime for agents. Connect over MCP to navigate Chromium, inspect accessibility snapshots, and act on page references.">
 <meta property="og:title" content="Callisto — A lean browser runtime for agents">
-<meta property="og:description" content="Give your agent a real browser. One MCP server, ten structured tools, bounded accessibility snapshots.">
+<meta property="og:description" content="Give your agent a real browser. One MCP server, eleven structured tools, bounded accessibility snapshots.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://callisto.lothnic.dev/">
 <meta property="og:site_name" content="Callisto">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Callisto — A lean browser runtime for agents">
-<meta name="twitter:description" content="Give your agent a real browser. One MCP server, ten structured tools, bounded accessibility snapshots.">
+<meta name="twitter:description" content="Give your agent a real browser. One MCP server, eleven structured tools, bounded accessibility snapshots.">
 <link rel="canonical" href="https://callisto.lothnic.dev/">
 <meta name="theme-color" content="#0a0a0a">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230a0a0a'/%3E%3Ccircle cx='32' cy='32' r='11' fill='none' stroke='%233b82f6' stroke-width='3'/%3E%3Cellipse cx='32' cy='32' rx='24' ry='9' fill='none' stroke='%23f0ede6' stroke-width='1.5' transform='rotate(-24 32 32)'/%3E%3Ccircle cx='49' cy='21' r='3' fill='%23f0ede6'/%3E%3C/svg%3E">
@@ -87,7 +87,7 @@
     <div class="hero-ticker-inner">
       <div class="hero-ticker-group">
         <span>MCP over stdio</span><span class="sep" aria-hidden="true">•</span>
-        <span>10 structured tools</span><span class="sep" aria-hidden="true">•</span>
+        <span>11 structured tools</span><span class="sep" aria-hidden="true">•</span>
         <span>ax-N refs</span><span class="sep" aria-hidden="true">•</span>
         <span>12,000-char bounded snapshots</span><span class="sep" aria-hidden="true">•</span>
         <span>1440 × 900 pinned viewport</span><span class="sep" aria-hidden="true">•</span>
@@ -97,7 +97,7 @@
       </div>
       <div class="hero-ticker-group" aria-hidden="true">
         <span>MCP over stdio</span><span class="sep">•</span>
-        <span>10 structured tools</span><span class="sep">•</span>
+        <span>11 structured tools</span><span class="sep">•</span>
         <span>ax-N refs</span><span class="sep">•</span>
         <span>12,000-char bounded snapshots</span><span class="sep">•</span>
         <span>1440 × 900 pinned viewport</span><span class="sep">•</span>
@@ -251,7 +251,7 @@
     <div class="container">
       <div class="intro-headline-wrap">
         <div class="badge">Introducing Callisto</div>
-        <h2 class="display intro-title">One Server.<br>Ten Tools. A Real Browser.</h2>
+        <h2 class="display intro-title">One Server.<br>Eleven Tools. A Real Browser.</h2>
         <p class="intro-desc">
           Callisto runs a local Chromium and exposes it over MCP. The agent navigates,
           reads a bounded accessibility tree, and acts on page refs — without a
@@ -535,7 +535,7 @@
             <g class="workflow-step" data-node="1">
               <rect x="90" y="178" width="240" height="58" rx="2"/>
               <text x="210" y="202" text-anchor="middle">CALLISTO MCP</text>
-              <text class="workflow-caption" x="210" y="220" text-anchor="middle">stdio · 10 tools</text>
+              <text class="workflow-caption" x="210" y="220" text-anchor="middle">stdio · 11 tools</text>
             </g>
 
             <g class="workflow-step" data-node="2">
@@ -657,7 +657,7 @@ the top three Show HN posts.</code></pre>
             <span class="faq-question-text">Does it use my browser or my logins?</span>
             <svg class="faq-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 6l5 5 5-5" stroke="currentColor" stroke-width="1.5"/></svg>
           </summary>
-          <div class="faq-answer-wrap"><div class="faq-answer"><p>By default Callisto starts an isolated browser. An experimental bridge can open its own tab through a paired browse extension, but it cannot yet adopt existing tabs or provide browse’s handoff and stop controls. Background input is refused. <a href="https://github.com/Lothnic/callisto#experimental-connected-browser">Read connected-mode limitations ↗</a></p></div></div>
+          <div class="faq-answer-wrap"><div class="faq-answer"><p>By default Callisto starts an isolated browser. An experimental bridge can open its own tab through a paired browse extension, but it cannot yet adopt existing tabs or provide browse’s full takeover and stop controls. A basic handoff tool delegates a human step; toolbar take-back is still open work. Background input is refused. <a href="https://github.com/Lothnic/callisto#experimental-connected-browser">Read connected-mode limitations ↗</a></p></div></div>
         </details>
         <details class="faq-item">
           <summary class="faq-question">
@@ -689,7 +689,7 @@ the top three Show HN posts.</code></pre>
             <span class="faq-question-text">What is actually shipped today?</span>
             <svg class="faq-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 6l5 5 5-5" stroke="currentColor" stroke-width="1.5"/></svg>
           </summary>
-          <div class="faq-answer-wrap"><div class="faq-answer"><p>The CDP engine, the MCP server, bounded snapshots, same-origin frame actions, batching, and an eval kit. Cross-origin frames, human handoff, and full Playwright compatibility are still open work. The project is experimental and says so.</p></div></div>
+          <div class="faq-answer-wrap"><div class="faq-answer"><p>The CDP engine, the MCP server, bounded snapshots, same-origin frame actions, batching, and an eval kit. Cross-origin frames, toolbar take-back, and full Playwright compatibility are still open work. The project is experimental and says so.</p></div></div>
         </details>
       </div>
     </div>
