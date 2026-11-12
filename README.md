@@ -34,11 +34,22 @@ when the session ends. Set `CHROME_PATH` in the host environment if Chrome is
 not discovered, or `CALLISTO_MCP_HEADLESS=0` to show the window. See the
 [Mini guide](packages/mini/README.md) for the available tools and limitations.
 
+## Website
+
+The marketing site lives in [`site/`](site/) and is published at
+<https://callisto.lothnic.dev>. It is plain HTML, CSS and JavaScript with no
+build step. Open `site/index.html` directly, or serve the folder:
+
+```bash
+python3 -m http.server 8087 --directory site
+```
+
 ## Project layout
 
 | Path | Purpose |
 | --- | --- |
 | [`packages/mini/`](packages/mini/) | CDP engine, accessibility snapshots and local MCP server |
+| [`site/`](site/) | Static marketing site; no build step |
 | [`harness/`](harness/) | Optional reference agent and CLI, not required for MCP |
 | [`eval/`](eval/) | Evaluation tools and reproducible comparison scripts |
 | [`research/`](research/) | Findings, historical notes and benchmark evidence |
