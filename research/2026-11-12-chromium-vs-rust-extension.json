@@ -1,0 +1,1738 @@
+{
+  "date": "2026-11-12T16:13:03.800Z",
+  "repetitions": 12,
+  "notes": "Release Rust, built TypeScript/Node; extension lane (when selected) adds post-action snapshots and navigation readiness polling; browser/extension installation excluded from its timings; no batch tool in extension lane; isolated headless browsers, native MCP tools, local deterministic fixtures. Warm trials exclude initial navigation. Different browsers/protocols/implementations; not a Rust-vs-JS language benchmark. p95 is descriptive with a small sample. Success-only timings; inspect failures.",
+  "versions": {
+    "node": "v26.5.0",
+    "chromium": "Chromium 157.0.8103.38 snap",
+    "firefox": "Mozilla Firefox 157.0.1"
+  },
+  "startups": [
+    {
+      "engine": "chromium",
+      "handshakeMs": 199.067288
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "handshakeMs": 56.40595200000007
+    }
+  ],
+  "summary": {
+    "chromium:cold_first_navigation": {
+      "success": 1,
+      "total": 1,
+      "medianMs": 650.25603,
+      "p95Ms": 650.25603,
+      "supported": true
+    },
+    "rust_firefox_extension:cold_first_navigation": {
+      "success": 0,
+      "total": 0,
+      "medianMs": null,
+      "p95Ms": null,
+      "supported": false
+    },
+    "chromium:ping_100": {
+      "success": 12,
+      "total": 12,
+      "medianMs": 13.227360999999291,
+      "p95Ms": 29.36362099999951,
+      "supported": true
+    },
+    "rust_firefox_extension:ping_100": {
+      "success": 12,
+      "total": 12,
+      "medianMs": 9.59546699999919,
+      "p95Ms": 13.384274000000005,
+      "supported": true
+    },
+    "chromium:navigate_small": {
+      "success": 12,
+      "total": 12,
+      "medianMs": 26.06930899999861,
+      "p95Ms": 29.20234899999923,
+      "supported": true
+    },
+    "rust_firefox_extension:navigate_small": {
+      "success": 12,
+      "total": 12,
+      "medianMs": 42.625615000000835,
+      "p95Ms": 59.79803700000048,
+      "supported": true
+    },
+    "chromium:snapshot_small": {
+      "success": 12,
+      "total": 12,
+      "medianMs": 7.914416999999958,
+      "p95Ms": 9.820377999996708,
+      "supported": true
+    },
+    "rust_firefox_extension:snapshot_small": {
+      "success": 12,
+      "total": 12,
+      "medianMs": 2.6570380000011937,
+      "p95Ms": 3.450643999996828,
+      "supported": true
+    },
+    "chromium:find_small": {
+      "success": 12,
+      "total": 12,
+      "medianMs": 7.330373000000691,
+      "p95Ms": 10.843935000000783,
+      "supported": true
+    },
+    "rust_firefox_extension:find_small": {
+      "success": 12,
+      "total": 12,
+      "medianMs": 2.130310999997164,
+      "p95Ms": 3.3051919999998063,
+      "supported": true
+    },
+    "chromium:form_fill_click_snapshot": {
+      "success": 12,
+      "total": 12,
+      "medianMs": 135.00628300000244,
+      "p95Ms": 142.6081549999999,
+      "supported": true
+    },
+    "rust_firefox_extension:form_fill_click_snapshot": {
+      "success": 12,
+      "total": 12,
+      "medianMs": 163.85134299999845,
+      "p95Ms": 169.8458929999997,
+      "supported": true
+    },
+    "chromium:batch_form": {
+      "success": 12,
+      "total": 12,
+      "medianMs": 147.64458999999988,
+      "p95Ms": 163.08926500000052,
+      "supported": true
+    },
+    "rust_firefox_extension:batch_form": {
+      "success": 0,
+      "total": 0,
+      "medianMs": null,
+      "p95Ms": null,
+      "supported": false
+    },
+    "chromium:navigate_large": {
+      "success": 12,
+      "total": 12,
+      "medianMs": 187.56459600000017,
+      "p95Ms": 214.9697299999998,
+      "supported": true
+    },
+    "rust_firefox_extension:navigate_large": {
+      "success": 12,
+      "total": 12,
+      "medianMs": 54.23337100000208,
+      "p95Ms": 61.29986999999892,
+      "supported": true
+    },
+    "chromium:snapshot_large": {
+      "success": 12,
+      "total": 12,
+      "medianMs": 126.28556700000081,
+      "p95Ms": 154.0042250000006,
+      "supported": true
+    },
+    "rust_firefox_extension:snapshot_large": {
+      "success": 12,
+      "total": 12,
+      "medianMs": 7.840999000000011,
+      "p95Ms": 10.506342999999106,
+      "supported": true
+    },
+    "chromium:find_large": {
+      "success": 12,
+      "total": 12,
+      "medianMs": 129.4509059999982,
+      "p95Ms": 153.8644629999999,
+      "supported": true
+    },
+    "rust_firefox_extension:find_large": {
+      "success": 12,
+      "total": 12,
+      "medianMs": 2.88508499999989,
+      "p95Ms": 3.9634249999980966,
+      "supported": true
+    }
+  },
+  "rows": [
+    {
+      "engine": "chromium",
+      "task": "cold_first_navigation",
+      "iteration": -1,
+      "ok": true,
+      "ms": 650.25603,
+      "chars": 1880
+    },
+    {
+      "engine": "chromium",
+      "task": "ping_100",
+      "iteration": 0,
+      "ok": true,
+      "ms": 29.36362099999951
+    },
+    {
+      "engine": "chromium",
+      "task": "navigate_small",
+      "iteration": 0,
+      "ok": true,
+      "ms": 26.799637999999504,
+      "chars": 1889
+    },
+    {
+      "engine": "chromium",
+      "task": "snapshot_small",
+      "iteration": 0,
+      "ok": true,
+      "ms": 7.914416999999958,
+      "chars": 1889
+    },
+    {
+      "engine": "chromium",
+      "task": "find_small",
+      "iteration": 0,
+      "ok": true,
+      "ms": 8.360142000000451
+    },
+    {
+      "engine": "chromium",
+      "task": "form_fill_click_snapshot",
+      "iteration": 0,
+      "ok": true,
+      "ms": 139.16010600000027,
+      "chars": 1939
+    },
+    {
+      "engine": "chromium",
+      "task": "batch_form",
+      "iteration": 0,
+      "ok": true,
+      "ms": 147.4218550000005,
+      "chars": 1939
+    },
+    {
+      "engine": "chromium",
+      "task": "navigate_large",
+      "iteration": 0,
+      "ok": true,
+      "ms": 214.9697299999998,
+      "chars": 12000
+    },
+    {
+      "engine": "chromium",
+      "task": "snapshot_large",
+      "iteration": 0,
+      "ok": true,
+      "ms": 126.32706400000006,
+      "chars": 12000
+    },
+    {
+      "engine": "chromium",
+      "task": "find_large",
+      "iteration": 0,
+      "ok": true,
+      "ms": 153.8644629999999
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "ping_100",
+      "iteration": 0,
+      "ok": true,
+      "ms": 13.384274000000005
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "navigate_small",
+      "iteration": 0,
+      "ok": true,
+      "ms": 49.57278099999985,
+      "chars": 1416
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "snapshot_small",
+      "iteration": 0,
+      "ok": true,
+      "ms": 2.994821000000229,
+      "chars": 1416
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "find_small",
+      "iteration": 0,
+      "ok": true,
+      "ms": 2.834689999999682
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "form_fill_click_snapshot",
+      "iteration": 0,
+      "ok": true,
+      "ms": 169.8458929999997,
+      "chars": 1433
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "navigate_large",
+      "iteration": 0,
+      "ok": true,
+      "ms": 53.967805999999655,
+      "chars": 12000
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "snapshot_large",
+      "iteration": 0,
+      "ok": true,
+      "ms": 7.508966999999757,
+      "chars": 12000
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "find_large",
+      "iteration": 0,
+      "ok": true,
+      "ms": 2.544536999999764
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "ping_100",
+      "iteration": 1,
+      "ok": true,
+      "ms": 12.868889000000308
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "navigate_small",
+      "iteration": 1,
+      "ok": true,
+      "ms": 52.5764879999997,
+      "chars": 1408
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "snapshot_small",
+      "iteration": 1,
+      "ok": true,
+      "ms": 2.2364090000000942,
+      "chars": 1408
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "find_small",
+      "iteration": 1,
+      "ok": true,
+      "ms": 3.3051919999998063
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "form_fill_click_snapshot",
+      "iteration": 1,
+      "ok": true,
+      "ms": 164.65172299999995,
+      "chars": 1425
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "navigate_large",
+      "iteration": 1,
+      "ok": true,
+      "ms": 57.373084000000745,
+      "chars": 12000
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "snapshot_large",
+      "iteration": 1,
+      "ok": true,
+      "ms": 6.373881000000438,
+      "chars": 12000
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "find_large",
+      "iteration": 1,
+      "ok": true,
+      "ms": 2.5458699999999226
+    },
+    {
+      "engine": "chromium",
+      "task": "ping_100",
+      "iteration": 1,
+      "ok": true,
+      "ms": 20.324045000000297
+    },
+    {
+      "engine": "chromium",
+      "task": "navigate_small",
+      "iteration": 1,
+      "ok": true,
+      "ms": 23.01953499999945,
+      "chars": 1955
+    },
+    {
+      "engine": "chromium",
+      "task": "snapshot_small",
+      "iteration": 1,
+      "ok": true,
+      "ms": 8.689609000000019,
+      "chars": 1955
+    },
+    {
+      "engine": "chromium",
+      "task": "find_small",
+      "iteration": 1,
+      "ok": true,
+      "ms": 7.204968000000008
+    },
+    {
+      "engine": "chromium",
+      "task": "form_fill_click_snapshot",
+      "iteration": 1,
+      "ok": true,
+      "ms": 142.51908899999944,
+      "chars": 2005
+    },
+    {
+      "engine": "chromium",
+      "task": "batch_form",
+      "iteration": 1,
+      "ok": true,
+      "ms": 144.35572899999988,
+      "chars": 2005
+    },
+    {
+      "engine": "chromium",
+      "task": "navigate_large",
+      "iteration": 1,
+      "ok": true,
+      "ms": 207.6116149999998,
+      "chars": 12000
+    },
+    {
+      "engine": "chromium",
+      "task": "snapshot_large",
+      "iteration": 1,
+      "ok": true,
+      "ms": 154.0042250000006,
+      "chars": 12000
+    },
+    {
+      "engine": "chromium",
+      "task": "find_large",
+      "iteration": 1,
+      "ok": true,
+      "ms": 130.39463499999965
+    },
+    {
+      "engine": "chromium",
+      "task": "ping_100",
+      "iteration": 2,
+      "ok": true,
+      "ms": 16.57613500000025
+    },
+    {
+      "engine": "chromium",
+      "task": "navigate_small",
+      "iteration": 2,
+      "ok": true,
+      "ms": 27.555261999999857,
+      "chars": 1955
+    },
+    {
+      "engine": "chromium",
+      "task": "snapshot_small",
+      "iteration": 2,
+      "ok": true,
+      "ms": 7.104290000000219,
+      "chars": 1955
+    },
+    {
+      "engine": "chromium",
+      "task": "find_small",
+      "iteration": 2,
+      "ok": true,
+      "ms": 7.330373000000691
+    },
+    {
+      "engine": "chromium",
+      "task": "form_fill_click_snapshot",
+      "iteration": 2,
+      "ok": true,
+      "ms": 131.85052199999973,
+      "chars": 2005
+    },
+    {
+      "engine": "chromium",
+      "task": "batch_form",
+      "iteration": 2,
+      "ok": true,
+      "ms": 140.9113669999997,
+      "chars": 2005
+    },
+    {
+      "engine": "chromium",
+      "task": "navigate_large",
+      "iteration": 2,
+      "ok": true,
+      "ms": 213.7107620000006,
+      "chars": 12000
+    },
+    {
+      "engine": "chromium",
+      "task": "snapshot_large",
+      "iteration": 2,
+      "ok": true,
+      "ms": 140.79083100000025,
+      "chars": 12000
+    },
+    {
+      "engine": "chromium",
+      "task": "find_large",
+      "iteration": 2,
+      "ok": true,
+      "ms": 132.8850399999992
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "ping_100",
+      "iteration": 2,
+      "ok": true,
+      "ms": 9.10175099999833
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "navigate_small",
+      "iteration": 2,
+      "ok": true,
+      "ms": 42.37783099999979,
+      "chars": 1418
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "snapshot_small",
+      "iteration": 2,
+      "ok": true,
+      "ms": 2.4809779999995953,
+      "chars": 1418
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "find_small",
+      "iteration": 2,
+      "ok": true,
+      "ms": 2.954685000000609
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "form_fill_click_snapshot",
+      "iteration": 2,
+      "ok": true,
+      "ms": 159.87800900000002,
+      "chars": 1435
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "navigate_large",
+      "iteration": 2,
+      "ok": true,
+      "ms": 53.73811400000159,
+      "chars": 12000
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "snapshot_large",
+      "iteration": 2,
+      "ok": true,
+      "ms": 7.408027999999831,
+      "chars": 12000
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "find_large",
+      "iteration": 2,
+      "ok": true,
+      "ms": 2.88508499999989
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "ping_100",
+      "iteration": 3,
+      "ok": true,
+      "ms": 8.37169399999948
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "navigate_small",
+      "iteration": 3,
+      "ok": true,
+      "ms": 38.247504000000845,
+      "chars": 1413
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "snapshot_small",
+      "iteration": 3,
+      "ok": true,
+      "ms": 3.0717249999997875,
+      "chars": 1413
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "find_small",
+      "iteration": 3,
+      "ok": true,
+      "ms": 1.9715030000006664
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "form_fill_click_snapshot",
+      "iteration": 3,
+      "ok": true,
+      "ms": 163.17910400000073,
+      "chars": 1430
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "navigate_large",
+      "iteration": 3,
+      "ok": true,
+      "ms": 51.53839400000106,
+      "chars": 12000
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "snapshot_large",
+      "iteration": 3,
+      "ok": true,
+      "ms": 7.943692000000738,
+      "chars": 12000
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "find_large",
+      "iteration": 3,
+      "ok": true,
+      "ms": 2.274481000000378
+    },
+    {
+      "engine": "chromium",
+      "task": "ping_100",
+      "iteration": 3,
+      "ok": true,
+      "ms": 12.46411099999932
+    },
+    {
+      "engine": "chromium",
+      "task": "navigate_small",
+      "iteration": 3,
+      "ok": true,
+      "ms": 22.605649999999514,
+      "chars": 1955
+    },
+    {
+      "engine": "chromium",
+      "task": "snapshot_small",
+      "iteration": 3,
+      "ok": true,
+      "ms": 8.390740000000733,
+      "chars": 1955
+    },
+    {
+      "engine": "chromium",
+      "task": "find_small",
+      "iteration": 3,
+      "ok": true,
+      "ms": 6.344906999998784
+    },
+    {
+      "engine": "chromium",
+      "task": "form_fill_click_snapshot",
+      "iteration": 3,
+      "ok": true,
+      "ms": 133.95332100000087,
+      "chars": 2005
+    },
+    {
+      "engine": "chromium",
+      "task": "batch_form",
+      "iteration": 3,
+      "ok": true,
+      "ms": 158.09684299999935,
+      "chars": 2005
+    },
+    {
+      "engine": "chromium",
+      "task": "navigate_large",
+      "iteration": 3,
+      "ok": true,
+      "ms": 185.33369800000037,
+      "chars": 12000
+    },
+    {
+      "engine": "chromium",
+      "task": "snapshot_large",
+      "iteration": 3,
+      "ok": true,
+      "ms": 126.28556700000081,
+      "chars": 12000
+    },
+    {
+      "engine": "chromium",
+      "task": "find_large",
+      "iteration": 3,
+      "ok": true,
+      "ms": 126.52871200000118
+    },
+    {
+      "engine": "chromium",
+      "task": "ping_100",
+      "iteration": 4,
+      "ok": true,
+      "ms": 9.902340999999069
+    },
+    {
+      "engine": "chromium",
+      "task": "navigate_small",
+      "iteration": 4,
+      "ok": true,
+      "ms": 23.975035999999818,
+      "chars": 1955
+    },
+    {
+      "engine": "chromium",
+      "task": "snapshot_small",
+      "iteration": 4,
+      "ok": true,
+      "ms": 7.524746999999479,
+      "chars": 1955
+    },
+    {
+      "engine": "chromium",
+      "task": "find_small",
+      "iteration": 4,
+      "ok": true,
+      "ms": 6.247253999999884
+    },
+    {
+      "engine": "chromium",
+      "task": "form_fill_click_snapshot",
+      "iteration": 4,
+      "ok": true,
+      "ms": 137.604381000001,
+      "chars": 2005
+    },
+    {
+      "engine": "chromium",
+      "task": "batch_form",
+      "iteration": 4,
+      "ok": true,
+      "ms": 135.74353500000143,
+      "chars": 2005
+    },
+    {
+      "engine": "chromium",
+      "task": "navigate_large",
+      "iteration": 4,
+      "ok": true,
+      "ms": 193.47940799999924,
+      "chars": 12000
+    },
+    {
+      "engine": "chromium",
+      "task": "snapshot_large",
+      "iteration": 4,
+      "ok": true,
+      "ms": 122.89989400000013,
+      "chars": 12000
+    },
+    {
+      "engine": "chromium",
+      "task": "find_large",
+      "iteration": 4,
+      "ok": true,
+      "ms": 126.40049200000067
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "ping_100",
+      "iteration": 4,
+      "ok": true,
+      "ms": 10.157408999999461
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "navigate_small",
+      "iteration": 4,
+      "ok": true,
+      "ms": 59.79803700000048,
+      "chars": 1410
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "snapshot_small",
+      "iteration": 4,
+      "ok": true,
+      "ms": 3.0520479999995587,
+      "chars": 1410
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "find_small",
+      "iteration": 4,
+      "ok": true,
+      "ms": 1.8459679999996297
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "form_fill_click_snapshot",
+      "iteration": 4,
+      "ok": true,
+      "ms": 161.7254699999994,
+      "chars": 1427
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "navigate_large",
+      "iteration": 4,
+      "ok": true,
+      "ms": 61.29986999999892,
+      "chars": 12000
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "snapshot_large",
+      "iteration": 4,
+      "ok": true,
+      "ms": 6.072786999999153,
+      "chars": 12000
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "find_large",
+      "iteration": 4,
+      "ok": true,
+      "ms": 2.1090109999986453
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "ping_100",
+      "iteration": 5,
+      "ok": true,
+      "ms": 9.643506000000343
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "navigate_small",
+      "iteration": 5,
+      "ok": true,
+      "ms": 42.625615000000835,
+      "chars": 1414
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "snapshot_small",
+      "iteration": 5,
+      "ok": true,
+      "ms": 2.6318200000005163,
+      "chars": 1414
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "find_small",
+      "iteration": 5,
+      "ok": true,
+      "ms": 2.313373999999385
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "form_fill_click_snapshot",
+      "iteration": 5,
+      "ok": true,
+      "ms": 163.85134299999845,
+      "chars": 1431
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "navigate_large",
+      "iteration": 5,
+      "ok": true,
+      "ms": 59.75677999999971,
+      "chars": 12000
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "snapshot_large",
+      "iteration": 5,
+      "ok": true,
+      "ms": 10.506342999999106,
+      "chars": 12000
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "find_large",
+      "iteration": 5,
+      "ok": true,
+      "ms": 2.978370000000723
+    },
+    {
+      "engine": "chromium",
+      "task": "ping_100",
+      "iteration": 5,
+      "ok": true,
+      "ms": 13.227360999999291
+    },
+    {
+      "engine": "chromium",
+      "task": "navigate_small",
+      "iteration": 5,
+      "ok": true,
+      "ms": 27.357561999999234,
+      "chars": 1955
+    },
+    {
+      "engine": "chromium",
+      "task": "snapshot_small",
+      "iteration": 5,
+      "ok": true,
+      "ms": 7.571545000000697,
+      "chars": 1955
+    },
+    {
+      "engine": "chromium",
+      "task": "find_small",
+      "iteration": 5,
+      "ok": true,
+      "ms": 8.652840000000651
+    },
+    {
+      "engine": "chromium",
+      "task": "form_fill_click_snapshot",
+      "iteration": 5,
+      "ok": true,
+      "ms": 136.33952099999988,
+      "chars": 2005
+    },
+    {
+      "engine": "chromium",
+      "task": "batch_form",
+      "iteration": 5,
+      "ok": true,
+      "ms": 150.48885999999948,
+      "chars": 2005
+    },
+    {
+      "engine": "chromium",
+      "task": "navigate_large",
+      "iteration": 5,
+      "ok": true,
+      "ms": 178.68577299999924,
+      "chars": 12000
+    },
+    {
+      "engine": "chromium",
+      "task": "snapshot_large",
+      "iteration": 5,
+      "ok": true,
+      "ms": 126.13024500000029,
+      "chars": 12000
+    },
+    {
+      "engine": "chromium",
+      "task": "find_large",
+      "iteration": 5,
+      "ok": true,
+      "ms": 128.33613799999875
+    },
+    {
+      "engine": "chromium",
+      "task": "ping_100",
+      "iteration": 6,
+      "ok": true,
+      "ms": 8.184832999999344
+    },
+    {
+      "engine": "chromium",
+      "task": "navigate_small",
+      "iteration": 6,
+      "ok": true,
+      "ms": 23.272680000000037,
+      "chars": 1955
+    },
+    {
+      "engine": "chromium",
+      "task": "snapshot_small",
+      "iteration": 6,
+      "ok": true,
+      "ms": 5.751054000000295,
+      "chars": 1955
+    },
+    {
+      "engine": "chromium",
+      "task": "find_small",
+      "iteration": 6,
+      "ok": true,
+      "ms": 6.50407499999892
+    },
+    {
+      "engine": "chromium",
+      "task": "form_fill_click_snapshot",
+      "iteration": 6,
+      "ok": true,
+      "ms": 142.6081549999999,
+      "chars": 2005
+    },
+    {
+      "engine": "chromium",
+      "task": "batch_form",
+      "iteration": 6,
+      "ok": true,
+      "ms": 163.08926500000052,
+      "chars": 2005
+    },
+    {
+      "engine": "chromium",
+      "task": "navigate_large",
+      "iteration": 6,
+      "ok": true,
+      "ms": 177.3687859999991,
+      "chars": 12000
+    },
+    {
+      "engine": "chromium",
+      "task": "snapshot_large",
+      "iteration": 6,
+      "ok": true,
+      "ms": 120.77264800000012,
+      "chars": 12000
+    },
+    {
+      "engine": "chromium",
+      "task": "find_large",
+      "iteration": 6,
+      "ok": true,
+      "ms": 124.2935839999991
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "ping_100",
+      "iteration": 6,
+      "ok": true,
+      "ms": 9.695783999999549
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "navigate_small",
+      "iteration": 6,
+      "ok": true,
+      "ms": 42.02175499999976,
+      "chars": 1412
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "snapshot_small",
+      "iteration": 6,
+      "ok": true,
+      "ms": 2.766422999999122,
+      "chars": 1412
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "find_small",
+      "iteration": 6,
+      "ok": true,
+      "ms": 1.404631999999765
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "form_fill_click_snapshot",
+      "iteration": 6,
+      "ok": true,
+      "ms": 164.31730499999867,
+      "chars": 1429
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "navigate_large",
+      "iteration": 6,
+      "ok": true,
+      "ms": 52.76446000000033,
+      "chars": 12000
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "snapshot_large",
+      "iteration": 6,
+      "ok": true,
+      "ms": 7.080315000001065,
+      "chars": 12000
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "find_large",
+      "iteration": 6,
+      "ok": true,
+      "ms": 2.7334609999998065
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "ping_100",
+      "iteration": 7,
+      "ok": true,
+      "ms": 9.59546699999919
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "navigate_small",
+      "iteration": 7,
+      "ok": true,
+      "ms": 43.00950499999999,
+      "chars": 1404
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "snapshot_small",
+      "iteration": 7,
+      "ok": true,
+      "ms": 1.840818999999101,
+      "chars": 1404
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "find_small",
+      "iteration": 7,
+      "ok": true,
+      "ms": 1.2589179999995395
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "form_fill_click_snapshot",
+      "iteration": 7,
+      "ok": true,
+      "ms": 162.40974199999982,
+      "chars": 1421
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "navigate_large",
+      "iteration": 7,
+      "ok": true,
+      "ms": 51.36264400000073,
+      "chars": 12000
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "snapshot_large",
+      "iteration": 7,
+      "ok": true,
+      "ms": 8.058327000000645,
+      "chars": 12000
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "find_large",
+      "iteration": 7,
+      "ok": true,
+      "ms": 3.401261999999406
+    },
+    {
+      "engine": "chromium",
+      "task": "ping_100",
+      "iteration": 7,
+      "ok": true,
+      "ms": 14.373086999999941
+    },
+    {
+      "engine": "chromium",
+      "task": "navigate_small",
+      "iteration": 7,
+      "ok": true,
+      "ms": 28.749037999999928,
+      "chars": 1955
+    },
+    {
+      "engine": "chromium",
+      "task": "snapshot_small",
+      "iteration": 7,
+      "ok": true,
+      "ms": 6.395241000000169,
+      "chars": 1955
+    },
+    {
+      "engine": "chromium",
+      "task": "find_small",
+      "iteration": 7,
+      "ok": true,
+      "ms": 6.286798000000999
+    },
+    {
+      "engine": "chromium",
+      "task": "form_fill_click_snapshot",
+      "iteration": 7,
+      "ok": true,
+      "ms": 131.08747199999925,
+      "chars": 2005
+    },
+    {
+      "engine": "chromium",
+      "task": "batch_form",
+      "iteration": 7,
+      "ok": true,
+      "ms": 145.1826179999989,
+      "chars": 2005
+    },
+    {
+      "engine": "chromium",
+      "task": "navigate_large",
+      "iteration": 7,
+      "ok": true,
+      "ms": 179.64733500000148,
+      "chars": 12000
+    },
+    {
+      "engine": "chromium",
+      "task": "snapshot_large",
+      "iteration": 7,
+      "ok": true,
+      "ms": 125.16366500000004,
+      "chars": 12000
+    },
+    {
+      "engine": "chromium",
+      "task": "find_large",
+      "iteration": 7,
+      "ok": true,
+      "ms": 130.03402799999822
+    },
+    {
+      "engine": "chromium",
+      "task": "ping_100",
+      "iteration": 8,
+      "ok": true,
+      "ms": 11.270775000000867
+    },
+    {
+      "engine": "chromium",
+      "task": "navigate_small",
+      "iteration": 8,
+      "ok": true,
+      "ms": 29.20234899999923,
+      "chars": 1955
+    },
+    {
+      "engine": "chromium",
+      "task": "snapshot_small",
+      "iteration": 8,
+      "ok": true,
+      "ms": 6.132689000001847,
+      "chars": 1955
+    },
+    {
+      "engine": "chromium",
+      "task": "find_small",
+      "iteration": 8,
+      "ok": true,
+      "ms": 6.775423000002775
+    },
+    {
+      "engine": "chromium",
+      "task": "form_fill_click_snapshot",
+      "iteration": 8,
+      "ok": true,
+      "ms": 134.6040299999986,
+      "chars": 2005
+    },
+    {
+      "engine": "chromium",
+      "task": "batch_form",
+      "iteration": 8,
+      "ok": true,
+      "ms": 148.36549100000047,
+      "chars": 2005
+    },
+    {
+      "engine": "chromium",
+      "task": "navigate_large",
+      "iteration": 8,
+      "ok": true,
+      "ms": 194.88406899999973,
+      "chars": 12000
+    },
+    {
+      "engine": "chromium",
+      "task": "snapshot_large",
+      "iteration": 8,
+      "ok": true,
+      "ms": 127.7054160000007,
+      "chars": 12000
+    },
+    {
+      "engine": "chromium",
+      "task": "find_large",
+      "iteration": 8,
+      "ok": true,
+      "ms": 129.27285199999824
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "ping_100",
+      "iteration": 8,
+      "ok": true,
+      "ms": 7.873871000003419
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "navigate_small",
+      "iteration": 8,
+      "ok": true,
+      "ms": 41.743271999999706,
+      "chars": 1409
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "snapshot_small",
+      "iteration": 8,
+      "ok": true,
+      "ms": 2.0782040000012785,
+      "chars": 1409
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "find_small",
+      "iteration": 8,
+      "ok": true,
+      "ms": 1.1955090000010387
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "form_fill_click_snapshot",
+      "iteration": 8,
+      "ok": true,
+      "ms": 166.78633099999934,
+      "chars": 1426
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "navigate_large",
+      "iteration": 8,
+      "ok": true,
+      "ms": 47.10948599999756,
+      "chars": 12000
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "snapshot_large",
+      "iteration": 8,
+      "ok": true,
+      "ms": 8.067664000001969,
+      "chars": 12000
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "find_large",
+      "iteration": 8,
+      "ok": true,
+      "ms": 2.649985000000015
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "ping_100",
+      "iteration": 9,
+      "ok": true,
+      "ms": 8.523558000000776
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "navigate_small",
+      "iteration": 9,
+      "ok": true,
+      "ms": 36.06435400000191,
+      "chars": 1409
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "snapshot_small",
+      "iteration": 9,
+      "ok": true,
+      "ms": 3.450643999996828,
+      "chars": 1409
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "find_small",
+      "iteration": 9,
+      "ok": true,
+      "ms": 2.130310999997164
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "form_fill_click_snapshot",
+      "iteration": 9,
+      "ok": true,
+      "ms": 160.58535400000255,
+      "chars": 1426
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "navigate_large",
+      "iteration": 9,
+      "ok": true,
+      "ms": 55.485867999999755,
+      "chars": 12000
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "snapshot_large",
+      "iteration": 9,
+      "ok": true,
+      "ms": 7.840999000000011,
+      "chars": 12000
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "find_large",
+      "iteration": 9,
+      "ok": true,
+      "ms": 3.1122009999999136
+    },
+    {
+      "engine": "chromium",
+      "task": "ping_100",
+      "iteration": 9,
+      "ok": true,
+      "ms": 8.004624999997759
+    },
+    {
+      "engine": "chromium",
+      "task": "navigate_small",
+      "iteration": 9,
+      "ok": true,
+      "ms": 26.06930899999861,
+      "chars": 1955
+    },
+    {
+      "engine": "chromium",
+      "task": "snapshot_small",
+      "iteration": 9,
+      "ok": true,
+      "ms": 9.063881000001857,
+      "chars": 1955
+    },
+    {
+      "engine": "chromium",
+      "task": "find_small",
+      "iteration": 9,
+      "ok": true,
+      "ms": 10.843935000000783
+    },
+    {
+      "engine": "chromium",
+      "task": "form_fill_click_snapshot",
+      "iteration": 9,
+      "ok": true,
+      "ms": 135.00628300000244,
+      "chars": 2005
+    },
+    {
+      "engine": "chromium",
+      "task": "batch_form",
+      "iteration": 9,
+      "ok": true,
+      "ms": 147.64458999999988,
+      "chars": 2005
+    },
+    {
+      "engine": "chromium",
+      "task": "navigate_large",
+      "iteration": 9,
+      "ok": true,
+      "ms": 177.8443559999978,
+      "chars": 12000
+    },
+    {
+      "engine": "chromium",
+      "task": "snapshot_large",
+      "iteration": 9,
+      "ok": true,
+      "ms": 125.19679499999984,
+      "chars": 12000
+    },
+    {
+      "engine": "chromium",
+      "task": "find_large",
+      "iteration": 9,
+      "ok": true,
+      "ms": 129.11124899999777
+    },
+    {
+      "engine": "chromium",
+      "task": "ping_100",
+      "iteration": 10,
+      "ok": true,
+      "ms": 10.77150999999867
+    },
+    {
+      "engine": "chromium",
+      "task": "navigate_small",
+      "iteration": 10,
+      "ok": true,
+      "ms": 24.89636099999916,
+      "chars": 1988
+    },
+    {
+      "engine": "chromium",
+      "task": "snapshot_small",
+      "iteration": 10,
+      "ok": true,
+      "ms": 9.172323000002507,
+      "chars": 1988
+    },
+    {
+      "engine": "chromium",
+      "task": "find_small",
+      "iteration": 10,
+      "ok": true,
+      "ms": 7.970521999999619
+    },
+    {
+      "engine": "chromium",
+      "task": "form_fill_click_snapshot",
+      "iteration": 10,
+      "ok": true,
+      "ms": 134.55419599999732,
+      "chars": 2041
+    },
+    {
+      "engine": "chromium",
+      "task": "batch_form",
+      "iteration": 10,
+      "ok": true,
+      "ms": 141.89756299999863,
+      "chars": 2041
+    },
+    {
+      "engine": "chromium",
+      "task": "navigate_large",
+      "iteration": 10,
+      "ok": true,
+      "ms": 172.5599570000013,
+      "chars": 12000
+    },
+    {
+      "engine": "chromium",
+      "task": "snapshot_large",
+      "iteration": 10,
+      "ok": true,
+      "ms": 136.00957299999936,
+      "chars": 12000
+    },
+    {
+      "engine": "chromium",
+      "task": "find_large",
+      "iteration": 10,
+      "ok": true,
+      "ms": 129.4509059999982
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "ping_100",
+      "iteration": 10,
+      "ok": true,
+      "ms": 8.195203000002948
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "navigate_small",
+      "iteration": 10,
+      "ok": true,
+      "ms": 42.83780300000217,
+      "chars": 1415
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "snapshot_small",
+      "iteration": 10,
+      "ok": true,
+      "ms": 2.6570380000011937,
+      "chars": 1415
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "find_small",
+      "iteration": 10,
+      "ok": true,
+      "ms": 2.7870609999990847
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "form_fill_click_snapshot",
+      "iteration": 10,
+      "ok": true,
+      "ms": 163.9308009999986,
+      "chars": 1434
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "navigate_large",
+      "iteration": 10,
+      "ok": true,
+      "ms": 60.790164999998524,
+      "chars": 12000
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "snapshot_large",
+      "iteration": 10,
+      "ok": true,
+      "ms": 6.93815800000084,
+      "chars": 12000
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "find_large",
+      "iteration": 10,
+      "ok": true,
+      "ms": 3.3684600000015053
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "ping_100",
+      "iteration": 11,
+      "ok": true,
+      "ms": 7.493407999998453
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "navigate_small",
+      "iteration": 11,
+      "ok": true,
+      "ms": 40.33731899999839,
+      "chars": 1418
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "snapshot_small",
+      "iteration": 11,
+      "ok": true,
+      "ms": 2.0172789999996894,
+      "chars": 1418
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "find_small",
+      "iteration": 11,
+      "ok": true,
+      "ms": 1.6753690000005008
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "form_fill_click_snapshot",
+      "iteration": 11,
+      "ok": true,
+      "ms": 161.62524100000155,
+      "chars": 1437
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "navigate_large",
+      "iteration": 11,
+      "ok": true,
+      "ms": 54.23337100000208,
+      "chars": 12000
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "snapshot_large",
+      "iteration": 11,
+      "ok": true,
+      "ms": 8.010788000003231,
+      "chars": 12000
+    },
+    {
+      "engine": "rust_firefox_extension",
+      "task": "find_large",
+      "iteration": 11,
+      "ok": true,
+      "ms": 3.9634249999980966
+    },
+    {
+      "engine": "chromium",
+      "task": "ping_100",
+      "iteration": 11,
+      "ok": true,
+      "ms": 13.329562000002625
+    },
+    {
+      "engine": "chromium",
+      "task": "navigate_small",
+      "iteration": 11,
+      "ok": true,
+      "ms": 24.643347000001086,
+      "chars": 1988
+    },
+    {
+      "engine": "chromium",
+      "task": "snapshot_small",
+      "iteration": 11,
+      "ok": true,
+      "ms": 9.820377999996708,
+      "chars": 1988
+    },
+    {
+      "engine": "chromium",
+      "task": "find_small",
+      "iteration": 11,
+      "ok": true,
+      "ms": 7.338218000000779
+    },
+    {
+      "engine": "chromium",
+      "task": "form_fill_click_snapshot",
+      "iteration": 11,
+      "ok": true,
+      "ms": 134.63539799999853,
+      "chars": 2041
+    },
+    {
+      "engine": "chromium",
+      "task": "batch_form",
+      "iteration": 11,
+      "ok": true,
+      "ms": 153.9941749999998,
+      "chars": 2041
+    },
+    {
+      "engine": "chromium",
+      "task": "navigate_large",
+      "iteration": 11,
+      "ok": true,
+      "ms": 187.56459600000017,
+      "chars": 12000
+    },
+    {
+      "engine": "chromium",
+      "task": "snapshot_large",
+      "iteration": 11,
+      "ok": true,
+      "ms": 125.19289800000115,
+      "chars": 12000
+    },
+    {
+      "engine": "chromium",
+      "task": "find_large",
+      "iteration": 11,
+      "ok": true,
+      "ms": 132.69079499999862
+    }
+  ],
+  "stderr": {
+    "chromium": "[callisto/mini] AppArmor restricts unprivileged user namespaces; launching Chrome/BrowserOS with --no-sandbox. Set CALLISTO_REQUIRE_SANDBOX=1 to forbid this.\n",
+    "rust_firefox_extension": ""
+  },
+  "sourceRevision": "5ef431f1204ba38a8ea34f010568c75c509c96c1",
+  "workingTreeDirty": true
+}

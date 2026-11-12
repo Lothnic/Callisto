@@ -3,8 +3,40 @@
   "name": "Callisto Tab Bridge (Experimental)",
   "version": "0.1.0",
   "description": "Share the current Firefox or Zen tab with a local Callisto session.",
-  "browser_specific_settings": {"gecko": {"id": "callisto-tab-bridge@lothnic.dev", "strict_min_version": "109.0"}},
-  "permissions": ["activeTab"],
-  "background": {"scripts": ["background.js"]},
-  "browser_action": {"default_title": "Callisto — share this tab", "default_popup": "popup.html"}
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "callisto-tab-bridge@lothnic.dev",
+      "strict_min_version": "109.0"
+    }
+  },
+  "permissions": [
+    "activeTab",
+    "menus",
+    "storage",
+    "webNavigation"
+  ],
+  "optional_permissions": [
+    "<all_urls>",
+    "tabs",
+    "cookies",
+    "bookmarks",
+    "history",
+    "downloads",
+    "contextualIdentities"
+  ],
+  "background": {
+    "scripts": [
+      "browser-control.js",
+      "background.js"
+    ]
+  },
+  "browser_action": {
+    "default_title": "Callisto \u2014 share this tab",
+    "default_popup": "popup.html"
+  },
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": false,
+    "browser_style": false
+  }
 }

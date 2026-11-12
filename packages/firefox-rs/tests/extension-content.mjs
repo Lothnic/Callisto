@@ -21,7 +21,25 @@ try {
   assert.deepEqual(await invoke({type:'action',method:'click',ref:ref('Send')}), {value:{completed:true}});
   assert.equal(await page.evaluate(() => window.clicked), 1);
   assert.match((await invoke({type:'action',method:'click',ref:ref('Disabled')})).error, /disabled/i);
+  await page.evaluate(()=>{
+    document.title='Fixture';
+    document.body.insertAdjacentHTML('beforeend','<form id="form"><label for="query">Search</label><input id="query" role="combobox" name="q" required><button type="submit">Find</button></form>');
+    window.submitted=0;document.querySelector('#form').onsubmit=e=>{e.preventDefault();window.submitted++};
+  });
+  await invoke({type:'ping'});
+  assert.equal(await page.title(),'[Callisto] Fixture');
+  await page.evaluate(()=>{document.title='Site updated'});
+  await page.waitForFunction(()=>document.title==='[Callisto] Site updated');
+  const formSnapshot=await invoke({type:'action',method:'snapshot'});
+  const queryRef=formSnapshot.value.text.split('\n').find(line=>line.includes('combobox "Search"')).match(/\[(ax-\d+)\]/)[1];
+  assert.equal((await invoke({type:'action',method:'submit',ref:queryRef})).error,'Form validation failed; complete the required fields before submitting.');
+  await invoke({type:'action',method:'fill',ref:queryRef,value:'browser research'});
+  const filled=await invoke({type:'action',method:'snapshot'});
+  assert(filled.value.text.includes('combobox "Search" =browser research'));
+  assert.equal((await invoke({type:'action',method:'submit',ref:queryRef})).value.completed,true);
+  assert.equal(await page.evaluate(()=>window.submitted),1);
   await invoke({type:'revoke'});
+  assert.equal(await page.title(),'Site updated');
   assert.match((await invoke({type:'action',method:'click',ref:ref('Send')})).error, /sharing stopped/i);
   console.log('DOM bridge checks passed (disposable Chromium).');
 } finally { await browser.close(); }

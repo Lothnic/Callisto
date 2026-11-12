@@ -2,11 +2,16 @@
 
 **A lean browser runtime for agents you already use.**
 
-Callisto gives an existing host agent an isolated Chromium session through a
-local MCP server. Its TypeScript engine, `@callisto/mini`, uses the Chrome
+Callisto gives an existing host agent browser tools through a local MCP server.
+Its TypeScript engine, `@callisto/mini`, uses the Chrome
 DevTools Protocol and an accessibility snapshot with actionable references.
 The runtime does not require a separate model API key; the host supplies the
 agent.
+
+An experimental Rust extension bridge also connects to an already running
+Firefox or Zen profile, including existing tabs and logins. See the
+[Firefox and Zen guide](packages/firefox-rs/README.md) for setup, permissions,
+capabilities and limitations. The two browser backends use separate MCP servers.
 
 Callisto is experimental. Its Playwright-shaped API is a subset, not a drop-in
 replacement for Playwright. An experimental connection to an existing Chromium
@@ -72,6 +77,7 @@ python3 -m http.server 8087 --directory site
 | Path | Purpose |
 | --- | --- |
 | [`packages/mini/`](packages/mini/) | CDP engine, accessibility snapshots and local MCP server |
+| [`packages/firefox-rs/`](packages/firefox-rs/) | Experimental Rust Firefox/Zen bridge and BiDi runtime |
 | [`site/`](site/) | Static marketing site; no build step |
 | [`harness/`](harness/) | Optional reference agent and CLI, not required for MCP |
 | [`eval/`](eval/) | Evaluation tools and reproducible comparison scripts |
