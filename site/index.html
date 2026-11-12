@@ -69,7 +69,7 @@
   </svg>
 
   <div class="hero-content">
-    <div class="hero-eyebrow"><span class="blink-dot"></span> Experimental · local MCP runtime</div>
+    <div class="hero-eyebrow"><span class="blink-dot"></span> v0.1.0 · experimental local MCP runtime</div>
     <h1>A Browser Runtime<br>For Your Agent</h1>
     <p class="hero-sub">
       Give your existing agent a way to navigate, read, and act on the web.
@@ -116,7 +116,7 @@
     <div class="container runtime-status-inner">
       <div class="runtime-status-label"><span class="status-pulse"></span> THE RUNTIME / TODAY</div>
       <div><strong>Isolated by default</strong><span>A fresh Chromium session for each MCP process.</span></div>
-      <div><strong>Connected, in progress</strong><span>Browse relay integration is experimental.</span></div>
+      <div><strong>Existing Zen tabs</strong><span>Experimental Firefox and Zen bridge connects to your profile.</span></div>
       <a href="https://github.com/Lothnic/callisto#status-and-evidence">Read the project status <span aria-hidden="true">↗</span></a>
     </div>
   </section>
@@ -581,7 +581,7 @@
         <li>
           <div class="step-number">01 / BUILD</div>
           <h3>Install the engine.</h3>
-          <p>With Git, Node.js 20+ and Chrome or Chromium available, run the installer. It prints the MCP configuration for your machine.</p>
+          <p>For isolated Chromium, install Git, Node.js 20+ and Chrome or Chromium, then run the installer. For an existing Firefox or Zen profile, follow the separate <a href="https://github.com/Lothnic/Callisto/blob/main/packages/firefox-rs/README.md">experimental bridge setup</a>.</p>
           <div class="code-block">
             <button type="button" class="copy-btn" data-copy="curl -fsSL https://callisto.lothnic.dev/install.sh | bash">Copy</button>
             <pre><code>curl -fsSL https://callisto.lothnic.dev/install.sh | bash</code></pre>
@@ -657,7 +657,7 @@ the top three Show HN posts.</code></pre>
             <span class="faq-question-text">Does it use my browser or my logins?</span>
             <svg class="faq-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 6l5 5 5-5" stroke="currentColor" stroke-width="1.5"/></svg>
           </summary>
-          <div class="faq-answer-wrap"><div class="faq-answer"><p>By default Callisto starts an isolated browser. An experimental bridge can open its own tab through a paired browse extension, but it cannot yet adopt existing tabs or provide browse’s full takeover and stop controls. A basic handoff tool delegates a human step; toolbar take-back is still open work. Background input is refused. <a href="https://github.com/Lothnic/callisto#experimental-connected-browser">Read connected-mode limitations ↗</a></p></div></div>
+          <div class="faq-answer-wrap"><div class="faq-answer"><p>Mini starts isolated Chromium by default; its experimental browse connection opens an agent-owned tab in your existing profile. The separate experimental Firefox and Zen bridge can control existing tabs and logins after pairing and permission. It uses a temporary extension and has capability limits. <a href="https://github.com/Lothnic/Callisto/blob/main/packages/firefox-rs/README.md">Read Firefox and Zen setup ↗</a></p></div></div>
         </details>
         <details class="faq-item">
           <summary class="faq-question">
