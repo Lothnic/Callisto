@@ -21,6 +21,6 @@ document.getElementById('full').addEventListener('click', async () => {
 });
 document.getElementById('forget').addEventListener('click', () => send({type:'forget'}));
 document.getElementById('containers').addEventListener('click',async()=>{
- try { const granted=await browser.permissions.request({permissions:['contextualIdentities','cookies']});status.textContent=granted?'Agent containers enabled for new tabs and windows. Existing tabs keep their logins.':'Container permission was not granted.'; } catch(error){status.textContent=`Error: ${error.message}`;}
+ try { const granted=await browser.permissions.request({permissions:['cookies']});if(granted)await send({type:'enable-containers'});else status.textContent='Container permission was not granted.'; } catch(error){status.textContent=`Error: ${error.message}`;}
 });
 send({type:'status'});

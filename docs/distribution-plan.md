@@ -1,7 +1,11 @@
 # Unified installation and updates
 
-This is a release plan, not an implemented installer. Callisto currently has
-separate experimental Chromium and Firefox/Zen MCP servers; see the
+This is the release plan. A shared launcher, source setup command, packaged
+installer with opt-in runtime updates, packaging workflow and signing workflow
+are now implemented in the hardening branch. The installer has local transaction
+tests, but compatible packages and a signed extension have not been published.
+See [the implementation guide](development-installation.md). Callisto has
+separate experimental Chromium and Firefox/Zen MCP backends; see the
 [main setup](../README.md#get-started) and [Firefox guide](../packages/firefox-rs/README.md).
 
 ## Intended experience
@@ -32,7 +36,7 @@ permanent extension installation and browser-restart behavior need validation.
 - Distribute signed Firefox/Zen and Chromium extensions through compatible
   browser stores or supported enterprise channels. Verify Zen compatibility,
   version migration, permission changes and extension update behavior.
-- Build a unified installer and stable launcher with explicit backend selection,
+- Complete published-release validation of the installer and stable launcher with explicit backend selection,
   host configuration, diagnostics and uninstall. Do not overwrite unrelated
   MCP configurations. Test upgrades and rollback from actual published releases.
 - Design runtime updates with authenticated release metadata, integrity checks,
@@ -44,5 +48,6 @@ permanent extension installation and browser-restart behavior need validation.
 - Test fresh installation, upgrade, browser and machine restarts, host restarts,
   reconnect, removal, and real workflows on each supported platform and browser.
 
-Until these are complete, do not describe installation, pairing or updates as
-one-click or automatic across both browser families.
+Until release packages and a signed extension are published and installation
+and upgrade tests pass, do not describe this as a tested one-click installation
+with automatic updates across both browser families.

@@ -1,0 +1,177 @@
+{
+  "date": "2026-11-12T18:42:49.169Z",
+  "sourceRevision": "99f3c88bd8ddcbc324909a98a5872243e020041f",
+  "workingTreeDirty": true,
+  "versions": {
+    "node": "v26.5.0",
+    "chromium": "Google Chrome for Testing 157.0.8103.78",
+    "agentBrowser": "agent-browser 0.42.0",
+    "firefox": "Mozilla Firefox 157.0.1"
+  },
+  "repetitions": 5,
+  "notes": "Host-scripted form submission and cookie persistence, local fixture login only; not an autonomous-agent benchmark or real-account login proof. Firefox runs a disposable test extension with all optional permissions granted. browse uses the paired existing Chromium profile in an owned tab; Mini and agent-browser launch isolated Chromium. CLI process overhead included for agent-browser. Warm runs exclude setup and initial login. Different observations and transports; no language-level speed claim.",
+  "summary": {
+    "chromium": {
+      "passed": 5,
+      "total": 5,
+      "medianMs": 204.98004599999877
+    },
+    "firefox": {
+      "passed": 5,
+      "total": 5,
+      "medianMs": 273.55488499999956
+    },
+    "browse": {
+      "passed": 5,
+      "total": 5,
+      "medianMs": 604.518489
+    },
+    "agent-browser": {
+      "passed": 5,
+      "total": 5,
+      "medianMs": 424.16889000000083
+    }
+  },
+  "rows": [
+    {
+      "engine": "chromium",
+      "iteration": 0,
+      "ok": true,
+      "ms": 218.359598,
+      "error": null
+    },
+    {
+      "engine": "firefox",
+      "iteration": 0,
+      "ok": true,
+      "ms": 275.6747429999996,
+      "error": null
+    },
+    {
+      "engine": "browse",
+      "iteration": 0,
+      "ok": true,
+      "ms": 2200.6613290000005,
+      "error": null
+    },
+    {
+      "engine": "agent-browser",
+      "iteration": 0,
+      "ok": true,
+      "ms": 444.59812599999896,
+      "error": null
+    },
+    {
+      "engine": "agent-browser",
+      "iteration": 1,
+      "ok": true,
+      "ms": 408.4282980000007,
+      "error": null
+    },
+    {
+      "engine": "browse",
+      "iteration": 1,
+      "ok": true,
+      "ms": 568.7584029999998,
+      "error": null
+    },
+    {
+      "engine": "firefox",
+      "iteration": 1,
+      "ok": true,
+      "ms": 273.48031400000036,
+      "error": null
+    },
+    {
+      "engine": "chromium",
+      "iteration": 1,
+      "ok": true,
+      "ms": 204.98004599999877,
+      "error": null
+    },
+    {
+      "engine": "chromium",
+      "iteration": 2,
+      "ok": true,
+      "ms": 178.32507800000167,
+      "error": null
+    },
+    {
+      "engine": "firefox",
+      "iteration": 2,
+      "ok": true,
+      "ms": 275.0764130000007,
+      "error": null
+    },
+    {
+      "engine": "browse",
+      "iteration": 2,
+      "ok": true,
+      "ms": 604.518489,
+      "error": null
+    },
+    {
+      "engine": "agent-browser",
+      "iteration": 2,
+      "ok": true,
+      "ms": 424.16889000000083,
+      "error": null
+    },
+    {
+      "engine": "agent-browser",
+      "iteration": 3,
+      "ok": true,
+      "ms": 411.1273680000013,
+      "error": null
+    },
+    {
+      "engine": "browse",
+      "iteration": 3,
+      "ok": true,
+      "ms": 1651.8912170000003,
+      "error": null
+    },
+    {
+      "engine": "firefox",
+      "iteration": 3,
+      "ok": true,
+      "ms": 273.55488499999956,
+      "error": null
+    },
+    {
+      "engine": "chromium",
+      "iteration": 3,
+      "ok": true,
+      "ms": 209.12742799999978,
+      "error": null
+    },
+    {
+      "engine": "chromium",
+      "iteration": 4,
+      "ok": true,
+      "ms": 190.2028109999992,
+      "error": null
+    },
+    {
+      "engine": "firefox",
+      "iteration": 4,
+      "ok": true,
+      "ms": 273.08589100000245,
+      "error": null
+    },
+    {
+      "engine": "browse",
+      "iteration": 4,
+      "ok": true,
+      "ms": 575.2139840000018,
+      "error": null
+    },
+    {
+      "engine": "agent-browser",
+      "iteration": 4,
+      "ok": true,
+      "ms": 431.93059699999867,
+      "error": null
+    }
+  ]
+}

@@ -6,6 +6,27 @@ on:
   pull_request:
 
 jobs:
+  firefox:
+    name: Firefox bridge (Rust + extension + launcher)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: packages/mini/package-lock.json
+      - run: cargo test --locked --manifest-path packages/firefox-rs/Cargo.toml
+      - run: cargo build --locked --release --manifest-path packages/firefox-rs/Cargo.toml --bin callisto-firefox-tab-mcp
+      - run: npm --prefix packages/mini ci
+      - run: npm --prefix packages/mini run build
+      - run: node --test packages/firefox-rs/tests/extension-background.test.cjs scripts/launcher.test.mjs scripts/install-release.test.mjs
+      - name: DOM bridge tests in runner Chrome
+        run: |
+          export CHROMIUM_PATH="$(command -v google-chrome)"
+          test -n "$CHROMIUM_PATH"
+          node packages/firefox-rs/tests/extension-content.mjs
   mini:
     name: packages/mini (typecheck + test)
     runs-on: ubuntu-latest

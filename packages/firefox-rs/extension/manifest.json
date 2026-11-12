@@ -6,14 +6,18 @@
   "browser_specific_settings": {
     "gecko": {
       "id": "callisto-tab-bridge@lothnic.dev",
-      "strict_min_version": "109.0"
+      "strict_min_version": "140.0",
+      "data_collection_permissions": {
+        "required": ["websiteContent", "browsingActivity", "websiteActivity", "bookmarksInfo", "authenticationInfo", "searchTerms"]
+      }
     }
   },
   "permissions": [
     "activeTab",
     "menus",
     "storage",
-    "webNavigation"
+    "webNavigation",
+    "contextualIdentities"
   ],
   "optional_permissions": [
     "<all_urls>",
@@ -21,8 +25,7 @@
     "cookies",
     "bookmarks",
     "history",
-    "downloads",
-    "contextualIdentities"
+    "downloads"
   ],
   "background": {
     "scripts": [

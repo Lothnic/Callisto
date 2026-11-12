@@ -12,14 +12,19 @@ DRIVER=os.environ.get('GECKODRIVER_URL', 'http://127.0.0.1:4444').rstrip('/')
 class Handler(http.server.BaseHTTPRequestHandler):
  def do_GET(self):
   data=b'<h1>Callisto test</h1><label for="field">Name</label><input id="field"><p>Visible fixture text</p><label for="check">Accept</label><input id="check" type="checkbox"><label for="choice">Choice</label><select id="choice"><option value="a">A</option><option value="b">B</option></select><button id="send" onclick="document.title=\"done\"">Send</button>'
-  if self.path.startswith('/slow-image'):
+  if self.path.startswith('/frame'):
+   data=b'<h1>Frame host</h1><iframe src="/inner" title="Fixture child"></iframe>'
+  elif self.path.startswith('/inner'):
+   data=b'<button onclick="window.frameClicked=true">Inside frame</button>'
+  elif self.path.startswith('/slow-image'):
    time.sleep(5);data=b''
   elif self.path.startswith('/search'):
    data=b'<title>Research form</title><form action="/results"><label>Research <input type="search" name="q" required></label><button type="submit">Search</button></form><img src="/slow-image">'
   elif self.path.startswith('/results'):
    query=urllib.parse.parse_qs(urllib.parse.urlparse(self.path).query).get('q',[''])[0]
    data=('<h1>Results '+html.escape(query)+'</h1>').encode()
-  self.send_response(200);self.send_header('Content-Length',str(len(data)));self.end_headers();self.wfile.write(data)
+  data+=b'<input type="file" aria-label="Attachment">'
+  self.send_response(200);self.send_header('Content-Type','text/html; charset=utf-8');self.send_header('Content-Length',str(len(data)));self.end_headers();self.wfile.write(data)
  def log_message(self,*args): pass
 socketserver.ThreadingTCPServer.daemon_threads=True
 server=socketserver.ThreadingTCPServer(('127.0.0.1',0),Handler);threading.Thread(target=server.serve_forever,daemon=True).start()
@@ -31,7 +36,7 @@ env=dict(os.environ,CALLISTO_FIREFOX_STATE_DIR=state.name)
 def client(): return subprocess.Popen([ROOT+'target/debug/callisto-firefox-tab-mcp'],stdin=subprocess.PIPE,stdout=subprocess.PIPE,text=True,env=env)
 p=client()
 def tool(name,args={}):
- p.stdin.write(json.dumps({'jsonrpc':'2.0','id':1,'method':'tools/call','params':{'name':name,'arguments':args}})+'\n');p.stdin.flush();return json.loads(p.stdout.readline())['result']
+ p.stdin.write(json.dumps({'jsonrpc':'2.0','id':1,'method':'tools/call','params':{'name':name,'arguments':args}})+'\n');p.stdin.flush();reply=json.loads(p.stdout.readline());return reply.get('result',{'isError':True,'content':[{'type':'text','text':str(reply.get('error'))}]})
 def value(result):
  if result.get('isError'): raise Exception(result)
  return json.loads(result['content'][0]['text'])
@@ -45,8 +50,8 @@ try:
   for name in os.listdir(ROOT+'extension'):
    data=open(ROOT+'extension/'+name,'rb').read()
    if name=='manifest.json':
-    manifest=json.loads(data);manifest['permissions'].extend(['<all_urls>','tabs','cookies','bookmarks','history','downloads','contextualIdentities']);data=json.dumps(manifest).encode()
-   if name=='background.js': data+=('\nsetTimeout(async () => { try { await pair('+json.dumps(pair)+'); await share(); } catch(e) { console.error(e); } }, 1000);').encode()
+    manifest=json.loads(data);manifest['permissions']=list(dict.fromkeys(manifest['permissions']+['<all_urls>','tabs','cookies','bookmarks','history','downloads']));data=json.dumps(manifest).encode()
+   if name=='background.js': data+=('\nsetTimeout(async () => { try { await browser.storage.local.set({callistoAgentContainersEnabled:true}); await pair('+json.dumps(pair)+'); await share(); } catch(e) { console.error(e); } }, 1000);').encode()
    z.writestr(name,data)
  req('/session/'+session+'/moz/addon/install',{'addon':base64.b64encode(out.getvalue()).decode(),'temporary':True})
  for i in range(30):
@@ -62,6 +67,11 @@ try:
  actual=req('/session/'+session+'/execute/sync',{'script':'return document.querySelector("#field").value','args':[]})
  assert actual == 'hello', actual
  print('fill: verified in Firefox')
+ upload_ref=re.search(r'\[(ax-\d+)\] textbox "Attachment"',snapshot['text']).group(1)
+ upload_path=Path(state.name)/'fixture.bin';upload_path.write_bytes(bytes([0,1,255]))
+ assert value(tool('callisto_upload',{'ref':upload_ref,'paths':[str(upload_path)]}))['completed']
+ assert req('/session/'+session+'/execute/sync',{'script':'const f=document.querySelector("input[type=file]").files[0];return [f.name,f.size];','args':[]})==['fixture.bin',3]
+ print('local binary file upload into Firefox input: verified')
  p.stdin.close(); p.wait(timeout=10)
  p=client()
  assert value(tool('callisto_pair'))['code'] == pair
@@ -112,6 +122,47 @@ try:
  value(tool('callisto_browser',{'action':'tab_close','tab_id':created['id']}))
  value(tool('callisto_browser',{'action':'tab_select','tab_id':original}))
  print('tab creation, selection, closing and return: verified in Firefox')
+ primary=p;other=client()
+ try:
+  p=other
+  second=value(tool('callisto_browser',{'action':'tab_create','url':target+'?other=1'}))
+  value(tool('callisto_browser',{'action':'tab_select','tab_id':second['id']}))
+  blocked=tool('callisto_browser',{'action':'tab_select','tab_id':original})
+  assert blocked.get('isError') and 'owned by another agent' in str(blocked),blocked
+  blocked_close=tool('callisto_browser',{'action':'tab_close','tab_id':original})
+  assert blocked_close.get('isError'),blocked_close
+  p=primary
+  assert value(tool('callisto_status'))['sharing']
+  value(tool('callisto_browser',{'action':'tab_select','tab_id':original}))
+  assert value(tool('callisto_snapshot'))['url']==target
+  p=other
+  value(tool('callisto_close'))
+  value(tool('callisto_browser',{'action':'tab_close','tab_id':second['id']}))
+ finally:
+  other.stdin.close();other.wait(timeout=10);p=primary
+ assert value(tool('callisto_status'))['sharing']
+ print('independent MCP clients keep tab ownership; cross-agent selection and close are refused: verified')
+ value(tool('callisto_navigate',{'url':base+'frame'}))
+ value(tool('callisto_snapshot'))
+ frame=None
+ for i in range(100):
+  frame=next((f for f in value(tool('callisto_frames'))['frames'] if f['url'].endswith('/inner')),None)
+  if frame:break
+  time.sleep(.05)
+ assert frame,'Missing child frame'
+ child_snapshot=value(tool('callisto_frame',{'frame_id':frame['frameId']}))['snapshot']
+ frame_match=re.search(r'\[(ax-\d+)\] button "Inside frame"',child_snapshot['text'])
+ assert frame_match,(frame,child_snapshot)
+ frame_ref=frame_match.group(1)
+ assert value(tool('callisto_click',{'ref':frame_ref}))['completed']
+ assert req('/session/'+session+'/execute/sync',{'script':'return document.querySelector("iframe").contentWindow.frameClicked','args':[]})
+ req('/session/'+session+'/execute/sync',{'script':'const f=document.querySelector("iframe"),r=f.getBoundingClientRect(),c=document.createElement("div");c.id="cover";c.style.cssText=`position:fixed;left:${r.left}px;top:${r.top}px;width:${r.width}px;height:${r.height}px;background:red;z-index:999`;document.body.append(c);','args':[]})
+ assert tool('callisto_click',{'ref':frame_ref}).get('isError')
+ req('/session/'+session+'/execute/sync',{'script':'document.querySelector("#cover").remove()','args':[]})
+ value(tool('callisto_frame',{'frame_id':0}))
+ value(tool('callisto_navigate',{'url':target}))
+ value(tool('callisto_snapshot'))
+ print('explicit same-origin frame selection, input and parent-overlay rejection: verified in Firefox')
  started=time.perf_counter()
  batch=value(tool('callisto_batch',{'actions':[{'action':'navigate','url':base+'search'},{'action':'fill_role','role':'searchbox','name':'Research','value':'Zen workflow'},{'action':'submit_role','role':'searchbox','name':'Research'}]}))
  elapsed=time.perf_counter()-started
@@ -133,15 +184,34 @@ try:
  value(tool('callisto_browser',{'action':'window_close','window_id':window['windowId']}))
  value(tool('callisto_browser',{'action':'tab_select','tab_id':original}))
  title=req('/session/'+session+'/execute/sync',{'script':'return document.title','args':[]})
- assert title.startswith('[Callisto] '),title
+ assert title=='[Callisto]' or title.startswith('[Callisto] '),title
  print('opt-in container, inherited cookie store, agent window and controlled-tab marker: verified')
+ handoff_result=[]
+ def handoff(): handoff_result.append(tool('callisto_handoff',{'prompt':'Confirm this disposable fixture step.','timeout_ms':10000}))
+ worker=threading.Thread(target=handoff);worker.start()
+ button=None
+ for i in range(100):
+  try:
+   button=req('/session/'+session+'/element',{'using':'css selector','value':'[data-callisto-handoff] button'});break
+  except Exception: time.sleep(.05)
+ assert button,'Handoff banner did not appear'
+ element=button['element-6066-11e4-a52e-4f735466cecf']
+ req('/session/'+session+'/element/'+element+'/click',{})
+ worker.join(timeout=15);assert not worker.is_alive()
+ assert value(handoff_result[0])['confirmed']
+ print('trusted human-style click confirms handoff in disposable Firefox: verified')
  assert value(tool('callisto_close'))['released']
  assert not value(tool('callisto_status'))['sharing']
- assert not req('/session/'+session+'/execute/sync',{'script':'return document.title','args':[]}).startswith('[Callisto] ')
+ assert not req('/session/'+session+'/execute/sync',{'script':'return document.title','args':[]}).startswith('[Callisto]')
  print('release: verified')
  subprocess.run([ROOT+'target/debug/callisto-firefox-tab-mcp','--stop-relay'],env=env,check=True,timeout=10)
- p.stdin.close(); p.wait(timeout=10); p=client()
- assert value(tool('callisto_pair'))['code'] == pair
+ for i in range(100):
+  try:
+   if value(tool('callisto_pair'))['code']==pair:break
+  except Exception:pass
+  time.sleep(.05)
+ assert p.poll() is None,'MCP proxy exited when relay restarted'
+ assert value(tool('callisto_pair'))['code']==pair
  for i in range(100):
   status=value(tool('callisto_status'))
   if status.get('connected'): break

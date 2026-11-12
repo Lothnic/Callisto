@@ -4,10 +4,12 @@
 import {
   launchChrome,
   connectBrowse,
+  connectExistingCDP,
   closeSession,
   switchTarget,
   type LaunchOpts,
   type ConnectBrowseOpts,
+  type ConnectCDPOpts,
   type Session,
 } from './client.js'
 import { tmpdir } from 'node:os'
@@ -21,6 +23,7 @@ export { Page, Locator, type CapturedRequest } from './page.js'
 export type { LocatorOptions } from './page.js'
 
 export type { LaunchOpts, Viewport, ConnectBrowseOpts } from './client.js'
+export type { ConnectCDPOpts } from './client.js'
 export type { Target, Point, Ref } from './elements.js'
 export type { Snapshot } from './snapshot.js'
 export type { RefLookup } from './ax-refs.js'
@@ -145,6 +148,15 @@ export class Mini {
     return mini
   }
 
+  static async connectCDP(opts:ConnectCDPOpts):Promise<Mini> {
+    const session=await connectExistingCDP(opts)
+    const mini=new Mini(session,new RefRegistry())
+    mini.currentTargetId=session.targetId
+    session.cdp.on('Page.frameNavigated',(event:{frame?:{parentId?:string}})=>{if(event.frame&&!event.frame.parentId)mini.resetPageState()})
+    // Keep this connection pinned; no popup auto-focus or browser-wide changes.
+    return mini
+  }
+
   async close(): Promise<void> {
     await closeSession(this.session)
   }
@@ -256,11 +268,13 @@ export class Mini {
   // --- interaction ---
 
   async click(target: Target, opts: ClickOpts = {}): Promise<void> {
-    await this.mouse(await this.actionable(target, 'click', opts.timeout), opts.button ?? 'left', opts.clickCount ?? 1)
+    const point=await this.actionable(target,'click',opts.timeout)
+    await this.observeClickNavigation(()=>this.mouse(point, opts.button ?? 'left', opts.clickCount ?? 1))
   }
 
   async dblclick(target: Target, opts: ClickOpts = {}): Promise<void> {
-    await this.mouse(await this.actionable(target, 'click', opts.timeout), opts.button ?? 'left', 2)
+    const point=await this.actionable(target,'click',opts.timeout)
+    await this.observeClickNavigation(()=>this.mouse(point, opts.button ?? 'left', 2))
   }
 
   async rightclick(target: Target): Promise<void> {
@@ -450,16 +464,19 @@ export class Mini {
 
   tabs = {
     new: async (url?: string): Promise<string> => {
+      if(this.session.mode==='attached')throw new Error('Attached sessions are pinned to one existing tab')
       if (this.session.mode === 'connected') throw new Error('Creating additional tabs is not supported in connected mode')
       const { targetId } = await this.cdp.Target.createTarget({ url: url ?? 'about:blank' })
       return targetId
     },
     switch: async (targetId: string): Promise<void> => {
+      if(this.session.mode==='attached')throw new Error('Attached sessions are pinned to one existing tab')
       if (this.session.mode === 'connected') throw new Error('Switching tabs is not supported in connected mode')
       this.pendingFocusTargetId = undefined
       await this.attachTarget(targetId)
     },
     close: async (targetId: string): Promise<void> => {
+      if(this.session.mode==='attached')throw new Error('Attached sessions cannot close user tabs')
       if (this.session.mode === 'connected') throw new Error('Closing tabs is not supported in connected mode')
       await this.cdp.Target.closeTarget({ targetId })
       if (this.pendingFocusTargetId === targetId) this.pendingFocusTargetId = undefined
@@ -900,6 +917,38 @@ export class Mini {
     await Input.dispatchMouseEvent({ type: 'mouseMoved', x: p.x, y: p.y })
     await Input.dispatchMouseEvent({ type: 'mousePressed', x: p.x, y: p.y, button, buttons, clickCount })
     await Input.dispatchMouseEvent({ type: 'mouseReleased', x: p.x, y: p.y, button, buttons, clickCount })
+  }
+
+  private async observeClickNavigation(work:()=>Promise<void>):Promise<void> {
+    if(this.session.mode==='connected'){await work();return}
+    const {frameTree}=await this.cdp.Page.getFrameTree()
+    const events=this.cdp as unknown as EventEmitter
+    let started=false,expired=false,finish:()=>void=()=>{}
+    const ready=new Promise<void>(resolve=>{finish=resolve})
+    const onStart=(event:{frameId:string})=>{if(event.frameId===frameTree.frame.id)started=true}
+    const onReady=()=>{if(started)finish()}
+    const onSameDocument=(event:{frameId:string})=>{if(event.frameId===frameTree.frame.id)finish()}
+    events.on('Page.frameStartedLoading',onStart)
+    events.on('Page.domContentEventFired',onReady)
+    events.on('Page.navigatedWithinDocument',onSameDocument)
+    const signal=this.operationSignal
+    signal?.addEventListener('abort',finish,{once:true})
+    const timeout=setTimeout(()=>{expired=true;finish()},10000)
+    let settle:ReturnType<typeof setTimeout>|undefined
+    try{
+      if(signal?.aborted)throw new Error('Request was cancelled')
+      await work()
+      settle=setTimeout(()=>{if(!started)finish()},150)
+      await ready
+      if(signal?.aborted)throw new Error('Request was cancelled; inspect before retrying')
+      if(expired)throw new Error('Click navigation did not reach DOMContentLoaded within 10 seconds; inspect before retrying')
+    }finally{
+      clearTimeout(timeout);if(settle)clearTimeout(settle)
+      signal?.removeEventListener('abort',finish)
+      events.removeListener('Page.frameStartedLoading',onStart)
+      events.removeListener('Page.domContentEventFired',onReady)
+      events.removeListener('Page.navigatedWithinDocument',onSameDocument)
+    }
   }
 
   private async connectedAction(code: string): Promise<void> {

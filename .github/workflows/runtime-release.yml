@@ -6,6 +6,32 @@ on:
 permissions:
   contents: write
 jobs:
+  mini:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm --prefix packages/mini ci
+      - run: npm --prefix packages/mini test
+      - run: npm --prefix packages/mini run build
+      - run: |
+          mkdir -p bundle/packages/mini bundle/scripts
+          cp -r packages/mini/dist bundle/packages/mini/
+          cp packages/mini/package.json packages/mini/package-lock.json bundle/packages/mini/
+          cp scripts/callisto.mjs scripts/install-release.mjs bundle/scripts/
+          cp README.md LICENSE bundle/
+          tar -czf callisto-mini.tar.gz -C bundle .
+          sha256sum callisto-mini.tar.gz > callisto-mini.tar.gz.sha256
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mini
+          path: callisto-mini.*
+      - if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "$GITHUB_REF_NAME" callisto-mini.* --clobber
   bridge:
     strategy:
       matrix:

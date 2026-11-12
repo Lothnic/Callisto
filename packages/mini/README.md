@@ -76,6 +76,24 @@ Mini is not a complete Playwright API or a sandbox for untrusted pages; browser 
 can modify websites. Same-origin iframe ref actions are supported; cross-origin
 or transformed frames can fail closed.
 
+### Attach directly to an existing debug-enabled Chromium tab
+
+Set `CALLISTO_MCP_BROWSER=attached`, `CALLISTO_CDP_ENDPOINT` to a loopback HTTP
+CDP origin (for example `http://127.0.0.1:9222`) and `CALLISTO_CDP_TARGET` to an
+explicit page target ID from that endpoint. The same Mini MCP command then
+adopts that tab without browse, viewport overrides, stealth scripts, popup
+auto-focus or browser-wide download changes. The browser must already expose
+CDP; Callisto cannot enable it in an arbitrary normally started browser.
+
+The connection is pinned to that tab. Additional tab creation/switching/closing
+through this Mini instance is refused, and closing Mini leaves the user tab and
+browser running. A private local lease prevents another Callisto process from
+adopting the same target. A crash may leave a lease under
+`$XDG_STATE_HOME/callisto/chromium-leases` (default `~/.local/state/...`); recovery
+is manual after verifying the recorded process is no longer running. This lease
+does not prevent another browser tool from controlling the same CDP target.
+The API equivalent is `Mini.connectCDP({endpoint,targetId})`.
+
 ### Current compatibility limits
 
 This is a subset, not a Playwright replacement. Semantic locators refresh the
@@ -95,9 +113,9 @@ For a small repeatable comparison with real Playwright, set `CHROME_PATH` and ru
 
 ### Getting a usable Chrome (Linux / snap trap)
 
-`chrome-launcher` needs a Chrome that speaks CDP over a debug port. **Ubuntu's
-snap Chromium doesn't** — it silently refuses the remote-debugging port and you
-get `ECONNREFUSED`. If `which google-chrome` points into `/snap`, grab a
+`chrome-launcher` needs a Chrome that speaks CDP over a debug port. Ubuntu's
+Snap confinement can interfere with launching or attaching, depending on the
+process and environment. If discovery or launch fails with a Snap binary, use a
 Chrome for Testing binary once:
 
 ```bash

@@ -3,10 +3,10 @@
 // agent-facing surface (index.ts) needs to talk to a real browser.
 import * as ChromeLauncher from 'chrome-launcher'
 import CDP from 'chrome-remote-interface'
-import { existsSync, readFileSync } from 'node:fs'
+import { existsSync, readFileSync, mkdirSync, openSync, closeSync, writeFileSync, unlinkSync } from 'node:fs'
 import * as path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { randomUUID } from 'node:crypto'
+import { randomUUID, createHash } from 'node:crypto'
 import { homedir } from 'node:os'
 import { Client } from '@modelcontextprotocol/client'
 import { StdioClientTransport, getDefaultEnvironment } from '@modelcontextprotocol/client/stdio'
@@ -40,7 +40,7 @@ export interface Session {
   viewport: Viewport
   userAgent?: string
   headless: boolean
-  mode?: 'connected'
+  mode?: 'connected' | 'attached'
   targetId?: string
   connectedSessionId?: string
   connectedPageSessionId?: string
@@ -54,6 +54,36 @@ export interface ConnectBrowseOpts {
   allowedOrigins: string[]
   /** The upstream browse CLI executable; defaults to the installed browse. */
   browseCommand?: string
+}
+
+export interface ConnectCDPOpts {
+  endpoint: string
+  targetId: string
+}
+
+/** Adopt one explicit page on an already debug-enabled local Chromium. */
+export async function connectExistingCDP(opts:ConnectCDPOpts):Promise<Session> {
+  const url=new URL(opts.endpoint)
+  if(url.protocol!=='http:' || !['127.0.0.1','localhost','[::1]'].includes(url.hostname) || url.username || url.password || url.pathname!=='/' || url.search || url.hash)throw new Error('CDP endpoint must be a loopback HTTP origin')
+  if(!opts.targetId || !/^[A-Za-z0-9_-]+$/.test(opts.targetId))throw new Error('An explicit CDP target ID is required')
+  const connection={host:url.hostname.replace(/^\[|\]$/g,''),port:Number(url.port||80)}
+  const pages=await CDP.List(connection)
+  if(!pages.some(page=>page.id===opts.targetId && page.type==='page'))throw new Error('The requested page target does not exist')
+  const directory=path.join(process.env.XDG_STATE_HOME || path.join(homedir(),'.local/state'),'callisto/chromium-leases')
+  mkdirSync(directory,{recursive:true,mode:0o700})
+  const lease=path.join(directory,createHash('sha256').update(`${connection.port}:${opts.targetId}`).digest('hex')+'.json')
+  const token=randomUUID()
+  let fd:number
+  try{fd=openSync(lease,'wx',0o600)}catch(error){throw new Error(`CDP target is already leased, or its lease needs recovery: ${lease}`,{cause:error})}
+  const release=()=>{try{if(JSON.parse(readFileSync(lease,'utf8')).token===token)unlinkSync(lease)}catch{}}
+  try{writeFileSync(fd,JSON.stringify({pid:process.pid,token}));}catch(error){unlinkSync(lease);throw error}finally{closeSync(fd)}
+  let cdp:CDP.Client|undefined
+  try{
+    cdp=await CDP({...connection,target:opts.targetId})
+    await Promise.all([cdp.Page.enable(),cdp.DOM.enable(),cdp.Runtime.enable(),cdp.Network.enable(),cdp.Accessibility.enable()])
+    const {layoutViewport}=await cdp.Page.getLayoutMetrics()
+    return {cdp,viewport:{width:layoutViewport.clientWidth,height:layoutViewport.clientHeight},headless:false,mode:'attached',targetId:opts.targetId,dispose:async()=>{release()}}
+  }catch(error){await cdp?.close().catch(()=>{});release();throw error}
 }
 
 const DEFAULT_VIEWPORT: Viewport = { width: 1440, height: 900 }
@@ -280,6 +310,7 @@ export async function switchTarget(session: Session, targetId: string): Promise<
 }
 
 export async function closeSession(session: Session): Promise<void> {
+  if(session.mode==='attached'){try{await session.cdp.close()}finally{await session.dispose?.()}return}
   if (session.mode === 'connected') {
     await session.dispose?.()
     return
