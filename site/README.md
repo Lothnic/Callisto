@@ -8,7 +8,8 @@ dependencies.
 site/
 ├── index.html   # content and structure
 ├── styles.css   # design system, layout, motion
-└── main.js      # ticker pacing, walkthrough, stepper, copy buttons
+├── main.js      # ticker pacing, walkthrough, stepper, copy buttons
+└── install.sh   # pinned installer served at /install.sh
 ```
 
 ## Preview
@@ -36,3 +37,7 @@ Then visit <http://127.0.0.1:8087/>.
 - Claims on the page must stay true to the MCP server in
   `packages/mini/src/mcp.ts`. Callisto is experimental, is not a Playwright
   replacement, and is not a sandbox.
+- The installer fetches the explicitly pinned Git revision, builds Mini and
+  prints an MCP configuration; it does not install Chrome or edit host configs.
+  `CALLISTO_INSTALL_DIR` changes the destination, which must not already exist.
+  Update the revision only after the corresponding commit is available on GitHub.

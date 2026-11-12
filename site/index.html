@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Callisto — A lean browser runtime for agents</title>
-<meta name="description" content="Callisto is a local MCP server that gives any agent an isolated Chromium, a pruned accessibility tree, and refs it can click. No model API key. No Playwright install. No context dump.">
+<meta name="description" content="Callisto is an experimental local browser runtime for agents. Connect over MCP to navigate Chromium, inspect accessibility snapshots, and act on page references.">
 <meta property="og:title" content="Callisto — A lean browser runtime for agents">
 <meta property="og:description" content="Give your agent a real browser. One MCP server, ten structured tools, bounded accessibility snapshots.">
 <meta property="og:type" content="website">
@@ -19,7 +19,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Chivo+Mono:wght@400;700&family=Instrument+Sans:wght@400;500;600;700&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="styles.css?v=20261112-5">
 </head>
 <body>
 
@@ -53,7 +53,7 @@
         <a href="#how" class="site-nav-link">How it works</a>
         <a href="#evidence" class="site-nav-link">Evidence</a>
         <a href="https://github.com/Lothnic/callisto" class="site-nav-link" rel="noreferrer">GitHub</a>
-        <a href="#install" class="btn-chamfer btn-dark site-nav-cta">Install</a>
+        <a href="#install" class="btn-chamfer btn-dark site-nav-cta">Install Callisto</a>
       </div>
     </nav>
   </header>
@@ -69,17 +69,16 @@
   </svg>
 
   <div class="hero-content">
-    <div class="hero-eyebrow"><span class="blink-dot"></span> Local MCP runtime · MIT engine</div>
-    <h1>Give Your Agent<br>A Real Browser</h1>
+    <div class="hero-eyebrow"><span class="blink-dot"></span> Experimental · local MCP runtime</div>
+    <h1>A Browser Runtime<br>For Your Agent</h1>
     <p class="hero-sub">
-      Callisto is a lean browser runtime for agents you already use. One local
-      MCP server, ten structured tools, and an accessibility tree the model can
-      actually read.
+      Give your existing agent a way to navigate, read, and act on the web.
+      Callisto connects over MCP and returns a concise view of the page.
     </p>
     <div class="hero-actions">
       <div class="hero-cta-buttons">
-        <a href="#install" class="btn-chamfer btn-dark">Install</a>
-        <a href="#how" class="hero-docs-btn">See the loop</a>
+        <a href="#install" class="btn-chamfer btn-dark">Install Callisto <span aria-hidden="true">↗</span></a>
+        <a href="#how" class="hero-docs-btn">See how it works</a>
       </div>
     </div>
   </div>
@@ -113,6 +112,14 @@
 <div class="content-lines" aria-hidden="true"></div>
 
 <main class="content">
+  <section class="runtime-status" aria-label="Runtime status">
+    <div class="container runtime-status-inner">
+      <div class="runtime-status-label"><span class="status-pulse"></span> THE RUNTIME / TODAY</div>
+      <div><strong>Isolated by default</strong><span>A fresh Chromium session for each MCP process.</span></div>
+      <div><strong>Connected, in progress</strong><span>Browse relay integration is experimental.</span></div>
+      <a href="https://github.com/Lothnic/callisto#status-and-evidence">Read the project status <span aria-hidden="true">↗</span></a>
+    </div>
+  </section>
 
   <div class="section-pad"><div class="section-divider"></div></div>
 
@@ -127,7 +134,7 @@
             </svg>
             The problem
           </div>
-          <h2 class="display problem-headline" id="problem-title">Agents Are Blind<br>On The Web</h2>
+          <h2 class="display problem-headline" id="problem-title">The Web Is Messy.<br>Give Agents A Clearer View.</h2>
         </div>
 
         <div class="problem-divider"></div>
@@ -144,6 +151,16 @@
                   <path d="M40 70V40H70 M410 40H440V70 M440 430V460H410 M70 460H40V430"/>
                   <path d="M130 112V240L210 290V425 M350 112V240L270 290V425"/>
                   <path d="M240 105V260 M240 330V425" stroke-dasharray="3 7"/>
+                </g>
+
+                <!-- Signals trace the decision and retry path; the static diagram
+                     remains readable when reduced motion is requested. -->
+                <g class="signal-flow" aria-hidden="true">
+                  <path class="signal-trace" d="M240 166V180L150 196 M150 244V260L216 291"/>
+                  <path class="signal-trace signal-trace-alt" d="M240 166V180L330 196 M330 244V260L264 291"/>
+                  <circle class="signal-packet signal-packet-a" r="4"/>
+                  <circle class="signal-packet signal-packet-b" r="4"/>
+                  <circle class="signal-packet signal-packet-c" r="4"/>
                 </g>
 
                 <text class="label" x="240" y="64" text-anchor="middle">AGENT</text>
@@ -181,8 +198,8 @@
                 <text class="label" x="240" y="470" text-anchor="middle">MORE TOKENS</text>
               </svg>
               <figcaption>
-                The model sees markup, guesses a selector, fails, and pays for another turn.
-                <span>Every retry re-sends the page.</span>
+                A browser task needs a useful view of the page and a way to act on it.
+                <span>Callisto brings both into the agent loop.</span>
               </figcaption>
             </figure>
           </div>
@@ -192,8 +209,8 @@
               <span class="mono problem-card-label">Perception</span>
               <span class="mono problem-card-number">001</span>
             </div>
-            <h3 class="display-heavy">A DOM Is A Context Bomb</h3>
-            <p>Raw markup is thousands of tokens of divs, scripts, and styles. The one button that matters is buried in the middle.</p>
+            <h3 class="display-heavy">Pages Carry A Lot Of Context</h3>
+            <p>Raw markup can be large and difficult to navigate. A task may need only a small part of the page.</p>
           </div>
 
           <div class="problem-card">
@@ -201,8 +218,8 @@
               <span class="mono problem-card-label">Action</span>
               <span class="mono problem-card-number">002</span>
             </div>
-            <h3 class="display-heavy">Selectors Are Guesses</h3>
-            <p>Classes change. Layouts shift. A selector that worked on the last snapshot silently clicks the wrong thing.</p>
+            <h3 class="display-heavy">Pages Keep Changing</h3>
+            <p>Elements move, disappear, or become covered. An action needs to check the page as it exists now.</p>
           </div>
 
           <div class="problem-card">
@@ -210,8 +227,8 @@
               <span class="mono problem-card-label">Setup</span>
               <span class="mono problem-card-number">003</span>
             </div>
-            <h3 class="display-heavy">Every Agent Rebuilds The Browser</h3>
-            <p>Playwright, a browser install, a driver, a profile, a retry layer. The plumbing costs more than the task.</p>
+            <h3 class="display-heavy">Browser Plumbing Adds Up</h3>
+            <p>Agents need a browser connection, an interface, and a way to understand the result of each action.</p>
           </div>
 
           <div class="problem-card">
@@ -219,8 +236,8 @@
               <span class="mono problem-card-label">Trust</span>
               <span class="mono problem-card-number">004</span>
             </div>
-            <h3 class="display-heavy">You Can't See What It Did</h3>
-            <p>When a run fails, there is no snapshot, no ref, and no trace. You get a stack trace and a guess.</p>
+            <h3 class="display-heavy">Results Need Context</h3>
+            <p>A useful response makes it easier for the agent to inspect the page and decide what to do next.</p>
           </div>
         </div>
       </div>
@@ -237,8 +254,8 @@
         <h2 class="display intro-title">One Server.<br>Ten Tools. A Real Browser.</h2>
         <p class="intro-desc">
           Callisto runs a local Chromium and exposes it over MCP. The agent navigates,
-          reads a short accessibility tree, and acts on stable refs — no Playwright
-          install, no model key, no raw DOM.
+          reads a bounded accessibility tree, and acts on page refs — without a
+          separate Playwright install or model API key.
         </p>
       </div>
 
@@ -276,7 +293,7 @@
                   <span class="ax">[ax-8]</span> link "new"<br>
                   <span class="ax">[ax-12]</span> link "Show HN"<br>
                   <span class="ax">[ax-18]</span> textbox "Search"<br>
-                  <span class="dim">… 37 more refs · nextOffset 12000</span>
+                  <span class="dim">… more page content</span>
                 </div>
                 <div class="term-line" data-reveal="2"><span class="prompt">›</span><span class="tool">callisto_batch</span><span class="arg">{ "actions": [ { "action": "click_ref", "ref": "ax-12" }, { "action": "scroll", "delta_y": 600 } ] }</span></div>
                 <div class="term-out" data-reveal="2"><span class="ok">✓</span> completed 2 actions · snapshot replaced</div>
@@ -312,7 +329,7 @@
                     <div class="tool-body">
                       <strong>Page is readable</strong>
                       <p><code>navigation "Hacker News"</code></p>
-                      <p>Actionable nodes are sorted first. The full tree is 1,842 characters.</p>
+                      <p>Actionable nodes are sorted first. This example shows a shortened tree.</p>
                     </div>
                   </div>
                   <div class="assistant-message"><span class="message-author">Agent</span><p>The Show HN link is <code>ax-12</code>. I'll click it.</p></div>
@@ -324,7 +341,7 @@
                     <div class="tool-body">
                       <strong>Clicked and scrolled</strong>
                       <p><code>click_ref ax-12</code> → <code>scroll 600px</code></p>
-                      <p>The new page is 2,110 characters. The comment tree starts at <code>ax-24</code>.</p>
+                      <p>The comment tree starts at <code>ax-24</code>.</p>
                     </div>
                   </div>
                   <div class="assistant-message"><span class="message-author">Agent</span><p>I can see the thread. Pulling the comment text now.</p></div>
@@ -342,7 +359,7 @@
             </div>
           </div>
 
-          <div class="demo-footer"><span class="local-dot"></span> LOCAL WORKSPACE <span>AGENT + CALLISTO</span></div>
+          <div class="demo-footer"><span class="local-dot"></span> ILLUSTRATIVE SESSION <span>AGENT + CALLISTO</span></div>
         </figure>
 
         <div class="walkthrough-copy">
@@ -350,9 +367,9 @@
             <div class="step-copy" data-copy="0" aria-hidden="false">
               <div class="step-heading">
                 <span class="step-kicker">THE LOOP / 01</span>
-                <h3>Any MCP client can start it.</h3>
+                <h3>Connect an MCP host.</h3>
               </div>
-              <p>Callisto speaks stdio MCP. OpenCode, Claude Code, Codex, or your own host launches one process. No API key, no browser install, no driver.</p>
+              <p>Callisto speaks stdio MCP. OpenCode, Claude Code, Codex, or your own host launches one process. The host supplies the model; Callisto requires Node.js and a local Chromium or Chrome binary.</p>
             </div>
             <div class="step-copy" data-copy="1" aria-hidden="true">
               <div class="step-heading">
@@ -371,9 +388,9 @@
             <div class="step-copy" data-copy="3" aria-hidden="true">
               <div class="step-heading">
                 <span class="step-kicker">THE LOOP / 04</span>
-                <h3>Every action returns the new state.</h3>
+                <h3>Inspect the resulting page.</h3>
               </div>
-              <p>Each call returns a fresh snapshot. The agent sees what changed, not what it hoped changed — and the next decision starts from real page state.</p>
+              <p>Navigation and action tools return a fresh snapshot so the agent can inspect the result before continuing.</p>
             </div>
           </div>
         </div>
@@ -399,7 +416,7 @@
 
       <figure class="comparison">
         <div class="analysis-panel">
-          <div class="panel-label"><span>01 / RAW DOM</span><span class="file-label">~48,000 chars</span></div>
+          <div class="panel-label"><span>01 / RAW DOM</span><span class="file-label">illustrative</span></div>
           <div class="code-sample" aria-label="Illustrative raw DOM: nested divs, scripts, and styles">
             <div><code>&lt;div class="sc-1x2y3z"&gt;</code></div>
             <div><code> &lt;div class="header__nav"&gt;</code></div>
@@ -409,12 +426,12 @@
           </div>
           <div class="panel-result">
             <span class="result-icon potential" aria-hidden="true">!</span>
-            <div><strong>A context bomb</strong><p>The button is one line in tens of thousands. The model pays for all of it.</p></div>
+            <div><strong>More to sift through</strong><p>Markup mixes the page structure with implementation details.</p></div>
           </div>
         </div>
 
         <div class="fix-panel">
-          <div class="panel-label"><span>02 / CALLISTO SNAPSHOT</span><span class="file-label">2,576 chars · 33 refs</span></div>
+          <div class="panel-label"><span>02 / CALLISTO SNAPSHOT</span><span class="file-label">illustrative</span></div>
           <div class="code-sample" aria-label="Illustrative Callisto snapshot with ax refs">
             <div><code>navigation "Main"</code></div>
             <div><code> [ax-3] link "Home"</code></div>
@@ -424,10 +441,10 @@
           </div>
           <div class="panel-result">
             <span class="result-icon confirmed" aria-hidden="true">→</span>
-            <div><strong>Act on the node that matters</strong><p>Actionable nodes first, stable refs, bounded output. The agent decides with less noise.</p></div>
+            <div><strong>Act on the node that matters</strong><p>Actionable nodes first, page refs, bounded output. The agent decides with less noise.</p></div>
           </div>
         </div>
-        <figcaption>Illustrative example. Snapshot sizes depend on the page.</figcaption>
+        <figcaption>Illustrative example, not a benchmark. Snapshot sizes depend on the page. <a href="https://github.com/Lothnic/callisto/blob/main/BENCHMARKS.md">Read the benchmark notes ↗</a></figcaption>
       </figure>
 
       <div class="evidence-points">
@@ -497,7 +514,7 @@
             <span class="how-step-header">
               <span class="how-step-num">04 / VERIFY</span>
               <span class="how-step-title">Get the new state back.</span>
-              <span class="how-step-body"><span class="how-step-body-inner"><span class="how-step-text">Every action returns a fresh snapshot. The agent checks the result before deciding the next step.</span></span></span>
+              <span class="how-step-body"><span class="how-step-body-inner"><span class="how-step-text">Navigation and action tools return a fresh snapshot. The agent can inspect the result before continuing.</span></span></span>
             </span>
           </button>
         </div>
@@ -557,31 +574,30 @@
     <div class="container">
       <div class="setup-heading">
         <div class="badge">Get started</div>
-        <h2 id="setup-title" class="display">Three Commands<br>To A Browser.</h2>
+        <h2 id="setup-title" class="display">From Repository<br>To Browser.</h2>
       </div>
 
       <ol class="setup-steps">
         <li>
           <div class="step-number">01 / BUILD</div>
           <h3>Install the engine.</h3>
-          <p>Clone the repo, install dependencies, and compile the TypeScript.</p>
+          <p>With Git, Node.js 20+ and Chrome or Chromium available, run the installer. It prints the MCP configuration for your machine.</p>
           <div class="code-block">
-            <button type="button" class="copy-btn" data-copy="npm --prefix packages/mini ci && npm --prefix packages/mini run build">Copy</button>
-            <pre><code>npm --prefix packages/mini ci
-npm --prefix packages/mini run build</code></pre>
+            <button type="button" class="copy-btn" data-copy="curl -fsSL https://callisto.lothnic.dev/install.sh | bash">Copy</button>
+            <pre><code>curl -fsSL https://callisto.lothnic.dev/install.sh | bash</code></pre>
           </div>
         </li>
         <li>
           <div class="step-number">02 / REGISTER</div>
           <h3>Add the MCP server.</h3>
-          <p>Point any MCP client at the compiled server over stdio. This shape works for Claude Desktop and Cursor.</p>
+          <p>The installer prints your exact command and path. Add it to your MCP host’s configuration; adapt this example for your host.</p>
           <div class="code-block">
-            <button type="button" class="copy-btn" data-copy='{"mcpServers":{"callisto":{"command":"node","args":["packages/mini/dist/mcp.js"]}}}'>Copy</button>
+            <button type="button" class="copy-btn" data-copy='{"mcpServers":{"callisto":{"command":"node","args":["/absolute/path/to/callisto/packages/mini/dist/mcp.js"]}}}'>Copy</button>
             <pre><code>{
   "mcpServers": {
     "callisto": {
       "command": "node",
-      "args": ["packages/mini/dist/mcp.js"]
+      "args": ["/absolute/path/to/callisto/packages/mini/dist/mcp.js"]
     }
   }
 }</code></pre>
@@ -590,7 +606,7 @@ npm --prefix packages/mini run build</code></pre>
         <li>
           <div class="step-number">03 / ASK</div>
           <h3>Give it a task.</h3>
-          <p>The first browser call launches Chromium. No key, no profile, no setup wizard.</p>
+          <p>The first browser call starts an isolated session. Set CHROME_PATH if your browser is not discovered.</p>
           <div class="code-block">
             <button type="button" class="copy-btn" data-copy="Open Hacker News and summarize the top three Show HN posts.">Copy</button>
             <pre><code>Open Hacker News and summarize
@@ -605,7 +621,7 @@ the top three Show HN posts.</code></pre>
       </div>
 
       <div class="stack-strip">
-        <h3>Works with any MCP host</h3>
+        <h3>Works with stdio MCP hosts</h3>
         <div class="stack-grid">
           <div class="stack-group"><h4>Hosts</h4><div class="stack-items"><span class="stack-item">OpenCode</span><span class="stack-item">Claude Code</span><span class="stack-item">Codex</span><span class="stack-item">Cursor</span></div></div>
           <div class="stack-group"><h4>Protocol</h4><div class="stack-items"><span class="stack-item">MCP stdio</span><span class="stack-item">JSON-RPC</span></div></div>
@@ -641,7 +657,7 @@ the top three Show HN posts.</code></pre>
             <span class="faq-question-text">Does it use my browser or my logins?</span>
             <svg class="faq-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 6l5 5 5-5" stroke="currentColor" stroke-width="1.5"/></svg>
           </summary>
-          <div class="faq-answer-wrap"><div class="faq-answer"><p>Not by default. The MCP server starts an isolated Chromium with a fresh profile. A connected mode exists behind an experimental flag, but it is not the default and it is not a supported security boundary.</p></div></div>
+          <div class="faq-answer-wrap"><div class="faq-answer"><p>By default Callisto starts an isolated browser. An experimental bridge can open its own tab through a paired browse extension, but it cannot yet adopt existing tabs or provide browse’s handoff and stop controls. Background input is refused. <a href="https://github.com/Lothnic/callisto#experimental-connected-browser">Read connected-mode limitations ↗</a></p></div></div>
         </details>
         <details class="faq-item">
           <summary class="faq-question">
@@ -665,7 +681,7 @@ the top three Show HN posts.</code></pre>
             <span class="faq-question-text">Is it safe to run unattended?</span>
             <svg class="faq-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 6l5 5 5-5" stroke="currentColor" stroke-width="1.5"/></svg>
           </summary>
-          <div class="faq-answer-wrap"><div class="faq-answer"><p>Callisto is not a sandbox. Browser actions can change real websites, and snapshots are not a general secret filter. Use an origin allowlist, a dedicated profile, and your own approval layer for anything sensitive.</p></div></div>
+          <div class="faq-answer-wrap"><div class="faq-answer"><p>Callisto is not a sandbox. Browser actions can change real websites, and snapshots are not a general secret filter. Use a dedicated profile and your own approval layer for sensitive work. The experimental connected mode requires an origin allowlist; it does not block all subresources.</p></div></div>
         </details>
         <details class="faq-item">
           <summary class="faq-question">
@@ -681,11 +697,7 @@ the top three Show HN posts.</code></pre>
 
   <!-- ═══════════ CTA ═══════════ -->
   <section class="cta-section" id="start" aria-labelledby="cta-title">
-    <svg class="cta-oversized-svg" viewBox="0 0 520 520" fill="none" aria-hidden="true">
-      <circle cx="260" cy="260" r="150" stroke="currentColor" stroke-width="2"/>
-      <ellipse cx="260" cy="260" rx="235" ry="82" stroke="currentColor" stroke-width="1.6" transform="rotate(-24 260 260)"/>
-      <ellipse cx="260" cy="260" rx="235" ry="82" stroke="currentColor" stroke-width="1.6" transform="rotate(38 260 260)"/>
-    </svg>
+    <canvas class="cta-wave" aria-hidden="true"></canvas>
     <div class="cta-container">
       <span class="cta-logo-wrap" aria-hidden="true">
         <svg class="cta-logo" viewBox="0 0 40 40" fill="none">
@@ -731,7 +743,7 @@ the top three Show HN posts.</code></pre>
           <h3 class="mono">Project</h3>
           <ul>
             <li><a href="https://github.com/Lothnic/callisto" rel="noreferrer">GitHub</a></li>
-            <li><a href="#evidence">Benchmarks</a></li>
+            <li><a href="https://github.com/Lothnic/callisto/blob/main/BENCHMARKS.md">Benchmarks</a></li>
             <li><a href="https://github.com/Lothnic/callisto/blob/main/LICENSE" rel="noreferrer">License</a></li>
             <li><a href="#top">Back to top</a></li>
           </ul>
@@ -750,6 +762,6 @@ the top three Show HN posts.</code></pre>
   </footer>
 </main>
 
-<script src="main.js"></script>
+<script src="main.js?v=20261112-5"></script>
 </body>
 </html>

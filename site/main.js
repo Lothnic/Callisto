@@ -331,6 +331,90 @@
     });
   }
 
+  /* A slowly moving wireframe beneath the final call to action. */
+  function initCtaWave() {
+    const canvas = document.querySelector('.cta-wave');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    const section = canvas.closest('.cta-section');
+    let width = 0, height = 0, frame = 0, lastPaint = 0;
+    let inView = false;
+    const particles = [
+      { x: .13, row: 3, phase: 0 }, { x: .45, row: 10, phase: 2 },
+      { x: .78, row: 6, phase: 4 }, { x: .93, row: 14, phase: 1 },
+    ];
+
+    function resize() {
+      const rect = canvas.getBoundingClientRect();
+      width = rect.width; height = rect.height;
+      const ratio = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.round(width * ratio);
+      canvas.height = Math.round(height * ratio);
+      ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+      draw(0);
+    }
+
+    function point(x, row, time) {
+      const depth = row / 19;
+      const baseline = height * (.37 + depth * .55);
+      const envelope = Math.sin(Math.PI * Math.min(1, Math.max(0, depth))) * .8 + .2;
+      const wave = Math.sin(x * 6.3 + depth * 4.3 - time * .38)
+        + .45 * Math.sin(x * 11 - depth * 3 + time * .22);
+      return [x * width, baseline + wave * height * .13 * envelope];
+    }
+
+    function draw(time) {
+      ctx.clearRect(0, 0, width, height);
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = 'rgba(31, 126, 219, .65)';
+      for (let row = 0; row < 20; row++) {
+        ctx.beginPath();
+        for (let step = 0; step <= 100; step++) {
+          const [x, y] = point(step / 100, row, time);
+          if (step === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+      }
+      ctx.strokeStyle = 'rgba(31, 126, 219, .48)';
+      for (let col = 0; col <= 16; col++) {
+        ctx.beginPath();
+        for (let row = 0; row <= 19; row += .25) {
+          const [x, y] = point(col / 16, row, time);
+          if (row === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+      }
+      for (const particle of particles) {
+        const progress = (particle.x + time * .006) % 1;
+        const [x, y] = point(progress, particle.row, time);
+        ctx.beginPath();
+        ctx.fillStyle = 'rgba(255, 191, 82, .85)';
+        ctx.shadowColor = '#ffa62e'; ctx.shadowBlur = 11;
+        ctx.arc(x, y, 2, 0, Math.PI * 2); ctx.fill();
+      }
+      ctx.shadowBlur = 0;
+    }
+
+    function tick(now) {
+      if (!inView || prefersReduced()) { frame = 0; return; }
+      if (now - lastPaint >= 32) { draw(now / 1000); lastPaint = now; }
+      frame = window.requestAnimationFrame(tick);
+    }
+    function refresh() {
+      if (prefersReduced()) {
+        if (frame) window.cancelAnimationFrame(frame);
+        frame = 0; draw(0);
+      } else if (inView && !frame) frame = window.requestAnimationFrame(tick);
+    }
+    resize();
+    window.addEventListener('resize', resize);
+    motionQuery.addEventListener?.('change', refresh);
+    if ('IntersectionObserver' in window && section) {
+      new IntersectionObserver(entries => { inView = entries[0].isIntersecting; refresh(); }).observe(section);
+    } else { inView = true; refresh(); }
+  }
+
   /* ----------------------------------------------------------
      Boot
      ---------------------------------------------------------- */
@@ -339,6 +423,7 @@
     initWalkthrough();
     initStepper();
     initCopyButtons();
+    initCtaWave();
   }
 
   if (document.readyState === 'loading') {
