@@ -1,0 +1,30 @@
+name: Sign Firefox extension
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  sign:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Check signing configuration
+        env:
+          WEB_EXT_API_KEY: ${{ secrets.WEB_EXT_API_KEY }}
+          WEB_EXT_API_SECRET: ${{ secrets.WEB_EXT_API_SECRET }}
+        run: |
+          test -n "$WEB_EXT_API_KEY" && test -n "$WEB_EXT_API_SECRET" || { echo 'Configure WEB_EXT_API_KEY and WEB_EXT_API_SECRET in repository Actions secrets.'; exit 1; }
+      - run: npx --yes web-ext@8 lint --source-dir packages/firefox-rs/extension
+      - name: Sign for self-distribution
+        env:
+          WEB_EXT_API_KEY: ${{ secrets.WEB_EXT_API_KEY }}
+          WEB_EXT_API_SECRET: ${{ secrets.WEB_EXT_API_SECRET }}
+        run: npx --yes web-ext@8 sign --channel unlisted --source-dir packages/firefox-rs/extension --artifacts-dir signed-extension
+      - uses: actions/upload-artifact@v4
+        with:
+          name: signed-firefox-extension
+          path: signed-extension/*.xpi
+          if-no-files-found: error

@@ -143,6 +143,8 @@ async fn serve_socket(socket: TcpStream, bridge: Arc<Bridge>) {
 
 fn tools() -> Value {
     json!([
+        {"name":"callisto_capabilities","description":"Report backend capabilities without reading page content.","inputSchema":{"type":"object","properties":{}}},
+        {"name":"callisto_upload","description":"Set files on a visible file input in the controlled page. Reads explicit local file paths, at most 10 files and 10 MiB total. Page input/change handlers may upload immediately. Does not submit the form.","inputSchema":{"type":"object","properties":{"ref":{"type":"string","pattern":"^ax-[0-9]+$"},"paths":{"type":"array","minItems":1,"maxItems":10,"items":{"type":"string"}}},"required":["ref","paths"]}},
         {"name":"callisto_pair","description":"Get the persistent local browser pairing code (only needed for initial setup) for the Firefox/Zen tab bridge. Enter it in the extension, then explicitly share the desired existing tab.","inputSchema":{"type":"object","properties":{}}},
         {"name":"callisto_status","description":"Check whether the extension is connected and a tab is shared and active, without reading page content.","inputSchema":{"type":"object","properties":{}}},
         {"name":"callisto_browser","description":"Manage the user's browser after they grant Enable browser access in the extension. Supports tabs, screenshots, cookies, bookmarks, history and downloads. tab_select also shares that existing tab. window_close closes the specified whole window, including its tabs; use the id returned by window_create for agent-window cleanup. Cookie values are sensitive. Downloads prompt for a save location. Zen may omit inactive workspaces.","inputSchema":{"type":"object","properties":{"action":{"type":"string","enum":["tabs_list","tab_select","tab_create","window_create","window_close","agent_container","tab_close","back","forward","reload","screenshot","cookies_list","cookie_set","cookie_remove","bookmarks_search","history_search","downloads_search","download"]},"window_id":{"type":"integer","minimum":0},"tab_id":{"type":"integer","minimum":0},"url":{"type":"string"},"query":{"type":"string","maxLength":200},"agent_container":{"type":"boolean","description":"Create a new tab or window in the opt-in isolated Callisto cookie container; existing logins will not be available there."},"cookie_store_id":{"type":"string"},"name":{"type":"string"},"value":{"type":"string"}},"required":["action"]}},
@@ -171,6 +173,27 @@ fn failure(error: impl std::fmt::Display) -> Value {
 }
 async fn call_tool(bridge: &Bridge, name: &str, args: &Value) -> Result<Value> {
     match name {
+        "callisto_capabilities" => Ok(json!({"schemaVersion":1,"backend":"firefox-extension","mode":"connected","snapshot":"dom","sessionModel":"exclusive-connection","capabilities":{"trustedInput":false,"frames":false,"openShadowRoots":true,"upload":true,"existingTabAdoption":true,"cancellation":false,"handoff":false}})),
+        "callisto_upload" => {
+            use base64::Engine;
+            use tokio::io::AsyncReadExt;
+            let ref_ = args["ref"].as_str().ok_or_else(|| anyhow!("ref required"))?;
+            let paths = args["paths"].as_array().ok_or_else(|| anyhow!("paths required"))?;
+            if paths.is_empty() || paths.len() > 10 { bail!("Expected 1–10 files"); }
+            let mut remaining = 10 * 1024 * 1024usize;
+            let mut files = Vec::new();
+            for path in paths {
+                let path = std::path::Path::new(path.as_str().ok_or_else(|| anyhow!("Invalid path"))?);
+                let file = tokio::fs::File::open(path).await?;
+                if !file.metadata().await?.is_file() { bail!("Only regular files can be uploaded"); }
+                let mut bytes = Vec::new();
+                file.take((remaining + 1) as u64).read_to_end(&mut bytes).await?;
+                if bytes.len() > remaining { bail!("Uploads exceed 10 MiB"); }
+                remaining -= bytes.len();
+                files.push(json!({"name":path.file_name().and_then(|n|n.to_str()).ok_or_else(||anyhow!("Invalid filename"))?,"data":base64::engine::general_purpose::STANDARD.encode(bytes)}));
+            }
+            bridge.call("page", None, Some(&json!({"action":"upload","ref":ref_,"files":files}).to_string())).await
+        }
         "callisto_pair" => Ok(
             json!({"code":format!("127.0.0.1:{}#{}",bridge.port,bridge.token),"instructions":"Pair once in the extension. Future MCP sessions reuse this local relay automatically. Tab sharing and full browser permissions are separate controls."}),
         ),
@@ -310,12 +333,21 @@ async fn main() -> Result<()> {
         }
     });
     let operations = Arc::new(Mutex::new(()));
+    let owner = Arc::new(Mutex::new(None::<u64>));
     while let Ok((client, _)) = clients.accept().await {
         let bridge = bridge.clone();
         let operations = operations.clone();
+        let owner = owner.clone();
+        let client_id = bridge.next_id.fetch_add(1, Ordering::Relaxed);
         tokio::spawn(async move {
             let (read, write) = client.into_split();
-            let _ = serve_mcp(read, write, bridge, operations).await;
+            let _ = serve_mcp(read, write, bridge.clone(), operations.clone(), owner.clone(), client_id).await;
+            let _operation = operations.lock().await;
+            let mut lease = owner.lock().await;
+            if *lease == Some(client_id) {
+                let _ = bridge.call("release", None, None).await;
+                *lease = None;
+            }
         });
     }
     Ok(())
@@ -325,6 +357,8 @@ async fn serve_mcp<R: AsyncRead + Unpin, W: AsyncWrite + Unpin>(
     mut stdout: W,
     bridge: Arc<Bridge>,
     operations: Arc<Mutex<()>>,
+    owner: Arc<Mutex<Option<u64>>>,
+    client_id: u64,
 ) -> Result<()> {
     let mut stdin = BufReader::new(read).lines();
     while let Some(line) = stdin.next_line().await? {
@@ -345,6 +379,12 @@ async fn serve_mcp<R: AsyncRead + Unpin, W: AsyncWrite + Unpin>(
             "tools/list" => json!({"tools":tools()}),
             "tools/call" => {
                 let _operation = operations.lock().await;
+                let name = params.get("name").and_then(Value::as_str).unwrap_or("");
+                let mut lease = owner.lock().await;
+                if !matches!(name, "callisto_pair" | "callisto_status" | "callisto_capabilities") && lease.is_some() && *lease != Some(client_id) {
+                    failure(anyhow!("Browser is owned by another MCP client. Release that session before taking control."))
+                } else {
+                if !matches!(name, "callisto_pair" | "callisto_status" | "callisto_close" | "callisto_capabilities") { *lease = Some(client_id); }
                 match call_tool(
                     &bridge,
                     params.get("name").and_then(Value::as_str).unwrap_or(""),
@@ -352,8 +392,9 @@ async fn serve_mcp<R: AsyncRead + Unpin, W: AsyncWrite + Unpin>(
                 )
                 .await
                 {
-                    Ok(result) => text(result),
+                    Ok(result) => { if name == "callisto_close" { *lease = None; } text(result) },
                     Err(error) => failure(error),
+                }
                 }
             }
             _ => {
@@ -378,6 +419,24 @@ mod tests {
         connect_async,
         tungstenite::{client::IntoClientRequest, http::HeaderValue},
     };
+
+    #[tokio::test]
+    async fn another_client_cannot_release_the_owners_browser() {
+        let (bridge, _) = fixture().await;
+        let owner = Arc::new(Mutex::new(Some(7)));
+        let operations = Arc::new(Mutex::new(()));
+        let (mut client, server) = tokio::io::duplex(8192);
+        let (read, write) = tokio::io::split(server);
+        let task = tokio::spawn(serve_mcp(read, write, bridge, operations, owner.clone(), 8));
+        client.write_all(b"{\"id\":1,\"method\":\"tools/call\",\"params\":{\"name\":\"callisto_close\",\"arguments\":{}}}\n").await.unwrap();
+        let mut lines = BufReader::new(client).lines();
+        let response: Value = serde_json::from_str(&lines.next_line().await.unwrap().unwrap()).unwrap();
+        assert_eq!(response["result"]["isError"], true);
+        assert!(response.to_string().contains("owned by another MCP client"));
+        assert_eq!(*owner.lock().await, Some(7));
+        drop(lines);
+        task.await.unwrap().unwrap();
+    }
 
     async fn fixture() -> (Arc<Bridge>, String) {
         let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();

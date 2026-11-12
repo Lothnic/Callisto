@@ -38,6 +38,21 @@ try {
   assert(filled.value.text.includes('combobox "Search" =browser research'));
   assert.equal((await invoke({type:'action',method:'submit',ref:queryRef})).value.completed,true);
   assert.equal(await page.evaluate(()=>window.submitted),1);
+  await page.evaluate(()=>{
+    const host=document.createElement('div'); document.body.append(host);
+    host.attachShadow({mode:'open'}).innerHTML='<button>Shadow action</button>';
+    host.shadowRoot.querySelector('button').onclick=()=>window.shadowClicked=true;
+  });
+  const shadowSnapshot=await invoke({type:'action',method:'snapshot'});
+  const shadowRef=shadowSnapshot.value.text.split('\n').find(line=>line.includes('"Shadow action"')).match(/\[(ax-\d+)\]/)[1];
+  assert.equal((await invoke({type:'action',method:'click',ref:shadowRef})).value.completed,true);
+  assert.equal(await page.evaluate(()=>window.shadowClicked),true);
+  await page.evaluate(()=>document.body.insertAdjacentHTML('beforeend','<input type="file" aria-label="Attachment">'));
+  const uploadSnapshot=await invoke({type:'action',method:'snapshot'});
+  const uploadRef=uploadSnapshot.value.text.split('\n').find(line=>line.includes('"Attachment"')).match(/\[(ax-\d+)\]/)[1];
+  const uploaded=await invoke({type:'action',method:'page',value:JSON.stringify({action:'upload',ref:uploadRef,files:[{name:'fixture.bin',data:'AAH/'}]})});
+  assert.equal(uploaded.value.completed,true);
+  assert.deepEqual(await page.evaluate(async()=>[...new Uint8Array(await document.querySelector('input[type=file]').files[0].arrayBuffer())]),[0,1,255]);
   await invoke({type:'revoke'});
   assert.equal(await page.title(),'Site updated');
   assert.match((await invoke({type:'action',method:'click',ref:ref('Send')})).error, /sharing stopped/i);

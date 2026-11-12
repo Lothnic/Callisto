@@ -1,0 +1,33 @@
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { spawn, spawnSync } from 'node:child_process';
+import { mkdtempSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+const launcher=fileURLToPath(new URL('./callisto.mjs',import.meta.url));
+for(const backend of ['chromium','zen']) test(`launcher forwards ${backend} MCP capabilities`,async()=>{
+  const state=mkdtempSync(join(tmpdir(),'callisto-launcher-'));
+  const env={...process.env,CALLISTO_FIREFOX_STATE_DIR:state};
+  const child=spawn(process.execPath,[launcher,backend],{env,stdio:['pipe','pipe','pipe']});
+  let output='',errors=''; child.stderr.on('data',b=>errors+=b);
+  try {
+    const result=await new Promise((resolve,reject)=>{
+      const timer=setTimeout(()=>reject(new Error(`MCP timeout: ${errors}`)),10000);
+      child.on('error',e=>{clearTimeout(timer);reject(e)});
+      child.stdout.on('data',b=>{
+        output+=b;
+        if(output.includes('\n')){clearTimeout(timer);resolve(JSON.parse(output.split('\n')[0]));}
+      });
+      child.stdin.write(JSON.stringify({jsonrpc:'2.0',id:1,method:'tools/call',params:{name:'callisto_capabilities',arguments:{}}})+'\n');
+    });
+    const capabilities=JSON.parse(result.result.content[0].text);
+    assert.equal(capabilities.schemaVersion,1);
+    assert.equal(capabilities.backend,backend==='zen'?'firefox-extension':'chromium-cdp');
+  } finally {
+    child.kill('SIGTERM');
+    await new Promise(resolve=>child.once('exit',resolve));
+    if(backend==='zen') spawnSync(fileURLToPath(new URL('../packages/firefox-rs/target/release/callisto-firefox-tab-mcp',import.meta.url)),['--stop-relay'],{env,timeout:5000});
+    rmSync(state,{recursive:true,force:true});
+  }
+});

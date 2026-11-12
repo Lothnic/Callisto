@@ -57,10 +57,16 @@
     const rect = el.getBoundingClientRect(), css = getComputedStyle(el);
     return !!rect.width && !!rect.height && css.display !== 'none' && css.visibility === 'visible' && !el.closest('[hidden],[inert],[aria-hidden="true"]');
   }
+  function* elements(root, selector) {
+    for (const el of root.querySelectorAll('*')) {
+      if (el.matches(selector)) yield el;
+      if (el.shadowRoot) yield* elements(el.shadowRoot, selector);
+    }
+  }
   function snapshot() {
     current = new Map();
     const lines = [];
-    for (const el of document.querySelectorAll('button,a[href],input,textarea,select,[role],h1,h2,h3,h4,h5,h6')) {
+    for (const el of elements(document, 'button,a[href],input,textarea,select,[role],h1,h2,h3,h4,h5,h6')) {
       if (lines.length >= 400) break;
       const r = role(el);
       if (!r || !visible(el)) continue;
@@ -94,7 +100,12 @@
     if ([a.x-b.x,a.y-b.y,a.width-b.width,a.height-b.height].some(n => Math.abs(n) > .25)) throw new Error('Target is moving.');
     const x = Math.max(0,b.left) + (Math.min(innerWidth,b.right)-Math.max(0,b.left))/2;
     const y = Math.max(0,b.top) + (Math.min(innerHeight,b.bottom)-Math.max(0,b.top))/2;
-    const hit = document.elementFromPoint(x,y);
+    let hit = document.elementFromPoint(x,y);
+    while (hit?.shadowRoot) {
+      const inner = hit.shadowRoot.elementFromPoint(x,y);
+      if (!inner || inner === hit) break;
+      hit = inner;
+    }
     if (!hit || !(hit === el || el.contains(hit))) throw new Error('Target is covered or not receiving events.');
     if (!enabled) throw new Error('Sharing stopped.');
     if (!el.isConnected || !visible(el)) throw new Error('Target changed before the action.');
@@ -134,7 +145,7 @@
             const deadline=Date.now()+2000;
             while (!target) {
               if(!enabled)throw new Error('Sharing stopped.');
-              const matches=[...document.querySelectorAll('button,a[href],input,textarea,select,[role]')].filter(el=>visible(el) && role(el)===args.role && name(el)===args.name);
+              const matches=[...elements(document,'button,a[href],input,textarea,select,[role]')].filter(el=>visible(el) && role(el)===args.role && name(el)===args.name);
               if(matches.length>1)throw new Error('Role locator must match exactly one visible element.');
               if(matches.length===1){target=reference(matches[0]);break;}
               if(Date.now()>=deadline)throw new Error('No visible element matched the exact role and name within 2 seconds.');
@@ -144,7 +155,20 @@
           return handle({type:'action',method:args.action,ref:target,value:args.value});
         }
         const el = await actionable(args.ref,args.action);
-        if (args.action === 'hover') {
+        if (args.action === 'upload') {
+          if (!el.matches('input[type=file]') || !Array.isArray(args.files) || !args.files.length || args.files.length>10) throw new Error('Expected file input and 1–10 files.');
+          if (!el.multiple && args.files.length>1) throw new Error('This input accepts only one file.');
+          const transfer = new DataTransfer(); let total=0;
+          for (const file of args.files) {
+            if (typeof file.name!=='string' || typeof file.data!=='string' || file.data.length>14000000) throw new Error('Invalid file.');
+            const bytes=Uint8Array.from(atob(file.data),c=>c.charCodeAt(0)); total+=bytes.length;
+            if(total>10*1024*1024)throw new Error('Uploads exceed 10 MiB.');
+            transfer.items.add(new File([bytes],file.name,{type:'application/octet-stream'}));
+          }
+          el.files=transfer.files;
+          el.dispatchEvent(new Event('input',{bubbles:true,composed:true}));
+          el.dispatchEvent(new Event('change',{bubbles:true}));
+        } else if (args.action === 'hover') {
           const r = el.getBoundingClientRect(), options = {bubbles:true,clientX:r.x+r.width/2,clientY:r.y+r.height/2};
           for (const type of ['pointerover','pointerenter','pointermove']) el.dispatchEvent(new PointerEvent(type,options));
           for (const type of ['mouseover','mouseenter','mousemove']) el.dispatchEvent(new MouseEvent(type,options));

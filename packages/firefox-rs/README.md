@@ -86,7 +86,11 @@ and credential stable across restarts. `callisto-firefox-tab-mcp --stop-relay`
 stops it; the next MCP connection starts it again. `--relay` runs it in the
 foreground for diagnostics. This relay implementation currently supports Unix
 hosts. All MCP clients currently share one controlled tab and their individual
-actions are serialized; named per-agent sessions are not implemented.
+actions are serialized. The relay now grants an exclusive lease to one MCP
+connection when it first requests page/browser control. Other clients may check
+status or pair, but cannot act, retarget or release its browser. Closing that
+session or disconnecting releases its lease and tab; the next client must select
+or share a tab again. Named concurrent per-agent tab sessions are not implemented.
 
 The persistent credential is a loopback bearer secret stored in the private
 relay file and extension local storage. It is not browse's ECDH/HMAC code
@@ -179,10 +183,17 @@ the add-on settings when needed.
 value, checkbox state, bounded visible body text and text search. The page must
 be active. Input is synthetic; sites can reject it or behave differently.
 
+`callisto_upload` accepts a visible file input ref and explicit local paths
+(1–10 regular files, 10 MiB total). It sets a synthetic FileList and emits input
+and change events; page handlers may upload immediately, without form submission.
+Directory inputs and native file dialogs are unsupported. This path has a
+disposable Chromium DOM test; real Firefox upload coverage remains outstanding.
+
 This is **not browse parity**. There is no arbitrary Playwright `execute`,
-trusted input, file upload, network interception, frame targeting, protected
+trusted input, network interception, frame targeting, protected
 secret store, human-handoff lifecycle, independent agent
-sessions. The snapshot is a limited DOM view; it omits frames, shadow DOM and
+sessions. The snapshot is a limited DOM view; it traverses open shadow roots but
+omits frames, closed shadow roots and
 some text. Password input values are redacted, but other sensitive page content
 may be visible. MCP cancellation during in-flight actions is not implemented.
 `callisto_status` reports browser permission state and known capability gaps.

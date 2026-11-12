@@ -66,8 +66,14 @@ try:
  p=client()
  assert value(tool('callisto_pair'))['code'] == pair
  assert value(tool('callisto_status'))['connected']
- assert value(tool('callisto_status'))['sharing']
- print('new MCP client reuses the live paired browser: verified')
+ for i in range(100):
+  if not value(tool('callisto_status'))['sharing']: break
+  time.sleep(.01)
+ assert not value(tool('callisto_status'))['sharing']
+ tabs=value(tool('callisto_browser',{'action':'tabs_list'}))['tabs']
+ value(tool('callisto_browser',{'action':'tab_select','tab_id':next(tab['id'] for tab in tabs if tab['active'])}))
+ snapshot=value(tool('callisto_snapshot'))
+ print('new MCP client reuses pairing and explicitly reacquires the released tab: verified')
  check=re.search(r'\[(ax-\d+)\] checkbox "Accept"',snapshot['text']).group(1)
  choice=re.search(r'\[(ax-\d+)\] combobox "Choice"',snapshot['text']).group(1)
  assert value(tool('callisto_page',{'action':'check','ref':check,'checked':True}))['completed']

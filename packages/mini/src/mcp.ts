@@ -6,6 +6,10 @@ import * as z from 'zod/v4'
 import { Mini, Page, type Snapshot } from './index.js'
 
 const server = new McpServer({ name: 'callisto-mcp-server', version: '0.1.0' })
+server.registerTool('callisto_capabilities', {
+  description: 'Report backend capabilities without starting a browser.',
+  inputSchema: {},
+}, async () => success({schemaVersion:1,backend:'chromium-cdp',mode:process.env.CALLISTO_MCP_BROWSER ?? 'isolated',snapshot:'accessibility',sessionModel:'per-process',capabilities:{trustedInput:true,frames:'same-origin',openShadowRoots:false,upload:false,existingTabAdoption:false,cancellation:true,handoff:process.env.CALLISTO_MCP_BROWSER==='connected'}}))
 let mini: Mini | undefined
 let queue: Promise<void> = Promise.resolve()
 let shuttingDown = false
