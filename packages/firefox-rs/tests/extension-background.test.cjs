@@ -17,7 +17,7 @@ function fixture(executeScript = async () => {}, siteAccess = false, saved = {})
   }
   const browser = {
     storage:{local:{get:async () => ({...saved}),set:async values => {Object.assign(saved,values);},remove:async key => {delete saved[key];}}},
-    webNavigation:{onDOMContentLoaded:{addListener(fn){domListener=fn;}}},
+    webNavigation:{getAllFrames:async()=>[{frameId:0,parentFrameId:-1},{frameId:7,parentFrameId:0}],onDOMContentLoaded:{addListener(fn){domListener=fn;}}},
     runtime:{onMessage:{addListener(fn) { listener = fn; }}},
     menus:{create(){},onClicked:{addListener(fn){ menuListener = fn; }}},
     browserAction:{setBadgeText:async () => {}},
@@ -38,6 +38,42 @@ function fixture(executeScript = async () => {}, siteAccess = false, saved = {})
 }
 const code = `127.0.0.1:1234#${'a'.repeat(64)}`;
 
+test('a runtime without the session protocol is rejected instead of silently sharing targets',async()=>{
+  const saved={};const {listener,Socket}=fixture(async()=>{},false,saved);
+  const pairing=listener({type:'pair',code});await new Promise(setImmediate);
+  Socket.last.open();await Socket.last.receive({type:'paired',protocol:1});
+  assert.match((await pairing).message,/protocol mismatch/);
+  assert.equal(saved.callistoPairing,undefined);
+});
+
+test('agent sessions keep distinct tabs and cannot retarget or release each other',async()=>{
+  const {listener,Socket,messages,browser}=fixture(async()=>{},true);
+  browser.tabs.get=async id=>({id,active:true,windowId:id===42?1:2});
+  browser.tabs.query=async options=>[{id:options?.windowId===2?43:42,active:true,windowId:options?.windowId||1}];
+  browser.tabs.update=async id=>({id,active:true,windowId:id===42?1:2});
+  browser.windows={update:async()=>{}};
+  const targets=[];
+  browser.tabs.sendMessage=async(id,message)=>{if(message.type==='action'){targets.push(id);return {value:{tab:id}};}return {value:true};};
+  const pairing=listener({type:'pair',code});await new Promise(setImmediate);
+  const ws=Socket.last;ws.open();await ws.receive({type:'paired',protocol:2});await pairing;
+  await listener({type:'share'});
+  await ws.receive({id:1,session:101,method:'snapshot'});
+  assert.equal(messages.at(-1).result.tab,42);
+  await ws.receive({id:2,session:202,method:'browser',value:JSON.stringify({action:'tab_select',tab_id:43})});
+  assert(!messages.at(-1).error);
+  await ws.receive({id:3,session:101,method:'snapshot'});
+  assert.equal(messages.at(-1).result.tab,42);
+  await ws.receive({id:4,session:202,method:'browser',value:JSON.stringify({action:'tab_select',tab_id:42})});
+  assert.match(messages.at(-1).error,/owned by another agent/);
+  await ws.receive({id:5,session:202,method:'release_session'});
+  await ws.receive({id:6,session:101,method:'status'});
+  assert.equal(messages.at(-1).result.sharing,true);
+  await listener({type:'stop'});
+  await ws.receive({id:7,session:101,method:'status'});
+  assert.equal(messages.at(-1).result.sharing,false);
+  assert.deepEqual(targets,[42,42]);
+});
+
 test('pairing requires server confirmation and stop prevents further sharing', async () => {
   const {listener,Socket,messages} = fixture();
   const connecting = listener({type:'pair',code});
@@ -46,11 +82,11 @@ test('pairing requires server confirmation and stop prevents further sharing', a
   ws.open();
   assert.equal(messages[0].type,'pair');
   assert.match((await listener({type:'share'})).message,/Connect first/);
-  await ws.receive({type:'paired'});
+  await ws.receive({type:'paired',protocol:2});
   assert.match((await connecting).message,/Connected/);
   assert.match((await listener({type:'share'})).message,/shared/);
   await ws.receive({id:1,method:'status'});
-  assert.deepEqual(messages.at(-1).result,{connected:true,sharing:true,active:true,ready:true,continuous:false,browserAccess:false,capabilities:{trustedInput:false,frames:false,playwrightExecution:false}});
+  assert.deepEqual(messages.at(-1).result,{connected:true,sharing:true,active:true,ready:true,continuous:false,browserAccess:false,capabilities:{trustedInput:false,frames:'same-origin',playwrightExecution:false}});
   await listener({type:'stop'});
   assert.match((await listener({type:'status'})).message,/Connected/);
 });
@@ -70,7 +106,7 @@ test('stopping while injection is in progress does not leave a shared tab', asyn
   const connecting = listener({type:'pair',code});
   await new Promise(setImmediate);
   Socket.last.open();
-  Socket.last.receive({type:'paired'});
+  Socket.last.receive({type:'paired',protocol:2});
   await connecting;
   const sharing = listener({type:'share'});
   await new Promise(setImmediate);
@@ -85,7 +121,7 @@ test('context menu shares the current page after pairing', async () => {
   const connecting = listener({type:'pair',code});
   await new Promise(setImmediate);
   Socket.last.open();
-  Socket.last.receive({type:'paired'});
+  Socket.last.receive({type:'paired',protocol:2});
   await connecting;
   await menuListener({menuItemId:'callisto-share'}, {id:42});
   await Socket.last.receive({id:1,method:'status'});
@@ -96,7 +132,7 @@ test('navigation is denied without optional permission', async () => {
   const {listener,Socket,messages} = fixture();
   const connecting = listener({type:'pair',code});
   await new Promise(setImmediate);
-  Socket.last.open(); Socket.last.receive({type:'paired'}); await connecting;
+  Socket.last.open(); Socket.last.receive({type:'paired',protocol:2}); await connecting;
   await listener({type:'share'});
   await Socket.last.receive({id:4,method:'navigate',value:'https://example.com'});
   assert.match(messages.at(-1).error,/optional website permission/);
@@ -106,7 +142,7 @@ test('with optional permission, a shared tab reconnects after navigation', async
   const {listener,updateListener,Socket,messages} = fixture(async () => {},true);
   const connecting = listener({type:'pair',code});
   await new Promise(setImmediate);
-  Socket.last.open(); Socket.last.receive({type:'paired'}); await connecting;
+  Socket.last.open(); Socket.last.receive({type:'paired',protocol:2}); await connecting;
   await listener({type:'share'});
   await Socket.last.receive({id:4,method:'navigate',value:'https://example.com'});
   assert.equal(messages.at(-1).result.navigationStarted,true);
@@ -123,7 +159,7 @@ test('with optional permission, a shared tab reconnects after navigation', async
   const {listener,Socket,messages} = fixture();
   const connecting = listener({type:'pair',code});
   await new Promise(setImmediate);
-  Socket.last.open(); Socket.last.receive({type:'paired'}); await connecting;
+  Socket.last.open(); Socket.last.receive({type:'paired',protocol:2}); await connecting;
   await Socket.last.receive({id:4,method:'browser',value:JSON.stringify({action:'tabs_list'})});
   assert.match(messages.at(-1).error,/Enable browser access/);
  });
@@ -131,7 +167,7 @@ test('with optional permission, a shared tab reconnects after navigation', async
   const {listener,Socket,messages} = fixture(async () => {},true);
   const connecting = listener({type:'pair',code});
   await new Promise(setImmediate);
-  Socket.last.open(); Socket.last.receive({type:'paired'}); await connecting;
+  Socket.last.open(); Socket.last.receive({type:'paired',protocol:2}); await connecting;
   await Socket.last.receive({id:4,method:'browser',value:JSON.stringify({action:'tabs_list'})});
   assert.equal(messages.at(-1).result.tabs[0].id,42);
  });
@@ -141,7 +177,7 @@ test('saved browser pairing reconnects after extension startup without another c
  const {Socket,listener,messages}=fixture(async () => {},false,saved);
  await new Promise(setImmediate);
  assert(Socket.last);
- Socket.last.open(); await Socket.last.receive({type:'paired'});
+ Socket.last.open(); await Socket.last.receive({type:'paired',protocol:2});
  assert.equal(messages[0].token,'a'.repeat(64));
  assert.match((await listener({type:'status'})).message,/Connected/);
  await listener({type:'forget'});
@@ -152,7 +188,7 @@ test('saved browser pairing reconnects after extension startup without another c
 test('successful click navigation is not mistaken for revoked sharing', async () => {
  const {listener,Socket,messages,updateListener,browser} = fixture(async () => {},true);
  const connecting=listener({type:'pair',code});await new Promise(setImmediate);
- Socket.last.open();await Socket.last.receive({type:'paired'});await connecting;
+ Socket.last.open();await Socket.last.receive({type:'paired',protocol:2});await connecting;
  await listener({type:'share'});
  browser.tabs.sendMessage=async (_id,m)=>{
   if(m.type==='action' && m.method==='click') { updateListener(42,{status:'loading'});return {value:{completed:true}}; }
@@ -166,7 +202,7 @@ test('successful click navigation is not mistaken for revoked sharing', async ()
 test('user revocation is still rejected when an action acknowledges completion',async()=>{
  const {listener,Socket,messages,browser}=fixture(async()=>{},true);
  const connecting=listener({type:'pair',code});await new Promise(setImmediate);
- Socket.last.open();await Socket.last.receive({type:'paired'});await connecting;await listener({type:'share'});
+ Socket.last.open();await Socket.last.receive({type:'paired',protocol:2});await connecting;await listener({type:'share'});
  browser.tabs.sendMessage=async(_id,m)=>{if(m.type==='action'){await listener({type:'stop'});return {value:{completed:true}};}return {value:true}};
  await Socket.last.receive({id:90,method:'click',ref:'ax-1'});
  assert.match(messages.at(-1).error,/sharing changed during the action/i);
@@ -174,14 +210,14 @@ test('user revocation is still rejected when an action acknowledges completion',
 test('page becomes ready at DOMContentLoaded without waiting for resource completion',async()=>{
  const {listener,Socket,messages,updateListener,domListener}=fixture(async()=>{},true);
  const connecting=listener({type:'pair',code});await new Promise(setImmediate);
- Socket.last.open();await Socket.last.receive({type:'paired'});await connecting;await listener({type:'share'});
+ Socket.last.open();await Socket.last.receive({type:'paired',protocol:2});await connecting;await listener({type:'share'});
  updateListener(42,{status:'loading'});domListener({tabId:42,frameId:0});await new Promise(setImmediate);
  await Socket.last.receive({id:91,method:'status'});assert.equal(messages.at(-1).result.ready,true);
 });
 test('batch returns one final snapshot and refuses to continue after revocation',async()=>{
  const {listener,Socket,messages,browser}=fixture(async()=>{},true);
  const connecting=listener({type:'pair',code});await new Promise(setImmediate);
- Socket.last.open();await Socket.last.receive({type:'paired'});await connecting;await listener({type:'share'});
+ Socket.last.open();await Socket.last.receive({type:'paired',protocol:2});await connecting;await listener({type:'share'});
  await Socket.last.receive({id:92,method:'batch',value:JSON.stringify([{action:'fill_role',role:'textbox',name:'Search',value:'demo'},{action:'submit_role',role:'textbox',name:'Search'}])});
  assert.equal(messages.at(-1).result.completed,2);assert(messages.at(-1).result.snapshot);
  let actions=0;browser.tabs.sendMessage=async(_id,m)=>{if(m.type==='action'){actions++;await listener({type:'stop'});return {value:{completed:true}}}return {value:true}};
@@ -191,13 +227,13 @@ test('batch returns one final snapshot and refuses to continue after revocation'
 
 test('control stays within the selected window when another window is focused',async()=>{
  const {listener,Socket,messages,browser}=fixture(async()=>{},true);
- const connecting=listener({type:'pair',code});await new Promise(setImmediate);Socket.last.open();await Socket.last.receive({type:'paired'});await connecting;await listener({type:'share'});
+ const connecting=listener({type:'pair',code});await new Promise(setImmediate);Socket.last.open();await Socket.last.receive({type:'paired',protocol:2});await connecting;await listener({type:'share'});
  browser.tabs.query=async options=>options.windowId===1?[{id:42,active:true,windowId:1}]:[{id:99,active:true,windowId:2}];
  await Socket.last.receive({id:94,method:'click',ref:'ax-1'});assert.equal(messages.at(-1).error,undefined);
 });
 test('initial about:blank navigation is retried before sharing',async()=>{
  let attempts=0;const {listener,Socket,browser}=fixture(async()=>{if(++attempts===1)throw new Error('Missing host permission for the tab')},true);
- const connecting=listener({type:'pair',code});await new Promise(setImmediate);Socket.last.open();await Socket.last.receive({type:'paired'});await connecting;
+ const connecting=listener({type:'pair',code});await new Promise(setImmediate);Socket.last.open();await Socket.last.receive({type:'paired',protocol:2});await connecting;
  browser.tabs.get=async id=>({id,active:true,windowId:1,url:'about:blank',status:'loading'});
  assert.match((await listener({type:'share'})).message,/tab is shared/);assert.equal(attempts,2);
 });

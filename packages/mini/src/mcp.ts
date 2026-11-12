@@ -6,6 +6,10 @@ import * as z from 'zod/v4'
 import { Mini, Page, type Snapshot } from './index.js'
 
 const server = new McpServer({ name: 'callisto-mcp-server', version: '0.1.0' })
+server.registerTool('callisto_capabilities', {
+  description: 'Report backend capabilities without starting a browser.',
+  inputSchema: {},
+}, async () => success({schemaVersion:1,backend:'chromium-cdp',mode:process.env.CALLISTO_MCP_BROWSER ?? 'isolated',snapshot:'accessibility',sessionModel:process.env.CALLISTO_MCP_BROWSER==='attached'?'pinned-target':'per-process',capabilities:{trustedInput:true,frames:'same-origin',openShadowRoots:false,upload:false,existingTabAdoption:process.env.CALLISTO_MCP_BROWSER==='attached',cancellation:true,handoff:process.env.CALLISTO_MCP_BROWSER==='connected'}}))
 let mini: Mini | undefined
 let queue: Promise<void> = Promise.resolve()
 let shuttingDown = false
@@ -27,7 +31,10 @@ async function browser(): Promise<Mini> {
       mini = await Mini.connectBrowse({ allowedOrigins })
     } else if (mode === 'isolated') {
       mini = await Mini.launch({ headless: process.env.CALLISTO_MCP_HEADLESS !== '0' })
-    } else throw new Error('CALLISTO_MCP_BROWSER must be isolated or connected')
+    } else if(mode==='attached') {
+      if(!process.env.CALLISTO_CDP_ENDPOINT || !process.env.CALLISTO_CDP_TARGET)throw new Error('Attached mode requires CALLISTO_CDP_ENDPOINT and CALLISTO_CDP_TARGET')
+      mini=await Mini.connectCDP({endpoint:process.env.CALLISTO_CDP_ENDPOINT,targetId:process.env.CALLISTO_CDP_TARGET})
+    } else throw new Error('CALLISTO_MCP_BROWSER must be isolated, connected or attached')
   }
   return mini
 }

@@ -6,19 +6,28 @@
   const nodeRefs = new WeakMap();
   let current = new Map();
   let enabled = true;
+  let handoff = null;
+  function finishHandoff(error) {
+    if (!handoff) return;
+    const pending=handoff; handoff=null;
+    clearTimeout(pending.timer); pending.banner.remove();
+    pending.resolve(error ? {error} : {value:{confirmed:true}});
+  }
   const titlePrefix = '[Callisto] ';
+  const hasTitleMarker = title => title === titlePrefix.trimEnd() || title.startsWith(titlePrefix);
+  const withoutTitleMarker = title => title === titlePrefix.trimEnd() ? '' : title.startsWith(titlePrefix) ? title.slice(titlePrefix.length) : title;
   let marked = false;
   const titleObserver = new MutationObserver(() => {
-    if (marked && !document.title.startsWith(titlePrefix)) document.title = titlePrefix + document.title;
+    if (marked && !hasTitleMarker(document.title)) document.title = titlePrefix + document.title;
   });
   function mark() {
     marked = true;
-    if (!document.title.startsWith(titlePrefix)) document.title = titlePrefix + document.title;
+    if (!hasTitleMarker(document.title)) document.title = titlePrefix + document.title;
     titleObserver.observe(document.head,{childList:true,subtree:true,characterData:true});
   }
   function unmark() {
     marked = false; titleObserver.disconnect();
-    if (document.title.startsWith(titlePrefix)) document.title = document.title.slice(titlePrefix.length);
+    document.title = withoutTitleMarker(document.title);
   }
   function newRef() {
     const bits = crypto.getRandomValues(new Uint32Array(2));
@@ -48,6 +57,10 @@
     return '';
   }
   const clean = text => String(text || '').replace(/\s+/g,' ').trim();
+  function composedClosest(el,selector) {
+    for(let node=el;node;node=node.parentElement||node.getRootNode()?.host)if(node.matches(selector))return node;
+    return null;
+  }
   function name(el) {
     const labelled = el.getAttribute('aria-labelledby');
     const labels = labelled?.split(/\s+/).map(id => clean(document.getElementById(id)?.textContent)).filter(Boolean).join(' ');
@@ -55,12 +68,18 @@
   }
   function visible(el) {
     const rect = el.getBoundingClientRect(), css = getComputedStyle(el);
-    return !!rect.width && !!rect.height && css.display !== 'none' && css.visibility === 'visible' && !el.closest('[hidden],[inert],[aria-hidden="true"]');
+    return !!rect.width && !!rect.height && css.display !== 'none' && css.visibility === 'visible' && !composedClosest(el,'[hidden],[inert],[aria-hidden="true"]');
+  }
+  function* elements(root, selector) {
+    for (const el of root.querySelectorAll('*')) {
+      if (el.matches(selector)) yield el;
+      if (el.shadowRoot) yield* elements(el.shadowRoot, selector);
+    }
   }
   function snapshot() {
     current = new Map();
     const lines = [];
-    for (const el of document.querySelectorAll('button,a[href],input,textarea,select,[role],h1,h2,h3,h4,h5,h6')) {
+    for (const el of elements(document, 'button,a[href],input,textarea,select,[role],h1,h2,h3,h4,h5,h6')) {
       if (lines.length >= 400) break;
       const r = role(el);
       if (!r || !visible(el)) continue;
@@ -77,7 +96,7 @@
     const warnings = ['Experimental DOM-derived snapshot; page text and frames may be omitted.'];
     if (document.querySelector('iframe,frame')) warnings.push('Iframe contents are not included.');
     if (lines.length >= 400) warnings.push('Snapshot is limited to 400 elements.');
-    return {url:location.href,title:document.title.startsWith(titlePrefix) ? document.title.slice(titlePrefix.length) : document.title,text:lines.join('\n').slice(0,12000),warnings};
+    return {url:location.href,title:withoutTitleMarker(document.title),text:lines.join('\n').slice(0,12000),warnings};
   }
   async function actionable(ref, action) {
     if (!enabled) throw new Error('Sharing stopped.');
@@ -85,30 +104,87 @@
     if (!el || !el.isConnected) throw new Error('Unknown or stale reference; capture a new snapshot.');
     if (document.visibilityState !== 'visible') throw new Error('The shared tab is not visible.');
     if (!visible(el)) throw new Error('Target is not visible.');
-    if (el.matches(':disabled') || el.closest('[aria-disabled="true"]')) throw new Error('Target is disabled.');
+    if (el.matches(':disabled') || composedClosest(el,'[aria-disabled="true"]')) throw new Error('Target is disabled.');
     if (action === 'fill' && (el.readOnly || el.getAttribute('aria-readonly') === 'true' || !(el.matches('input,textarea') || el.isContentEditable))) throw new Error('Target is not editable.');
     el.scrollIntoView({block:'center',inline:'center'});
+    const frames=[];let view=window;
+    while(view!==view.top) {
+      let host;try{host=view.frameElement;}catch{}
+      if(!host)throw new Error('Cross-origin frame input is unsupported; parent hit testing cannot be verified.');
+      const parent=host.ownerDocument.defaultView;
+      for(let ancestor=host;ancestor;ancestor=ancestor.parentElement||ancestor.getRootNode()?.host){
+        const css=parent.getComputedStyle(ancestor);
+        if(css.transform!=='none' || (css.zoom && !['1','normal'].includes(css.zoom)))throw new Error('Transformed frame input is unsupported.');
+      }
+      frames.push({host,parent,rect:host.getBoundingClientRect()});view=parent;
+    }
     const a = el.getBoundingClientRect();
     await new Promise(resolve => setTimeout(resolve, 75));
     const b = el.getBoundingClientRect();
     if ([a.x-b.x,a.y-b.y,a.width-b.width,a.height-b.height].some(n => Math.abs(n) > .25)) throw new Error('Target is moving.');
     const x = Math.max(0,b.left) + (Math.min(innerWidth,b.right)-Math.max(0,b.left))/2;
     const y = Math.max(0,b.top) + (Math.min(innerHeight,b.bottom)-Math.max(0,b.top))/2;
-    const hit = document.elementFromPoint(x,y);
+    let hit = document.elementFromPoint(x,y);
+    while (hit?.shadowRoot) {
+      const inner = hit.shadowRoot.elementFromPoint(x,y);
+      if (!inner || inner === hit) break;
+      hit = inner;
+    }
     if (!hit || !(hit === el || el.contains(hit))) throw new Error('Target is covered or not receiving events.');
+    let px=x,py=y;
+    for(const {host,parent,rect} of frames) {
+      const now=host.getBoundingClientRect();
+      if(!host.isConnected || ['x','y','width','height'].some(key=>Math.abs(now[key]-rect[key])>.25))throw new Error('Frame is moving or detached.');
+      px+=now.left+host.clientLeft;py+=now.top+host.clientTop;
+      let covering=parent.document.elementFromPoint(px,py);
+      while(covering?.shadowRoot){const inner=covering.shadowRoot.elementFromPoint(px,py);if(!inner || inner===covering)break;covering=inner;}
+      if(covering!==host)throw new Error('Frame is covered or outside the parent viewport.');
+    }
     if (!enabled) throw new Error('Sharing stopped.');
     if (!el.isConnected || !visible(el)) throw new Error('Target changed before the action.');
     return el;
   }
   browser.runtime.onMessage.addListener(async function handle(message) {
     if (message.type === 'ping') { enabled = true; mark(); return {value:true}; }
-    if (message.type === 'revoke') { enabled = false; current.clear(); unmark(); return {value:true}; }
+    if (message.type === 'revoke') { enabled = false; finishHandoff('Sharing stopped during human handoff.'); current.clear(); unmark(); return {value:true}; }
+    if (message.type === 'handoff') {
+      if (!enabled || handoff) return {error:'Sharing stopped or a handoff is already pending.'};
+      if (typeof message.prompt!=='string' || !message.prompt.trim() || message.prompt.length>1000 || !Number.isInteger(message.timeout_ms) || message.timeout_ms<1000 || message.timeout_ms>120000) return {error:'Invalid handoff prompt or timeout.'};
+      return new Promise(resolve=>{
+        const banner=document.createElement('div');
+        banner.setAttribute('data-callisto-handoff','');
+        banner.setAttribute('role','status');
+        banner.style.cssText='position:fixed;top:12px;right:12px;z-index:2147483647;max-width:360px;padding:16px;background:#102333;color:white;border:2px solid #55aaff;border-radius:8px;font:14px system-ui;box-shadow:0 4px 24px #0008';
+        const title=document.createElement('strong'); title.textContent='Callisto needs your help';
+        const prompt=document.createElement('p'); prompt.textContent=message.prompt;
+        const button=document.createElement('button');button.textContent='Continue with agent';
+        button.addEventListener('click',event=>{if(event.isTrusted)finishHandoff();});
+        banner.append(title,prompt,button);document.documentElement.append(banner);
+        handoff={banner,resolve,timer:setTimeout(()=>finishHandoff('Human handoff timed out; inspect the page before continuing.'),message.timeout_ms)};
+      });
+    }
     if (message.type !== 'action') return undefined;
     try {
       if (!enabled) throw new Error('Sharing stopped.');
+      if (handoff && message.method !== 'snapshot') throw new Error('Human handoff is pending; wait for confirmation.');
       if (message.method === 'snapshot') return {value:snapshot()};
       if (message.method === 'page') {
         const args = JSON.parse(message.value);
+        if (args.action === 'press') {
+          if(typeof args.key!=='string' || args.key.length>40)throw new Error('Invalid key.');
+          const parts=args.key.split('+'),key=parts.pop();
+          const modifiers={Control:'ctrlKey',Alt:'altKey',Shift:'shiftKey',Meta:'metaKey'};
+          if(!key || parts.some(part=>!modifiers[part]))throw new Error('Unsupported key chord.');
+          let focused=document.activeElement;
+          while(focused?.shadowRoot?.activeElement)focused=focused.shadowRoot.activeElement;
+          if(!focused || focused===document.body)throw new Error('Focus a control with fill or click before pressing a key.');
+          const target=await actionable(reference(focused),'press');
+          const options={key,bubbles:true,cancelable:true,composed:true};
+          for(const part of parts)options[modifiers[part]]=true;
+          target.dispatchEvent(new KeyboardEvent('keydown',options));
+          target.dispatchEvent(new KeyboardEvent('keyup',options));
+          return {value:{completed:true,synthetic:true,defaultBrowserBehavior:false}};
+        }
         if (args.action === 'text' || args.action === 'find') {
           const text = document.body.innerText;
           if (args.action === 'text') return {value:{text:text.slice(0,30000),totalChars:text.length,truncated:text.length>30000}};
@@ -134,7 +210,7 @@
             const deadline=Date.now()+2000;
             while (!target) {
               if(!enabled)throw new Error('Sharing stopped.');
-              const matches=[...document.querySelectorAll('button,a[href],input,textarea,select,[role]')].filter(el=>visible(el) && role(el)===args.role && name(el)===args.name);
+              const matches=[...elements(document,'button,a[href],input,textarea,select,[role]')].filter(el=>visible(el) && role(el)===args.role && name(el)===args.name);
               if(matches.length>1)throw new Error('Role locator must match exactly one visible element.');
               if(matches.length===1){target=reference(matches[0]);break;}
               if(Date.now()>=deadline)throw new Error('No visible element matched the exact role and name within 2 seconds.');
@@ -144,7 +220,20 @@
           return handle({type:'action',method:args.action,ref:target,value:args.value});
         }
         const el = await actionable(args.ref,args.action);
-        if (args.action === 'hover') {
+        if (args.action === 'upload') {
+          if (!el.matches('input[type=file]') || !Array.isArray(args.files) || !args.files.length || args.files.length>10) throw new Error('Expected file input and 1–10 files.');
+          if (!el.multiple && args.files.length>1) throw new Error('This input accepts only one file.');
+          const transfer = new DataTransfer(); let total=0;
+          for (const file of args.files) {
+            if (typeof file.name!=='string' || typeof file.data!=='string' || file.data.length>14000000) throw new Error('Invalid file.');
+            const bytes=Uint8Array.from(atob(file.data),c=>c.charCodeAt(0)); total+=bytes.length;
+            if(total>10*1024*1024)throw new Error('Uploads exceed 10 MiB.');
+            transfer.items.add(new File([bytes],file.name,{type:'application/octet-stream'}));
+          }
+          el.files=transfer.files;
+          el.dispatchEvent(new Event('input',{bubbles:true,composed:true}));
+          el.dispatchEvent(new Event('change',{bubbles:true}));
+        } else if (args.action === 'hover') {
           const r = el.getBoundingClientRect(), options = {bubbles:true,clientX:r.x+r.width/2,clientY:r.y+r.height/2};
           for (const type of ['pointerover','pointerenter','pointermove']) el.dispatchEvent(new PointerEvent(type,options));
           for (const type of ['mouseover','mouseenter','mousemove']) el.dispatchEvent(new MouseEvent(type,options));

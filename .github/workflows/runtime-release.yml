@@ -1,0 +1,75 @@
+name: Runtime packages
+on:
+  workflow_dispatch:
+  push:
+    tags: ['v*']
+  pull_request:
+    paths: ['packages/firefox-rs/**', 'packages/mini/**', 'scripts/**', '.github/workflows/runtime-release.yml']
+permissions:
+  contents: read
+jobs:
+  mini:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm --prefix packages/mini ci
+      - run: npm --prefix packages/mini test
+      - run: npm --prefix packages/mini run build
+      - run: |
+          mkdir -p bundle/packages/mini bundle/scripts
+          cp -r packages/mini/dist bundle/packages/mini/
+          cp packages/mini/package.json packages/mini/package-lock.json bundle/packages/mini/
+          cp scripts/callisto.mjs scripts/install-release.mjs bundle/scripts/
+          cp README.md LICENSE bundle/
+          tar -czf callisto-mini.tar.gz -C bundle .
+          sha256sum callisto-mini.tar.gz > callisto-mini.tar.gz.sha256
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mini
+          path: callisto-mini.*
+  bridge:
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            platform: linux-x64
+          - os: macos-latest
+            platform: macos-arm64
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - run: cargo test --locked --manifest-path packages/firefox-rs/Cargo.toml
+      - run: cargo build --locked --release --manifest-path packages/firefox-rs/Cargo.toml --bin callisto-firefox-tab-mcp
+      - name: Package
+        env:
+          PLATFORM: ${{ matrix.platform }}
+        run: |
+          if [ "$PLATFORM" = macos-arm64 ]; then test "$(uname -m)" = arm64; fi
+          mkdir -p bundle
+          cp packages/firefox-rs/target/release/callisto-firefox-tab-mcp bundle/
+          cp packages/firefox-rs/README.md LICENSE bundle/
+          tar -czf "callisto-bridge-${PLATFORM}.tar.gz" -C bundle .
+          shasum -a 256 "callisto-bridge-${PLATFORM}.tar.gz" > "callisto-bridge-${PLATFORM}.tar.gz.sha256"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: bridge-${{ matrix.platform }}
+          path: callisto-bridge-*
+  publish:
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: [mini, bridge]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: release-assets
+          merge-multiple: true
+      - env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: gh release upload "$GITHUB_REF_NAME" release-assets/* --clobber

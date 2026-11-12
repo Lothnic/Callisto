@@ -3,6 +3,11 @@
 This crate contains two experimental Rust MCP servers. Neither is ready for a
 1.0 release or a replacement for the Chromium connected runtime.
 
+The extension currently targets Firefox 140+ desktop and compatible Zen builds.
+Read [browser data handling](../../docs/browser-data.md) before enabling access,
+and [installation and release tooling](../../docs/development-installation.md)
+for the shared launcher, packages, signing setup and current release gates.
+
 ## Existing tabs: extension bridge
 
 `callisto-firefox-tab-mcp` is intended to work with a Firefox or Zen browser
@@ -83,10 +88,22 @@ Relay state is stored in `$XDG_STATE_HOME/callisto/firefox` (default
 and Unix socket. `CALLISTO_FIREFOX_STATE_DIR` overrides the directory for tests.
 The relay holds a file lock to prevent duplicate startup and keeps its endpoint
 and credential stable across restarts. `callisto-firefox-tab-mcp --stop-relay`
-stops it; the next MCP connection starts it again. `--relay` runs it in the
-foreground for diagnostics. This relay implementation currently supports Unix
-hosts. All MCP clients currently share one controlled tab and their individual
-actions are serialized; named per-agent sessions are not implemented.
+stops it; a connected MCP proxy automatically starts a replacement. Close MCP
+clients first if you want it to remain stopped. `--relay` runs it in the
+foreground for diagnostics. This implementation currently supports Unix hosts.
+The stdio proxy survives a relay restart, reports interrupted requests without
+replaying them, and reconnects with the same pairing credential.
+
+Each MCP connection has an independent session with its own tab, frame selection
+and navigation state. A tab can belong to only one session. Selection, tab close
+and window close reject targets owned by another session. Disconnect and
+`callisto_close` release only that client's tab. The toolbar's Stop sharing
+releases every session; the popup reports the number of shared tabs. Ordinary
+actions are serialized; a human handoff releases that operation lock so other
+sessions can proceed. Input still requires the target to be active in its window.
+There are no caller-chosen persistent session names: a reconnect requires
+explicit tab selection again. Runtime and extension use protocol version 2 and
+reject an incompatible peer instead of silently sharing a global target.
 
 The persistent credential is a loopback bearer secret stored in the private
 relay file and extension local storage. It is not browse's ECDH/HMAC code
@@ -179,12 +196,46 @@ the add-on settings when needed.
 value, checkbox state, bounded visible body text and text search. The page must
 be active. Input is synthetic; sites can reject it or behave differently.
 
+`callisto_upload` accepts a visible file input ref and explicit local paths
+(1–10 regular files, 10 MiB total). It sets a synthetic FileList and emits input
+and change events; page handlers may upload immediately, without form submission.
+Directory inputs and native file dialogs are unsupported. This path has a
+disposable Chromium DOM test; real Firefox upload coverage remains outstanding.
+
+`callisto_frames` lists the controlled tab's frames. `callisto_frame` selects a
+frame and returns a fresh snapshot; subsequent page operations target it.
+Navigation resets selection to the top frame. Same-origin frame input checks
+the parent hit target and refuses covered, moving or transformed frames.
+Cross-origin frames may be readable with website permission, but input fails
+closed because parent hit testing cannot be verified. Snapshots do not inline
+all frames: select one explicitly and take fresh refs.
+
+`callisto_press` dispatches synthetic keydown and keyup events on the focused
+control. It supports JavaScript keyboard handlers and modifiers; browser default
+editing, shortcuts, Tab navigation and form submission are not emulated. Use
+fill or submit for those actions. It is not trusted keyboard input.
+
+`callisto_handoff` shows a top-page banner and waits for the user's trusted click
+on Continue with agent, with a configurable 1–120 second timeout. Input is
+blocked in that document while the banner is pending. Confirmation is not proof
+that the requested step succeeded; inspect afterward. Navigation can interrupt
+the handoff. Stop sharing removes the banner and rejects the wait. The banner
+is page UI, not a browser-chrome security boundary. A disposable Firefox test
+confirms it with a WebDriver click; a real user's production workflow remains
+to be validated.
+
+MCP cancellation notifications are consumed while a tool is running. Cancellation
+revokes sharing and releases the owning client's lease before returning an
+error. Already dispatched actions may still have completed; inspect before
+retrying. Queued requests can also cancel before acquiring the operation lock.
+Transport tests cover queue cancellation, pending request cleanup and revocation.
+
 This is **not browse parity**. There is no arbitrary Playwright `execute`,
-trusted input, file upload, network interception, frame targeting, protected
-secret store, human-handoff lifecycle, independent agent
-sessions. The snapshot is a limited DOM view; it omits frames, shadow DOM and
+trusted input, network interception, protected
+secret store or full Playwright execution. The snapshot is a limited
+DOM view; it traverses open shadow roots but omits closed shadow roots and
 some text. Password input values are redacted, but other sensitive page content
-may be visible. MCP cancellation during in-flight actions is not implemented.
+may be visible.
 `callisto_status` reports browser permission state and known capability gaps.
 
 Firefox's normal WebExtension API does not implement Chromium's debugger API.
@@ -202,7 +253,9 @@ The original title is restored when sharing stops; site title changes are
 preserved. This marker does not isolate cookies.
 
 For new isolated agent tabs/windows, choose **Enable agent containers** and
-approve the optional contextual-identities permission. The `agent_container`
+enable container creation. The contextual-identities API permission is declared
+at installation because Firefox does not support requesting it optionally;
+the button separately enables the feature and requests cookie permission. The `agent_container`
 browser action creates or reuses a Callisto-owned container; `tab_create` and
 `window_create` accept `agent_container: true` to use it. This is a separate
 cookie session, so existing logins will not appear there. Existing-tab control

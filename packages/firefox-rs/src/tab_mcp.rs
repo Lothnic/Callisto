@@ -5,7 +5,7 @@ use anyhow::{anyhow, bail, Result};
 use futures_util::{SinkExt, StreamExt};
 use serde_json::{json, Value};
 use std::{
-    collections::HashMap,
+    collections::{HashMap, VecDeque},
     sync::{
         atomic::{AtomicU64, Ordering},
         Arc,
@@ -34,10 +34,21 @@ struct Bridge {
     next_id: AtomicU64,
 }
 impl Bridge {
+    #[cfg(test)]
     async fn call(&self, method: &str, ref_: Option<&str>, value: Option<&str>) -> Result<Value> {
+        self.call_session(0, method, ref_, value).await
+    }
+    async fn call_session(
+        &self,
+        session_id: u64,
+        method: &str,
+        ref_: Option<&str>,
+        value: Option<&str>,
+    ) -> Result<Value> {
         let id = self.next_id.fetch_add(1, Ordering::Relaxed);
         let (send, recv) = oneshot::channel();
-        let message = json!({"id":id,"method":method,"ref":ref_,"value":value});
+        let message =
+            json!({"id":id,"session":session_id,"method":method,"ref":ref_,"value":value});
         {
             // Register and send while holding the connection lock so disconnect
             // cannot drain the pending table between those two operations.
@@ -49,7 +60,11 @@ impl Bridge {
                 bail!("The Firefox extension disconnected");
             }
         }
-        let result = tokio::time::timeout(Duration::from_secs(15), recv).await;
+        let result = tokio::time::timeout(
+            Duration::from_secs(if method == "handoff" { 125 } else { 15 }),
+            recv,
+        )
+        .await;
         self.pending.lock().await.remove(&id);
         match result {
             Ok(Ok(Ok(value))) => Ok(value),
@@ -98,6 +113,10 @@ async fn serve_socket(socket: TcpStream, bridge: Arc<Bridge>) {
     {
         return;
     }
+    if auth.get("protocol").and_then(Value::as_u64) != Some(2) {
+        let _=ws.send(Message::Text(json!({"type":"pairing_error","message":"Callisto protocol mismatch. Update both the browser extension and runtime."}).to_string().into())).await;
+        return;
+    }
     let (tx, mut rx) = mpsc::unbounded_channel::<Value>();
     {
         let mut connection = bridge.connection.lock().await;
@@ -105,7 +124,9 @@ async fn serve_socket(socket: TcpStream, bridge: Arc<Bridge>) {
             return;
         }
         if ws
-            .send(Message::Text(json!({"type":"paired"}).to_string().into()))
+            .send(Message::Text(
+                json!({"type":"paired","protocol":2}).to_string().into(),
+            ))
             .await
             .is_err()
         {
@@ -143,6 +164,12 @@ async fn serve_socket(socket: TcpStream, bridge: Arc<Bridge>) {
 
 fn tools() -> Value {
     json!([
+        {"name":"callisto_press","description":"Dispatch synthetic keydown/keyup on the focused control, including chords such as Control+A. For JavaScript keyboard handlers only: native editing, focus navigation, shortcuts and form submission defaults are not emulated. Use fill or submit for those operations.","inputSchema":{"type":"object","properties":{"key":{"type":"string","minLength":1,"maxLength":40}},"required":["key"]}},
+        {"name":"callisto_frames","description":"List frames in the controlled tab. Frame access depends on granted website permissions.","inputSchema":{"type":"object","properties":{}}},
+        {"name":"callisto_frame","description":"Select a frame by frame_id from callisto_frames, inject the bridge and return a fresh snapshot. Navigation resets selection. Cross-origin frame input fails closed because parent hit testing cannot be verified.","inputSchema":{"type":"object","properties":{"frame_id":{"type":"integer","minimum":0}},"required":["frame_id"]}},
+        {"name":"callisto_handoff","description":"Ask the user to complete a step in the shared page, then click Continue with agent in the Callisto banner. Confirmation is not proof of task success: inspect the page afterward. Navigation may interrupt this handoff.","inputSchema":{"type":"object","properties":{"prompt":{"type":"string","minLength":1,"maxLength":1000},"timeout_ms":{"type":"integer","minimum":1000,"maximum":120000}},"required":["prompt"]}},
+        {"name":"callisto_capabilities","description":"Report backend capabilities without reading page content.","inputSchema":{"type":"object","properties":{}}},
+        {"name":"callisto_upload","description":"Set files on a visible file input in the controlled page. Reads explicit local file paths, at most 10 files and 10 MiB total. Page input/change handlers may upload immediately. Does not submit the form.","inputSchema":{"type":"object","properties":{"ref":{"type":"string","pattern":"^ax-[0-9]+$"},"paths":{"type":"array","minItems":1,"maxItems":10,"items":{"type":"string"}}},"required":["ref","paths"]}},
         {"name":"callisto_pair","description":"Get the persistent local browser pairing code (only needed for initial setup) for the Firefox/Zen tab bridge. Enter it in the extension, then explicitly share the desired existing tab.","inputSchema":{"type":"object","properties":{}}},
         {"name":"callisto_status","description":"Check whether the extension is connected and a tab is shared and active, without reading page content.","inputSchema":{"type":"object","properties":{}}},
         {"name":"callisto_browser","description":"Manage the user's browser after they grant Enable browser access in the extension. Supports tabs, screenshots, cookies, bookmarks, history and downloads. tab_select also shares that existing tab. window_close closes the specified whole window, including its tabs; use the id returned by window_create for agent-window cleanup. Cookie values are sensitive. Downloads prompt for a save location. Zen may omit inactive workspaces.","inputSchema":{"type":"object","properties":{"action":{"type":"string","enum":["tabs_list","tab_select","tab_create","window_create","window_close","agent_container","tab_close","back","forward","reload","screenshot","cookies_list","cookie_set","cookie_remove","bookmarks_search","history_search","downloads_search","download"]},"window_id":{"type":"integer","minimum":0},"tab_id":{"type":"integer","minimum":0},"url":{"type":"string"},"query":{"type":"string","maxLength":200},"agent_container":{"type":"boolean","description":"Create a new tab or window in the opt-in isolated Callisto cookie container; existing logins will not be available there."},"cookie_store_id":{"type":"string"},"name":{"type":"string"},"value":{"type":"string"}},"required":["action"]}},
@@ -169,8 +196,104 @@ fn text(value: Value) -> Value {
 fn failure(error: impl std::fmt::Display) -> Value {
     json!({"isError":true,"content":[{"type":"text","text":error.to_string()}]})
 }
-async fn call_tool(bridge: &Bridge, name: &str, args: &Value) -> Result<Value> {
+async fn call_tool(bridge: &Bridge, session_id: u64, name: &str, args: &Value) -> Result<Value> {
     match name {
+        "callisto_press" => {
+            let key = args["key"]
+                .as_str()
+                .ok_or_else(|| anyhow!("key required"))?;
+            if key.is_empty() || key.len() > 40 {
+                bail!("Invalid key");
+            }
+            bridge
+                .call_session(
+                    session_id,
+                    "page",
+                    None,
+                    Some(&json!({"action":"press","key":key}).to_string()),
+                )
+                .await
+        }
+        "callisto_frames" => bridge.call_session(session_id, "frames", None, None).await,
+        "callisto_frame" => {
+            let frame = args["frame_id"]
+                .as_u64()
+                .ok_or_else(|| anyhow!("frame_id required"))?;
+            bridge
+                .call_session(
+                    session_id,
+                    "frame",
+                    None,
+                    Some(&json!({"frame_id":frame}).to_string()),
+                )
+                .await
+        }
+        "callisto_handoff" => {
+            let prompt = args["prompt"]
+                .as_str()
+                .ok_or_else(|| anyhow!("prompt required"))?;
+            let timeout = args
+                .get("timeout_ms")
+                .and_then(Value::as_u64)
+                .unwrap_or(60000);
+            if prompt.trim().is_empty()
+                || prompt.len() > 1000
+                || !(1000..=120000).contains(&timeout)
+            {
+                bail!("Invalid handoff prompt or timeout");
+            }
+            bridge
+                .call_session(
+                    session_id,
+                    "handoff",
+                    None,
+                    Some(&json!({"prompt":prompt,"timeout_ms":timeout}).to_string()),
+                )
+                .await
+        }
+        "callisto_capabilities" => Ok(
+            json!({"schemaVersion":1,"backend":"firefox-extension","mode":"connected","snapshot":"dom","sessionModel":"per-client-tab","capabilities":{"trustedInput":false,"frames":"same-origin","openShadowRoots":true,"upload":true,"existingTabAdoption":true,"cancellation":true,"handoff":true}}),
+        ),
+        "callisto_upload" => {
+            use base64::Engine;
+            use tokio::io::AsyncReadExt;
+            let ref_ = args["ref"]
+                .as_str()
+                .ok_or_else(|| anyhow!("ref required"))?;
+            let paths = args["paths"]
+                .as_array()
+                .ok_or_else(|| anyhow!("paths required"))?;
+            if paths.is_empty() || paths.len() > 10 {
+                bail!("Expected 1–10 files");
+            }
+            let mut remaining = 10 * 1024 * 1024usize;
+            let mut files = Vec::new();
+            for path in paths {
+                let path =
+                    std::path::Path::new(path.as_str().ok_or_else(|| anyhow!("Invalid path"))?);
+                let file = tokio::fs::File::open(path).await?;
+                if !file.metadata().await?.is_file() {
+                    bail!("Only regular files can be uploaded");
+                }
+                let mut bytes = Vec::new();
+                file.take((remaining + 1) as u64)
+                    .read_to_end(&mut bytes)
+                    .await?;
+                if bytes.len() > remaining {
+                    bail!("Uploads exceed 10 MiB");
+                }
+                remaining -= bytes.len();
+                files.push(json!({"name":path.file_name().and_then(|n|n.to_str()).ok_or_else(||anyhow!("Invalid filename"))?,"data":base64::engine::general_purpose::STANDARD.encode(bytes)}));
+            }
+            bridge
+                .call_session(
+                    session_id,
+                    "page",
+                    None,
+                    Some(&json!({"action":"upload","ref":ref_,"files":files}).to_string()),
+                )
+                .await
+        }
         "callisto_pair" => Ok(
             json!({"code":format!("127.0.0.1:{}#{}",bridge.port,bridge.token),"instructions":"Pair once in the extension. Future MCP sessions reuse this local relay automatically. Tab sharing and full browser permissions are separate controls."}),
         ),
@@ -178,13 +301,17 @@ async fn call_tool(bridge: &Bridge, name: &str, args: &Value) -> Result<Value> {
             if args.to_string().len() > 200_000 {
                 bail!("Browser arguments are too large");
             }
-            bridge.call("browser", None, Some(&args.to_string())).await
+            bridge
+                .call_session(session_id, "browser", None, Some(&args.to_string()))
+                .await
         }
         "callisto_page" => {
             if args.to_string().len() > 200_000 {
                 bail!("Page arguments are too large");
             }
-            bridge.call("page", None, Some(&args.to_string())).await
+            bridge
+                .call_session(session_id, "page", None, Some(&args.to_string()))
+                .await
         }
         "callisto_batch" => {
             let steps = args
@@ -195,15 +322,24 @@ async fn call_tool(bridge: &Bridge, name: &str, args: &Value) -> Result<Value> {
                 bail!("Expected 1–10 actions, bounded to 200,000 bytes");
             }
             bridge
-                .call("batch", None, Some(&serde_json::to_string(steps)?))
+                .call_session(
+                    session_id,
+                    "batch",
+                    None,
+                    Some(&serde_json::to_string(steps)?),
+                )
                 .await
         }
-        "callisto_snapshot" => bridge.call("snapshot", None, None).await,
+        "callisto_snapshot" => {
+            bridge
+                .call_session(session_id, "snapshot", None, None)
+                .await
+        }
         "callisto_status" => {
             if bridge.connection.lock().await.is_none() {
                 Ok(json!({"connected":false,"sharing":false,"active":false}))
             } else {
-                bridge.call("status", None, None).await
+                bridge.call_session(session_id, "status", None, None).await
             }
         }
         "callisto_navigate" => {
@@ -214,7 +350,9 @@ async fn call_tool(bridge: &Bridge, name: &str, args: &Value) -> Result<Value> {
             if url.len() > 8192 {
                 bail!("URL is too long");
             }
-            bridge.call("navigate", None, Some(url)).await
+            bridge
+                .call_session(session_id, "navigate", None, Some(url))
+                .await
         }
         "callisto_click" | "callisto_fill" | "callisto_submit" => {
             let target = args
@@ -239,7 +377,8 @@ async fn call_tool(bridge: &Bridge, name: &str, args: &Value) -> Result<Value> {
                 None
             };
             bridge
-                .call(
+                .call_session(
+                    session_id,
                     if name == "callisto_fill" {
                         "fill"
                     } else if name == "callisto_submit" {
@@ -256,7 +395,7 @@ async fn call_tool(bridge: &Bridge, name: &str, args: &Value) -> Result<Value> {
             if bridge.connection.lock().await.is_none() {
                 return Ok(json!({"released":true}));
             }
-            bridge.call("release", None, None).await
+            bridge.call_session(session_id, "release", None, None).await
         }
         _ => bail!("unknown tool: {name}"),
     }
@@ -275,15 +414,7 @@ async fn main() -> Result<()> {
         return Ok(());
     }
     if mode.as_deref() != Some("--relay") {
-        let stream = tab_relay::connect(&root).await?;
-        let (mut read, mut write) = stream.into_split();
-        let mut stdin = tokio::io::stdin();
-        let mut stdout = tokio::io::stdout();
-        tokio::select! {
-            result = tokio::io::copy(&mut stdin,&mut write) => { result?; },
-            result = tokio::io::copy(&mut read,&mut stdout) => { result?; },
-        }
-        return Ok(());
+        return proxy(tokio::io::stdin(), tokio::io::stdout(), &root).await;
     }
     let Some(_lock) = tab_relay::lock(&root)? else {
         return Ok(());
@@ -313,21 +444,82 @@ async fn main() -> Result<()> {
     while let Ok((client, _)) = clients.accept().await {
         let bridge = bridge.clone();
         let operations = operations.clone();
+        let client_id = bridge.next_id.fetch_add(1, Ordering::Relaxed);
         tokio::spawn(async move {
             let (read, write) = client.into_split();
-            let _ = serve_mcp(read, write, bridge, operations).await;
+            let _ = serve_mcp(read, write, bridge.clone(), operations.clone(), client_id).await;
+            bridge
+                .pending
+                .lock()
+                .await
+                .retain(|_, sender| !sender.is_closed());
+            let _operation = operations.lock().await;
+            let _ = bridge
+                .call_session(client_id, "release_session", None, None)
+                .await;
         });
     }
     Ok(())
+}
+async fn proxy<R: AsyncRead + Unpin, W: AsyncWrite + Unpin>(
+    input: R,
+    mut output: W,
+    root: &std::path::Path,
+) -> Result<()> {
+    let mut input = BufReader::new(input).lines();
+    let stream = tab_relay::connect(root).await?;
+    let (read, mut write) = stream.into_split();
+    let mut replies = BufReader::new(read).lines();
+    let mut pending = HashMap::<String, Value>::new();
+    loop {
+        let disconnected = tokio::select! {
+            line=input.next_line()=>{
+                let Some(line)=line? else {return Ok(());};
+                if let Ok(message)=serde_json::from_str::<Value>(&line) {
+                    if let Some(id)=message.get("id"){pending.insert(id.to_string(),id.clone());}
+                }
+                write.write_all(format!("{line}\n").as_bytes()).await.is_err()
+            }
+            line=replies.next_line()=>{
+                match line {
+                    Ok(Some(line))=>{
+                        if let Ok(message)=serde_json::from_str::<Value>(&line){if let Some(id)=message.get("id"){pending.remove(&id.to_string());}}
+                        output.write_all(format!("{line}\n").as_bytes()).await?;output.flush().await?;false
+                    }
+                    _=>true,
+                }
+            }
+        };
+        if disconnected {
+            for (_, id) in pending.drain() {
+                let reply = json!({"jsonrpc":"2.0","id":id,"error":{"code":-32000,"message":"Browser relay disconnected. The action may have completed; inspect before retrying. It was not replayed."}});
+                output.write_all(format!("{reply}\n").as_bytes()).await?;
+            }
+            output.flush().await?;
+            let stream = tab_relay::connect(root).await?;
+            let (read, new_write) = stream.into_split();
+            replies = BufReader::new(read).lines();
+            write = new_write;
+        }
+    }
 }
 async fn serve_mcp<R: AsyncRead + Unpin, W: AsyncWrite + Unpin>(
     read: R,
     mut stdout: W,
     bridge: Arc<Bridge>,
     operations: Arc<Mutex<()>>,
+    client_id: u64,
 ) -> Result<()> {
     let mut stdin = BufReader::new(read).lines();
-    while let Some(line) = stdin.next_line().await? {
+    let mut deferred = VecDeque::new();
+    loop {
+        let line = match deferred.pop_front() {
+            Some(line) => line,
+            None => match stdin.next_line().await? {
+                Some(line) => line,
+                None => break,
+            },
+        };
         let Ok(message) = serde_json::from_str::<Value>(&line) else {
             continue;
         };
@@ -344,16 +536,53 @@ async fn serve_mcp<R: AsyncRead + Unpin, W: AsyncWrite + Unpin>(
             "ping" => json!({}),
             "tools/list" => json!({"tools":tools()}),
             "tools/call" => {
-                let _operation = operations.lock().await;
-                match call_tool(
-                    &bridge,
-                    params.get("name").and_then(Value::as_str).unwrap_or(""),
-                    &params.get("arguments").cloned().unwrap_or(json!({})),
-                )
-                .await
-                {
-                    Ok(result) => text(result),
-                    Err(error) => failure(error),
+                match acquire_operation(&mut stdin, &mut deferred, &id, operations.clone()).await? {
+                    None => failure(anyhow!("Request cancelled before execution")),
+                    Some(_operation) => {
+                        let name = params.get("name").and_then(Value::as_str).unwrap_or("");
+                        if name == "callisto_handoff" {
+                            drop(_operation);
+                        }
+                        let arguments = params.get("arguments").cloned().unwrap_or(json!({}));
+                        let outcome = {
+                            let work = call_tool(&bridge, client_id, name, &arguments);
+                            tokio::pin!(work);
+                            loop {
+                                tokio::select! {
+                                    result = &mut work => break result,
+                                    incoming = stdin.next_line() => {
+                                        match incoming? {
+                                            None => break Err(anyhow!("MCP client disconnected; action may have completed")),
+                                            Some(line) => {
+                                                let next = serde_json::from_str::<Value>(&line).unwrap_or(Value::Null);
+                                                if next["method"] == "notifications/cancelled" && next["params"]["requestId"] == id {
+                                                    break Err(anyhow!("Request cancelled; action may have completed. Inspect before retrying."));
+                                                }
+                                                if next.get("id").is_some() { deferred.push_back(line); }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        };
+                        if outcome.as_ref().err().is_some_and(|e| {
+                            e.to_string().starts_with("Request cancelled")
+                                || e.to_string().starts_with("MCP client disconnected")
+                        }) {
+                            // Dropped requests cannot consume late replies. Revoke the page
+                            // before allowing another queued command to run.
+                            bridge
+                                .pending
+                                .lock()
+                                .await
+                                .retain(|_, sender| !sender.is_closed());
+                            let _ = bridge.call_session(client_id, "release", None, None).await;
+                        }
+                        match outcome {
+                            Ok(result) => text(result),
+                            Err(error) => failure(error),
+                        }
+                    }
                 }
             }
             _ => {
@@ -370,6 +599,27 @@ async fn serve_mcp<R: AsyncRead + Unpin, W: AsyncWrite + Unpin>(
     Ok(())
 }
 
+async fn acquire_operation<R: AsyncRead + Unpin>(
+    input: &mut tokio::io::Lines<BufReader<R>>,
+    deferred: &mut VecDeque<String>,
+    id: &Value,
+    operations: Arc<Mutex<()>>,
+) -> Result<Option<tokio::sync::OwnedMutexGuard<()>>> {
+    let wait = operations.lock_owned();
+    tokio::pin!(wait);
+    loop {
+        tokio::select! {
+            guard=&mut wait => return Ok(Some(guard)),
+            incoming=input.next_line()=>{
+                let Some(line)=incoming? else {bail!("MCP client disconnected while queued");};
+                let message=serde_json::from_str::<Value>(&line).unwrap_or(Value::Null);
+                if message["method"]=="notifications/cancelled" && message["params"]["requestId"]==*id {return Ok(None);}
+                if message.get("id").is_some(){deferred.push_back(line);}
+            }
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -378,6 +628,178 @@ mod tests {
         connect_async,
         tungstenite::{client::IntoClientRequest, http::HeaderValue},
     };
+
+    #[tokio::test]
+    async fn human_handoff_does_not_block_another_clients_status() {
+        let (bridge, _) = fixture().await;
+        let (send, mut receive) = mpsc::unbounded_channel();
+        *bridge.connection.lock().await = Some(send);
+        let operations = Arc::new(Mutex::new(()));
+        let (mut first, server) = tokio::io::duplex(8192);
+        let (read, write) = tokio::io::split(server);
+        let a = tokio::spawn(serve_mcp(
+            read,
+            write,
+            bridge.clone(),
+            operations.clone(),
+            101,
+        ));
+        first.write_all(b"{\"id\":1,\"method\":\"tools/call\",\"params\":{\"name\":\"callisto_handoff\",\"arguments\":{\"prompt\":\"Confirm fixture\"}}}\n").await.unwrap();
+        let handoff = receive.recv().await.unwrap();
+        assert_eq!(handoff["session"], 101);
+        assert_eq!(handoff["method"], "handoff");
+        let (mut second, server) = tokio::io::duplex(8192);
+        let (read, write) = tokio::io::split(server);
+        let b = tokio::spawn(serve_mcp(read, write, bridge.clone(), operations, 202));
+        second.write_all(b"{\"id\":2,\"method\":\"tools/call\",\"params\":{\"name\":\"callisto_status\",\"arguments\":{}}}\n").await.unwrap();
+        let status = tokio::time::timeout(Duration::from_secs(1), receive.recv())
+            .await
+            .unwrap()
+            .unwrap();
+        assert_eq!(status["session"], 202);
+        assert_eq!(status["method"], "status");
+        bridge
+            .pending
+            .lock()
+            .await
+            .remove(&status["id"].as_u64().unwrap())
+            .unwrap()
+            .send(Ok(json!({"connected":true})))
+            .unwrap();
+        let mut second = BufReader::new(second).lines();
+        assert!(second
+            .next_line()
+            .await
+            .unwrap()
+            .unwrap()
+            .contains("connected"));
+        first
+            .write_all(b"{\"method\":\"notifications/cancelled\",\"params\":{\"requestId\":1}}\n")
+            .await
+            .unwrap();
+        let release = receive.recv().await.unwrap();
+        assert_eq!(release["session"], 101);
+        assert_eq!(release["method"], "release");
+        bridge
+            .pending
+            .lock()
+            .await
+            .remove(&release["id"].as_u64().unwrap())
+            .unwrap()
+            .send(Ok(json!({"released":true})))
+            .unwrap();
+        let mut first = BufReader::new(first).lines();
+        assert!(first
+            .next_line()
+            .await
+            .unwrap()
+            .unwrap()
+            .contains("Request cancelled"));
+        drop(first);
+        drop(second);
+        a.await.unwrap().unwrap();
+        b.await.unwrap().unwrap();
+    }
+
+    #[tokio::test]
+    async fn queued_request_can_cancel_without_waiting_for_browser_lock() {
+        let operations = Arc::new(Mutex::new(()));
+        let _held = operations.lock().await;
+        let (mut client, server) = tokio::io::duplex(1024);
+        client
+            .write_all(b"{\"method\":\"notifications/cancelled\",\"params\":{\"requestId\":42}}\n")
+            .await
+            .unwrap();
+        let mut input = BufReader::new(server).lines();
+        let mut deferred = VecDeque::new();
+        let result = tokio::time::timeout(
+            Duration::from_secs(1),
+            acquire_operation(&mut input, &mut deferred, &json!(42), operations.clone()),
+        )
+        .await
+        .unwrap()
+        .unwrap();
+        assert!(result.is_none());
+    }
+
+    #[tokio::test]
+    async fn cancellation_revokes_before_returning_and_cleans_pending() {
+        let (bridge, _) = fixture().await;
+        let (send, mut receive) = mpsc::unbounded_channel();
+        *bridge.connection.lock().await = Some(send);
+        let (mut client, server) = tokio::io::duplex(8192);
+        let (read, write) = tokio::io::split(server);
+        let task = tokio::spawn(serve_mcp(
+            read,
+            write,
+            bridge.clone(),
+            Arc::new(Mutex::new(())),
+            9,
+        ));
+        client.write_all(b"{\"id\":1,\"method\":\"tools/call\",\"params\":{\"name\":\"callisto_snapshot\",\"arguments\":{}}}\n").await.unwrap();
+        assert_eq!(receive.recv().await.unwrap()["method"], "snapshot");
+        client
+            .write_all(b"{\"method\":\"notifications/cancelled\",\"params\":{\"requestId\":1}}\n")
+            .await
+            .unwrap();
+        let revoke = tokio::time::timeout(Duration::from_secs(1), receive.recv())
+            .await
+            .unwrap()
+            .unwrap();
+        assert_eq!(revoke["method"], "release");
+        let id = revoke["id"].as_u64().unwrap();
+        bridge
+            .pending
+            .lock()
+            .await
+            .remove(&id)
+            .unwrap()
+            .send(Ok(json!({"released":true})))
+            .unwrap();
+        let mut lines = BufReader::new(client).lines();
+        let response = lines.next_line().await.unwrap().unwrap();
+        assert!(response.contains("Request cancelled"));
+        assert!(bridge.pending.lock().await.is_empty());
+        drop(lines);
+        task.await.unwrap().unwrap();
+    }
+
+    #[tokio::test]
+    async fn client_release_is_scoped_to_its_session_on_the_wire() {
+        let (bridge, _) = fixture().await;
+        let (send, mut receive) = mpsc::unbounded_channel();
+        *bridge.connection.lock().await = Some(send);
+        let (mut client, server) = tokio::io::duplex(8192);
+        let (read, write) = tokio::io::split(server);
+        let task = tokio::spawn(serve_mcp(
+            read,
+            write,
+            bridge.clone(),
+            Arc::new(Mutex::new(())),
+            8,
+        ));
+        client.write_all(b"{\"id\":1,\"method\":\"tools/call\",\"params\":{\"name\":\"callisto_close\",\"arguments\":{}}}\n").await.unwrap();
+        let command = receive.recv().await.unwrap();
+        assert_eq!(command["session"], 8);
+        assert_eq!(command["method"], "release");
+        bridge
+            .pending
+            .lock()
+            .await
+            .remove(&command["id"].as_u64().unwrap())
+            .unwrap()
+            .send(Ok(json!({"released":true})))
+            .unwrap();
+        let mut lines = BufReader::new(client).lines();
+        assert!(lines
+            .next_line()
+            .await
+            .unwrap()
+            .unwrap()
+            .contains("released"));
+        drop(lines);
+        task.await.unwrap().unwrap();
+    }
 
     async fn fixture() -> (Arc<Bridge>, String) {
         let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
@@ -419,7 +841,9 @@ mod tests {
             .unwrap();
         socket
             .send(Message::Text(
-                json!({"type":"pair","token":"wrong"}).to_string().into(),
+                json!({"type":"pair","protocol":2,"token":"wrong"})
+                    .to_string()
+                    .into(),
             ))
             .await
             .unwrap();
@@ -436,7 +860,7 @@ mod tests {
             .unwrap();
         socket
             .send(Message::Text(
-                json!({"type":"pair","token":"a".repeat(64)})
+                json!({"type":"pair","protocol":2,"token":"a".repeat(64)})
                     .to_string()
                     .into(),
             ))

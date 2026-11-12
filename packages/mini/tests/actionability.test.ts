@@ -5,6 +5,26 @@ import type { EventEmitter } from 'node:events'
 
 const enabled = Boolean(process.env.CALLISTO_SMOKE)
 
+test('browser: click waits for submitted document before the next snapshot', {skip:!enabled}, async()=>{
+  const {createServer}=await import('node:http')
+  const server=createServer((req,res)=>{
+    res.setHeader('content-type','text/html')
+    if(req.url?.startsWith('/next'))setTimeout(()=>res.end('<title>Submitted document</title><h1>Saved result</h1>'),80)
+    else res.end('<form action="/next"><button>Submit fixture</button></form>')
+  })
+  await new Promise<void>(resolve=>server.listen(0,'127.0.0.1',resolve))
+  const mini=await Mini.launch({headless:true})
+  try{
+    await mini.goto(`http://127.0.0.1:${(server.address() as {port:number}).port}/`)
+    const snapshot=await mini.snapshot()
+    const ref=snapshot.text.match(/\[(ax-\d+)\] button "Submit fixture"/)![1]
+    await mini.click(ref)
+    const result=await mini.snapshot()
+    assert.equal(result.title,'Submitted document')
+    assert.match(result.text,/Saved result/)
+  }finally{await mini.close();server.closeAllConnections();await new Promise<void>(resolve=>server.close(()=>resolve()))}
+})
+
 test('browser: repeated Enter presses release navigation listeners', { skip: !enabled }, async () => {
   const mini = await Mini.launch({headless:true, chromeFlags: process.env.CALLISTO_NO_SANDBOX ? ['--no-sandbox'] : []})
   try {

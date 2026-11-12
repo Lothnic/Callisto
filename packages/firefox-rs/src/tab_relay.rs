@@ -96,7 +96,20 @@ pub async fn connect(root: &Path) -> Result<UnixStream> {
     if let Ok(stream) = UnixStream::connect(&socket).await {
         return Ok(stream);
     }
-    let mut child = std::process::Command::new(std::env::current_exe()?)
+    let current = std::env::current_exe()?;
+    // A development build can replace the running proxy's inode. Linux then
+    // reports a non-existent "(deleted)" executable path. Prefer the updated
+    // absolute launch path in that case; never search PATH for a replacement.
+    let executable = if current.is_file() {
+        current
+    } else {
+        let launch = PathBuf::from(std::env::args_os().next().context("Missing launch path")?);
+        if !launch.is_absolute() || !launch.is_file() {
+            bail!("The runtime executable was replaced; restart the MCP server");
+        }
+        launch
+    };
+    let mut child = std::process::Command::new(executable)
         .arg("--relay")
         .process_group(0)
         .stdin(std::process::Stdio::null())

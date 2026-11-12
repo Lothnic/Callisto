@@ -1,0 +1,169 @@
+{
+  "date": "2026-11-12T18:09:56.603Z",
+  "repetitions": 5,
+  "notes": "Host-scripted form submission and cookie persistence, local fixture login only; not an autonomous-agent benchmark or real-account login proof. Firefox runs a disposable test extension with all optional permissions granted. browse uses the paired existing Chromium profile in an owned tab; Mini and agent-browser launch isolated Chromium. CLI process overhead included for agent-browser. Warm runs exclude setup and initial login. Different observations and transports; no language-level speed claim.",
+  "summary": {
+    "chromium": {
+      "passed": 0,
+      "total": 5,
+      "medianMs": null
+    },
+    "firefox": {
+      "passed": 5,
+      "total": 5,
+      "medianMs": 277.30943500000103
+    },
+    "browse": {
+      "passed": 5,
+      "total": 5,
+      "medianMs": 686.4560259999998
+    },
+    "agent-browser": {
+      "passed": 5,
+      "total": 5,
+      "medianMs": 449.1748789999983
+    }
+  },
+  "rows": [
+    {
+      "engine": "chromium",
+      "iteration": 0,
+      "ok": false,
+      "ms": 160.4131180000004,
+      "error": "Form result or persisted fixture login missing"
+    },
+    {
+      "engine": "firefox",
+      "iteration": 0,
+      "ok": true,
+      "ms": 279.70651200000066,
+      "error": null
+    },
+    {
+      "engine": "browse",
+      "iteration": 0,
+      "ok": true,
+      "ms": 957.3152799999989,
+      "error": null
+    },
+    {
+      "engine": "agent-browser",
+      "iteration": 0,
+      "ok": true,
+      "ms": 460.54931000000033,
+      "error": null
+    },
+    {
+      "engine": "agent-browser",
+      "iteration": 1,
+      "ok": true,
+      "ms": 452.3638170000013,
+      "error": null
+    },
+    {
+      "engine": "browse",
+      "iteration": 1,
+      "ok": true,
+      "ms": 643.8261309999998,
+      "error": null
+    },
+    {
+      "engine": "firefox",
+      "iteration": 1,
+      "ok": true,
+      "ms": 281.3749660000012,
+      "error": null
+    },
+    {
+      "engine": "chromium",
+      "iteration": 1,
+      "ok": false,
+      "ms": 153.07209599999987,
+      "error": "Form result or persisted fixture login missing"
+    },
+    {
+      "engine": "chromium",
+      "iteration": 2,
+      "ok": false,
+      "ms": 158.73567000000003,
+      "error": "The page changed during snapshot capture; try again."
+    },
+    {
+      "engine": "firefox",
+      "iteration": 2,
+      "ok": true,
+      "ms": 267.87818400000106,
+      "error": null
+    },
+    {
+      "engine": "browse",
+      "iteration": 2,
+      "ok": true,
+      "ms": 686.4560259999998,
+      "error": null
+    },
+    {
+      "engine": "agent-browser",
+      "iteration": 2,
+      "ok": true,
+      "ms": 449.1748789999983,
+      "error": null
+    },
+    {
+      "engine": "agent-browser",
+      "iteration": 3,
+      "ok": true,
+      "ms": 432.2679500000013,
+      "error": null
+    },
+    {
+      "engine": "browse",
+      "iteration": 3,
+      "ok": true,
+      "ms": 1619.685904,
+      "error": null
+    },
+    {
+      "engine": "firefox",
+      "iteration": 3,
+      "ok": true,
+      "ms": 277.30943500000103,
+      "error": null
+    },
+    {
+      "engine": "chromium",
+      "iteration": 3,
+      "ok": false,
+      "ms": 148.94179299999996,
+      "error": "Form result or persisted fixture login missing"
+    },
+    {
+      "engine": "chromium",
+      "iteration": 4,
+      "ok": false,
+      "ms": 146.5942670000004,
+      "error": "Form result or persisted fixture login missing"
+    },
+    {
+      "engine": "firefox",
+      "iteration": 4,
+      "ok": true,
+      "ms": 263.54616299999907,
+      "error": null
+    },
+    {
+      "engine": "browse",
+      "iteration": 4,
+      "ok": true,
+      "ms": 590.0258390000017,
+      "error": null
+    },
+    {
+      "engine": "agent-browser",
+      "iteration": 4,
+      "ok": true,
+      "ms": 441.5759109999999,
+      "error": null
+    }
+  ]
+}

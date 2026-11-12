@@ -11,7 +11,10 @@ agent.
 An experimental Rust extension bridge also connects to an already running
 Firefox or Zen profile, including existing tabs and logins. See the
 [Firefox and Zen guide](packages/firefox-rs/README.md) for setup, permissions,
-capabilities and limitations. The two browser backends use separate MCP servers.
+capabilities and limitations. A shared [launcher and setup command](docs/development-installation.md)
+selects the backend and reports its capabilities. Direct attachment to an explicit
+existing Chromium CDP target is also available when remote debugging is already
+enabled; see the [Mini attachment guide](packages/mini/README.md#attach-directly-to-an-existing-debug-enabled-chromium-tab).
 
 Callisto is experimental. Its Playwright-shaped API is a subset, not a drop-in
 replacement for Playwright. An experimental connection to an existing Chromium
