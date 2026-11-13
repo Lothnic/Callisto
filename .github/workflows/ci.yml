@@ -18,6 +18,7 @@ jobs:
           cache: npm
           cache-dependency-path: packages/mini/package-lock.json
       - run: cargo test --locked --manifest-path packages/firefox-rs/Cargo.toml
+      - run: cargo build --locked --manifest-path packages/firefox-rs/Cargo.toml --bin callisto-firefox-tab-mcp
       - run: cargo build --locked --release --manifest-path packages/firefox-rs/Cargo.toml --bin callisto-firefox-tab-mcp
       - run: npm --prefix packages/mini ci
       - run: npm --prefix packages/mini run build
@@ -27,6 +28,20 @@ jobs:
           export CHROMIUM_PATH="$(command -v google-chrome)"
           test -n "$CHROMIUM_PATH"
           node packages/firefox-rs/tests/extension-content.mjs
+      - name: Firefox extension bridge end-to-end
+        timeout-minutes: 5
+        run: |
+          command -v firefox
+          command -v geckodriver
+          geckodriver --host 127.0.0.1 --port 4444 > /tmp/callisto-geckodriver.log 2>&1 &
+          driver_pid=$!
+          trap 'kill "$driver_pid" 2>/dev/null || true' EXIT
+          for i in {1..30}; do
+            if curl -fsS http://127.0.0.1:4444/status >/dev/null; then break; fi
+            sleep 0.2
+          done
+          curl -fsS http://127.0.0.1:4444/status >/dev/null
+          python3 packages/firefox-rs/tests/firefox-bridge-smoke.py
   mini:
     name: packages/mini (typecheck + test)
     runs-on: ubuntu-latest

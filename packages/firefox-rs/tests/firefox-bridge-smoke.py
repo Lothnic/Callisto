@@ -63,9 +63,13 @@ try:
  snapshot=value(tool('callisto_snapshot'));print('snapshot:',snapshot['text'])
  import re
  ref=re.search(r'\[(ax-\d+)\] textbox "Name"',snapshot['text']).group(1)
+ req('/session/'+session+'/execute/sync',{'script':'window.callistoEvents=[];document.addEventListener("input",e=>window.callistoEvents.push({type:e.type,trusted:e.isTrusted}),true);document.addEventListener("keydown",e=>window.callistoEvents.push({type:e.type,trusted:e.isTrusted}),true);','args':[]})
  assert value(tool('callisto_fill',{'ref':ref,'value':'hello'}))['completed']
  actual=req('/session/'+session+'/execute/sync',{'script':'return document.querySelector("#field").value','args':[]})
  assert actual == 'hello', actual
+ assert value(tool('callisto_press',{'key':'a'}))['completed']
+ events=req('/session/'+session+'/execute/sync',{'script':'return window.callistoEvents','args':[]})
+ assert {'type':'input','trusted':False} in events and {'type':'keydown','trusted':False} in events,events
  print('fill: verified in Firefox')
  upload_ref=re.search(r'\[(ax-\d+)\] textbox "Attachment"',snapshot['text']).group(1)
  upload_path=Path(state.name)/'fixture.bin';upload_path.write_bytes(bytes([0,1,255]))

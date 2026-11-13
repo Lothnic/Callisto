@@ -5,6 +5,31 @@ import type { EventEmitter } from 'node:events'
 
 const enabled = Boolean(process.env.CALLISTO_SMOKE)
 
+test('browser: CDP clicks and text input produce trusted browser events', { skip: !enabled }, async () => {
+  const mini = await Mini.launch({headless:true})
+  try {
+    const html = `<label>Probe <input></label><button>Probe button</button>
+      <script>window.events=[]; for (const type of ['click','keydown','input'])
+      document.addEventListener(type, e => window.events.push({type, trusted:e.isTrusted}), true)</script>`
+    await mini.goto('data:text/html,' + encodeURIComponent(html))
+    await mini.snapshot()
+    const button = mini.ref({role:'button', name:'Probe button', exact:true})!
+    const input = mini.ref({role:'textbox', name:'Probe', exact:true})!
+    assert.ok(button && input)
+    await mini.click(button)
+    await mini.fill(input, 'hello')
+    await mini.press('A')
+    const result = await mini.evaluate(() => ({
+      events: (window as any).events as Array<{type:string; trusted:boolean}>,
+      value: (document.querySelector('input') as HTMLInputElement).value,
+    }))
+    for (const type of ['click','keydown','input']) {
+      assert.ok(result.events.some(event => event.type === type && event.trusted), `${type} should be trusted`)
+    }
+    assert.match(result.value, /^hello/i)
+  } finally { await mini.close() }
+})
+
 test('browser: click waits for submitted document before the next snapshot', {skip:!enabled}, async()=>{
   const {createServer}=await import('node:http')
   const server=createServer((req,res)=>{

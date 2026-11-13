@@ -16,6 +16,10 @@ try {
   assert(!snapshot.value.text.includes('secret'));
   assert(snapshot.value.text.includes('[REDACTED]'));
   const ref = label => snapshot.value.text.split('\n').find(line => line.includes(`"${label}"`)).match(/\[(ax-\d+)\]/)[1];
+  await page.evaluate(() => {
+    window.inputEvents = [];
+    for (const type of ['input', 'click']) document.addEventListener(type, event => window.inputEvents.push({type, trusted:event.isTrusted}), true);
+  });
   assert.deepEqual(await invoke({type:'action',method:'fill',ref:ref('Email'),value:'hello@example.com'}), {value:{completed:true}});
   assert.equal(await page.locator('#email').inputValue(), 'hello@example.com');
   await page.locator('#email').evaluate(el=>el.addEventListener('keydown',event=>{window.keySeen={key:event.key,ctrl:event.ctrlKey,trusted:event.isTrusted};}));
@@ -24,6 +28,7 @@ try {
   assert.deepEqual(await page.evaluate(()=>window.keySeen),{key:'a',ctrl:true,trusted:false});
   assert.deepEqual(await invoke({type:'action',method:'click',ref:ref('Send')}), {value:{completed:true}});
   assert.equal(await page.evaluate(() => window.clicked), 1);
+  assert.deepEqual(await page.evaluate(() => window.inputEvents), [{type:'input',trusted:false},{type:'click',trusted:false}]);
   assert.match((await invoke({type:'action',method:'click',ref:ref('Disabled')})).error, /disabled/i);
   await page.evaluate(()=>{
     document.title='Fixture';
