@@ -65,7 +65,8 @@ not establish support for the others.
 
 - Keep the website installer pinned to a publicly fetchable, tested revision.
   Give testers the [source setup guide](docs/getting-started.md) and a simple
-  first task.
+  first task. Automate and verify Vercel site deployments so the live installer
+  cannot silently lag behind the repository.
 - Invite a small group using disposable profiles or test accounts. Record OS,
   browser, host, revision, setup failures and reproducible workflow failures;
   avoid collecting page secrets. Fix blockers before widening the group.

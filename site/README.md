@@ -4,6 +4,11 @@ Static marketing site for Callisto, published at
 <https://callisto.lothnic.dev>. No framework, no build step, no external runtime
 dependencies.
 
+The live domain is hosted on Vercel; pushing to GitHub does not by itself prove
+the live site was updated. Deploy the contents of `site/` to the linked Vercel
+project, then verify `/install.sh` serves the intended revision. The optional
+GitHub Pages workflow is manually dispatched and requires Pages to be enabled.
+
 ```
 site/
 ├── index.html   # content and structure

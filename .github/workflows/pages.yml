@@ -1,11 +1,8 @@
 name: Pages
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - "site/**"
-      - ".github/workflows/pages.yml"
+  # The live custom domain is hosted on Vercel. This remains available for
+  # an explicitly configured GitHub Pages deployment.
   workflow_dispatch:
 
 permissions:
