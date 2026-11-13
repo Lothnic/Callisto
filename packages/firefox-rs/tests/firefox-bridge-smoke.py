@@ -70,6 +70,12 @@ try:
  assert value(tool('callisto_press',{'key':'a'}))['completed']
  events=req('/session/'+session+'/execute/sync',{'script':'return window.callistoEvents','args':[]})
  assert {'type':'input','trusted':False} in events and {'type':'keydown','trusted':False} in events,events
+ req('/session/'+session+'/execute/sync',{'script':'window.callistoEvents=[];document.querySelector("#field").focus();','args':[]})
+ req('/session/'+session+'/actions',{'actions':[{'type':'key','id':'keyboard','actions':[{'type':'keyDown','value':'x'},{'type':'keyUp','value':'x'}]}]})
+ native=req('/session/'+session+'/execute/sync',{'script':'return {events:window.callistoEvents,value:document.querySelector("#field").value}','args':[]})
+ assert {'type':'input','trusted':True} in native['events'] and {'type':'keydown','trusted':True} in native['events'],native
+ assert 'x' in native['value'],native
+ print('WebDriver browser-mediated keys produce trusted events in disposable Firefox: verified')
  print('fill: verified in Firefox')
  upload_ref=re.search(r'\[(ax-\d+)\] textbox "Attachment"',snapshot['text']).group(1)
  upload_path=Path(state.name)/'fixture.bin';upload_path.write_bytes(bytes([0,1,255]))

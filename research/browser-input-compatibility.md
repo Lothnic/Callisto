@@ -22,4 +22,11 @@ Firefox's [remote-agent security documentation](https://firefox-source-docs.mozi
 
 ## Verification proposal
 
+Local result: `packages/firefox-rs/tests/firefox-bridge-smoke.py` now records
+synthetic `input` and `keydown` events from the extension as untrusted, then
+uses WebDriver Actions in the same disposable Firefox test session and checks
+that its `keydown` and `input` events are trusted and change the field. This
+proves the event behavior in that test setup, not attachment to an ordinary
+running Zen profile, cross-platform availability, or resistance to bot checks.
+
 Use local fixtures that log `isTrusted`, pointer and key sequence, focus, default actions, DOM outcome, and controlled-component state. Run the same cases in Mini, Zen extension mode, proposed Zen BiDi mode, browse and agent-browser with versions and modes recorded. Verify adversarial overlays and navigation as well as simple controls. Separately measure outcomes in authorized real workflows, noting human challenges, rate limits, access denials and browser restarts. Treat challenges as a signal to wait or hand control back, not evidence that event trust alone caused a block. Results from a small site sample cannot establish a universal bypass rate.
