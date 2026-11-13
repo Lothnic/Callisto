@@ -448,7 +448,9 @@ export class Mini {
     const expression =
       typeof fn === 'string'
         ? fn
-        : `(${fn.toString()})(${args.map((a) => JSON.stringify(a)).join(',')})`
+        : // `__name` is emitted by transpilers that keep function names (tsx/esbuild).
+          // Defining it locally keeps serialized functions runnable in the page.
+          `(()=>{const __name=(value)=>value;return (${fn.toString()})(${args.map((a) => JSON.stringify(a)).join(',')})})()`
     const { result, exceptionDetails } = await this.cdp.Runtime.evaluate({
       expression,
       returnByValue: true,

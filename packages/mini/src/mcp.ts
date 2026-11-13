@@ -4,12 +4,13 @@ import { McpServer } from '@modelcontextprotocol/server'
 import { StdioServerTransport } from '@modelcontextprotocol/server/stdio'
 import * as z from 'zod/v4'
 import { Mini, Page, type Snapshot } from './index.js'
+import { extractRows, type ExtractSpec } from './extract.js'
 
 const server = new McpServer({ name: 'callisto-mcp-server', version: '0.1.0' })
 server.registerTool('callisto_capabilities', {
   description: 'Report backend capabilities without starting a browser.',
   inputSchema: {},
-}, async () => success({schemaVersion:1,backend:'chromium-cdp',mode:process.env.CALLISTO_MCP_BROWSER ?? 'isolated',snapshot:'accessibility',sessionModel:process.env.CALLISTO_MCP_BROWSER==='attached'?'pinned-target':'per-process',input:{click:'browser-protocol',keyboard:'browser-protocol',fill:'browser-protocol-text-insertion',nativeKeyDefaults:true},capabilities:{trustedInput:true,frames:'same-origin',openShadowRoots:false,upload:false,existingTabAdoption:process.env.CALLISTO_MCP_BROWSER==='attached',cancellation:true,handoff:process.env.CALLISTO_MCP_BROWSER==='connected'}}))
+}, async () => success({schemaVersion:1,backend:'chromium-cdp',mode:process.env.CALLISTO_MCP_BROWSER ?? 'isolated',snapshot:'accessibility',sessionModel:process.env.CALLISTO_MCP_BROWSER==='attached'?'pinned-target':'per-process',input:{click:'browser-protocol',keyboard:'browser-protocol',fill:'browser-protocol-text-insertion',nativeKeyDefaults:true},capabilities:{trustedInput:true,frames:'same-origin',openShadowRoots:false,upload:false,existingTabAdoption:process.env.CALLISTO_MCP_BROWSER==='attached',cancellation:true,handoff:process.env.CALLISTO_MCP_BROWSER==='connected',run:true,extract:true}}))
 let mini: Mini | undefined
 let queue: Promise<void> = Promise.resolve()
 let shuttingDown = false
@@ -195,6 +196,94 @@ server.registerTool('callisto_batch', {
   }
   return { completed: actions.length, snapshot: await boundedSnapshot(m) }
 }, {signal:context.mcpReq.signal}))
+
+const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
+
+const extractField = z.union([
+  z.string().min(1).max(500),
+  z.object({
+    selector: z.string().min(1).max(500).optional(),
+    attribute: z.string().min(1).max(100).optional(),
+    type: z.enum(['text', 'number']).optional(),
+  }),
+])
+const extractSpecSchema = z.object({
+  selector: z.string().min(1).max(500).describe('CSS selector for each row, evaluated against the current document'),
+  fields: z.record(z.string().min(1).max(50), extractField).refine(value => Object.keys(value).length > 0 && Object.keys(value).length <= 20, 'Provide 1-20 fields'),
+  limit: z.number().int().min(1).max(1000).optional().default(500),
+  include_text: z.boolean().optional().default(false),
+  paginate: z.object({
+    next: z.string().min(1).max(500).describe('CSS selector for the next-page control'),
+    max_pages: z.number().int().min(1).max(25).optional().default(10),
+  }).optional(),
+})
+
+const runStep = z.discriminatedUnion('action', [
+  z.object({ action: z.literal('navigate'), url: httpUrl }),
+  z.object({ action: z.literal('click_ref'), ref }),
+  z.object({ action: z.literal('click_role'), role: z.string().min(1).max(50), name: z.string().min(1).max(200) }),
+  z.object({ action: z.literal('fill_ref'), ref, value: z.string().max(100_000) }),
+  z.object({ action: z.literal('fill_role'), role: z.string().min(1).max(50), name: z.string().min(1).max(200), value: z.string().max(100_000) }),
+  z.object({ action: z.literal('press'), key: z.string().min(1).max(40) }),
+  z.object({ action: z.literal('scroll'), delta_x: z.number().finite().default(0), delta_y: z.number().finite() }),
+  z.object({ action: z.literal('wait'), ms: z.number().int().min(1).max(5000) }),
+  z.object({ action: z.literal('wait_for'), text: z.string().min(1).max(500), timeout_ms: z.number().int().min(100).max(20000).optional().default(5000) }),
+  z.object({ action: z.literal('extract'), spec: extractSpecSchema }),
+])
+
+async function waitForText(m: Mini, text: string, timeoutMs: number): Promise<void> {
+  const deadline = Date.now() + timeoutMs
+  while (Date.now() < deadline) {
+    try {
+      if (await m.evaluate<boolean>(needle => (document.body?.innerText ?? '').includes(needle), text)) return
+    } catch {
+      // Navigation during the wait replaces the execution context; retry.
+    }
+    await sleep(100)
+  }
+  throw new Error(`wait_for timed out after ${timeoutMs}ms waiting for ${JSON.stringify(text)}.`)
+}
+
+server.registerTool('callisto_extract', {
+  description: 'Read structured rows from the current page using CSS selectors: a row selector plus a field map. Optionally follow a next-page control and merge pages. Returns typed rows, not a snapshot, so counting and aggregation need one call.',
+  inputSchema: extractSpecSchema,
+  annotations: { ...annotations, readOnlyHint: true },
+}, async (spec, context) => run(m => extractRows(m, spec as ExtractSpec), { signal: context.mcpReq.signal }))
+
+server.registerTool('callisto_run', {
+  description: 'Run 1-40 dependent steps in one call: navigate, click/fill by ref or exact role, press, scroll, wait, wait_for text, and extract rows. Returns the last extraction and, optionally, a final snapshot. Stops at the first failure within a 60-second budget; earlier steps are not rolled back.',
+  inputSchema: z.object({ steps: z.array(runStep).min(1).max(40), snapshot: z.boolean().optional().default(false), max_chars: maxChars }),
+  annotations,
+}, async ({ steps, snapshot, max_chars }, context) => run(async m => {
+  const page = new Page(m)
+  const started = Date.now()
+  let extraction: Awaited<ReturnType<typeof extractRows>> | undefined
+  for (const [index, step] of steps.entries()) {
+    if (Date.now() - started > 60_000) throw new Error(`Run stopped at step ${index + 1}: 60-second budget exceeded.`)
+    try {
+      switch (step.action) {
+        case 'navigate': await m.goto(step.url, { waitUntil: 'domcontentloaded', timeout: 20000 }); break
+        case 'click_ref': await m.click(step.ref); break
+        case 'click_role': await page.getByRole(step.role, { name: step.name, exact: true }).click(); break
+        case 'fill_ref': await m.fill(step.ref, step.value); break
+        case 'fill_role': await page.getByRole(step.role, { name: step.name, exact: true }).fill(step.value); break
+        case 'press': await m.press(step.key); break
+        case 'scroll': await m.scroll(step.delta_x, step.delta_y); break
+        case 'wait': await sleep(step.ms); break
+        case 'wait_for': await waitForText(m, step.text, step.timeout_ms); break
+        case 'extract': extraction = await extractRows(m, step.spec as ExtractSpec); break
+      }
+    } catch (error) {
+      throw new Error(`Run stopped at step ${index + 1} (${step.action}); earlier steps may have completed: ${error instanceof Error ? error.message : String(error)}`)
+    }
+  }
+  return {
+    completed: steps.length,
+    elapsed_ms: Date.now() - started,
+    ...(extraction ? { extraction } : {}),
+    ...(snapshot ? { snapshot: await boundedSnapshot(m, { maxChars: max_chars }) } : {}),
+  }
+}, { signal: context.mcpReq.signal }))
 
 server.registerTool('callisto_screenshot', {
   description: 'Capture the current browser viewport as a PNG image.',

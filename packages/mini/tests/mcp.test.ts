@@ -20,7 +20,7 @@ test('MCP: initializes, lists browser tools and validates arguments without laun
   const client = await connect()
   try {
     const { tools } = await client.listTools()
-    for (const name of ['callisto_navigate', 'callisto_snapshot', 'callisto_find', 'callisto_batch', 'callisto_click', 'callisto_fill', 'callisto_press', 'callisto_scroll', 'callisto_handoff', 'callisto_screenshot', 'callisto_close']) {
+    for (const name of ['callisto_navigate', 'callisto_snapshot', 'callisto_find', 'callisto_batch', 'callisto_extract', 'callisto_run', 'callisto_click', 'callisto_fill', 'callisto_press', 'callisto_scroll', 'callisto_handoff', 'callisto_screenshot', 'callisto_close']) {
       assert.ok(tools.some(tool => tool.name === name), `missing ${name}`)
     }
     const bad = await client.callTool({ name: 'callisto_click', arguments: { ref: 'not-a-ref' } })
@@ -41,6 +41,11 @@ test('MCP: complete a local browser task through tools and close the session', {
     res.writeHead(200, { 'content-type': 'text/html' })
     if (req.url === '/long') {
       res.end(Array.from({length:180}, (_, i) => `<p>Paragraph ${i}: ${'context '.repeat(15)} ${i === 179 ? 'HiddenTargetPhrase' : ''}</p>`).join(''))
+    } else if (req.url?.startsWith('/grid')) {
+      res.end(`<table id="grid"><tbody>
+        <tr><td>Alpha</td><td>3</td></tr>
+        <tr><td>Beta</td><td>5</td></tr>
+      </tbody></table><div id="ready">Grid ready</div>`)
     } else {
       res.end('<label>Fruit <input></label><button onclick="document.querySelector(\'output\').textContent=document.querySelector(\'input\').value">Save</button><output></output>')
     }
@@ -77,6 +82,21 @@ test('MCP: complete a local browser task through tools and close the session', {
     assert.equal(next.offset, 12000)
     const found = JSON.parse((await invoke('callisto_find', {query:'HiddenTargetPhrase'}))[0].text!)
     assert.match(found.matches[0].text, /HiddenTargetPhrase/)
+    await invoke('callisto_navigate', {url: `http://127.0.0.1:${port}/grid`})
+    const extraction = JSON.parse((await invoke('callisto_extract', {
+      selector: '#grid tbody tr',
+      fields: {name: 'td:nth-child(1)', total: {selector: 'td:nth-child(2)', type: 'number'}},
+    }))[0].text!)
+    assert.equal(extraction.count, 2)
+    assert.deepEqual(extraction.rows, [{name: 'Alpha', total: 3}, {name: 'Beta', total: 5}])
+    const scripted = JSON.parse((await invoke('callisto_run', {steps: [
+      {action: 'navigate', url: `http://127.0.0.1:${port}/grid`},
+      {action: 'wait_for', text: 'Grid ready'},
+      {action: 'extract', spec: {selector: '#grid tbody tr', fields: {name: 'td:nth-child(1)'}}},
+    ]}))[0].text!)
+    assert.equal(scripted.completed, 3)
+    assert.equal(scripted.extraction.count, 2)
+    assert.equal(scripted.snapshot, undefined)
     const afterFind = await client.callTool({name:'callisto_snapshot', arguments:{offset:12000}})
     assert.equal(afterFind.isError, true, 'find replaces the ref registry, so old pages must be discarded')
     await invoke('callisto_navigate', {url:`http://127.0.0.1:${port}/long`})
