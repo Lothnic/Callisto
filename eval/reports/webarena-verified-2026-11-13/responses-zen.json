@@ -1,0 +1,109 @@
+[
+  {
+    "task_id": 11,
+    "status": "SUCCESS",
+    "retrieved_data": [
+      6
+    ],
+    "evidence": "Magento Admin Reviews grid: applied Review column filter `disappointed`; page text showed `6 records found`.",
+    "tool_calls": 19,
+    "elapsed_ms": null,
+    "error": null
+  },
+  {
+    "task_id": 41,
+    "status": "SUCCESS",
+    "retrieved_data": [
+      "hollister"
+    ],
+    "evidence": "Magento Admin Dashboard Top Search Terms table listed hollister first (19 uses).",
+    "tool_calls": 3,
+    "elapsed_ms": null,
+    "error": null
+  },
+  {
+    "task_id": 62,
+    "status": "FAILURE",
+    "retrieved_data": null,
+    "evidence": "Customers grid reported 70 records but exposes no order-count column; dashboard Customers tab click left the Bestsellers panel active and supplied no all-history order ranking.",
+    "tool_calls": 15,
+    "elapsed_ms": null,
+    "error": "Could not determine most-orders customer from available visible UI within the task action budget; no answer inferred."
+  },
+  {
+    "task_id": 94,
+    "status": "SUCCESS",
+    "retrieved_data": [
+      36.39
+    ],
+    "evidence": "Invoices grid row invoice 000000001 showed Grand Total (Purchased) $36.39; Grand Total (Base) also showed $36.39.",
+    "tool_calls": 6,
+    "elapsed_ms": null,
+    "error": null
+  },
+  {
+    "task_id": 107,
+    "status": "FAILURE",
+    "retrieved_data": null,
+    "evidence": "Admin order grid offers a Purchase Date interval and Status filter; the monthly task requires eight separate month buckets. The plausible Sales report route `/admin/reports/report_sales/` returned 404. No monthly totals were gathered.",
+    "tool_calls": 10,
+    "elapsed_ms": null,
+    "error": "Could not obtain all eight monthly counts within the per-task action cap without guessing or exceeding it."
+  },
+  {
+    "task_id": 112,
+    "status": "SUCCESS",
+    "retrieved_data": [
+      "Hannah Lim"
+    ],
+    "evidence": "Filtered Reviews grid to Circe; the two matching reviews were Hannah Lim (Summary Rating 1/5, visible orange star in the edit form) and `customer` (4/5). Only Hannah Lim qualifies at \u22643 stars.",
+    "tool_calls": 13,
+    "elapsed_ms": null,
+    "error": null
+  },
+  {
+    "task_id": 183,
+    "status": "FAILURE",
+    "retrieved_data": null,
+    "evidence": "An inherited Products-grid filter showed Quantity 10\u201310 and 0 records; I cleared it to avoid relying on stale state, then reapplying the filter failed with `The shared tab is not visible` even after selecting only tab 57.",
+    "tool_calls": 16,
+    "elapsed_ms": null,
+    "error": "Could not confirm the result with a fresh filter because the dedicated shared tab became hidden; stopped without switching tabs or changing browser settings."
+  },
+  {
+    "task_id": 193,
+    "status": "SUCCESS",
+    "retrieved_data": [
+      182.4
+    ],
+    "evidence": "Orders grid was ordered by Purchase Date descending. The most recent completed order rows visible were 000000230 (May 19, 2023; Grand Total (Purchased) $93.40) and 000000256 (May 14, 2023; $89.00); sum $182.40.",
+    "tool_calls": 6,
+    "elapsed_ms": null,
+    "error": null
+  },
+  {
+    "task_id": 198,
+    "status": "SUCCESS",
+    "retrieved_data": [
+      "harrypotterfan1@gmail.com"
+    ],
+    "evidence": "Orders grid displayed 308 records sorted by Purchase Date descending. The first (most recent) row with Status Canceled was order 000000136 dated May 23, 2023, with Customer Email harrypotterfan1@gmail.com.",
+    "tool_calls": 7,
+    "elapsed_ms": null,
+    "error": null
+  },
+  {
+    "task_id": 208,
+    "status": "SUCCESS",
+    "retrieved_data": [
+      {
+        "name": "John Smith",
+        "email": "john.smith.xyz@gmail.com"
+      }
+    ],
+    "evidence": "Customers grid showed 70 records; the row with Phone +1 2058812302 was John Smith, john.smith.xyz@gmail.com. (Grid displays phone as 2058812302 without formatting.)",
+    "tool_calls": 6,
+    "elapsed_ms": null,
+    "error": null
+  }
+]

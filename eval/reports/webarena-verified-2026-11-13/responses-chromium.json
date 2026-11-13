@@ -1,0 +1,132 @@
+[
+  {
+    "task_id": 11,
+    "status": "SUCCESS",
+    "retrieved_data": [
+      6
+    ],
+    "evidence": "Reviews grid filtered on review text 'disappointed' showed 6 records found.",
+    "tool_calls": 8,
+    "elapsed_ms": null
+  },
+  {
+    "task_id": 41,
+    "status": "SUCCESS",
+    "retrieved_data": [
+      "hollister"
+    ],
+    "evidence": "Magento admin dashboard Top Search Terms table showed hollister with 19 uses, highest among displayed terms.",
+    "tool_calls": 1,
+    "elapsed_ms": null
+  },
+  {
+    "task_id": 62,
+    "status": "FAILURE",
+    "retrieved_data": null,
+    "evidence": "Customers grid exposed customer identity/contact columns but no completed-order count; no confirmed customer ranking was visible before moving on.",
+    "tool_calls": 9,
+    "elapsed_ms": null,
+    "error": "Could not determine the customer email(s) with the most completed orders from visible UI evidence."
+  },
+  {
+    "task_id": 94,
+    "status": "SUCCESS",
+    "retrieved_data": [
+      36.39
+    ],
+    "evidence": "Invoices grid row for invoice 000000001 showed Grand Total (Purchased) $36.39 (base total also $36.39).",
+    "tool_calls": 5,
+    "elapsed_ms": null
+  },
+  {
+    "task_id": 107,
+    "status": "SUCCESS",
+    "retrieved_data": [
+      {
+        "month": "May",
+        "count": 8
+      },
+      {
+        "month": "June",
+        "count": 13
+      },
+      {
+        "month": "July",
+        "count": 9
+      },
+      {
+        "month": "August",
+        "count": 8
+      },
+      {
+        "month": "September",
+        "count": 10
+      },
+      {
+        "month": "October",
+        "count": 4
+      },
+      {
+        "month": "November",
+        "count": 5
+      },
+      {
+        "month": "December",
+        "count": 10
+      }
+    ],
+    "evidence": "Orders Report filtered Order Created, Month, 5/1/2022\u201312/31/2022, status Complete; report showed the eight monthly order counts.",
+    "tool_calls": 9,
+    "elapsed_ms": null
+  },
+  {
+    "task_id": 112,
+    "status": "SUCCESS",
+    "retrieved_data": [
+      "Hannah Lim"
+    ],
+    "evidence": "Filtered reviews to Circe Hooded Ice Fleece. Hannah Lim\u2019s review showed a 1-star summary rating; the other matching review showed 4 stars.",
+    "tool_calls": 23,
+    "elapsed_ms": null
+  },
+  {
+    "task_id": 183,
+    "status": "SUCCESS",
+    "retrieved_data": null,
+    "evidence": "Catalog Products filter Quantity from 10 to 10 returned 0 records found.",
+    "tool_calls": 10,
+    "elapsed_ms": null
+  },
+  {
+    "task_id": 193,
+    "status": "FAILURE",
+    "retrieved_data": null,
+    "evidence": "Orders report showed monthly counts, but the orders grid filter interaction returned 0 records, and a keyword search for Complete also returned 0; no two newest completed-order totals were confirmed.",
+    "tool_calls": 19,
+    "elapsed_ms": null,
+    "error": "Could not reliably filter the order grid to completed orders."
+  },
+  {
+    "task_id": 198,
+    "status": "SUCCESS",
+    "retrieved_data": [
+      "harrypotterfan1@gmail.com"
+    ],
+    "evidence": "Orders grid was sorted newest-first by Purchase Date. The first canceled order in the visible sequence was order 000000136 (May 23, 2023), with customer email harrypotterfan1@gmail.com.",
+    "tool_calls": 9,
+    "elapsed_ms": null
+  },
+  {
+    "task_id": 208,
+    "status": "SUCCESS",
+    "retrieved_data": [
+      {
+        "name": "John Smith",
+        "email": "john.smith.xyz@gmail.com"
+      }
+    ],
+    "evidence": "Customer grid search for phone 2058812302 returned exactly 1 record: John Smith, john.smith.xyz@gmail.com.",
+    "tool_calls": 8,
+    "elapsed_ms": null
+  }
+]

@@ -85,6 +85,13 @@ harness/.venv/bin/python -m callisto_eval run webvoyager --subset pr-50 --agent 
 harness/.venv/bin/python -m callisto_eval run webvoyager --subset full --agent fake --out runs/webvoyager-full-fake
 ```
 
+## Third-party benchmark reports
+
+- [`reports/webarena-verified-2026-11-13/`](reports/webarena-verified-2026-11-13/README.md) — ten Shopping Admin
+  retrieval tasks scored by the official WebArena Verified evaluator, run against
+  Callisto Chromium, Callisto Zen, OpenCode browse and Vercel agent-browser. It
+  records the per-task scores, tool calls and the limits of the comparison.
+
 ## Current scope
 
 - Implemented: WebVoyager full dataset downloader (`download_webvoyager.py`), `full` (643 tasks) and `pr-50` (50 tasks) subsets, offline fake agent, live Callisto harness agent adapter, deterministic contains/exact/regex scorers, bootstrap summary stats, and artifact manifests.

@@ -1,0 +1,92 @@
+[
+  {
+    "task_id": 11,
+    "agent_status": "SUCCESS",
+    "eval_status": "success",
+    "score": 1.0,
+    "elapsed_ms": null,
+    "tool_calls": 14,
+    "error": null
+  },
+  {
+    "task_id": 41,
+    "agent_status": "SUCCESS",
+    "eval_status": "success",
+    "score": 1.0,
+    "elapsed_ms": null,
+    "tool_calls": 3,
+    "error": null
+  },
+  {
+    "task_id": 62,
+    "agent_status": "FAILURE",
+    "eval_status": "failure",
+    "score": 0.0,
+    "elapsed_ms": null,
+    "tool_calls": 33,
+    "error": "Could not verify which customer had the most completed orders from the UI within the task action budget; no answer guessed."
+  },
+  {
+    "task_id": 94,
+    "agent_status": "SUCCESS",
+    "eval_status": "success",
+    "score": 1.0,
+    "elapsed_ms": null,
+    "tool_calls": 10,
+    "error": null
+  },
+  {
+    "task_id": 107,
+    "agent_status": "SUCCESS",
+    "eval_status": "success",
+    "score": 1.0,
+    "elapsed_ms": null,
+    "tool_calls": 21,
+    "error": null
+  },
+  {
+    "task_id": 112,
+    "agent_status": "SUCCESS",
+    "eval_status": "success",
+    "score": 1.0,
+    "elapsed_ms": null,
+    "tool_calls": 45,
+    "error": null
+  },
+  {
+    "task_id": 183,
+    "agent_status": "SUCCESS",
+    "eval_status": "failure",
+    "score": 0.0,
+    "elapsed_ms": null,
+    "tool_calls": 21,
+    "error": null
+  },
+  {
+    "task_id": 193,
+    "agent_status": "SUCCESS",
+    "eval_status": "failure",
+    "score": 0.0,
+    "elapsed_ms": null,
+    "tool_calls": 16,
+    "error": null
+  },
+  {
+    "task_id": 198,
+    "agent_status": "SUCCESS",
+    "eval_status": "success",
+    "score": 1.0,
+    "elapsed_ms": null,
+    "tool_calls": 25,
+    "error": null
+  },
+  {
+    "task_id": 208,
+    "agent_status": "SUCCESS",
+    "eval_status": "success",
+    "score": 1.0,
+    "elapsed_ms": null,
+    "tool_calls": 25,
+    "error": null
+  }
+]
