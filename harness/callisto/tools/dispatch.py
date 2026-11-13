@@ -8,7 +8,7 @@ from ..audit import AuditLog
 from ..auth.autofill import do_autofill, is_signin_call
 from ..models import ToolCall
 from ..sidecar_client import SidecarClient
-from .bash import bash
+from .bash import bash, shell_command
 from .repl import repl
 
 # ---------------------------------------------------------------------------
@@ -71,21 +71,10 @@ async def execute(
 
         return await repl(code, client)
 
-    if call["name"] == "bash":
-        return await bash(call["arguments"].get("cmd", ""), session_dir=session_dir)
-
     # Legacy alias: some models still emit repo.exec from older prompts/traces.
     # Not in TOOL_SCHEMAS — never advertised to the model as a third tool.
-    if call["name"] == "repo.exec":
-        cmd_arg = call["arguments"].get("cmd", "")
-        if isinstance(cmd_arg, list):
-            if len(cmd_arg) >= 3 and cmd_arg[0] == "bash" and cmd_arg[1] in ("-c", "-lc"):
-                cmd_str = cmd_arg[2]
-            else:
-                cmd_str = " ".join(str(part) for part in cmd_arg)
-        else:
-            cmd_str = str(cmd_arg)
-        return await bash(cmd_str, session_dir=session_dir)
+    if call["name"] in ("bash", "repo.exec"):
+        return await bash(shell_command(call["arguments"].get("cmd", "")), session_dir=session_dir)
 
     return {"error": f"unknown tool: {call['name']}"}
 

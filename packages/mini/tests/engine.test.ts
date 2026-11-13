@@ -47,3 +47,32 @@ test('browser: navigation timeout is bounded and the session can recover', { ski
     await new Promise<void>((resolve) => server.close(() => resolve()))
   }
 })
+
+test('browser: optional evaluation arguments, text responses and printable chords work', { skip: !smoke }, async () => {
+  const server = createServer((req, res) => {
+    if (req.url === '/') res.writeHead(200, {'content-type':'text/html'}).end('<label>Text <input></label>')
+    else if (req.url === '/json') res.writeHead(200, {'content-type':'application/json'}).end(JSON.stringify({header:req.headers['x-test']}))
+    else res.writeHead(200, {'content-type':'text/plain'}).end('plain response')
+  })
+  await new Promise<void>(resolve => server.listen(0,'127.0.0.1',resolve))
+  const base = `http://127.0.0.1:${(server.address() as {port:number}).port}`
+  const mini = await Mini.launch({headless:true})
+  const page = new Page(mini)
+  try {
+    await mini.goto(base)
+    assert.deepEqual(await mini.evaluate((a, b, c) => [a, b, c], 'first', undefined, 'third'), ['first',null,'third'])
+    assert.equal(await page.request.get(base+'/text'), 'plain response')
+    assert.equal(await page.request.post(base+'/text', {data:'hello'}), 'plain response')
+    assert.deepEqual(await page.request.post(base+'/json', {headers:{'X-Test':'yes'}}), {header:'yes'})
+    await page.getByRole('textbox',{name:'Text'}).fill('a')
+    await mini.press('Space')
+    await mini.press('b')
+    await mini.press('Shift+C')
+    await mini.press('Shift+1')
+    assert.equal(await mini.evaluate(() => (document.querySelector('input') as HTMLInputElement).value), 'a bC!')
+  } finally {
+    await mini.close()
+    server.closeAllConnections()
+    await new Promise<void>(resolve=>server.close(()=>resolve()))
+  }
+})

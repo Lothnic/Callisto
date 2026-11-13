@@ -600,14 +600,13 @@ pub async fn launch(options: LaunchOptions) -> Result<Browser> {
 impl Browser {
     pub async fn close(&mut self) -> Result<()> {
         if self.owned {
-            let _ = self
-                .bidi
-                .call("browsingContext.close", json!({ "context": self.context }))
-                .await;
+            let _ = tokio::time::timeout(Duration::from_secs(2), self.bidi.call(
+                "browsingContext.close", json!({ "context": self.context })
+            )).await;
         }
         if let Some(child) = self.child.as_mut() {
-            let _ = child.kill().await;
-            let _ = child.wait().await;
+            let _ = child.start_kill();
+            let _ = tokio::time::timeout(Duration::from_secs(2), child.wait()).await;
         }
         if self.owned && !self.profile.as_os_str().is_empty() {
             let _ = std::fs::remove_dir_all(&self.profile);

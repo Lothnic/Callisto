@@ -249,8 +249,8 @@
           try { next = document.querySelector(args.selector); } catch { throw new Error('Invalid next-page selector.'); }
           if (!next) throw new Error('No next-page control matched the selector.');
           if (next.hasAttribute('disabled') || next.getAttribute('aria-disabled') === 'true' || next.classList.contains('disabled')) throw new Error('The next-page control is disabled.');
-          next.scrollIntoView({block:'center'});
-          next.click();
+          const target = await actionable(reference(next), 'click');
+          target.click();
           return {value:{clicked:true}};
         }
         if (args.action === 'scroll') {
@@ -307,7 +307,7 @@
         const form = el.form;
         if (!(form instanceof HTMLFormElement)) throw new Error('Target is not associated with a form.');
         if (!HTMLFormElement.prototype.checkValidity.call(form)) throw new Error('Form validation failed; complete the required fields before submitting.');
-        const submitter = el.matches('button[type=submit],input[type=submit],input[type=image]') ? el : [...form.elements].find(node=>node.matches('button[type=submit],button:not([type]),input[type=submit]') && !node.disabled);
+        const submitter = el.matches('button,input') && ['submit','image'].includes(el.type) ? el : [...form.elements].find(node=>node.matches('button[type=submit],button:not([type]),input[type=submit]') && !node.disabled);
         HTMLFormElement.prototype.requestSubmit.call(form,submitter);
       } else if (message.method === 'click') el.click();
       else if (message.method === 'fill') {

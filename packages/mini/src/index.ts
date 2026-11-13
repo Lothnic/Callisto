@@ -168,7 +168,25 @@ export class Mini {
   async withAbortSignal<T>(signal: AbortSignal, work: () => Promise<T>): Promise<T> {
     const previous = this.operationSignal
     this.operationSignal = signal
-    try { return await work() } finally { this.operationSignal = previous }
+    try { this.throwIfAborted(); const result = await work(); this.throwIfAborted(); return result }
+    finally { this.operationSignal = previous }
+  }
+
+  /** @internal Check cancellation between dependent operations. */
+  throwIfAborted(): void {
+    if (this.operationSignal?.aborted) throw new Error('Request was cancelled')
+  }
+
+  /** @internal An interruptible delay within a host operation. */
+  async wait(ms: number): Promise<void> {
+    this.throwIfAborted()
+    const signal = this.operationSignal
+    await new Promise<void>((resolve, reject) => {
+      const finish = () => { clearTimeout(timer); signal?.removeEventListener('abort', cancel); resolve() }
+      const cancel = () => { clearTimeout(timer); signal?.removeEventListener('abort', cancel); reject(new Error('Request was cancelled')) }
+      const timer = setTimeout(finish, ms)
+      signal?.addEventListener('abort', cancel, { once: true })
+    })
   }
 
   /** Ask the person using a paired browser to complete a step in this tab. */
@@ -200,6 +218,7 @@ export class Mini {
   // --- navigation ---
 
   async goto(url: string, opts: { waitUntil?: 'load' | 'domcontentloaded'; timeout?: number } = {}): Promise<void> {
+    this.throwIfAborted()
     if (this.session.mode === 'connected') {
       try {
         await this.connectedAction(`await page.goto(${JSON.stringify(url)}, ${JSON.stringify({waitUntil:opts.waitUntil ?? 'load', timeout:opts.timeout ?? NAVIGATION_TIMEOUT})})`)
@@ -270,6 +289,18 @@ export class Mini {
   async click(target: Target, opts: ClickOpts = {}): Promise<void> {
     const point=await this.actionable(target,'click',opts.timeout)
     await this.observeClickNavigation(()=>this.mouse(point, opts.button ?? 'left', opts.clickCount ?? 1))
+  }
+
+  /** @internal Resolve a pager selector, then use the regular checked input path. */
+  async clickSelector(selector: string): Promise<void> {
+    this.throwIfAborted()
+    const { root } = await this.cdp.DOM.getDocument()
+    const { nodeId } = await this.cdp.DOM.querySelector({ nodeId: root.nodeId, selector })
+    if (!nodeId) throw new Error('No next-page control matched the selector.')
+    const { node } = await this.cdp.DOM.describeNode({ nodeId })
+    const point = await this.actionableNode(node.backendNodeId, selector, 'click', 2000)
+    this.throwIfAborted()
+    await this.observeClickNavigation(() => this.mouse(point, 'left', 1))
   }
 
   async dblclick(target: Target, opts: ClickOpts = {}): Promise<void> {
@@ -349,8 +380,12 @@ export class Mini {
       await this.connectedAction(`await page.keyboard.press(${JSON.stringify([...parts, main].join('+'))})`)
       return
     }
-    const text = modifiers === 0 && main.length === 1 ? main : main === 'Enter' ? '\r' : undefined
-    const event = { key: main === 'Space' ? ' ' : main, code, windowsVirtualKeyCode, modifiers }
+    const shiftedDigits: Record<string, string> = { '0': ')', '1': '!', '2': '@', '3': '#', '4': '$', '5': '%', '6': '^', '7': '&', '8': '*', '9': '(' }
+    const printable = main === 'Space' ? ' ' : main.length === 1
+      ? (modifiers & modifierBits.Shift ? shiftedDigits[main] ?? upper : main)
+      : undefined
+    const text = (modifiers & ~modifierBits.Shift) === 0 ? (printable ?? (main === 'Enter' ? '\r' : undefined)) : undefined
+    const event = { key: printable ?? main, code, windowsVirtualKeyCode, modifiers }
     const observeNav = main === 'Enter' && modifiers === 0
     const cdpEvents = this.cdp as unknown as EventEmitter
     let navigated = false
@@ -445,12 +480,13 @@ export class Mini {
     fn: string | ((...args: never[]) => T),
     ...args: unknown[]
   ): Promise<T> {
+    this.throwIfAborted()
     const expression =
       typeof fn === 'string'
         ? fn
         : // `__name` is emitted by transpilers that keep function names (tsx/esbuild).
           // Defining it locally keeps serialized functions runnable in the page.
-          `(()=>{const __name=(value)=>value;return (${fn.toString()})(${args.map((a) => JSON.stringify(a)).join(',')})})()`
+          `(()=>{const __name=(value)=>value;return (${fn.toString()})(${args.map((a) => a === undefined ? 'undefined' : JSON.stringify(a)).join(',')})})()`
     const { result, exceptionDetails } = await this.cdp.Runtime.evaluate({
       expression,
       returnByValue: true,
@@ -459,6 +495,7 @@ export class Mini {
     if (exceptionDetails) {
       throw new Error(exceptionDetails.exception?.description ?? 'evaluate failed')
     }
+    this.throwIfAborted()
     return result.value as T
   }
 
@@ -807,6 +844,7 @@ export class Mini {
 
   /** Bounded safety checks for ref targets. Raw coordinates are explicit and unchecked. */
   private async actionable(target: Target, action: 'click' | 'hover' | 'fill', timeout = 2_000): Promise<Point> {
+    this.throwIfAborted()
     await this.requireConnectedInput()
     if (isPoint(target)) {
       if (!Number.isFinite(target.x) || !Number.isFinite(target.y)) throw new Error(`${action}: coordinates must be finite numbers`)
@@ -815,6 +853,10 @@ export class Mini {
     const ref = target.replace(/^\[|\]$/g, '')
     const info = this.refs.get(ref)
     if (!info) throw new Error(`ref "${target}" unknown — call snapshot() first.`)
+    return this.actionableNode(info.backendDOMNodeId, target, action, timeout)
+  }
+
+  private async actionableNode(backendNodeId: number, target: string, action: 'click' | 'hover' | 'fill', timeout: number): Promise<Point> {
     const deadline = Date.now() + timeout
     let lastReason = 'not ready'
     let previous: number[] | undefined
@@ -822,8 +864,8 @@ export class Mini {
       if (this.operationSignal?.aborted) throw new Error(`${action}: request was cancelled`)
       let objectId: string | undefined
       try {
-        await this.cdp.DOM.scrollIntoViewIfNeeded({ backendNodeId: info.backendDOMNodeId })
-        const { object } = await this.cdp.DOM.resolveNode({ backendNodeId: info.backendDOMNodeId })
+        await this.cdp.DOM.scrollIntoViewIfNeeded({ backendNodeId })
+        const { object } = await this.cdp.DOM.resolveNode({ backendNodeId })
         objectId = object.objectId
         if (!objectId) throw new Error('node is detached')
         const response = await this.cdp.Runtime.callFunctionOn({
@@ -910,6 +952,7 @@ export class Mini {
   }
 
   private async mouse(p: Point, button: MouseButton, clickCount: number): Promise<void> {
+    this.throwIfAborted()
     if (this.session.mode === 'connected') {
       await this.connectedAction(`await page.mouse.click(${p.x}, ${p.y}, ${JSON.stringify({button,clickCount})})`)
       return
@@ -960,6 +1003,7 @@ export class Mini {
 
   /** Never send connected input outside browse's execution lifecycle. */
   private async requireConnectedInput(): Promise<void> {
+    this.throwIfAborted()
     if (this.session.mode !== 'connected') return
     if (!this.session.connectedExecute) throw new Error('Connected browser execution lifecycle is unavailable')
   }

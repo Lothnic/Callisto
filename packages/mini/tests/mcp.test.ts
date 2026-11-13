@@ -114,3 +114,32 @@ test('MCP: complete a local browser task through tools and close the session', {
     await new Promise<void>(resolve => fixture.close(() => resolve()))
   }
 })
+
+test('MCP: cancellation during a wait prevents the next run step', {skip:!process.env.CALLISTO_SMOKE}, async()=>{
+  const visited:string[]=[]
+  const fixture=createServer((req,res)=>{
+    visited.push(req.url ?? '/')
+    res.writeHead(200,{'content-type':'text/html'}).end('<h1>Fixture</h1>')
+  })
+  await new Promise<void>(resolve=>fixture.listen(0,'127.0.0.1',resolve))
+  const base=`http://127.0.0.1:${(fixture.address() as {port:number}).port}`
+  const client=await connect()
+  try {
+    await client.callTool({name:'callisto_navigate',arguments:{url:base+'/initial'}})
+    const controller=new AbortController()
+    const pending=client.callTool({name:'callisto_run',arguments:{steps:[
+      {action:'wait',ms:1500},{action:'navigate',url:base+'/late'},
+    ]}}, {signal:controller.signal})
+    await new Promise(resolve=>setTimeout(resolve,200))
+    controller.abort()
+    await assert.rejects(pending)
+    const snapshot=await client.callTool({name:'callisto_snapshot',arguments:{}})
+    assert.equal(snapshot.isError,undefined)
+    assert(!visited.includes('/late'))
+    assert.match(JSON.stringify(snapshot.content), /initial/)
+  } finally {
+    await client.close()
+    fixture.closeAllConnections()
+    await new Promise<void>(resolve=>fixture.close(()=>resolve()))
+  }
+})

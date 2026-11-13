@@ -20,6 +20,8 @@ import re
 from dataclasses import dataclass
 from typing import Any
 
+from .tools.bash import shell_command
+
 
 @dataclass(frozen=True)
 class ApprovalRule:
@@ -126,9 +128,9 @@ def check_approval(
         return None
 
     # ── bash approval check ──────────────────────────────────────────
-    if call["name"] == "bash":
+    if call["name"] in ("bash", "repo.exec"):
         # Serialise arguments for pattern matching
-        args_text = json.dumps(call.get("arguments", {}))
+        args_text = json.dumps({"cmd": shell_command(call.get("arguments", {}).get("cmd", ""))})
 
         for rule in ruleset:
             if rule.pattern.search(args_text):

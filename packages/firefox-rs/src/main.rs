@@ -717,7 +717,14 @@ fn resolve_tab(tabs: &[TabInfo], target: Option<&str>, current: &str) -> Result<
 }
 
 fn find_matches(text: &str, query: &str, max_matches: usize) -> Vec<Value> {
-    let haystack: Vec<char> = text.to_lowercase().chars().collect();
+    let mut haystack = Vec::new();
+    let mut offsets = Vec::new();
+    for (index, ch) in text.chars().enumerate() {
+        for lower in ch.to_lowercase() {
+            haystack.push(lower);
+            offsets.push(index);
+        }
+    }
     let needle: Vec<char> = query.to_lowercase().chars().collect();
     let original: Vec<char> = text.chars().collect();
     let mut matches = Vec::new();
@@ -732,10 +739,11 @@ fn find_matches(text: &str, query: &str, max_matches: usize) -> Vec<Value> {
         let found = (position..=haystack.len() - needle.len())
             .find(|&index| haystack[index..index + needle.len()] == needle[..]);
         let Some(index) = found else { break };
-        let start = index.saturating_sub(120);
-        let end = (index + needle.len() + 120).min(original.len());
+        let original_index = offsets[index];
+        let start = original_index.saturating_sub(120);
+        let end = (offsets[index + needle.len() - 1] + 1 + 120).min(original.len());
         let snippet: String = original[start..end].iter().collect();
-        matches.push(json!({ "offset": index, "text": snippet }));
+        matches.push(json!({ "offset": original_index, "text": snippet }));
         position = index + needle.len();
     }
     matches
@@ -874,4 +882,16 @@ async fn write_message(stdout: &mut tokio::io::Stdout, message: &Value) -> std::
     stdout.flush().await?;
     let _ = std::io::stdout().flush();
     Ok(())
+}
+
+#[cfg(test)]
+mod find_regression_tests {
+    use super::*;
+    #[test]
+    fn unicode_lowercase_expansion_preserves_original_offsets() {
+        let text = format!("{}needle", "İ".repeat(300));
+        let results = find_matches(&text, "needle", 5);
+        assert_eq!(results[0]["offset"], 300);
+        assert!(results[0]["text"].as_str().unwrap().contains("needle"));
+    }
 }

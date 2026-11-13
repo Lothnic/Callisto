@@ -60,29 +60,16 @@ function extractPageInBrowser(spec: ExtractSpec): PageRows {
   return { rows, has_next, omitted: matches.length > limit }
 }
 
-/** Runs in the page and clicks the pager control. */
-function clickNextInBrowser(selector: string): { clicked: boolean } {
-  const next = document.querySelector<HTMLElement>(selector)
-  if (!next) return { clicked: false }
-  if (next.hasAttribute('disabled') || next.getAttribute('aria-disabled') === 'true' || next.classList.contains('disabled')) {
-    throw new Error('The next-page control is disabled.')
-  }
-  next.scrollIntoView({ block: 'center' })
-  next.click()
-  return { clicked: true }
-}
-
-const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
-
 async function stableDocument(mini: Mini, timeoutMs = 10_000): Promise<void> {
   const deadline = Date.now() + timeoutMs
   while (Date.now() < deadline) {
+    mini.throwIfAborted()
     try {
       if (await mini.evaluate<boolean>(() => document.readyState === 'complete')) return
     } catch {
       // Navigation destroys the execution context; retry until the next document.
     }
-    await sleep(50)
+    await mini.wait(50)
   }
   throw new Error('The page did not finish loading within 10 seconds.')
 }
@@ -90,11 +77,12 @@ async function stableDocument(mini: Mini, timeoutMs = 10_000): Promise<void> {
 async function extractOnce(mini: Mini, spec: ExtractSpec): Promise<PageRows> {
   const deadline = Date.now() + 5_000
   for (;;) {
+    mini.throwIfAborted()
     try {
       return await mini.evaluate(extractPageInBrowser, spec)
     } catch (error) {
       if (Date.now() >= deadline) throw error
-      await sleep(100)
+      await mini.wait(100)
     }
   }
 }
@@ -104,16 +92,17 @@ async function waitForAdvance(mini: Mini, spec: ExtractSpec, previous: PageRows)
   const before = JSON.stringify(previous.rows)
   let candidate = '', since = 0
   while (Date.now() < deadline) {
+    mini.throwIfAborted()
     let result: PageRows
     try { result = await mini.evaluate(extractPageInBrowser, spec) }
-    catch { await sleep(100); continue } // A navigation may replace the document.
+    catch { await mini.wait(100); continue } // A navigation may replace the document.
     const current = JSON.stringify(result.rows)
     // A temporarily empty grid is common while an async page is loading.
     if (current !== before && result.rows.length > 0) {
       if (candidate !== current) { candidate = current; since = Date.now() }
       else if (Date.now() - since >= 200) return result
     } else { candidate = ''; since = 0 }
-    await sleep(100)
+    await mini.wait(100)
   }
   throw new Error('Pagination did not produce a stable, different set of rows within 5 seconds; inspect the page before retrying.')
 }
@@ -131,21 +120,14 @@ export async function extractRows(mini: Mini, spec: ExtractSpec, limitTotal = 10
   let truncated = false
   let result = await extractOnce(mini, { ...spec, limit })
   for (let page = 0; page < maxPages; page++) {
+    mini.throwIfAborted()
     pages++
     rows.push(...result.rows)
     if (result.omitted) truncated = true
     if (rows.length >= limitTotal) { if (rows.length > limitTotal || result.has_next) truncated = true; break }
     if (!spec.paginate || !result.has_next) break
     if (page + 1 >= maxPages) { truncated = true; break }
-    let clicked: { clicked: boolean }
-    try {
-      clicked = await mini.evaluate(clickNextInBrowser, spec.paginate.next)
-    } catch (error) {
-      // Only navigation-related failures may have occurred after the click.
-      if (!/context|navigation|target closed|cannot find/i.test(String(error))) throw error
-      clicked = { clicked: true }
-    }
-    if (!clicked.clicked) break
+    await mini.clickSelector(spec.paginate.next)
     await stableDocument(mini)
     result = await waitForAdvance(mini, { ...spec, limit }, result)
   }

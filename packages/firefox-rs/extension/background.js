@@ -134,7 +134,8 @@ async function executeCommand(request,connection){
     if(sessions.size>=64)throw new Error('Too many connected sessions; close unused MCP clients.');
     session=createSession();sessions.set(id,session);
   }
-  return session.executeCommand(request,connection);
+  const budget = request.method === 'run' ? 60000 : request.method === 'extract' ? 35000 : 10000;
+  return session.executeCommand(request,connection,Date.now()+budget);
 }
 function createSession(){
 let selected = null;
@@ -171,6 +172,7 @@ async function share(tabId,expectedOwner) {
   assertAvailable(tab.id);
   reserved = tab.id;
   const stamp = generation, connection = socket;
+  try {
   const hasSiteAccess = await browser.permissions.contains({origins:['<all_urls>']});
   const deadline=Date.now()+8000;
   while(true) {
@@ -193,6 +195,13 @@ async function share(tabId,expectedOwner) {
   continuous = hasSiteAccess;
   await browser.browserAction.setBadgeText({text:'ON'}).catch(() => {});
   return 'Connected. This tab is shared; click Stop sharing to revoke access.';
+  } catch (error) {
+    if (stamp === generation && reserved === tab.id) {
+      reserved = null;
+      await browser.tabs.sendMessage(tab.id, {type:'revoke'}).catch(() => {});
+    }
+    throw error;
+  }
 }
 
 async function waitReady(tabId, owner, connection, commandDeadline=Date.now()+8000) {
@@ -228,6 +237,7 @@ async function executeCommand(request, connection, deadline = Date.now()+10000) 
     const [active] = target ? await browser.tabs.query({active:true,windowId:target.windowId}) : [];
     return {connected:true,sharing:chosen !== null,active:chosen !== null && active?.id === chosen,ready,continuous,browserAccess:await browser.permissions.contains(fullBrowserPermissions),capabilities:{trustedInput:false,frames:'same-origin',playwrightExecution:false}};
   }
+  if (Date.now() >= deadline) throw new Error('Command deadline exceeded; inspect before retrying.');
   if (request.method === 'browser') {
     const args = JSON.parse(request.value);
     if (!browserActions.includes(args.action)) throw new Error('Unsupported browser action.');
@@ -264,9 +274,10 @@ async function executeCommand(request, connection, deadline = Date.now()+10000) 
     const rows = [];
     let pages = 0;
     let truncated = false;
-    const readPage = () => executeCommand({ method: 'page', value: JSON.stringify({ action: 'extract', spec }) }, connection, Date.now() + 10000);
+    const readPage = () => executeCommand({ method: 'page', value: JSON.stringify({ action: 'extract', spec }) }, connection, Math.min(deadline, Date.now() + 10000));
     let one = await readPage();
     for (let page = 0; page < maxPages; page++) {
+      if (Date.now() >= deadline) throw new Error('Extraction deadline exceeded; inspect before retrying.');
       if (chosen !== selected || owner !== ownership || socket !== connection) throw new Error('Tab sharing changed during extraction.');
       pages++;
       rows.push(...one.rows);
@@ -276,15 +287,16 @@ async function executeCommand(request, connection, deadline = Date.now()+10000) 
       if (page + 1 >= maxPages) { truncated = true; break; }
       const stampBefore = generation;
       try {
-        await executeCommand({ method: 'page', value: JSON.stringify({ action: 'click_next', selector: spec.paginate.next }) }, connection, Date.now() + 30000);
+        await executeCommand({ method: 'page', value: JSON.stringify({ action: 'click_next', selector: spec.paginate.next }) }, connection, Math.min(deadline, Date.now() + 10000));
       } catch (error) {
         // Only a navigation that actually started can explain a dropped reply.
         if (ready && generation === stampBefore) throw error;
       }
       const before = JSON.stringify(one.rows);
-      const until = Date.now() + 5000;
+      const until = Math.min(deadline, Date.now() + 5000);
       let candidate = '', since = 0, advanced = false;
       while (Date.now() < until) {
+        if (Date.now() >= deadline) throw new Error('Extraction deadline exceeded; inspect before retrying.');
         if (chosen !== selected || owner !== ownership || socket !== connection) throw new Error('Tab sharing changed during extraction.');
         if (!ready) await waitReady(chosen, owner, connection, until);
         let next;
@@ -314,7 +326,7 @@ async function executeCommand(request, connection, deadline = Date.now()+10000) 
     const steps = args.steps;
     if (!Array.isArray(steps) || !steps.length || steps.length > 40) throw new Error('Expected 1-40 steps.');
     const started = Date.now();
-    const deadline = started + 60000;
+    deadline = Math.min(deadline, started + 60000);
     let completed = 0;
     let extraction = null;
     for (const step of steps) {
@@ -325,11 +337,11 @@ async function executeCommand(request, connection, deadline = Date.now()+10000) 
         if (step.action === 'wait') {
           const ms = Math.max(1, Math.min(Number(step.ms) || 0, 5000));
           if (!ms) throw new Error('wait requires ms.');
-          await new Promise(resolve => setTimeout(resolve, ms));
+          await new Promise(resolve => setTimeout(resolve, Math.min(ms, Math.max(0, deadline-Date.now()))));
         } else if (step.action === 'wait_for') {
           if (typeof step.text !== 'string' || !step.text || step.text.length > 500) throw new Error('wait_for requires text (1-500 characters).');
           const budget = Math.min(Number(step.timeout_ms) || 5000, 20000);
-          const until = Date.now() + budget;
+          const until = Math.min(deadline, Date.now() + budget);
           let found = false;
           while (Date.now() < until) {
             const result = await executeCommand({ method: 'page', value: JSON.stringify({ action: 'find', query: step.text }) }, connection, deadline);
@@ -350,6 +362,7 @@ async function executeCommand(request, connection, deadline = Date.now()+10000) 
           await executeCommand(command, connection, deadline);
           if (step.action === 'navigate' && !ready) await waitReady(chosen, owner, connection, deadline);
         }
+        if (Date.now() >= deadline) throw new Error('Command deadline exceeded.');
         completed++;
       } catch (error) {
         throw new Error(`Run stopped at step ${completed + 1} (${step.action}); earlier steps may have completed: ${error.message}`);
@@ -382,6 +395,7 @@ async function executeCommand(request, connection, deadline = Date.now()+10000) 
   const [active] = await browser.tabs.query({active:true,windowId:target.windowId});
   if (!active || active.id !== chosen) throw new Error('The shared tab is not active. Return to it before continuing.');
   if (!ready) await waitReady(chosen,owner,connection,deadline);
+  if (Date.now() >= deadline) throw new Error('Command deadline exceeded; inspect before retrying.');
   if (owner !== ownership || chosen !== selected || socket !== connection) throw new Error('Tab sharing changed before the action.');
   if (request.method === 'navigate') {
     if (!continuous || !(await browser.permissions.contains({origins:['<all_urls>']}))) throw new Error('Navigation needs the optional website permission. Choose Allow navigation in the extension, then share the tab again.');

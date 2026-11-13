@@ -180,6 +180,7 @@ server.registerTool('callisto_batch', {
 }, async ({ actions }, context) => run(async m => {
   const page = new Page(m)
   for (const [index, step] of actions.entries()) {
+    m.throwIfAborted()
     try {
       switch (step.action) {
         case 'navigate': await m.goto(step.url, { waitUntil: 'domcontentloaded', timeout: 20000 }); break
@@ -196,8 +197,6 @@ server.registerTool('callisto_batch', {
   }
   return { completed: actions.length, snapshot: await boundedSnapshot(m) }
 }, {signal:context.mcpReq.signal}))
-
-const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 
 const extractField = z.union([
   z.string().min(1).max(500),
@@ -239,7 +238,7 @@ async function waitForText(m: Mini, text: string, timeoutMs: number): Promise<vo
     } catch {
       // Navigation during the wait replaces the execution context; retry.
     }
-    await sleep(100)
+    await m.wait(100)
   }
   throw new Error(`wait_for timed out after ${timeoutMs}ms waiting for ${JSON.stringify(text)}.`)
 }
@@ -259,6 +258,7 @@ server.registerTool('callisto_run', {
   const started = Date.now()
   let extraction: Awaited<ReturnType<typeof extractRows>> | undefined
   for (const [index, step] of steps.entries()) {
+    m.throwIfAborted()
     if (Date.now() - started > 60_000) throw new Error(`Run stopped at step ${index + 1}: 60-second budget exceeded.`)
     try {
       switch (step.action) {
@@ -269,7 +269,7 @@ server.registerTool('callisto_run', {
         case 'fill_role': await page.getByRole(step.role, { name: step.name, exact: true }).fill(step.value); break
         case 'press': await m.press(step.key); break
         case 'scroll': await m.scroll(step.delta_x, step.delta_y); break
-        case 'wait': await sleep(step.ms); break
+        case 'wait': await m.wait(step.ms); break
         case 'wait_for': await waitForText(m, step.text, step.timeout_ms); break
         case 'extract': extraction = await extractRows(m, step.spec as ExtractSpec); break
       }

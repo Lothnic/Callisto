@@ -16,24 +16,28 @@ async function browserControl(args, session, owner) {
     case 'tab_select': {
       session.assertAvailable(id());
       const tab = await browser.tabs.update(id(),{active:true});
+      session.guard(owner);
       await browser.windows.update(tab.windowId,{focused:true});
       await session.share(tab.id,owner); return summary(tab);
     }
     case 'window_close': {
       if(!Number.isSafeInteger(args.window_id) || args.window_id<0)throw new Error('window_id is required.');
       for(const tab of await browser.tabs.query({windowId:args.window_id}))session.assertAvailable(tab.id);
+      session.guard(owner);
       await browser.windows.remove(args.window_id);return {closed:true};
     }
     case 'agent_container': return agentContainer();
     case 'window_create': {
       const options={url:webUrl(args.url),focused:true,titlePreface:'[Callisto] '};
       const store=await creationStore(args, session); if(store)options.cookieStoreId=store;
+      session.guard(owner);
       const window=await browser.windows.create(options);
       return {windowId:window.id,tabs:window.tabs.map(summary)};
     }
     case 'tab_create': {
       const options = {url:webUrl(args.url),active:true};
       const store=await creationStore(args, session);if(store)options.cookieStoreId=store;
+      session.guard(owner);
       const tab = await browser.tabs.create(options);
       return summary(tab);
     }
@@ -55,6 +59,7 @@ async function browserControl(args, session, owner) {
       if (session.selected === null) throw new Error('Select or share a tab first.');
       const tab = await browser.tabs.get(session.selected);
       const [active] = await browser.tabs.query({active:true,windowId:tab.windowId});
+      session.guard(owner);
       if (active?.id !== session.selected) throw new Error('The controlled tab is not active.');
       if (args.action === 'screenshot') return {dataUrl:await browser.tabs.captureVisibleTab(tab.windowId,{format:'jpeg',quality:70})};
       if (args.action === 'back') await browser.tabs.goBack(session.selected);

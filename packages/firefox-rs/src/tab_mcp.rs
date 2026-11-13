@@ -6,7 +6,7 @@ use anyhow::{anyhow, bail, Result};
 use futures_util::{SinkExt, StreamExt};
 use serde_json::{json, Value};
 use std::{
-    collections::{HashMap, VecDeque},
+    collections::{HashMap, HashSet, VecDeque},
     sync::{
         atomic::{AtomicU64, Ordering},
         Arc,
@@ -79,7 +79,7 @@ impl Bridge {
             Ok(Ok(Ok(value))) => Ok(value),
             Ok(Ok(Err(error))) => Err(anyhow!(error)),
             Ok(Err(_)) => Err(anyhow!("The Firefox extension disconnected")),
-            Err(_) => Err(anyhow!("The tab did not respond within 15 seconds; the action may have completed. Inspect the page before retrying.")),
+            Err(_) => Err(anyhow!("Request timed out waiting for the tab; the action may have completed. Inspect the page before retrying.")),
         }
     }
 }
@@ -566,6 +566,7 @@ async fn serve_mcp<R: AsyncRead + Unpin, W: AsyncWrite + Unpin>(
 ) -> Result<()> {
     let mut stdin = BufReader::new(read).lines();
     let mut deferred = VecDeque::new();
+    let mut cancelled = HashSet::new();
     loop {
         let line = match deferred.pop_front() {
             Some(line) => line,
@@ -580,6 +581,7 @@ async fn serve_mcp<R: AsyncRead + Unpin, W: AsyncWrite + Unpin>(
         let Some(id) = message.get("id").cloned() else {
             continue;
         };
+        let was_cancelled = cancelled.remove(&id.to_string());
         let method = message.get("method").and_then(Value::as_str).unwrap_or("");
         let params = message.get("params").cloned().unwrap_or(json!({}));
         let result = match method {
@@ -590,7 +592,7 @@ async fn serve_mcp<R: AsyncRead + Unpin, W: AsyncWrite + Unpin>(
             "ping" => json!({}),
             "tools/list" => json!({"tools":tools()}),
             "tools/call" => {
-                match acquire_operation(&mut stdin, &mut deferred, &id, operations.clone()).await? {
+                match if was_cancelled { None } else { acquire_operation(&mut stdin, &mut deferred, &mut cancelled, &id, operations.clone()).await? } {
                     None => failure(anyhow!("Request cancelled before execution")),
                     Some(_operation) => {
                         let name = params.get("name").and_then(Value::as_str).unwrap_or("");
@@ -612,7 +614,10 @@ async fn serve_mcp<R: AsyncRead + Unpin, W: AsyncWrite + Unpin>(
                                                 if next["method"] == "notifications/cancelled" && next["params"]["requestId"] == id {
                                                     break Err(anyhow!("Request cancelled; action may have completed. Inspect before retrying."));
                                                 }
-                                                if next.get("id").is_some() { deferred.push_back(line); }
+                                                if next["method"] == "notifications/cancelled" {
+                                                    let target = &next["params"]["requestId"];
+                                                    if deferred.iter().any(|queued: &String| serde_json::from_str::<Value>(queued).ok().is_some_and(|v| v.get("id") == Some(target))) { cancelled.insert(target.to_string()); }
+                                                } else if next.get("id").is_some() { deferred.push_back(line); }
                                             }
                                         }
                                     }
@@ -621,6 +626,7 @@ async fn serve_mcp<R: AsyncRead + Unpin, W: AsyncWrite + Unpin>(
                         };
                         if outcome.as_ref().err().is_some_and(|e| {
                             e.to_string().starts_with("Request cancelled")
+                                || e.to_string().starts_with("Request timed out")
                                 || e.to_string().starts_with("MCP client disconnected")
                         }) {
                             // Dropped requests cannot consume late replies. Revoke the page
@@ -656,6 +662,7 @@ async fn serve_mcp<R: AsyncRead + Unpin, W: AsyncWrite + Unpin>(
 async fn acquire_operation<R: AsyncRead + Unpin>(
     input: &mut tokio::io::Lines<BufReader<R>>,
     deferred: &mut VecDeque<String>,
+    cancelled: &mut HashSet<String>,
     id: &Value,
     operations: Arc<Mutex<()>>,
 ) -> Result<Option<tokio::sync::OwnedMutexGuard<()>>> {
@@ -668,7 +675,10 @@ async fn acquire_operation<R: AsyncRead + Unpin>(
                 let Some(line)=incoming? else {bail!("MCP client disconnected while queued");};
                 let message=serde_json::from_str::<Value>(&line).unwrap_or(Value::Null);
                 if message["method"]=="notifications/cancelled" && message["params"]["requestId"]==*id {return Ok(None);}
-                if message.get("id").is_some(){deferred.push_back(line);}
+                if message["method"]=="notifications/cancelled" {
+                    let target = &message["params"]["requestId"];
+                    if deferred.iter().any(|queued| serde_json::from_str::<Value>(queued).ok().is_some_and(|v| v.get("id") == Some(target))) { cancelled.insert(target.to_string()); }
+                } else if message.get("id").is_some(){deferred.push_back(line);}
             }
         }
     }
@@ -682,6 +692,51 @@ mod tests {
         connect_async,
         tungstenite::{client::IntoClientRequest, http::HeaderValue},
     };
+
+    #[tokio::test]
+    async fn deferred_cancellation_prevents_later_dispatch() {
+        let (bridge, _) = fixture().await;
+        let (send, mut receive) = mpsc::unbounded_channel();
+        *bridge.connection.lock().await = Some(send);
+        let (mut client, server) = tokio::io::duplex(8192);
+        let (read, write) = tokio::io::split(server);
+        let task = tokio::spawn(serve_mcp(read, write, bridge.clone(), Arc::new(Mutex::new(())), 101));
+        client.write_all(b"{\"id\":1,\"method\":\"tools/call\",\"params\":{\"name\":\"callisto_snapshot\",\"arguments\":{}}}\n").await.unwrap();
+        let first = receive.recv().await.unwrap();
+        client.write_all(b"{\"id\":2,\"method\":\"tools/call\",\"params\":{\"name\":\"callisto_click\",\"arguments\":{\"ref\":\"ax-1\"}}}\n{\"method\":\"notifications/cancelled\",\"params\":{\"requestId\":2}}\n").await.unwrap();
+        tokio::time::sleep(Duration::from_millis(50)).await;
+        bridge.pending.lock().await.remove(&first["id"].as_u64().unwrap()).unwrap().send(Ok(json!({"text":"ok"}))).unwrap();
+        let mut lines = BufReader::new(client).lines();
+        assert!(lines.next_line().await.unwrap().unwrap().contains("ok"));
+        assert!(lines.next_line().await.unwrap().unwrap().contains("Request cancelled before execution"));
+        assert!(receive.try_recv().is_err());
+        drop(lines); task.await.unwrap().unwrap();
+    }
+
+    #[tokio::test(start_paused = true)]
+    async fn timed_out_extraction_revokes_before_returning() {
+        let (bridge, _) = fixture().await;
+        let (send, mut receive) = mpsc::unbounded_channel();
+        *bridge.connection.lock().await = Some(send);
+        let (mut client, server) = tokio::io::duplex(8192);
+        let (read, write) = tokio::io::split(server);
+        let task = tokio::spawn(serve_mcp(read, write, bridge.clone(), Arc::new(Mutex::new(())), 101));
+        client.write_all(b"{\"id\":1,\"method\":\"tools/call\",\"params\":{\"name\":\"callisto_extract\",\"arguments\":{\"selector\":\".row\",\"fields\":{\"name\":{}}}}}\n").await.unwrap();
+        let extract = receive.recv().await.unwrap();
+        assert_eq!(extract["method"], "extract");
+        tokio::time::advance(Duration::from_secs(41)).await;
+        let release = receive.recv().await.unwrap();
+        assert_eq!(release["method"], "release");
+        assert_eq!(release["session"], 101);
+        bridge.pending.lock().await.remove(&release["id"].as_u64().unwrap()).unwrap()
+            .send(Ok(json!({"released":true}))).unwrap();
+        let mut client = BufReader::new(client).lines();
+        let response = client.next_line().await.unwrap().unwrap();
+        assert!(response.contains("Request timed out"));
+        assert!(bridge.pending.lock().await.is_empty());
+        drop(client);
+        task.await.unwrap().unwrap();
+    }
 
     #[tokio::test]
     async fn handoff_rejects_conflicting_aliases_before_contacting_browser() {
@@ -774,9 +829,10 @@ mod tests {
             .unwrap();
         let mut input = BufReader::new(server).lines();
         let mut deferred = VecDeque::new();
+        let mut cancelled = HashSet::new();
         let result = tokio::time::timeout(
             Duration::from_secs(1),
-            acquire_operation(&mut input, &mut deferred, &json!(42), operations.clone()),
+            acquire_operation(&mut input, &mut deferred, &mut cancelled, &json!(42), operations.clone()),
         )
         .await
         .unwrap()

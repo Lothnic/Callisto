@@ -95,6 +95,16 @@ MAX_STUCK_NUDGES = 2
 _tool_call_fingerprint = tool_call_fingerprint
 
 
+def _reject_tool_calls(history: list[dict[str, Any]], calls: list, result: dict[str, Any]) -> None:
+    """Keep rejected parallel tool calls paired with a result on every exit path."""
+    history.append(assistant_tool_calls_msg(calls))
+    history.append(tool_result_msg(calls[0]["id"], result))
+    for extra in calls[1:]:
+        history.append(tool_result_msg(extra["id"], {
+            "error": "Single-action discipline: not executed.",
+        }))
+
+
 def _is_websocket_disconnection(exc: SidecarError) -> bool:
     """Check if a SidecarError indicates a CDP WebSocket disconnection.
 
@@ -425,12 +435,7 @@ async def run(
         if noop:
             log.info("step %d: blocked action: %s", step, noop[:100])
             result = {"error": noop}
-            history.append(assistant_tool_calls_msg(tool_calls))
-            history.append(tool_result_msg(call["id"], result))
-            for extra in tool_calls[1:]:
-                history.append(tool_result_msg(extra["id"], {
-                    "error": "Single-action discipline: not executed.",
-                }))
+            _reject_tool_calls(history, tool_calls, result)
             write_scratchpad(history)
             await _emit(progress_callback, {
                 "type": "step_end",
@@ -491,12 +496,7 @@ async def run(
             if stuck_nudges >= MAX_STUCK_NUDGES:
                 force_final_mode = True
                 result = {"error": FORCE_FINAL_NUDGE}
-            history.append(assistant_tool_calls_msg(tool_calls))
-            history.append(tool_result_msg(call["id"], result))
-            for extra in tool_calls[1:]:
-                history.append(tool_result_msg(extra["id"], {
-                    "error": "Single-action discipline: not executed.",
-                }))
+            _reject_tool_calls(history, tool_calls, result)
             consecutive_identical = 0  # allow a different retry after nudge
             write_scratchpad(history)
             await _emit(progress_callback, {
@@ -527,8 +527,7 @@ async def run(
             thrash_msg = FORCE_FINAL_NUDGE if force_final_mode else PINGPONG_NUDGE
             log.warning("step %d: click/snapshot ping-pong — %s", step, thrash_msg[:60])
             result = {"error": thrash_msg}
-            history.append(assistant_tool_calls_msg(tool_calls))
-            history.append(tool_result_msg(call["id"], result))
+            _reject_tool_calls(history, tool_calls, result)
             family_history.clear()
             consecutive_family = 0
             write_scratchpad(history)
@@ -553,8 +552,7 @@ async def run(
             )
             log.warning("step %d: same ref thrash %s", step, last_click_ref)
             result = {"error": thrash_msg}
-            history.append(assistant_tool_calls_msg(tool_calls))
-            history.append(tool_result_msg(call["id"], result))
+            _reject_tool_calls(history, tool_calls, result)
             same_click_count = 0
             write_scratchpad(history)
             await _emit(progress_callback, {
@@ -590,8 +588,7 @@ async def run(
                 if family == "repl:goto" and consecutive_blocked >= 2:
                     thrash_msg += " Recent pages looked blocked — switch host or stop with partial."
             result = {"error": thrash_msg}
-            history.append(assistant_tool_calls_msg(tool_calls))
-            history.append(tool_result_msg(call["id"], result))
+            _reject_tool_calls(history, tool_calls, result)
             consecutive_family = 0
             write_scratchpad(history)
             await _emit(progress_callback, {
@@ -829,10 +826,23 @@ async def run(
             "phase": "model_wait",
             "message": "Step budget exhausted — asking model for best-effort final answer…",
         })
-        last = await model.chat(
+        budget.check()
+        messages, compaction_info = await compact(
             [system_message()] + prune_old_snapshots(history),
-            [],  # no tools
+            token_budget=token_budget,
+            model=model,
         )
+        if compaction_info:
+            audit.record_compaction(
+                compaction_info["turns_dropped"], compaction_info["summary_used"],
+                compaction_info["token_savings"],
+            )
+        last = await model.chat(messages, [])
+        budget.record_turn(
+            sum(len(json.dumps(message)) for message in messages) // 4,
+            len(json.dumps(last, default=str)) // 4,
+        )
+        budget.check()
         final = (last.get("text") or "").strip()
         if final:
             audit.record_task_end("success", final[:500])

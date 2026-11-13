@@ -4,7 +4,7 @@ const vm = require('node:vm');
 const fs = require('node:fs');
 const path = require('node:path');
 
-function fixture(executeScript = async () => {}, siteAccess = false, saved = {}) {
+function fixture(executeScript = async () => {}, siteAccess = false, saved = {}, clock = Date) {
   let listener, menuListener, updateListener, domListener;
   const messages = [];
   class Socket {
@@ -31,7 +31,7 @@ function fixture(executeScript = async () => {}, siteAccess = false, saved = {})
       onRemoved:{addListener(){}}, onUpdated:{addListener(fn){ updateListener = fn; }}
     }
   };
-  const context = vm.createContext({browser,WebSocket:Socket,setTimeout,clearTimeout,URL});
+  const context = vm.createContext({browser,WebSocket:Socket,setTimeout,clearTimeout,URL,Date:clock});
   vm.runInContext(fs.readFileSync(path.join(__dirname,'../extension/browser-control.js'),'utf8'), context);
   vm.runInContext(fs.readFileSync(path.join(__dirname,'../extension/background.js'),'utf8'), context);
   return {listener,menuListener,updateListener,domListener,Socket,messages,browser};
@@ -236,4 +236,52 @@ test('initial about:blank navigation is retried before sharing',async()=>{
  const connecting=listener({type:'pair',code});await new Promise(setImmediate);Socket.last.open();await Socket.last.receive({type:'paired',protocol:2});await connecting;
  browser.tabs.get=async id=>({id,active:true,windowId:1,url:'about:blank',status:'loading'});
  assert.match((await listener({type:'share'})).message,/tab is shared/);assert.equal(attempts,2);
+});
+
+
+test('nested extraction respects the enclosing absolute deadline', async()=>{
+  let now=0, page=0, clicks=0;
+  const {listener,Socket,messages,browser}=fixture(async()=>{},true,{}, {now:()=>now});
+  const pairing=listener({type:'pair',code});await new Promise(setImmediate);
+  Socket.last.open();await Socket.last.receive({type:'paired',protocol:2});await pairing;
+  await listener({type:'share'});
+  browser.tabs.sendMessage=async(_id,message)=>{
+    if(message.type!=='action')return {value:true};
+    const args=JSON.parse(message.value);
+    if(args.action==='extract'){now+=100;return {value:{rows:[{page}],has_next:true,omitted:false}};}
+    if(args.action==='click_next'){clicks++;page++;now+=2500;return {value:{clicked:true}};}
+    return {value:{}};
+  };
+  await Socket.last.receive({id:200,method:'run',value:JSON.stringify({steps:[{action:'extract',spec:{selector:'.row',fields:{page:{}},paginate:{next:'#next',max_pages:25}}}]})});
+  assert.match(messages.at(-1).error,/deadline|budget|within 5 seconds/i);
+  assert(clicks<24, 'no new pager clicks after the enclosing deadline');
+});
+
+
+test('revocation during window lookup prevents window closure',async()=>{
+  const {listener,Socket,browser,messages}=fixture(async()=>{},true);
+  const pairing=listener({type:'pair',code});await new Promise(setImmediate);
+  Socket.last.open();await Socket.last.receive({type:'paired',protocol:2});await pairing;
+  await listener({type:'share'});
+  let release; let entered;
+  const started=new Promise(resolve=>{entered=resolve;});
+  browser.tabs.query=async options=>{if(options?.windowId===9){entered();await new Promise(resolve=>{release=resolve;});return [];}return [{id:42,active:true,windowId:1}];};
+  let removed=false;browser.windows={remove:async()=>{removed=true;}};
+  const pending=Socket.last.receive({id:300,method:'browser',value:JSON.stringify({action:'window_close',window_id:9})});
+  await started;await listener({type:'stop'});release();await pending;
+  assert.equal(removed,false);assert.match(messages.at(-1).error,/ownership changed/i);
+});
+
+test('failed tab sharing releases its reservation',async()=>{
+  const {listener,Socket,browser,messages}=fixture(async id=>{if(id===43)throw new Error('Missing host permission');},true);
+  browser.tabs.get=async id=>({id,active:true,windowId:1,url:'https://example.test'});
+  browser.tabs.update=async id=>({id,active:true,windowId:1});
+  browser.windows={update:async()=>{}};
+  const pairing=listener({type:'pair',code});await new Promise(setImmediate);
+  Socket.last.open();await Socket.last.receive({type:'paired',protocol:2});await pairing;
+  await Socket.last.receive({id:301,session:101,method:'browser',value:JSON.stringify({action:'tab_select',tab_id:43})});
+  assert.match(messages.at(-1).error,/Missing host permission/);
+  let closed=false;browser.tabs.remove=async()=>{closed=true;};
+  await Socket.last.receive({id:302,session:202,method:'browser',value:JSON.stringify({action:'tab_close',tab_id:43})});
+  assert.equal(closed,true);
 });

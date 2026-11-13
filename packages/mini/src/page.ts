@@ -292,11 +292,8 @@ export class Page {
               ...headers,
             },
           })
-          try {
-            return await res.json()
-          } catch {
-            return await res.text()
-          }
+          const text = await res.text()
+          try { return JSON.parse(text) } catch { return text }
         },
         url,
         opts.data,
@@ -310,11 +307,8 @@ export class Page {
             method: 'GET',
             headers,
           })
-          try {
-            return await res.json()
-          } catch {
-            return await res.text()
-          }
+          const text = await res.text()
+          try { return JSON.parse(text) } catch { return text }
         },
         url,
         opts.headers,

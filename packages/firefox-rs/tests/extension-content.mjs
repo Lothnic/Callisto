@@ -99,6 +99,17 @@ try {
   assert.equal(limited.value.omitted,true);
   assert.match(limited.value.rows[0]._text,/^Alpha 3$/);
   assert.match((await invoke({type:'action',method:'page',value:JSON.stringify({action:'extract',spec:{selector:'[[',fields:{name:'td'}}})})).error,/Invalid row selector/);
+  await page.evaluate(()=>{
+    document.body.innerHTML='<form id="multi"><button name="first">First</button><button name="second">Second</button></form><div class="row">A</div><button id="hidden-next" style="display:none" onclick="document.body.dataset.clicked=1">Next</button>';
+    document.querySelector('form').onsubmit=event=>{event.preventDefault();window.submitter=event.submitter.name;};
+  });
+  const multi=await invoke({type:'action',method:'snapshot'});
+  const second=multi.value.text.split('\n').find(line=>line.includes('"Second"')).match(/\[(ax-\d+)\]/)[1];
+  assert.equal((await invoke({type:'action',method:'submit',ref:second})).value.completed,true);
+  assert.equal(await page.evaluate(()=>window.submitter),'second');
+  const hidden=await invoke({type:'action',method:'page',value:JSON.stringify({action:'click_next',selector:'#hidden-next'})});
+  assert.match(hidden.error,/not visible/);
+  assert.equal(await page.evaluate(()=>document.body.dataset.clicked),undefined);
   const interrupted=invoke({type:'handoff',prompt:'This step will be revoked.',timeout_ms:5000});
   await page.getByText('This step will be revoked.',{exact:true}).waitFor();
   await invoke({type:'revoke'});

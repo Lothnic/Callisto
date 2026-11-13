@@ -43,6 +43,8 @@ impl RefRegistry {
         if let Some(existing) = self.by_node.get_mut(&node_id) {
             existing.role = role.to_string();
             existing.name = name.to_string();
+            existing.frame_id = frame_id.to_string();
+            self.by_ref.insert(existing.ref_.clone(), existing.clone());
             return existing.ref_.clone();
         }
         let ref_ = format!("ax-{}", self.next);
@@ -134,4 +136,18 @@ fn matches_name(actual: &str, expected: Option<&str>, exact: bool) -> bool {
         return true;
     }
     a.to_lowercase().contains(&e.to_lowercase())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn refreshed_metadata_is_visible_through_both_indexes() {
+        let mut refs = RefRegistry::new();
+        let id = refs.intern(1, "button", "Before", "old");
+        refs.current.insert(id.clone());
+        assert_eq!(refs.intern(1, "button", "After", "new"), id);
+        assert!(refs.find(Some("button"), Some("Before"), true).unwrap().is_none());
+        assert_eq!(refs.find(Some("button"), Some("After"), true).unwrap().unwrap().frame_id, "new");
+    }
 }

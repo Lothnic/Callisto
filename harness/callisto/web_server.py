@@ -4,6 +4,7 @@ from __future__ import annotations
 import asyncio
 import json
 import logging
+import secrets
 from typing import Any, Callable
 
 from aiohttp import web
@@ -15,6 +16,16 @@ _websockets: set[web.WebSocketResponse] = set()
 
 # Global task queue to handle tasks sent from the sidebar UI
 task_queue: asyncio.Queue[str] = asyncio.Queue()
+UI_TOKEN = web.AppKey("ui_token", str)
+
+
+@web.middleware
+async def local_host_only(request: web.Request, handler: Callable) -> web.StreamResponse:
+    """Reject foreign Host headers, including DNS rebinding to loopback."""
+    port = request.transport.get_extra_info("sockname")[1]
+    if request.host not in {f"127.0.0.1:{port}", f"localhost:{port}"}:
+        raise web.HTTPForbidden(text="Use the local sidebar address.")
+    return await handler(request)
 
 
 async def broadcast(message: dict[str, Any]) -> None:
@@ -31,7 +42,13 @@ async def broadcast(message: dict[str, Any]) -> None:
 
 async def websocket_handler(request: web.Request) -> web.WebSocketResponse:
     """Handles WebSocket communication with the sidebar UI."""
-    ws = web.WebSocketResponse()
+    if request.headers.get("Origin") != f"{request.scheme}://{request.host}":
+        raise web.HTTPForbidden(text="Sidebar origin required.")
+    expected = "callisto-token." + request.app[UI_TOKEN]
+    protocols = request.headers.get("Sec-WebSocket-Protocol", "").split(",")
+    if not any(secrets.compare_digest(protocol.strip(), expected) for protocol in protocols):
+        raise web.HTTPForbidden(text="Sidebar credential required.")
+    ws = web.WebSocketResponse(protocols=("callisto",))
     await ws.prepare(request)
 
     _websockets.add(ws)
@@ -324,7 +341,7 @@ async def sidebar_html_handler(request: web.Request) -> web.Response:
     function connect() {
       const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
       const wsUrl = `${protocol}//${window.location.host}/ws`;
-      ws = new WebSocket(wsUrl);
+      ws = new WebSocket(wsUrl, ["callisto", "callisto-token." + __CALLISTO_UI_TOKEN__]);
 
       ws.onopen = () => {
         statusBadge.innerText = "Connected";
@@ -471,12 +488,14 @@ async def sidebar_html_handler(request: web.Request) -> web.Response:
 </body>
 </html>
 """
-    return web.Response(text=html_content, content_type="text/html")
+    html_content = html_content.replace("__CALLISTO_UI_TOKEN__", json.dumps(request.app[UI_TOKEN]))
+    return web.Response(text=html_content, content_type="text/html", headers={"Cache-Control": "no-store"})
 
 
 async def start_server(port: int = 54321) -> web.AppRunner:
     """Start the web server runner."""
-    app = web.Application()
+    app = web.Application(middlewares=[local_host_only])
+    app[UI_TOKEN] = secrets.token_urlsafe(32)
     app.router.add_get("/ws", websocket_handler)
     app.router.add_get("/sidebar", sidebar_html_handler)
 

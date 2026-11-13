@@ -103,3 +103,24 @@ test('extract: waits for delayed pagination and fails when rows do not advance',
     assert.equal(limited.truncated,true)
   } finally { await mini.close() }
 })
+
+test('extract: pager clicks enforce actionability and connected execution', { skip: !enabled }, async () => {
+  const mini = await Mini.launch({headless:true})
+  const session = (mini as unknown as {session:{mode?:string; connectedExecute?:()=>Promise<unknown>}}).session
+  try {
+    await mini.goto('data:text/html,'+encodeURIComponent('<div class="row">A</div><button id="next" style="display:none" onclick="document.body.dataset.clicked=1">Next</button>'))
+    const spec = {selector:'.row',fields:{value:{}},paginate:{next:'#next',max_pages:2}}
+    await assert.rejects(extractRows(mini,spec), /not actionable/)
+    assert.equal(await mini.evaluate(()=>document.body.dataset.clicked), undefined)
+    await mini.goto('data:text/html,'+encodeURIComponent('<div class="row">A</div><button id="next" onclick="document.body.dataset.clicked=1">Next</button>'))
+    let executions=0
+    session.mode='connected'
+    session.connectedExecute=async()=>{executions++;throw new Error('Tab taken back')}
+    await assert.rejects(extractRows(mini,spec), /Tab taken back/)
+    assert.equal(executions,1)
+    assert.equal(await mini.evaluate(()=>document.body.dataset.clicked), undefined)
+  } finally {
+    session.mode=undefined
+    await mini.close()
+  }
+})
