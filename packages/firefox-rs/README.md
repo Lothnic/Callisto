@@ -144,6 +144,16 @@ Earlier actions are not rolled back. The batch has a ten-second deadline and
 stops if control is revoked or moved to another tab. This reduces host-agent
 round trips; it does not remove the existing input stability checks.
 
+`callisto_extract` reads structured rows with a CSS row selector and a field
+map, optionally following a next-page control and merging pages. It returns
+typed rows rather than a snapshot, so counting and aggregation need one call.
+`callisto_run` executes up to 40 dependent steps in order: `navigate`,
+`click_ref`, `click_role`, `fill_ref`, `fill_role`, `press`, `scroll`, `wait`,
+`wait_for` and `extract`. It returns the last extraction and, on request, a
+final snapshot. Both tools use the same declarative interface as the Chromium
+backend and do not evaluate arbitrary page JavaScript. Steps stop at the first
+failure within a 60-second budget, and earlier steps are not rolled back.
+
 Snapshots and actions wait for controlled-page readiness instead of immediately
 failing during a load. Reattachment can happen at DOMContentLoaded; it need not
 wait for images and trackers to finish. Page navigation and revoked ownership

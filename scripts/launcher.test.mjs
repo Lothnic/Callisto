@@ -27,7 +27,7 @@ for(const backend of ['chromium','zen']) test(`launcher forwards ${backend} MCP 
     assert.equal(typeof capabilities.mode,'string');
     assert.equal(typeof capabilities.snapshot,'string');
     assert.equal(typeof capabilities.sessionModel,'string');
-    for (const name of ['trustedInput','openShadowRoots','upload','existingTabAdoption','cancellation','handoff']) {
+    for (const name of ['trustedInput','openShadowRoots','upload','existingTabAdoption','cancellation','handoff','run','extract']) {
       assert.equal(typeof capabilities.capabilities[name], 'boolean', `${backend}: missing boolean capability ${name}`);
     }
     assert.equal(capabilities.capabilities.frames,'same-origin');
@@ -68,6 +68,7 @@ for (const backend of ['chromium', 'zen']) test(`${backend} exposes the common a
       callisto_find: ['query'], callisto_scroll: ['delta_y'], callisto_click: ['ref'],
       callisto_fill: ['ref','value'], callisto_press: ['key'], callisto_screenshot: [],
       callisto_close: [], callisto_handoff: ['message'],
+      callisto_run: ['steps'], callisto_extract: ['selector','fields'],
     };
     for (const [name, properties] of Object.entries(contract)) {
       const tool = result.result.tools.find(entry => entry.name === name);

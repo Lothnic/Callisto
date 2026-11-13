@@ -43,7 +43,12 @@ snapshot, and refs may become stale when the page changes. Snapshot refs are
 retired on document changes and their identifiers are not reused during the
 same Mini session. `callisto_batch` executes up to 10 structured actions in
 order, including role-based targets; earlier actions
-are not rolled back if a later one fails. Navigation, actions and search
+are not rolled back if a later one fails. `callisto_run` extends that idea to
+dependent sequences of up to 40 steps, including waits and extraction, and
+`callisto_extract` returns typed rows (row selector plus field map) rather than
+a snapshot. Extraction can follow a next-page control and merge pages; both
+tools avoid arbitrary page JavaScript so the Firefox/Zen backend behaves the
+same way. Navigation, actions and search
 invalidate cached snapshot pages, including when an action fails; request a new
 snapshot before continuing pagination. The server also exposes
 `callisto_press`, `callisto_scroll`, `callisto_screenshot`, and `callisto_close`.

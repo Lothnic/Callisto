@@ -97,6 +97,13 @@ that the intended action succeeded. See [browser data handling](browser-data.md)
 
 - Call `callisto_capabilities` first and use the tools advertised by the
   selected backend. The interfaces and response shapes are not identical.
+- Both backends expose `callisto_extract` and `callisto_run`, with the same
+  declarative interface. `callisto_extract` takes a row selector and a field
+  map and returns typed rows instead of a snapshot; optional `paginate` follows
+  a next-page control and merges the pages. `callisto_run` executes up to 40
+  dependent steps (navigate, click/fill by ref or exact role, press, scroll,
+  wait, wait-for-text and extract) in one call. Both are driven by host-supplied
+  selectors and refs, not arbitrary page JavaScript.
 - Both backends expose `callisto_find` and `callisto_scroll`. Firefox finds
   rendered DOM text, while Chromium searches its accessibility snapshot;
   Firefox scroll returns an action result, so capture a new snapshot afterward.
