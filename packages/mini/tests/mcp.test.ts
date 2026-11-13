@@ -23,6 +23,7 @@ test('MCP: initializes, lists browser tools and validates arguments without laun
     for (const name of ['callisto_navigate', 'callisto_snapshot', 'callisto_find', 'callisto_batch', 'callisto_extract', 'callisto_run', 'callisto_click', 'callisto_fill', 'callisto_press', 'callisto_scroll', 'callisto_handoff', 'callisto_screenshot', 'callisto_close']) {
       assert.ok(tools.some(tool => tool.name === name), `missing ${name}`)
     }
+    assert.notEqual(tools.find(tool => tool.name === 'callisto_extract')?.annotations?.readOnlyHint, true, 'pagination may click a control')
     const bad = await client.callTool({ name: 'callisto_click', arguments: { ref: 'not-a-ref' } })
     assert.equal(bad.isError, true)
     const handoff = await client.callTool({ name: 'callisto_handoff', arguments: {message:'Complete the step'} })

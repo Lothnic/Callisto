@@ -81,7 +81,7 @@ jobs:
         run: |
           export CHROME_PATH="$(command -v google-chrome)"
           test -n "$CHROME_PATH"
-          node --import tsx --test --test-concurrency=1 tests/mcp.test.ts tests/actionability.test.ts tests/engine.test.ts tests/attached.test.ts
+          node --import tsx --test --test-concurrency=1 tests/mcp.test.ts tests/actionability.test.ts tests/engine.test.ts tests/attached.test.ts tests/extract.test.ts
 
   harness:
     name: harness (lint + test)

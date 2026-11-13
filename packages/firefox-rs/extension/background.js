@@ -263,19 +263,41 @@ async function executeCommand(request, connection, deadline = Date.now()+10000) 
     const totalLimit = 1000;
     const rows = [];
     let pages = 0;
+    let truncated = false;
+    const readPage = () => executeCommand({ method: 'page', value: JSON.stringify({ action: 'extract', spec }) }, connection, Date.now() + 10000);
+    let one = await readPage();
     for (let page = 0; page < maxPages; page++) {
       if (chosen !== selected || owner !== ownership || socket !== connection) throw new Error('Tab sharing changed during extraction.');
-      const one = await executeCommand({ method: 'page', value: JSON.stringify({ action: 'extract', spec }) }, connection, Date.now() + 30000);
       pages++;
       rows.push(...one.rows);
-      if (rows.length >= totalLimit || !spec.paginate || !one.has_next) break;
+      if (one.omitted) truncated = true;
+      if (rows.length >= totalLimit) { if (rows.length > totalLimit || one.has_next) truncated = true; break; }
+      if (!spec.paginate || !one.has_next) break;
+      if (page + 1 >= maxPages) { truncated = true; break; }
+      const stampBefore = generation;
       try {
         await executeCommand({ method: 'page', value: JSON.stringify({ action: 'click_next', selector: spec.paginate.next }) }, connection, Date.now() + 30000);
       } catch (error) {
-        // A pager link can navigate and drop the reply; the page load is expected.
+        // Only a navigation that actually started can explain a dropped reply.
+        if (ready && generation === stampBefore) throw error;
       }
-      if (!ready) await waitReady(chosen, owner, connection, Date.now() + 10000);
-      await new Promise(resolve => setTimeout(resolve, 200));
+      const before = JSON.stringify(one.rows);
+      const until = Date.now() + 5000;
+      let candidate = '', since = 0, advanced = false;
+      while (Date.now() < until) {
+        if (chosen !== selected || owner !== ownership || socket !== connection) throw new Error('Tab sharing changed during extraction.');
+        if (!ready) await waitReady(chosen, owner, connection, until);
+        let next;
+        try { next = await readPage(); }
+        catch (error) { if (ready) throw error; await new Promise(resolve => setTimeout(resolve, 100)); continue; }
+        const current = JSON.stringify(next.rows);
+        if (current !== before && next.rows.length > 0) {
+          if (candidate !== current) { candidate = current; since = Date.now(); }
+          else if (Date.now() - since >= 200) { one = next; advanced = true; break; }
+        } else { candidate = ''; since = 0; }
+        await new Promise(resolve => setTimeout(resolve, 100));
+      }
+      if (!advanced) throw new Error('Pagination did not produce a stable, different set of rows within 5 seconds; inspect the page before retrying.');
     }
     const tab = await browser.tabs.get(chosen);
     return {
@@ -284,7 +306,7 @@ async function executeCommand(request, connection, deadline = Date.now()+10000) 
       rows: rows.slice(0, totalLimit),
       count: Math.min(rows.length, totalLimit),
       pages,
-      truncated: rows.length > totalLimit,
+      truncated,
     };
   }
   if (request.method === 'run') {

@@ -78,11 +78,28 @@ test('extract: row limit and text snapshot stay bounded', { skip: !enabled }, as
       paginate: { next: 'a.next', max_pages: 5 },
     })
     assert.equal(result.count, 6, 'each page contributes at most `limit` rows')
-    assert.equal(result.truncated, false)
+    assert.equal(result.truncated, true, 'omitted rows on each page must be reported')
     assert.ok(String(result.rows[0]._text).startsWith('1 customer1@example.com'))
   } finally {
     await mini.close()
     server.closeAllConnections()
     await new Promise<void>(resolve => server.close(() => resolve()))
   }
+})
+
+test('extract: waits for delayed pagination and fails when rows do not advance', { skip: !enabled }, async () => {
+  const mini = await Mini.launch({headless:true})
+  const html = `<div class="row">Page A</div><button id="next" onclick="setTimeout(()=>{document.querySelector('.row').textContent='Page B';this.disabled=true},700)">Next</button>`
+  try {
+    await mini.goto('data:text/html,' + encodeURIComponent(html))
+    const spec = {selector:'.row', fields:{value:{}}, paginate:{next:'#next',max_pages:2}}
+    const result = await extractRows(mini, spec)
+    assert.deepEqual(result.rows, [{value:'Page A'}, {value:'Page B'}])
+    assert.equal(result.truncated,false)
+    await mini.goto('data:text/html,' + encodeURIComponent('<div class="row">Same</div><button id="next">Next</button>'))
+    await assert.rejects(extractRows(mini, spec), /did not produce a stable, different set of rows/)
+    await mini.goto('data:text/html,' + encodeURIComponent(html))
+    const limited = await extractRows(mini, {...spec, paginate:{next:'#next',max_pages:1}})
+    assert.equal(limited.truncated,true)
+  } finally { await mini.close() }
 })

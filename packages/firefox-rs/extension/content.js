@@ -186,7 +186,7 @@
       const disabled = !next || next.hasAttribute('disabled') || next.getAttribute('aria-disabled') === 'true' || next.classList.contains('disabled');
       has_next = !disabled && (next.tagName !== 'A' || Boolean(next.getAttribute('href')));
     }
-    return {rows: out, has_next};
+    return {rows: out, has_next, omitted: rows.length > limit};
   }
   browser.runtime.onMessage.addListener(async function handle(message) {
     if (message.type === 'ping') { enabled = true; mark(); return {value:true}; }

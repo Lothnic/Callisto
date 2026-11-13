@@ -247,7 +247,7 @@ async function waitForText(m: Mini, text: string, timeoutMs: number): Promise<vo
 server.registerTool('callisto_extract', {
   description: 'Read structured rows from the current page using CSS selectors: a row selector plus a field map. Optionally follow a next-page control and merge pages. Returns typed rows, not a snapshot, so counting and aggregation need one call.',
   inputSchema: extractSpecSchema,
-  annotations: { ...annotations, readOnlyHint: true },
+  annotations,
 }, async (spec, context) => run(m => extractRows(m, spec as ExtractSpec), { signal: context.mcpReq.signal }))
 
 server.registerTool('callisto_run', {

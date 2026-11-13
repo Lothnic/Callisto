@@ -23,14 +23,10 @@ export interface ExtractResult {
   truncated: boolean
 }
 
-/**
- * Runs in the page. It must stay self-contained: `Mini.evaluate` serializes the
- * function and passes the spec as JSON, so no closure state is available.
- *
- * Keep behaviour identical to `extractPage` in the Firefox extension's
- * content.js; the shared contract is covered by tests on both backends.
- */
-function extractPageInBrowser(spec: ExtractSpec): { rows: Array<Record<string, string | number | null>>; has_next: boolean } {
+type PageRows = { rows: Array<Record<string, string | number | null>>; has_next: boolean; omitted: boolean }
+
+/** Runs in the page; keep behavior aligned with the Firefox content script. */
+function extractPageInBrowser(spec: ExtractSpec): PageRows {
   const clean = (value: unknown) => String(value ?? '').replace(/\s+/g, ' ').trim()
   const matches = Array.from(document.querySelectorAll(spec.selector))
   const limit = spec.limit ?? 500
@@ -61,7 +57,7 @@ function extractPageInBrowser(spec: ExtractSpec): { rows: Array<Record<string, s
       || next.classList.contains('disabled')
     has_next = !disabled && (next.tagName !== 'A' || Boolean(next.getAttribute('href')))
   }
-  return { rows, has_next }
+  return { rows, has_next, omitted: matches.length > limit }
 }
 
 /** Runs in the page and clicks the pager control. */
@@ -91,7 +87,7 @@ async function stableDocument(mini: Mini, timeoutMs = 10_000): Promise<void> {
   throw new Error('The page did not finish loading within 10 seconds.')
 }
 
-async function extractOnce(mini: Mini, spec: ExtractSpec): Promise<{ rows: Array<Record<string, string | number | null>>; has_next: boolean }> {
+async function extractOnce(mini: Mini, spec: ExtractSpec): Promise<PageRows> {
   const deadline = Date.now() + 5_000
   for (;;) {
     try {
@@ -103,10 +99,29 @@ async function extractOnce(mini: Mini, spec: ExtractSpec): Promise<{ rows: Array
   }
 }
 
+async function waitForAdvance(mini: Mini, spec: ExtractSpec, previous: PageRows): Promise<PageRows> {
+  const deadline = Date.now() + 5_000
+  const before = JSON.stringify(previous.rows)
+  let candidate = '', since = 0
+  while (Date.now() < deadline) {
+    let result: PageRows
+    try { result = await mini.evaluate(extractPageInBrowser, spec) }
+    catch { await sleep(100); continue } // A navigation may replace the document.
+    const current = JSON.stringify(result.rows)
+    // A temporarily empty grid is common while an async page is loading.
+    if (current !== before && result.rows.length > 0) {
+      if (candidate !== current) { candidate = current; since = Date.now() }
+      else if (Date.now() - since >= 200) return result
+    } else { candidate = ''; since = 0 }
+    await sleep(100)
+  }
+  throw new Error('Pagination did not produce a stable, different set of rows within 5 seconds; inspect the page before retrying.')
+}
+
 /**
  * Extract rows from the current page, optionally following a pager. Pagination
- * stops at max_pages, at the row limit, when the pager disappears, or when the
- * page stops changing.
+ * stops at max_pages, at the row limit, or when the pager disappears. A page
+ * that does not advance fails rather than returning duplicated rows.
  */
 export async function extractRows(mini: Mini, spec: ExtractSpec, limitTotal = 1000): Promise<ExtractResult> {
   const limit = Math.max(1, Math.min(spec.limit ?? 500, 1000))
@@ -114,22 +129,25 @@ export async function extractRows(mini: Mini, spec: ExtractSpec, limitTotal = 10
   const rows: Array<Record<string, string | number | null>> = []
   let pages = 0
   let truncated = false
+  let result = await extractOnce(mini, { ...spec, limit })
   for (let page = 0; page < maxPages; page++) {
-    const result = await extractOnce(mini, { ...spec, limit })
     pages++
     rows.push(...result.rows)
-    if (rows.length >= limitTotal) { truncated = true; break }
+    if (result.omitted) truncated = true
+    if (rows.length >= limitTotal) { if (rows.length > limitTotal || result.has_next) truncated = true; break }
     if (!spec.paginate || !result.has_next) break
+    if (page + 1 >= maxPages) { truncated = true; break }
     let clicked: { clicked: boolean }
     try {
       clicked = await mini.evaluate(clickNextInBrowser, spec.paginate.next)
-    } catch {
-      // A pager link may navigate and destroy the execution context mid-call.
+    } catch (error) {
+      // Only navigation-related failures may have occurred after the click.
+      if (!/context|navigation|target closed|cannot find/i.test(String(error))) throw error
       clicked = { clicked: true }
     }
     if (!clicked.clicked) break
     await stableDocument(mini)
-    await sleep(150)
+    result = await waitForAdvance(mini, { ...spec, limit }, result)
   }
   const info = await mini.evaluate<{ url: string; title: string }>(() => ({ url: location.href, title: document.title }))
   return {

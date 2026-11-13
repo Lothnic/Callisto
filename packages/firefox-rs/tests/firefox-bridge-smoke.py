@@ -23,6 +23,10 @@ class Handler(http.server.BaseHTTPRequestHandler):
   elif self.path.startswith('/results'):
    query=urllib.parse.parse_qs(urllib.parse.urlparse(self.path).query).get('q',[''])[0]
    data=('<h1>Results '+html.escape(query)+'</h1>').encode()
+  elif self.path.startswith('/async-grid'):
+   data=b'''<div class="row">Page A</div><button id="next" onclick="setTimeout(()=>{document.querySelector('.row').textContent='Page B';this.disabled=true},700)">Next</button>'''
+  elif self.path.startswith('/stuck-grid'):
+   data=b'<div class="row">Same</div><button id="next">Next</button>'
   elif self.path.startswith('/grid'):
    page=int(urllib.parse.parse_qs(urllib.parse.urlparse(self.path).query).get('page',['1'])[0])
    rows=''.join('<tr><td>F%d</td><td>%d</td></tr>'%(n,n*10) for n in range((page-1)*3+1,(page-1)*3+4))
@@ -197,6 +201,17 @@ try:
  scripted=value(tool('callisto_run',{'steps':[{'action':'navigate','url':base+'grid'},{'action':'wait_for','text':'Orders'},{'action':'extract','spec':{'selector':'#grid tbody tr','fields':{'name':'td:nth-child(1)'}}}]}))
  assert scripted['completed']==3 and scripted['extraction']['count']==3,scripted
  assert 'snapshot' not in scripted
+ limited=value(tool('callisto_extract',{'selector':'#grid tbody tr','fields':{'name':'td:nth-child(1)'},'limit':2}))
+ assert limited['count']==2 and limited['truncated'],limited
+ value(tool('callisto_navigate',{'url':base+'async-grid'}))
+ result=value(tool('callisto_extract',{'selector':'.row','fields':{'value':{}},'paginate':{'next':'#next','max_pages':2}}))
+ assert result['rows']==[{'value':'Page A'},{'value':'Page B'}] and not result['truncated'],result
+ value(tool('callisto_navigate',{'url':base+'async-grid'}))
+ result=value(tool('callisto_extract',{'selector':'.row','fields':{'value':{}},'paginate':{'next':'#next','max_pages':1}}))
+ assert result['truncated'],result
+ value(tool('callisto_navigate',{'url':base+'stuck-grid'}))
+ result=tool('callisto_extract',{'selector':'.row','fields':{'value':{}},'paginate':{'next':'#next','max_pages':2}})
+ assert result.get('isError') and 'did not produce a stable' in str(result),result
  print('structured extraction across pager and scripted run: verified in Firefox')
  container=value(tool('callisto_browser',{'action':'agent_container'}))
  assert value(tool('callisto_browser',{'action':'agent_container'}))['cookieStoreId']==container['cookieStoreId']
