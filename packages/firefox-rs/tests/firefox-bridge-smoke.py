@@ -94,6 +94,8 @@ try:
  assert value(tool('callisto_page',{'action':'select','ref':choice,'value':'b'}))['completed']
  assert req('/session/'+session+'/execute/sync',{'script':'return document.querySelector("#check").checked && document.querySelector("#choice").value === "b"','args':[]})
  assert value(tool('callisto_page',{'action':'find','query':'Visible fixture'}))['matches']
+ assert value(tool('callisto_find',{'query':'Visible fixture','max_matches':1}))['matches']
+ assert value(tool('callisto_scroll',{'delta_y':50}))['completed']
  assert 'Visible fixture' in value(tool('callisto_page',{'action':'text'}))['text']
  print('check, select, text and find: verified in Firefox')
  tabs=value(tool('callisto_browser',{'action':'tabs_list'}))['tabs']

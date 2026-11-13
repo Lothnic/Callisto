@@ -97,6 +97,9 @@ that the intended action succeeded. See [browser data handling](browser-data.md)
 
 - Call `callisto_capabilities` first and use the tools advertised by the
   selected backend. The interfaces and response shapes are not identical.
+- Both backends expose `callisto_find` and `callisto_scroll`. Firefox finds
+  rendered DOM text, while Chromium searches its accessibility snapshot;
+  Firefox scroll returns an action result, so capture a new snapshot afterward.
 - For Firefox/Zen, check `callisto_status`, use `tabs_list` and `tab_select`
   only when browser access was granted, then snapshot the chosen tab. Respect
   ownership errors; do not close or take over another session's tab.
