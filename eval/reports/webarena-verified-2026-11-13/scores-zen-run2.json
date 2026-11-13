@@ -1,0 +1,92 @@
+[
+  {
+    "task_id": 11,
+    "agent_status": "SUCCESS",
+    "eval_status": "success",
+    "score": 1.0,
+    "elapsed_ms": null,
+    "tool_calls": 1,
+    "error": null
+  },
+  {
+    "task_id": 41,
+    "agent_status": "SUCCESS",
+    "eval_status": "success",
+    "score": 1.0,
+    "elapsed_ms": null,
+    "tool_calls": 1,
+    "error": null
+  },
+  {
+    "task_id": 62,
+    "agent_status": "SUCCESS",
+    "eval_status": "success",
+    "score": 1.0,
+    "elapsed_ms": null,
+    "tool_calls": 7,
+    "error": null
+  },
+  {
+    "task_id": 94,
+    "agent_status": "SUCCESS",
+    "eval_status": "success",
+    "score": 1.0,
+    "elapsed_ms": null,
+    "tool_calls": 1,
+    "error": null
+  },
+  {
+    "task_id": 107,
+    "agent_status": "SUCCESS",
+    "eval_status": "success",
+    "score": 1.0,
+    "elapsed_ms": null,
+    "tool_calls": 0,
+    "error": null
+  },
+  {
+    "task_id": 112,
+    "agent_status": "SUCCESS",
+    "eval_status": "success",
+    "score": 1.0,
+    "elapsed_ms": null,
+    "tool_calls": 3,
+    "error": null
+  },
+  {
+    "task_id": 183,
+    "agent_status": "SUCCESS",
+    "eval_status": "failure",
+    "score": 0.0,
+    "elapsed_ms": null,
+    "tool_calls": 1,
+    "error": null
+  },
+  {
+    "task_id": 193,
+    "agent_status": "SUCCESS",
+    "eval_status": "success",
+    "score": 1.0,
+    "elapsed_ms": null,
+    "tool_calls": 0,
+    "error": null
+  },
+  {
+    "task_id": 198,
+    "agent_status": "SUCCESS",
+    "eval_status": "success",
+    "score": 1.0,
+    "elapsed_ms": null,
+    "tool_calls": 11,
+    "error": null
+  },
+  {
+    "task_id": 208,
+    "agent_status": "SUCCESS",
+    "eval_status": "success",
+    "score": 1.0,
+    "elapsed_ms": null,
+    "tool_calls": 0,
+    "error": null
+  }
+]

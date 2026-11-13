@@ -1,0 +1,134 @@
+[
+ {
+  "task_id": 11,
+  "status": "SUCCESS",
+  "retrieved_data": [
+   6
+  ],
+  "evidence": "Reviews grid filtered on review text 'disappointed' showed 6 records found (5 pending/approved).",
+  "tool_calls": 1,
+  "elapsed_ms": null
+ },
+ {
+  "task_id": 41,
+  "status": "SUCCESS",
+  "retrieved_data": [
+   "hollister"
+  ],
+  "evidence": "Dashboard Top Search Terms grid, first row: hollister, 19 uses.",
+  "tool_calls": 1,
+  "elapsed_ms": null
+ },
+ {
+  "task_id": 62,
+  "status": "SUCCESS",
+  "retrieved_data": [
+   "janesmith456@yahoo.com"
+  ],
+  "evidence": "Orders grid (complete, saved view) paginated extraction: 153 completed orders; Jane Smith 11 > Adam Garcia 8. Customer Email column toggled on: janesmith456@yahoo.com x9 vs janesmith@gmail.com x2.",
+  "tool_calls": 6,
+  "elapsed_ms": null
+ },
+ {
+  "task_id": 94,
+  "status": "SUCCESS",
+  "retrieved_data": [
+   36.39
+  ],
+  "evidence": "Invoice grid: invoice 000000001 grand total $36.39.",
+  "tool_calls": 1,
+  "elapsed_ms": null
+ },
+ {
+  "task_id": 107,
+  "status": "SUCCESS",
+  "retrieved_data": [
+   {
+    "month": "May",
+    "count": 8
+   },
+   {
+    "month": "June",
+    "count": 13
+   },
+   {
+    "month": "July",
+    "count": 9
+   },
+   {
+    "month": "August",
+    "count": 8
+   },
+   {
+    "month": "September",
+    "count": 10
+   },
+   {
+    "month": "October",
+    "count": 4
+   },
+   {
+    "month": "November",
+    "count": 5
+   },
+   {
+    "month": "December",
+    "count": 10
+   }
+  ],
+  "evidence": "Reused paginated Orders extraction (seq with complete orders, 153 rows); grouped by purchase month for 2022-05..2022-12.",
+  "tool_calls": 0,
+  "elapsed_ms": null
+ },
+ {
+  "task_id": 112,
+  "status": "SUCCESS",
+  "retrieved_data": [
+   "Hannah Lim"
+  ],
+  "evidence": "Reviews filtered by SKU WH12 -> 2 reviews (353 Hannah Lim, 352 customer). Edit pages: 353 ratings[4] checked=Rating_1 (1 star), 352 checked=Rating_4 (4 stars). Only Hannah Lim <= 3 stars.",
+  "tool_calls": 3,
+  "elapsed_ms": null
+ },
+ {
+  "task_id": 183,
+  "status": "SUCCESS",
+  "retrieved_data": [],
+  "evidence": "Products grid paginated extraction: quantities observed 0 (750), 3 (10), 4 (5), 14 (5), 100 (230+). Low Stock report with qty=10 returned 'We couldn't find any records.' No product has exactly 10 units.",
+  "tool_calls": 3,
+  "elapsed_ms": null
+ },
+ {
+  "task_id": 193,
+  "status": "SUCCESS",
+  "retrieved_data": [
+   182.4
+  ],
+  "evidence": "Top 2 most recent complete orders from the same extraction: 000000230 2023-05-19 $93.40, 000000256 2023-05-14 $89.00 -> 182.40.",
+  "tool_calls": 0,
+  "elapsed_ms": null
+ },
+ {
+  "task_id": 198,
+  "status": "SUCCESS",
+  "retrieved_data": [
+   "harrypotterfan1@gmail.com"
+  ],
+  "evidence": "Cancelled orders extraction (grid filter Canceled): latest is 000000136 2023-05-23 (Lily Potter). Order view 000000136 -> mailto harrypotterfan1@gmail.com.",
+  "tool_calls": 2,
+  "elapsed_ms": null
+ },
+ {
+  "task_id": 208,
+  "status": "SUCCESS",
+  "retrieved_data": [
+   {
+    "name": "John Smith",
+    "email": "john.smith.xyz@gmail.com"
+   }
+  ],
+  "evidence": "Customers grid extraction: phone +1 2058812302 -> John Smith / john.smith.xyz@gmail.com.",
+  "tool_calls": 1,
+  "elapsed_ms": null
+ }
+]

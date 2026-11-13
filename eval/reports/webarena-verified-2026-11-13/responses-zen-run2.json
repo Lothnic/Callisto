@@ -1,0 +1,134 @@
+[
+ {
+  "task_id": 11,
+  "status": "SUCCESS",
+  "retrieved_data": [
+   6
+  ],
+  "evidence": "Reviews grid filtered on review text 'disappointed' showed 6 records found.",
+  "tool_calls": 1,
+  "elapsed_ms": null
+ },
+ {
+  "task_id": 41,
+  "status": "SUCCESS",
+  "retrieved_data": [
+   "hollister"
+  ],
+  "evidence": "Dashboard Top Search Terms grid, first row: hollister, 19 uses.",
+  "tool_calls": 1,
+  "elapsed_ms": null
+ },
+ {
+  "task_id": 62,
+  "status": "SUCCESS",
+  "retrieved_data": [
+   "janesmith456@yahoo.com"
+  ],
+  "evidence": "Orders grid paginated extraction: 153 completed orders; Jane Smith 11 highest. Customer Email column toggled on via UI: janesmith456@yahoo.com x9 vs janesmith@gmail.com x2.",
+  "tool_calls": 7,
+  "elapsed_ms": null
+ },
+ {
+  "task_id": 94,
+  "status": "SUCCESS",
+  "retrieved_data": [
+   36.39
+  ],
+  "evidence": "Invoice grid: invoice 000000001 grand total $36.39.",
+  "tool_calls": 1,
+  "elapsed_ms": null
+ },
+ {
+  "task_id": 107,
+  "status": "SUCCESS",
+  "retrieved_data": [
+   {
+    "month": "May",
+    "count": 8
+   },
+   {
+    "month": "June",
+    "count": 13
+   },
+   {
+    "month": "July",
+    "count": 9
+   },
+   {
+    "month": "August",
+    "count": 8
+   },
+   {
+    "month": "September",
+    "count": 10
+   },
+   {
+    "month": "October",
+    "count": 4
+   },
+   {
+    "month": "November",
+    "count": 5
+   },
+   {
+    "month": "December",
+    "count": 10
+   }
+  ],
+  "evidence": "Reused the shared complete-orders extraction; grouped 2022-05..2022-12 completed orders by month.",
+  "tool_calls": 0,
+  "elapsed_ms": null
+ },
+ {
+  "task_id": 112,
+  "status": "SUCCESS",
+  "retrieved_data": [
+   "Hannah Lim"
+  ],
+  "evidence": "Reviews filtered SKU WH12 -> 2 reviews. 353 (Hannah Lim)=Rating_1 (1 star); 352 (customer)=Rating_4 (4 stars). Answer: Hannah Lim.",
+  "tool_calls": 3,
+  "elapsed_ms": null
+ },
+ {
+  "task_id": 183,
+  "status": "SUCCESS",
+  "retrieved_data": [],
+  "evidence": "Products grid paginated extraction: all rows show quantity 100 (sorted descending); no product with qty exactly 10 found; Low Stock report with qty=10 shows no records.",
+  "tool_calls": 1,
+  "elapsed_ms": null
+ },
+ {
+  "task_id": 193,
+  "status": "SUCCESS",
+  "retrieved_data": [
+   182.4
+  ],
+  "evidence": "Top 2 most recent complete orders: 000000230 2023-05-19 $93.40, 000000256 2023-05-14 $89.00 -> 182.40.",
+  "tool_calls": 0,
+  "elapsed_ms": null
+ },
+ {
+  "task_id": 198,
+  "status": "SUCCESS",
+  "retrieved_data": [
+   "harrypotterfan1@gmail.com"
+  ],
+  "evidence": "UI filter switch to Canceled was flaky in Zen (target-moving errors, retry-then-fallback). Fallback: Clear-all + one paginated extraction of all 308 orders; latest cancelled = 000000136 2023-05-23 (Lily Potter). Order view -> harrypotterfan1@gmail.com.",
+  "tool_calls": 11,
+  "elapsed_ms": null
+ },
+ {
+  "task_id": 208,
+  "status": "SUCCESS",
+  "retrieved_data": [
+   {
+    "name": "John Smith",
+    "email": "john.smith.xyz@gmail.com"
+   }
+  ],
+  "evidence": "Customers grid extraction: phone 2058812302 -> John Smith / john.smith.xyz@gmail.com (reused from the T62 customers extraction).",
+  "tool_calls": 0,
+  "elapsed_ms": null
+ }
+]

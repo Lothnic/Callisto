@@ -37,6 +37,72 @@ the evaluator rejected the submitted answer.
 Task 183 failed for all four runtimes: none reported the product SKUs the
 evaluator expected.
 
+## Re-run with `callisto_run` / `callisto_extract` — 2026-11-13
+
+Round 2 re-ran only the two Callisto backends, serially, on the same fixture
+and the same scoring path. Both backends now expose two additional tools:
+`callisto_extract` (typed rows from a CSS row selector plus field map, with
+optional next-page pagination) and `callisto_run` (up to 40 dependent steps:
+navigate, click/fill by ref or exact role, press, scroll, wait, wait-for-text,
+extract). Answers below are the same agent, model family and task text, evaluated
+by the same `AgentResponseEvaluator` wrapper.
+
+| Task | Intent | Chromium (round 1) | Zen (round 1) | Chromium (round 2) | Zen (round 2) |
+| --- | --- | --- | --- | --- | --- |
+| 11 | Reviews mentioning "disappointed" | 1 (8) | 1 (19) | 1 (1) | 1 (1) |
+| 41 | Top search term | 1 (1) | 1 (3) | 1 (1) | 1 (1) |
+| 62 | Customer with most completed orders | 0 (9) | 0 (15) | 1 (6) | 1 (7) |
+| 94 | Grand total of invoice 000000001 | 1 (5) | 1 (6) | 1 (1) | 1 (1) |
+| 107 | Monthly completed orders, May–Dec 2022 | 1 (9) | 0 (10) | 1 (0) | 1 (0) |
+| 112 | Customers rating Circe fleece ≤ 3 stars | 1 (23) | 1 (13) | 1 (3) | 1 (3) |
+| 183 | SKUs with 10 units left | 0 (10) | 0 (16) | 0 (3) | 0 (1) |
+| 193 | Total payment of last 2 completed orders | 0 (19) | 1 (6) | 1 (0) | 1 (0) |
+| 198 | Email of most recent cancelled order | 1 (9) | 1 (7) | 1 (2) | 1 (11) |
+| 208 | Customer name and email for a phone number | 1 (8) | 1 (6) | 1 (1) | 1 (0) |
+| **Score** | | **7/10** | **7/10** | **9/10** | **9/10** |
+| **Tool calls** | | 101 | 101 | 18 (+2 setup, +8 wasted) | 25 (+5 reconnect) |
+
+### What round 2 does and does not show
+
+- Both Callisto backends fixed the two round-1 failures that were tooling
+  limits (62 Jane Smith disambiguation via the `Customer Email` grid column,
+  and 107/193 by one paginated orders extraction reused across tasks). Task 183
+  is still unsolved on both — the fixture exposes no products with exactly
+  10 units (quantities observed: 0, 3, 4, 14, 100), and the low-stock report
+  filtered to qty 10 returns no records. That is consistent with all four
+  runtimes failing it, but it is also unverified by more than one agent policy.
+- `callisto_run`/`callisto_extract` cut Chromium's task-call count from 101 to
+  18 and Zen's from 101 to 25. Most of the savings come from batched grid
+  extraction, not from any single trick.
+- **Zen T198 cost 11 calls**: the Magento filter combobox clicks were flaky in
+  Zen (`Target is moving`, retry-then-fallback) and the agent fell back to a
+  Clear-all + single paginated extraction of all 308 orders. Chromium completed
+  the identical task in 2 calls. The same input-stability problem, not the
+  answer, is the cost driver.
+- Zen rendered the Magento virtual-scroll grid only when its window was in the
+  foreground; a background Zen window shows headers and no rows. This delayed
+  and complicated the run but is a real product limitation to fix, not hide.
+- Zen's extension in the benchmark profile was stale; the Downloads copy
+  (`~/Downloads/Callisto-Zen-Extension`) was synced from the repo and reloaded.
+  A backup was taken (`*.bak-20261113`).
+- The browser tests share the admin user's persisted Magento grid state, which
+  this run left as "Complete + Customer Email" (Chromium set it; Zen cleared to
+  unfiltered at the end for the all-orders extraction). Later runs start from
+  that state, not a pristine one.
+- setup/reconnect calls are reported separately, not folded into per-task
+  counts; Chromium also made 8 non-scoring calls working around the persisted
+  grid state (failed filter URL attempts, stale refs). Those are disclosed for
+  transparency but, per AGENTS.md/reporting norms, not hidden.
+- Task-call counts are an agent-policy outcome as much as a runtime outcome:
+  round 1 and round 2 used different policies. Comparing 18/25 calls against
+  browse's 44 is fair only as "same agent policy per tool," not as a controlled
+  A/B. The scores are the meaningful invariant here.
+- The runs overlap against one fixture on one machine; timings were not
+  compared in either round.
+
+`responses-chromium-run2.json` / `responses-zen-run2.json` contain the round-2
+answers and evidence; `scores-*-run2.json` contain the evaluator verdicts.
+
 ### What this does and does not show
 
 - **browse scored highest** on this subset and used the fewest calls. Its
@@ -82,3 +148,5 @@ because they contain fixture session data.
 
 `responses-*.json` contains each runtime's submitted answers and evidence;
 `scores-*.json` contains the official evaluator verdict per task.
+`responses-*-run2.json` and `scores-*-run2.json` are the round-2 equivalents
+for `callisto_run`/`callisto_extract` (see the round-2 section above).
