@@ -31,9 +31,13 @@ for(const backend of ['chromium','zen']) test(`launcher forwards ${backend} MCP 
       assert.equal(typeof capabilities.capabilities[name], 'boolean', `${backend}: missing boolean capability ${name}`);
     }
     assert.equal(capabilities.capabilities.frames,'same-origin');
+    for (const name of ['click','keyboard','fill']) assert.equal(typeof capabilities.input[name], 'string');
+    assert.equal(typeof capabilities.input.nativeKeyDefaults, 'boolean');
     if (backend === 'zen') {
       assert.equal(capabilities.capabilities.trustedInput,false);
       assert.equal(capabilities.capabilities.existingTabAdoption,true);
+      assert.equal(capabilities.input.nativeKeyDefaults,false);
+      assert.equal(capabilities.input.keyboard,'synthetic-dom');
     }
   } finally {
     child.kill('SIGTERM');

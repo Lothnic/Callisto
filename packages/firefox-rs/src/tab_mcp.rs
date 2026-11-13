@@ -260,7 +260,7 @@ async fn call_tool(bridge: &Bridge, session_id: u64, name: &str, args: &Value) -
                 .await
         }
         "callisto_capabilities" => Ok(
-            json!({"schemaVersion":1,"backend":"firefox-extension","mode":"connected","snapshot":"dom","sessionModel":"per-client-tab","capabilities":{"trustedInput":false,"frames":"same-origin","openShadowRoots":true,"upload":true,"existingTabAdoption":true,"cancellation":true,"handoff":true}}),
+            json!({"schemaVersion":1,"backend":"firefox-extension","mode":"connected","snapshot":"dom","sessionModel":"per-client-tab","input":{"click":"synthetic-dom","keyboard":"synthetic-dom","fill":"synthetic-dom","nativeKeyDefaults":false},"capabilities":{"trustedInput":false,"frames":"same-origin","openShadowRoots":true,"upload":true,"existingTabAdoption":true,"cancellation":true,"handoff":true}}),
         ),
         "callisto_upload" => {
             use base64::Engine;
