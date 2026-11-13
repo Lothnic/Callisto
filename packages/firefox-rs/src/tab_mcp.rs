@@ -167,7 +167,7 @@ fn tools() -> Value {
         {"name":"callisto_press","description":"Dispatch synthetic keydown/keyup on the focused control, including chords such as Control+A. For JavaScript keyboard handlers only: native editing, focus navigation, shortcuts and form submission defaults are not emulated. Use fill or submit for those operations.","inputSchema":{"type":"object","properties":{"key":{"type":"string","minLength":1,"maxLength":40}},"required":["key"]}},
         {"name":"callisto_frames","description":"List frames in the controlled tab. Frame access depends on granted website permissions.","inputSchema":{"type":"object","properties":{}}},
         {"name":"callisto_frame","description":"Select a frame by frame_id from callisto_frames, inject the bridge and return a fresh snapshot. Navigation resets selection. Cross-origin frame input fails closed because parent hit testing cannot be verified.","inputSchema":{"type":"object","properties":{"frame_id":{"type":"integer","minimum":0}},"required":["frame_id"]}},
-        {"name":"callisto_handoff","description":"Ask the user to complete a step in the shared page, then click Continue with agent in the Callisto banner. Confirmation is not proof of task success: inspect the page afterward. Navigation may interrupt this handoff.","inputSchema":{"type":"object","properties":{"prompt":{"type":"string","minLength":1,"maxLength":1000},"timeout_ms":{"type":"integer","minimum":1000,"maximum":120000}},"required":["prompt"]}},
+        {"name":"callisto_handoff","description":"Ask the user to complete a step in the shared page, then click Continue with agent. Use message; prompt is supported for compatibility. Confirmation is not proof of task success.","inputSchema":{"type":"object","properties":{"message":{"type":"string","minLength":1,"maxLength":500},"prompt":{"type":"string","minLength":1,"maxLength":1000},"timeout_ms":{"type":"integer","minimum":1000,"maximum":120000}},"anyOf":[{"required":["message"]},{"required":["prompt"]}]}},
         {"name":"callisto_capabilities","description":"Report backend capabilities without reading page content.","inputSchema":{"type":"object","properties":{}}},
         {"name":"callisto_upload","description":"Set files on a visible file input in the controlled page. Reads explicit local file paths, at most 10 files and 10 MiB total. Page input/change handlers may upload immediately. Does not submit the form.","inputSchema":{"type":"object","properties":{"ref":{"type":"string","pattern":"^ax-[0-9]+$"},"paths":{"type":"array","minItems":1,"maxItems":10,"items":{"type":"string"}}},"required":["ref","paths"]}},
         {"name":"callisto_pair","description":"Get the persistent local browser pairing code (only needed for initial setup) for the Firefox/Zen tab bridge. Enter it in the extension, then explicitly share the desired existing tab.","inputSchema":{"type":"object","properties":{}}},
@@ -229,9 +229,14 @@ async fn call_tool(bridge: &Bridge, session_id: u64, name: &str, args: &Value) -
                 .await
         }
         "callisto_handoff" => {
-            let prompt = args["prompt"]
-                .as_str()
-                .ok_or_else(|| anyhow!("prompt required"))?;
+            let message = args.get("message").and_then(Value::as_str);
+            let legacy_prompt = args.get("prompt").and_then(Value::as_str);
+            if message.is_some_and(|m| m.trim().len() > 500)
+                || matches!((message, legacy_prompt), (Some(m), Some(p)) if m.trim() != p.trim())
+            {
+                bail!("Invalid or conflicting handoff message and prompt");
+            }
+            let prompt = message.or(legacy_prompt).ok_or_else(|| anyhow!("message required"))?.trim();
             let timeout = args
                 .get("timeout_ms")
                 .and_then(Value::as_u64)
@@ -630,6 +635,14 @@ mod tests {
     };
 
     #[tokio::test]
+    async fn handoff_rejects_conflicting_aliases_before_contacting_browser() {
+        let (bridge, _) = fixture().await;
+        let error = call_tool(&bridge, 1, "callisto_handoff", &json!({"message":"one","prompt":"two"}))
+            .await.unwrap_err();
+        assert!(error.to_string().contains("conflicting"));
+    }
+
+    #[tokio::test]
     async fn human_handoff_does_not_block_another_clients_status() {
         let (bridge, _) = fixture().await;
         let (send, mut receive) = mpsc::unbounded_channel();
@@ -644,7 +657,7 @@ mod tests {
             operations.clone(),
             101,
         ));
-        first.write_all(b"{\"id\":1,\"method\":\"tools/call\",\"params\":{\"name\":\"callisto_handoff\",\"arguments\":{\"prompt\":\"Confirm fixture\"}}}\n").await.unwrap();
+        first.write_all(b"{\"id\":1,\"method\":\"tools/call\",\"params\":{\"name\":\"callisto_handoff\",\"arguments\":{\"message\":\"Confirm fixture\"}}}\n").await.unwrap();
         let handoff = receive.recv().await.unwrap();
         assert_eq!(handoff["session"], 101);
         assert_eq!(handoff["method"], "handoff");

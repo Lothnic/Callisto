@@ -28,6 +28,11 @@ test('MCP: initializes, lists browser tools and validates arguments without laun
     const handoff = await client.callTool({ name: 'callisto_handoff', arguments: {message:'Complete the step'} })
     assert.equal(handoff.isError, true)
     assert.match(JSON.stringify(handoff.content), /connected browser session/)
+    const legacyHandoff = await client.callTool({ name: 'callisto_handoff', arguments: {prompt:'Complete the step'} })
+    assert.equal(legacyHandoff.isError, true)
+    assert.match(JSON.stringify(legacyHandoff.content), /connected browser session/)
+    const conflictingHandoff = await client.callTool({ name: 'callisto_handoff', arguments: {message:'One', prompt:'Two'} })
+    assert.equal(conflictingHandoff.isError, true)
   } finally { await client.close() }
 })
 

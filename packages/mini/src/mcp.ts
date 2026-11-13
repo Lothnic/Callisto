@@ -143,9 +143,9 @@ server.registerTool('callisto_scroll', {
 
 server.registerTool('callisto_handoff', {
   description: 'In connected mode, ask the person to complete a step in the session-owned browser tab and wait for their confirmation. A confirmation does not verify the outcome; inspect the returned snapshot. The request may time out or be cancelled.',
-  inputSchema: z.object({ message: z.string().trim().min(1).max(500), timeout_ms: z.number().int().min(1000).max(120000).default(60000) }),
+  inputSchema: z.object({ message: z.string().trim().min(1).max(500).optional(), prompt: z.string().trim().min(1).max(500).optional(), timeout_ms: z.number().int().min(1000).max(120000).default(60000) }).refine(args => Boolean(args.message || args.prompt) && (!args.message || !args.prompt || args.message === args.prompt), 'Provide message (or legacy prompt); both must match if supplied'),
   annotations,
-}, async ({ message, timeout_ms }, context) => {
+}, async ({ message, prompt, timeout_ms }, context) => {
   if (process.env.CALLISTO_MCP_BROWSER !== 'connected') return failure(new Error('Human handoff requires a connected browser session'))
   const controller = new AbortController()
   const cancel = () => controller.abort()
@@ -156,7 +156,7 @@ server.registerTool('callisto_handoff', {
   }
   try {
     return await run(async m => {
-      await m.handoff(message, {timeoutMs:timeout_ms, signal:controller.signal})
+      await m.handoff((message ?? prompt)!, {timeoutMs:timeout_ms, signal:controller.signal})
       return boundedSnapshot(m)
     }, {signal:controller.signal})
   } finally {

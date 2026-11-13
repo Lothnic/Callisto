@@ -86,7 +86,9 @@ be active in its window. Browser access is powerful: the agent acts with the
 page's account privileges. The extension's **Stop sharing** releases all agent
 tabs; `callisto_close` releases the calling session's tab.
 
-For a step only you should perform, the agent can call `callisto_handoff`. A
+For a step only you should perform, the agent can call `callisto_handoff` with
+`message` and an optional `timeout_ms` on either backend. The older `prompt`
+argument remains accepted for compatibility. A
 banner asks you to complete the step and click **Continue with agent**. The
 agent should take a fresh snapshot afterward; confirmation does not establish
 that the intended action succeeded. See [browser data handling](browser-data.md).
