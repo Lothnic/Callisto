@@ -2,7 +2,7 @@
 
 This is the release plan. A shared launcher, source setup command, packaged
 installer with opt-in runtime updates, packaging workflow and signing workflow
-are now implemented in the hardening branch. The installer has local transaction
+are implemented in the source tree. The installer has local transaction
 tests, but compatible packages and a signed extension have not been published.
 See [the implementation guide](development-installation.md). Callisto has
 separate experimental Chromium and Firefox/Zen MCP backends; see the

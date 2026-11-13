@@ -51,26 +51,60 @@ backend. The BrowserOS fork under `packages/callisto-browser` remains a historic
 experiment outside the runtime's critical path, with its own AGPL license and
 notices; do not redistribute its outputs as if they were MIT-only.
 
-## Before a 1.0 release
+## Path to 1.0
 
-The connected runtime needs tested execution ownership and cancellation,
-foreground and background input, user takeover and broader handoff coverage,
-tab and frame recovery, and reliable cleanup after disconnects. Its shipped relay and
-extension, upgrade path, dependency licenses, and supported platforms also need
-to be settled. Repeated host-agent comparisons and a security review are release
-gates; local fixture tests alone do not establish production readiness. See the
-[connected runtime plan](research/2026-11-connected-runtime-next-steps.md) for
-the proposed sequence.
+Callisto is currently an experimental 0.1.0 source release. The isolated
+Chromium MCP runtime works, and the Rust Firefox/Zen existing-tab bridge and
+separate BiDi runtime are implemented experiments. The bridge has pairing,
+tab ownership, handoff and explicit stop-sharing; those features still need
+broader real-browser and restart testing. Connected Chromium depends on browse.
+These modes have different input and permission behavior; support for one does
+not establish support for the others.
 
-A second Gecko backend for Firefox and Zen is a candidate for launch in isolated
-owned-browser mode. Full connected takeover, handoff, and attach-to-daily-profile
-behavior remain post-launch work. See the
-[future work note](future.md#part-2--firefox-and-gecko-compatibility) for the
-market scan and the [Firefox roadmap](future.md#part-4--firefox-implementation-roadmap)
-for the phased plan.
+### 1. Small early-tester release
 
-A Rust rewrite is not planned before launch. The [Rust review](future.md#part-3--rust-feasibility)
-found that the measured speed gap comes from bypassing Playwright, which
-Callisto already does, and that the Firefox ecosystem is more mature in
-TypeScript. Distribution friction should be solved with a lean binary build
-before considering a rewrite.
+- Keep the website installer pinned to a publicly fetchable, tested revision.
+  Give testers the [source setup guide](docs/getting-started.md) and a simple
+  first task.
+- Invite a small group using disposable profiles or test accounts. Record OS,
+  browser, host, revision, setup failures and reproducible workflow failures;
+  avoid collecting page secrets. Fix blockers before widening the group.
+- Run the full CI suite on the exact release commit, including Chromium and
+  Firefox bridge browser tests. Repeat setup on clean machines, including at
+  least one real Zen profile; publish the tested versions and known failures.
+
+### 2. Beta: distribution and reliability
+
+- Choose and publish the supported OS, browser and host matrix. Verify fresh
+  installs and removal on each combination. The Firefox relay currently needs a
+  Unix host; Windows needs implementation and testing before it can be listed.
+- Publish versioned runtime packages and checksums; validate installation,
+  upgrades and rollback against actual releases. Sign and distribute the
+  Firefox extension, then test pairing, extension updates and browser restarts.
+- Exercise cancellation, tab ownership, take-back, reconnect, browser crashes,
+  frame handling and cleanup in both automated fixtures and real profiles.
+  Make partial actions and unsupported capabilities explicit to hosts.
+- Review the local relay, credentials, permissions, prompt injection exposure
+  and data handling. Resolve release-blocking findings and document the limits
+  of user approvals and isolation.
+
+### 3. Stable 1.0 gate
+
+- Freeze and version the supported MCP contract, including errors, capability
+  reporting, compatibility and a migration policy. Treat experimental modes as
+  such until they independently meet the published support criteria.
+- Require green release tests on the supported matrix, repeated clean-install
+  and upgrade/rollback checks, and a sustained beta without unresolved
+  release-blocking reliability or security issues. Record the evidence and
+  owner for each gate in the release checklist.
+- Repeat representative agent workflows with comparable task setup and publish
+  successes, failures and limitations. The existing ten-task single-site
+  [WebArena report](eval/reports/webarena-verified-2026-11-13/README.md) is useful
+  early evidence, not a general reliability or performance guarantee.
+- Publish release notes, support and vulnerability-reporting instructions, a
+  deprecation policy, and a tested recovery path for each supported installation.
+
+The [distribution plan](docs/distribution-plan.md) and
+[backend parity plan](docs/backend-parity-implementation-plan.md) contain the
+remaining implementation detail. The BrowserOS fork remains a separate
+historical experiment with its own license and is outside the runtime release.

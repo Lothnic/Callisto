@@ -35,7 +35,7 @@ jobs:
           command -v geckodriver
           geckodriver --host 127.0.0.1 --port 4444 > /tmp/callisto-geckodriver.log 2>&1 &
           driver_pid=$!
-          trap 'kill "$driver_pid" 2>/dev/null || true' EXIT
+          trap 'status=$?; kill "$driver_pid" 2>/dev/null || true; if [ "$status" -ne 0 ]; then cat /tmp/callisto-geckodriver.log; fi' EXIT
           for i in {1..30}; do
             if curl -fsS http://127.0.0.1:4444/status >/dev/null; then break; fi
             sleep 0.2

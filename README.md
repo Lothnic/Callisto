@@ -23,8 +23,10 @@ Performance and reliability claims are still being tested.
 
 ## Get started
 
-For setup with Codex, Claude Code or OpenCode, including existing Zen tabs and
-pairing, start with the [user and agent setup guide](docs/getting-started.md).
+For setup with Codex, Claude Code or OpenCode, including a safe first trial and
+existing Zen tabs, start with the [user and agent setup guide](docs/getting-started.md).
+Friends can try a source checkout today; published builds and signed Firefox/Zen
+extension distribution are not ready yet. See the [path to 1.0](roadmap.md#path-to-10).
 
 From the repository root, with Node.js 20+ and a Chromium/Chrome binary:
 
