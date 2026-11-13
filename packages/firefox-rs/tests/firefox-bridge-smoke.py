@@ -102,6 +102,8 @@ try:
  assert any(t.get('url','').startswith('http://127.0.0.1:') for t in tabs)
  shot=tool('callisto_browser',{'action':'screenshot'})
  assert shot['content'][0]['type'] == 'image', shot
+ shot=tool('callisto_screenshot')
+ assert shot['content'][0]['type'] == 'image' and shot['content'][0]['mimeType']=='image/jpeg', shot
  base='http://127.0.0.1:'+str(server.server_address[1])+'/'
  value(tool('callisto_browser',{'action':'cookie_set','url':base,'name':'callisto-test','value':'ok'}))
  cookies=value(tool('callisto_browser',{'action':'cookies_list','url':base}))
