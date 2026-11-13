@@ -316,6 +316,9 @@ export async function closeSession(session: Session): Promise<void> {
     return
   }
   try {
+    // Ask the browser to exit before closing the protocol connection. Some
+    // launcher wrappers can leave the real Chromium process alive otherwise.
+    await session.cdp.Browser.close().catch(() => undefined)
     await session.cdp.close()
   } finally {
     await session.chrome?.kill()
