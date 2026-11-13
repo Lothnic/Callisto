@@ -89,6 +89,15 @@ try {
   await page.locator('#frame-cover').evaluate(el=>el.remove());
   await page.locator('#fixture-frame').evaluate(el=>{el.parentElement.style.transform='scale(1.1)';});
   assert.match((await frameInvoke({type:'action',method:'click',ref:frameRef})).error,/Transformed frame/);
+  await page.evaluate(()=>{
+    document.body.insertAdjacentHTML('beforeend','<table id="extract-grid"><tbody><tr><td>Alpha</td><td>3</td></tr><tr><td>Beta</td><td>5</td></tr></tbody></table>');
+  });
+  const extracted=await invoke({type:'action',method:'page',value:JSON.stringify({action:'extract',spec:{selector:'#extract-grid tbody tr',fields:{name:'td:nth-child(1)',total:{selector:'td:nth-child(2)',type:'number'}}}})});
+  assert.deepEqual(extracted.value,{rows:[{name:'Alpha',total:3},{name:'Beta',total:5}],has_next:false});
+  const limited=await invoke({type:'action',method:'page',value:JSON.stringify({action:'extract',spec:{selector:'#extract-grid tbody tr',fields:{name:'td:nth-child(1)'},limit:1,include_text:true}})});
+  assert.equal(limited.value.rows.length,1);
+  assert.match(limited.value.rows[0]._text,/^Alpha 3$/);
+  assert.match((await invoke({type:'action',method:'page',value:JSON.stringify({action:'extract',spec:{selector:'[[',fields:{name:'td'}}})})).error,/Invalid row selector/);
   const interrupted=invoke({type:'handoff',prompt:'This step will be revoked.',timeout_ms:5000});
   await page.getByText('This step will be revoked.',{exact:true}).waitFor();
   await invoke({type:'revoke'});

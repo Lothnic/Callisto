@@ -144,6 +144,50 @@
     if (!el.isConnected || !visible(el)) throw new Error('Target changed before the action.');
     return el;
   }
+  // Structured extraction. Keep behaviour identical to extract.ts in the
+  // Chromium backend; both are covered by the shared contract tests.
+  function extractPage(spec) {
+    if (!spec || typeof spec.selector !== 'string' || !spec.selector || spec.selector.length > 500) throw new Error('A row selector (1-500 characters) is required.');
+    const entries = Object.entries(spec.fields || {});
+    if (!entries.length || entries.length > 20) throw new Error('Provide 1-20 fields.');
+    const cleanText = value => String(value ?? '').replace(/\s+/g, ' ').trim();
+    let rows = [];
+    try { rows = Array.from(document.querySelectorAll(spec.selector)); }
+    catch { throw new Error('Invalid row selector.'); }
+    const limit = Number.isInteger(spec.limit) ? Math.max(1, Math.min(spec.limit, 1000)) : 500;
+    const out = [];
+    for (const row of rows.slice(0, limit)) {
+      const item = {};
+      for (const [name, rawField] of entries) {
+        if (typeof name !== 'string' || !name || name.length > 50) throw new Error('Invalid field name.');
+        const field = typeof rawField === 'string' ? {selector: rawField} : rawField;
+        if (!field || typeof field !== 'object') throw new Error('Invalid field specification.');
+        let element = row;
+        if (field.selector !== undefined) {
+          if (typeof field.selector !== 'string' || !field.selector || field.selector.length > 500) throw new Error('Invalid field selector.');
+          try { element = row.querySelector(field.selector); } catch { throw new Error('Invalid field selector.'); }
+        }
+        if (!element) { item[name] = null; continue; }
+        const raw = field.attribute ? element.getAttribute(field.attribute) : element.textContent;
+        const text = cleanText(raw);
+        if (field.type === 'number') {
+          const normalized = text.replace(/[^0-9.eE+-]/g, '');
+          const number = normalized === '' ? NaN : Number(normalized);
+          item[name] = Number.isFinite(number) ? number : null;
+        } else item[name] = text.slice(0, 300);
+      }
+      if (spec.include_text) item._text = cleanText(row.innerText).slice(0, 500);
+      out.push(item);
+    }
+    let has_next = false;
+    if (spec.paginate) {
+      let next = null;
+      try { next = document.querySelector(spec.paginate.next); } catch { throw new Error('Invalid next-page selector.'); }
+      const disabled = !next || next.hasAttribute('disabled') || next.getAttribute('aria-disabled') === 'true' || next.classList.contains('disabled');
+      has_next = !disabled && (next.tagName !== 'A' || Boolean(next.getAttribute('href')));
+    }
+    return {rows: out, has_next};
+  }
   browser.runtime.onMessage.addListener(async function handle(message) {
     if (message.type === 'ping') { enabled = true; mark(); return {value:true}; }
     if (message.type === 'revoke') { enabled = false; finishHandoff('Sharing stopped during human handoff.'); current.clear(); unmark(); return {value:true}; }
@@ -197,6 +241,17 @@
             offset = index + args.query.length;
           }
           return {value:{matches}};
+        }
+        if (args.action === 'extract') return {value: extractPage(args.spec)};
+        if (args.action === 'click_next') {
+          if (typeof args.selector !== 'string' || !args.selector || args.selector.length > 500) throw new Error('A next-page selector is required.');
+          let next;
+          try { next = document.querySelector(args.selector); } catch { throw new Error('Invalid next-page selector.'); }
+          if (!next) throw new Error('No next-page control matched the selector.');
+          if (next.hasAttribute('disabled') || next.getAttribute('aria-disabled') === 'true' || next.classList.contains('disabled')) throw new Error('The next-page control is disabled.');
+          next.scrollIntoView({block:'center'});
+          next.click();
+          return {value:{clicked:true}};
         }
         if (args.action === 'scroll') {
           const x = args.delta_x ?? 0, y = args.delta_y ?? 0;

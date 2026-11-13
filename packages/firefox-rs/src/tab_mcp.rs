@@ -1,5 +1,6 @@
 //! Experimental, opt-in local bridge for an explicitly shared Firefox/Zen tab.
 //! Browser input is supplied by a WebExtension and is synthetic, not BiDi input.
+#![recursion_limit = "512"]
 mod tab_relay;
 use anyhow::{anyhow, bail, Result};
 use futures_util::{SinkExt, StreamExt};
@@ -61,7 +62,15 @@ impl Bridge {
             }
         }
         let result = tokio::time::timeout(
-            Duration::from_secs(if method == "handoff" { 125 } else { 15 }),
+            Duration::from_secs(if method == "handoff" {
+                125
+            } else if method == "run" {
+                65
+            } else if method == "extract" {
+                40
+            } else {
+                15
+            }),
             recv,
         )
         .await;
@@ -179,6 +188,8 @@ fn tools() -> Value {
         {"name":"callisto_find","description":"Search visible page text and return bounded matching snippets. Unlike Chromium accessibility search, this uses rendered DOM text.","inputSchema":{"type":"object","properties":{"query":{"type":"string","minLength":1,"maxLength":200},"max_matches":{"type":"integer","minimum":1,"maximum":10,"default":5}},"required":["query"]}},
         {"name":"callisto_submit","description":"Submit the form associated with a snapshot ref, preserving browser validation and submit handlers. Use an input or submit-button ref. Submission may navigate; the next snapshot waits for the page.","inputSchema":{"type":"object","properties":{"ref":{"type":"string","pattern":"^ax-[0-9]+$"}},"required":["ref"]}},
         {"name":"callisto_batch","description":"Execute 1–10 dependent actions in the controlled tab and return a final snapshot in one tool call. Batches stop if tab ownership changes. Earlier actions are not rolled back on failure. Ten-second deadline; input remains synthetic.","inputSchema":{"type":"object","properties":{"actions":{"type":"array","minItems":1,"maxItems":10,"items":{"type":"object","properties":{"action":{"type":"string","enum":["navigate","click_ref","fill_ref","submit_ref","click_role","fill_role","submit_role","scroll"]},"url":{"type":"string"},"ref":{"type":"string"},"role":{"type":"string"},"name":{"type":"string"},"value":{"type":"string"},"delta_x":{"type":"number"},"delta_y":{"type":"number"}},"required":["action"]}}},"required":["actions"]}},
+        {"name":"callisto_extract","description":"Read structured rows from the shared page using CSS selectors: a row selector plus a field map. Optionally follow a next-page control and merge pages. Returns typed rows, not a snapshot, so counting and aggregation need one call.","inputSchema":{"type":"object","properties":{"selector":{"type":"string","minLength":1,"maxLength":500},"fields":{"type":"object","minProperties":1,"maxProperties":20,"additionalProperties":{"anyOf":[{"type":"string"},{"type":"object","properties":{"selector":{"type":"string"},"attribute":{"type":"string"},"type":{"type":"string","enum":["text","number"]}}}]}},"limit":{"type":"integer","minimum":1,"maximum":1000},"include_text":{"type":"boolean"},"paginate":{"type":"object","properties":{"next":{"type":"string","minLength":1,"maxLength":500},"max_pages":{"type":"integer","minimum":1,"maximum":25}},"required":["next"]}},"required":["selector","fields"]}},
+        {"name":"callisto_run","description":"Run 1–40 dependent steps in one call: navigate, click/fill by ref or exact role, press, scroll, wait, wait_for text, and extract rows. Returns the last extraction and an optional final snapshot. Stops at the first failure within a 60-second budget; earlier steps are not rolled back. Input remains synthetic.","inputSchema":{"type":"object","properties":{"steps":{"type":"array","minItems":1,"maxItems":40,"items":{"type":"object","properties":{"action":{"type":"string","enum":["navigate","click_ref","click_role","fill_ref","fill_role","press","scroll","wait","wait_for","extract"]},"url":{"type":"string"},"ref":{"type":"string"},"role":{"type":"string"},"name":{"type":"string"},"value":{"type":"string"},"key":{"type":"string"},"delta_x":{"type":"number"},"delta_y":{"type":"number"},"ms":{"type":"integer","minimum":1,"maximum":5000},"text":{"type":"string"},"timeout_ms":{"type":"integer"},"spec":{"type":"object"}},"required":["action"]}},"snapshot":{"type":"boolean"}},"required":["steps"]}},
         {"name":"callisto_snapshot","description":"Inspect the explicitly shared active tab. This experimental DOM-derived snapshot can omit content and frames.","inputSchema":{"type":"object","properties":{}}},
         {"name":"callisto_navigate","description":"Navigate the shared active tab to an HTTP(S) URL. Requires the user to grant optional access to all websites and re-share the tab. Poll callisto_status until ready, then take a fresh snapshot.","inputSchema":{"type":"object","properties":{"url":{"type":"string","maxLength":8192}},"required":["url"]}},
         {"name":"callisto_click","description":"Click a ref from the latest snapshot in the shared tab using a synthetic DOM click. Some websites reject synthetic input.","inputSchema":{"type":"object","properties":{"ref":{"type":"string","pattern":"^ax-[0-9]+$"}},"required":["ref"]}},
@@ -260,7 +271,7 @@ async fn call_tool(bridge: &Bridge, session_id: u64, name: &str, args: &Value) -
                 .await
         }
         "callisto_capabilities" => Ok(
-            json!({"schemaVersion":1,"backend":"firefox-extension","mode":"connected","snapshot":"dom","sessionModel":"per-client-tab","input":{"click":"synthetic-dom","keyboard":"synthetic-dom","fill":"synthetic-dom","nativeKeyDefaults":false},"capabilities":{"trustedInput":false,"frames":"same-origin","openShadowRoots":true,"upload":true,"existingTabAdoption":true,"cancellation":true,"handoff":true}}),
+            json!({"schemaVersion":1,"backend":"firefox-extension","mode":"connected","snapshot":"dom","sessionModel":"per-client-tab","input":{"click":"synthetic-dom","keyboard":"synthetic-dom","fill":"synthetic-dom","nativeKeyDefaults":false},"capabilities":{"trustedInput":false,"frames":"same-origin","openShadowRoots":true,"upload":true,"existingTabAdoption":true,"cancellation":true,"handoff":true,"run":true,"extract":true}}),
         ),
         "callisto_upload" => {
             use base64::Engine;
@@ -351,6 +362,26 @@ async fn call_tool(bridge: &Bridge, session_id: u64, name: &str, args: &Value) -
                     None,
                     Some(&serde_json::to_string(steps)?),
                 )
+                .await
+        }
+        "callisto_extract" => {
+            if args.to_string().len() > 200_000 {
+                bail!("Extract arguments are too large");
+            }
+            bridge
+                .call_session(session_id, "extract", None, Some(&args.to_string()))
+                .await
+        }
+        "callisto_run" => {
+            let steps = args
+                .get("steps")
+                .and_then(Value::as_array)
+                .ok_or_else(|| anyhow!("steps must be an array"))?;
+            if steps.is_empty() || steps.len() > 40 || args.to_string().len() > 200_000 {
+                bail!("Expected 1–40 steps, bounded to 200,000 bytes");
+            }
+            bridge
+                .call_session(session_id, "run", None, Some(&args.to_string()))
                 .await
         }
         "callisto_snapshot" => {

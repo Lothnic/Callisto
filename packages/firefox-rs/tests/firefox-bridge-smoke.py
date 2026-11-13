@@ -23,6 +23,11 @@ class Handler(http.server.BaseHTTPRequestHandler):
   elif self.path.startswith('/results'):
    query=urllib.parse.parse_qs(urllib.parse.urlparse(self.path).query).get('q',[''])[0]
    data=('<h1>Results '+html.escape(query)+'</h1>').encode()
+  elif self.path.startswith('/grid'):
+   page=int(urllib.parse.parse_qs(urllib.parse.urlparse(self.path).query).get('page',['1'])[0])
+   rows=''.join('<tr><td>F%d</td><td>%d</td></tr>'%(n,n*10) for n in range((page-1)*3+1,(page-1)*3+4))
+   more='<a class="next" href="/grid?page=%d">Next</a>'%(page+1) if page<2 else '<span class="next disabled">Next</span>'
+   data=('<title>Grid page %d</title><h1>Orders</h1><table id="grid"><tbody>%s</tbody></table>%s'%(page,rows,more)).encode()
   data+=b'<input type="file" aria-label="Attachment">'
   self.send_response(200);self.send_header('Content-Type','text/html; charset=utf-8');self.send_header('Content-Length',str(len(data)));self.end_headers();self.wfile.write(data)
  def log_message(self,*args): pass
@@ -86,6 +91,8 @@ try:
  p=client()
  assert value(tool('callisto_pair'))['code'] == pair
  assert value(tool('callisto_status'))['connected']
+ caps=value(tool('callisto_capabilities'))
+ assert caps['capabilities']['run'] and caps['capabilities']['extract'],caps
  for i in range(100):
   if not value(tool('callisto_status'))['sharing']: break
   time.sleep(.01)
@@ -183,6 +190,14 @@ try:
  assert batch['completed']==3 and 'Results Zen workflow' in batch['snapshot']['text'],batch
  assert elapsed<4,('Waited for slow resource instead of DOM readiness',elapsed)
  print('search form batch across navigation before 5-second image load: verified',round(elapsed*1000),'ms')
+ value(tool('callisto_navigate',{'url':base+'grid'}))
+ extracted=value(tool('callisto_extract',{'selector':'#grid tbody tr','fields':{'name':'td:nth-child(1)','total':{'selector':'td:nth-child(2)','type':'number'}},'paginate':{'next':'a.next','max_pages':3}}))
+ assert extracted['count']==6 and extracted['pages']==2,(extracted,)
+ assert extracted['rows'][0]=={'name':'F1','total':10} and extracted['rows'][-1]=={'name':'F6','total':60},extracted
+ scripted=value(tool('callisto_run',{'steps':[{'action':'navigate','url':base+'grid'},{'action':'wait_for','text':'Orders'},{'action':'extract','spec':{'selector':'#grid tbody tr','fields':{'name':'td:nth-child(1)'}}}]}))
+ assert scripted['completed']==3 and scripted['extraction']['count']==3,scripted
+ assert 'snapshot' not in scripted
+ print('structured extraction across pager and scripted run: verified in Firefox')
  container=value(tool('callisto_browser',{'action':'agent_container'}))
  assert value(tool('callisto_browser',{'action':'agent_container'}))['cookieStoreId']==container['cookieStoreId']
  agent_tab=value(tool('callisto_browser',{'action':'tab_create','url':target,'agent_container':True}))

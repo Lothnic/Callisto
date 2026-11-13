@@ -254,6 +254,87 @@ async function executeCommand(request, connection, deadline = Date.now()+10000) 
     if(!result || result.error)throw new Error(result?.error || 'Handoff page did not respond.');
     return result.value;
   }
+  if (request.method === 'extract') {
+    const args = JSON.parse(request.value);
+    const spec = args.spec ?? args;
+    if (!spec || typeof spec.selector !== 'string' || !spec.selector || spec.selector.length > 500) throw new Error('A row selector (1-500 characters) is required.');
+    if (!spec.fields || typeof spec.fields !== 'object' || !Object.keys(spec.fields).length || Object.keys(spec.fields).length > 20) throw new Error('Provide 1-20 fields.');
+    const maxPages = spec.paginate ? Math.max(1, Math.min(Number(spec.paginate.max_pages) || 10, 25)) : 1;
+    const totalLimit = 1000;
+    const rows = [];
+    let pages = 0;
+    for (let page = 0; page < maxPages; page++) {
+      if (chosen !== selected || owner !== ownership || socket !== connection) throw new Error('Tab sharing changed during extraction.');
+      const one = await executeCommand({ method: 'page', value: JSON.stringify({ action: 'extract', spec }) }, connection, Date.now() + 30000);
+      pages++;
+      rows.push(...one.rows);
+      if (rows.length >= totalLimit || !spec.paginate || !one.has_next) break;
+      try {
+        await executeCommand({ method: 'page', value: JSON.stringify({ action: 'click_next', selector: spec.paginate.next }) }, connection, Date.now() + 30000);
+      } catch (error) {
+        // A pager link can navigate and drop the reply; the page load is expected.
+      }
+      if (!ready) await waitReady(chosen, owner, connection, Date.now() + 10000);
+      await new Promise(resolve => setTimeout(resolve, 200));
+    }
+    const tab = await browser.tabs.get(chosen);
+    return {
+      url: tab.url,
+      title: tab.title || '',
+      rows: rows.slice(0, totalLimit),
+      count: Math.min(rows.length, totalLimit),
+      pages,
+      truncated: rows.length > totalLimit,
+    };
+  }
+  if (request.method === 'run') {
+    const args = JSON.parse(request.value);
+    const steps = args.steps;
+    if (!Array.isArray(steps) || !steps.length || steps.length > 40) throw new Error('Expected 1-40 steps.');
+    const started = Date.now();
+    const deadline = started + 60000;
+    let completed = 0;
+    let extraction = null;
+    for (const step of steps) {
+      if (chosen !== selected || owner !== ownership || socket !== connection) throw new Error('Tab sharing changed during the run.');
+      if (Date.now() >= deadline) throw new Error(`Run stopped at step ${completed + 1}: 60-second budget exceeded.`);
+      try {
+        let command = null;
+        if (step.action === 'wait') {
+          const ms = Math.max(1, Math.min(Number(step.ms) || 0, 5000));
+          if (!ms) throw new Error('wait requires ms.');
+          await new Promise(resolve => setTimeout(resolve, ms));
+        } else if (step.action === 'wait_for') {
+          if (typeof step.text !== 'string' || !step.text || step.text.length > 500) throw new Error('wait_for requires text (1-500 characters).');
+          const budget = Math.min(Number(step.timeout_ms) || 5000, 20000);
+          const until = Date.now() + budget;
+          let found = false;
+          while (Date.now() < until) {
+            const result = await executeCommand({ method: 'page', value: JSON.stringify({ action: 'find', query: step.text }) }, connection, deadline);
+            if (result.matches && result.matches.length) { found = true; break; }
+            await new Promise(resolve => setTimeout(resolve, 100));
+          }
+          if (!found) throw new Error(`wait_for timed out after ${budget}ms waiting for ${JSON.stringify(step.text)}.`);
+        } else if (step.action === 'extract') {
+          extraction = await executeCommand({ method: 'extract', value: JSON.stringify(step.spec ?? {}) }, connection, deadline);
+        } else if (step.action === 'navigate') command = { method: 'navigate', value: step.url };
+        else if (step.action === 'scroll') command = { method: 'page', value: JSON.stringify({ ...step, action: 'scroll' }) };
+        else if (/^(fill|click)_(ref|role)$/.test(step.action)) {
+          const method = step.action.split('_')[0];
+          command = { method: 'page', value: JSON.stringify({ ...step, action: method }) };
+        } else if (step.action === 'press') command = { method: 'page', value: JSON.stringify({ action: 'press', key: step.key }) };
+        else throw new Error('Unsupported run step.');
+        if (command) {
+          await executeCommand(command, connection, deadline);
+          if (step.action === 'navigate' && !ready) await waitReady(chosen, owner, connection, deadline);
+        }
+        completed++;
+      } catch (error) {
+        throw new Error(`Run stopped at step ${completed + 1} (${step.action}); earlier steps may have completed: ${error.message}`);
+      }
+    }
+    return { completed, elapsed_ms: Date.now() - started, ...(extraction ? { extraction } : {}), ...(args.snapshot ? { snapshot: await executeCommand({ method: 'snapshot' }, connection, deadline) } : {}) };
+  }
   if (request.method === 'batch') {
     const steps = JSON.parse(request.value);
     if (!Array.isArray(steps) || !steps.length || steps.length>10) throw new Error('Expected 1–10 batch actions.');
