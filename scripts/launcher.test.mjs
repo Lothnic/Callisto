@@ -24,6 +24,17 @@ for(const backend of ['chromium','zen']) test(`launcher forwards ${backend} MCP 
     const capabilities=JSON.parse(result.result.content[0].text);
     assert.equal(capabilities.schemaVersion,1);
     assert.equal(capabilities.backend,backend==='zen'?'firefox-extension':'chromium-cdp');
+    assert.equal(typeof capabilities.mode,'string');
+    assert.equal(typeof capabilities.snapshot,'string');
+    assert.equal(typeof capabilities.sessionModel,'string');
+    for (const name of ['trustedInput','openShadowRoots','upload','existingTabAdoption','cancellation','handoff']) {
+      assert.equal(typeof capabilities.capabilities[name], 'boolean', `${backend}: missing boolean capability ${name}`);
+    }
+    assert.equal(capabilities.capabilities.frames,'same-origin');
+    if (backend === 'zen') {
+      assert.equal(capabilities.capabilities.trustedInput,false);
+      assert.equal(capabilities.capabilities.existingTabAdoption,true);
+    }
   } finally {
     child.kill('SIGTERM');
     await new Promise(resolve=>child.once('exit',resolve));

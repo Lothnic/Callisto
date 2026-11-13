@@ -42,9 +42,31 @@ jobs:
           cache-dependency-path: packages/mini/package-lock.json
       - run: npm ci
       - run: npm run typecheck
-      # Unit tests only. The browser smoke test (CALLISTO_SMOKE=1) needs a real
-      # Chrome + network and is run locally, not in CI.
       - run: npm test
+
+  mini-browser:
+    name: Chromium local browser tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    defaults:
+      run:
+        working-directory: packages/mini
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: packages/mini/package-lock.json
+      - run: npm ci
+      - name: Exercise Chromium against local fixtures
+        env:
+          CALLISTO_SMOKE: '1'
+          CALLISTO_NO_SANDBOX: '1'
+        run: |
+          export CHROME_PATH="$(command -v google-chrome)"
+          test -n "$CHROME_PATH"
+          node --import tsx --test --test-concurrency=1 tests/mcp.test.ts
 
   harness:
     name: harness (lint + test)
