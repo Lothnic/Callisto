@@ -41,6 +41,13 @@ local MCP server. Start or reopen OpenCode in this project and use the
 node /absolute/path/to/callisto/packages/mini/dist/mcp.js
 ```
 
+Both backends share the same structured batch/extract interface: `callisto_run`
+executes up to 40 dependent steps (navigate, click/fill by ref or exact role,
+press, scroll, wait, wait-for-text, extract) and `callisto_extract` reads typed
+rows from a CSS row selector plus field map, optionally following a next-page
+control and merging pages. Neither evaluates arbitrary page JavaScript. See the
+[Mini guide](packages/mini/README.md) and [Firefox and Zen guide](packages/firefox-rs/README.md) for the full limits.
+
 The server starts a fresh browser on the first browser tool call and closes it
 when the session ends. Set `CHROME_PATH` in the host environment if Chrome is
 not discovered, or `CALLISTO_MCP_HEADLESS=0` to show the window. See the

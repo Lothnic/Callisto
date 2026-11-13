@@ -103,7 +103,11 @@ that the intended action succeeded. See [browser data handling](browser-data.md)
   a next-page control and merges the pages. `callisto_run` executes up to 40
   dependent steps (navigate, click/fill by ref or exact role, press, scroll,
   wait, wait-for-text and extract) in one call. Both are driven by host-supplied
-  selectors and refs, not arbitrary page JavaScript.
+  selectors and refs, not arbitrary page JavaScript. Both are advertised by
+  `callisto_capabilities` (`capabilities.run` / `capabilities.extract`,
+  `true` since 2026-11-13). In the Zen/Firefox backend the extension must be
+  the current build — loading an older copy makes the tools silently missing
+  or returning `Unsupported action.`; reload and re-pair it after upgrading.
 - Both backends expose `callisto_find` and `callisto_scroll`. Firefox finds
   rendered DOM text, while Chromium searches its accessibility snapshot;
   Firefox scroll returns an action result, so capture a new snapshot afterward.

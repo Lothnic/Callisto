@@ -30,7 +30,9 @@ not yet normalize every backend-specific tool result.
 Both servers expose `callisto_capabilities` with a versioned response describing
 the active backend, observation type, session model and supported features.
 Run `node --test scripts/launcher.test.mjs` after building both backends to check
-the launcher against the real MCP processes using isolated relay state.
+the launcher against the real MCP processes using isolated relay state. The test
+also asserts `callisto_run` and `callisto_extract` are advertised with the same
+inputs on both backends.
 
 The Runtime packages workflow builds and tests the Rust bridge for Linux x64
 and macOS ARM64, creates archives and SHA-256 checksum files, and uploads them

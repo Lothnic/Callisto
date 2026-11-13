@@ -33,6 +33,18 @@ connects its tools are available under `callisto`. Other MCP clients can launch
 `CHROME_PATH` in the host environment if Chrome is not discovered; set
 `CALLISTO_MCP_HEADLESS=0` for a visible window.
 
+### Tools at a glance
+
+- `callisto_extract` — typed rows from a CSS row selector plus field map; optional next-page pagination merges pages.
+- `callisto_run` — up to 40 dependent steps: `navigate`, `click_ref`, `click_role`, `fill_ref`, `fill_role`, `press`, `scroll`, `wait`, `wait_for`, `extract`; 60-second budget.
+- `callisto_batch` — up to 10 dependent actions returning one final snapshot.
+- `callisto_navigate`, `callisto_snapshot`, `callisto_find` — accessibility tree with `ax-N` refs, search and paging.
+- `callisto_click`, `callisto_fill`, `callisto_press`, `callisto_scroll` — single-action helpers; `callisto_screenshot`, `callisto_close`.
+- `callisto_capabilities` — reports the supported feature set (`run`, `extract`, `handoff`, `cancellation`, ...).
+
+`callisto_run` and `callisto_extract` share the same declarative interface as
+the Firefox/Zen backend; they do not evaluate arbitrary page JavaScript.
+
 By default, each MCP server process owns one isolated browser, launched lazily on the first
 browser action. `callisto_navigate` and `callisto_snapshot` return accessibility
 trees with `ax-N` refs; use those refs with `callisto_click` and `callisto_fill`.

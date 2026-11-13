@@ -55,6 +55,30 @@ works. Use **Stop sharing** to release the tab, or ask the agent to call
 needed, unless the optional navigation permission described below is enabled.
 A temporary add-on is removed when the browser exits; a signed,
 permanently installable extension and a streamlined setup are still needed.
+
+### Tools at a glance
+
+Shared with the Chromium backend (same names, matching semantics):
+
+- `callisto_extract` — typed rows from a CSS row selector plus field map; optional next-page pagination merges pages.
+- `callisto_run` — up to 40 dependent steps: `navigate`, `click_ref`, `click_role`, `fill_ref`, `fill_role`, `press`, `scroll`, `wait`, `wait_for`, `extract`; 60-second budget.
+- `callisto_batch`, `callisto_submit`, `callisto_page` — smaller dependent-action helpers.
+- `callisto_snapshot`, `callisto_find`, `callisto_scroll`, `callisto_screenshot`, `callisto_press`, `callisto_close`.
+- `callisto_browser` — tabs, windows, containers, cookies, bookmarks, history, downloads, screenshots.
+- `callisto_frames` / `callisto_frame` — same-origin frame selection and input.
+- `callisto_upload` — set files on a visible file input.
+- `callisto_handoff` — ask a human to complete a step in the page.
+- `callisto_capabilities` / `callisto_status` — what the connected build supports.
+- `callisto_pair` — persistent local pairing code (once per profile).
+
+`callisto_run` and `callisto_extract` are advertised by `callisto_capabilities`
+since the 2026-11-13 build (`capabilities.run` / `capabilities.extract`), but
+the action dispatch lives in the extension: a stale extension copy returns
+`Unsupported action.` even then. Reload the extension after upgrading and check
+the flags before relying on either tool.
+
+A temporary add-on is removed when the browser exits; a signed,
+permanently installable extension and a streamlined setup are still needed.
 The agent can call `callisto_status` to check whether the bridge is connected,
 sharing and on the active tab without reading the page.
 
