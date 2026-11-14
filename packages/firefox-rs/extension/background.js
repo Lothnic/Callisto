@@ -115,6 +115,7 @@ async function stop(reset=false){
 }
 async function share(id){await stop();return sessions.get(0).share(id);}
 browser.webNavigation.onDOMContentLoaded.addListener(event=>{if(event.frameId===0)for(const session of sessions.values())session.domReady(event.tabId);});
+browser.webNavigation.onCommitted?.addListener(event=>{if(event.frameId!==0)for(const session of sessions.values())session.frameNavigated(event.tabId,event.frameId);});
 async function executeCommand(request,connection){
   if(socket!==connection || !paired)throw new Error('Browser connection was revoked.');
   const id=Number.isSafeInteger(request.session)&&request.session>=0?request.session:0;
@@ -144,6 +145,7 @@ let ownership = 0;
 let ready = false;
 let continuous = false;
 let selectedFrame = 0;
+let frameStale = false;
 let reserved=null;
   const context={get selected(){return selected;},share,assertAvailable,guard(expected){if(expected!==ownership)throw new Error('Tab ownership changed before the browser operation.');}};
   function assertAvailable(tabId){
@@ -155,9 +157,12 @@ function status() {
 }
 async function stop() {
   const previous = selected;
-  selected = null; reserved = null; selectedFrame = 0; ready = false; continuous = false; generation++; ownership++;
+  selected = null; reserved = null; selectedFrame = 0; frameStale = false; ready = false; continuous = false; generation++; ownership++;
   await browser.browserAction.setBadgeText({text:[...sessions.values()].some(s=>s.target!==null)?'ON':''}).catch(() => {});
-  if (previous !== null) await browser.tabs.sendMessage(previous, {type:'revoke'}).catch(() => {});
+  if (previous !== null) {
+    const frames=await browser.webNavigation.getAllFrames({tabId:previous}).catch(()=>[{frameId:0}]);
+    await Promise.all((frames || [{frameId:0}]).map(frame=>browser.tabs.sendMessage(previous,{type:'revoke'},{frameId:frame.frameId}).catch(()=>{})));
+  }
 }
 async function share(tabId,expectedOwner) {
   if(expectedOwner!==undefined)context.guard(expectedOwner);
@@ -235,7 +240,7 @@ async function executeCommand(request, connection, deadline = Date.now()+10000) 
   if (request.method === 'status') {
     const target = chosen === null ? null : await browser.tabs.get(chosen);
     const [active] = target ? await browser.tabs.query({active:true,windowId:target.windowId}) : [];
-    return {connected:true,sharing:chosen !== null,active:chosen !== null && active?.id === chosen,ready,continuous,browserAccess:await browser.permissions.contains(fullBrowserPermissions),capabilities:{trustedInput:false,frames:'same-origin',playwrightExecution:false}};
+    return {connected:true,sharing:chosen !== null,active:chosen !== null && active?.id === chosen,ready,continuous,browserAccess:await browser.permissions.contains(fullBrowserPermissions),capabilities:{trustedInput:false,frames:'same-origin',playwrightExecution:false,run:true,extract:true,snapshotPagination:true,runFormControls:true,selectorWait:true,targetedObservation:true}};
   }
   if (Date.now() >= deadline) throw new Error('Command deadline exceeded; inspect before retrying.');
   if (request.method === 'browser') {
@@ -253,7 +258,7 @@ async function executeCommand(request, connection, deadline = Date.now()+10000) 
     await browser.tabs.executeScript(chosen,{file:'/content.js',frameId:id,runAt:'document_end'});
     await browser.tabs.sendMessage(chosen,{type:'ping'},{frameId:id});
     if(owner!==ownership || chosen!==selected)throw new Error('Tab changed while selecting frame.');
-    selectedFrame=id;
+    selectedFrame=id;frameStale=false;
     return {frameId:id,snapshot:await executeCommand({method:'snapshot'},connection,deadline)};
   }
   if (request.method === 'handoff') {
@@ -335,25 +340,18 @@ async function executeCommand(request, connection, deadline = Date.now()+10000) 
       try {
         let command = null;
         if (step.action === 'wait') {
-          const ms = Math.max(1, Math.min(Number(step.ms) || 0, 5000));
-          if (!ms) throw new Error('wait requires ms.');
+          const ms = step.ms;
+          if (!Number.isInteger(ms) || ms < 1 || ms > 5000) throw new Error('wait requires integer ms from 1 to 5000.');
           await new Promise(resolve => setTimeout(resolve, Math.min(ms, Math.max(0, deadline-Date.now()))));
         } else if (step.action === 'wait_for') {
-          if (typeof step.text !== 'string' || !step.text || step.text.length > 500) throw new Error('wait_for requires text (1-500 characters).');
-          const budget = Math.min(Number(step.timeout_ms) || 5000, 20000);
-          const until = Math.min(deadline, Date.now() + budget);
-          let found = false;
-          while (Date.now() < until) {
-            const result = await executeCommand({ method: 'page', value: JSON.stringify({ action: 'find', query: step.text }) }, connection, deadline);
-            if (result.matches && result.matches.length) { found = true; break; }
-            await new Promise(resolve => setTimeout(resolve, 100));
-          }
-          if (!found) throw new Error(`wait_for timed out after ${budget}ms waiting for ${JSON.stringify(step.text)}.`);
+          const timeout = step.timeout_ms ?? 5000;
+          if (!Number.isInteger(timeout) || timeout < 100 || timeout > 20000) throw new Error('wait_for timeout_ms must be an integer from 100 to 20000.');
+          await executeCommand({ method: 'page', value: JSON.stringify(step) }, connection, Math.min(deadline, Date.now()+timeout));
         } else if (step.action === 'extract') {
           extraction = await executeCommand({ method: 'extract', value: JSON.stringify(step.spec ?? {}) }, connection, deadline);
         } else if (step.action === 'navigate') command = { method: 'navigate', value: step.url };
         else if (step.action === 'scroll') command = { method: 'page', value: JSON.stringify({ ...step, action: 'scroll' }) };
-        else if (/^(fill|click)_(ref|role)$/.test(step.action)) {
+        else if (/^(fill|click|submit|select|check|hover)_(ref|role)$/.test(step.action)) {
           const method = step.action.split('_')[0];
           command = { method: 'page', value: JSON.stringify({ ...step, action: method }) };
         } else if (step.action === 'press') command = { method: 'page', value: JSON.stringify({ action: 'press', key: step.key }) };
@@ -391,6 +389,7 @@ async function executeCommand(request, connection, deadline = Date.now()+10000) 
     return {completed,snapshot:await executeCommand({method:'snapshot'},connection,deadline)};
   }
   if (!['snapshot','click','fill','submit','navigate','page'].includes(request.method)) throw new Error('Unsupported action.');
+  if(frameStale && request.method!=='navigate')throw new Error('The selected frame navigated; list frames and explicitly select it again.');
   const target = await browser.tabs.get(chosen);
   const [active] = await browser.tabs.query({active:true,windowId:target.windowId});
   if (!active || active.id !== chosen) throw new Error('The shared tab is not active. Return to it before continuing.');
@@ -404,15 +403,19 @@ async function executeCommand(request, connection, deadline = Date.now()+10000) 
     let sameDocument = false;
     try { const current = new URL(active.url); current.hash=''; const target=new URL(url.href);target.hash='';sameDocument=current.href===target.href && active.url!==url.href; } catch {}
     if (owner !== ownership || chosen !== selected || socket !== connection) throw new Error('Tab sharing changed before navigation.');
-    selectedFrame=0;ready=false;generation++;
+    selectedFrame=0;frameStale=false;ready=false;generation++;
     try { await browser.tabs.update(chosen,{url:url.href}); }
     catch (error) { if(chosen===selected && generation===stamp+1)ready=true;throw error; }
     if (sameDocument && chosen===selected && generation===stamp+1)ready=true;
     return {navigationStarted:true};
   }
   let result;
-  try { result = await browser.tabs.sendMessage(chosen,{type:'action',method:request.method,ref:request.ref,value:request.value},{frameId:selectedFrame}); }
+  try { result = await browser.tabs.sendMessage(chosen,{type:'action',method:request.method,ref:request.ref,value:request.value,deadline},{frameId:selectedFrame}); }
   catch (error) {
+    if (owner !== ownership || chosen !== selected || socket !== connection) throw new Error('Tab sharing changed during the action; inspect the page before retrying.');
+    // Waiting is read-only and can safely resume in the next document, within
+    // the original step deadline. Never replay an interrupted input operation.
+    if (request.method === 'page' && JSON.parse(request.value).action === 'wait_for' && (stamp !== generation || !ready)) return executeCommand(request,connection,deadline);
     throw new Error(`Page message interrupted; action outcome is unknown. Inspect before retrying: ${error.message}`);
   }
   if (owner !== ownership || chosen !== selected || socket !== connection) throw new Error('Tab sharing changed during the action; inspect the page before retrying.');
@@ -423,7 +426,8 @@ async function executeCommand(request, connection, deadline = Date.now()+10000) 
   Object.assign(context,{
     status,stop,share,executeCommand,
     removed(id){if(selected===id)void stop();},
-    updated(id,change){if(selected!==id)return;if(change.status==='loading'){selectedFrame=0;ready=false;generation++;if(!continuous)void stop();}if(change.status==='complete')void restorePage(id);},
+    updated(id,change){if(selected!==id)return;if(change.status==='loading'){selectedFrame=0;frameStale=false;ready=false;generation++;if(!continuous)void stop();}if(change.status==='complete')void restorePage(id);},
+    frameNavigated(id,frame){if(selected===id && selectedFrame===frame)frameStale=true;},
     permissionsRemoved(permissions){if(continuous&&permissions.origins?.includes('<all_urls>'))void stop();},
     domReady(id){void restorePage(id);}
   });

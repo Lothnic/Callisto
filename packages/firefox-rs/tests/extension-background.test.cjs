@@ -5,7 +5,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 
 function fixture(executeScript = async () => {}, siteAccess = false, saved = {}, clock = Date) {
-  let listener, menuListener, updateListener, domListener;
+  let listener, menuListener, updateListener, domListener, commitListener;
   const messages = [];
   class Socket {
     static OPEN = 1;
@@ -17,7 +17,7 @@ function fixture(executeScript = async () => {}, siteAccess = false, saved = {},
   }
   const browser = {
     storage:{local:{get:async () => ({...saved}),set:async values => {Object.assign(saved,values);},remove:async key => {delete saved[key];}}},
-    webNavigation:{getAllFrames:async()=>[{frameId:0,parentFrameId:-1},{frameId:7,parentFrameId:0}],onDOMContentLoaded:{addListener(fn){domListener=fn;}}},
+    webNavigation:{getAllFrames:async()=>[{frameId:0,parentFrameId:-1},{frameId:7,parentFrameId:0}],onDOMContentLoaded:{addListener(fn){domListener=fn;}},onCommitted:{addListener(fn){commitListener=fn;}}},
     runtime:{onMessage:{addListener(fn) { listener = fn; }}},
     menus:{create(){},onClicked:{addListener(fn){ menuListener = fn; }}},
     browserAction:{setBadgeText:async () => {}},
@@ -34,7 +34,7 @@ function fixture(executeScript = async () => {}, siteAccess = false, saved = {},
   const context = vm.createContext({browser,WebSocket:Socket,setTimeout,clearTimeout,URL,Date:clock});
   vm.runInContext(fs.readFileSync(path.join(__dirname,'../extension/browser-control.js'),'utf8'), context);
   vm.runInContext(fs.readFileSync(path.join(__dirname,'../extension/background.js'),'utf8'), context);
-  return {listener,menuListener,updateListener,domListener,Socket,messages,browser};
+  return {listener,menuListener,updateListener,domListener,commitListener,Socket,messages,browser};
 }
 const code = `127.0.0.1:1234#${'a'.repeat(64)}`;
 
@@ -86,7 +86,7 @@ test('pairing requires server confirmation and stop prevents further sharing', a
   assert.match((await connecting).message,/Connected/);
   assert.match((await listener({type:'share'})).message,/shared/);
   await ws.receive({id:1,method:'status'});
-  assert.deepEqual(messages.at(-1).result,{connected:true,sharing:true,active:true,ready:true,continuous:false,browserAccess:false,capabilities:{trustedInput:false,frames:'same-origin',playwrightExecution:false}});
+  assert.deepEqual(messages.at(-1).result,{connected:true,sharing:true,active:true,ready:true,continuous:false,browserAccess:false,capabilities:{trustedInput:false,frames:'same-origin',playwrightExecution:false,run:true,extract:true,snapshotPagination:true,runFormControls:true,selectorWait:true,targetedObservation:true}});
   await listener({type:'stop'});
   assert.match((await listener({type:'status'})).message,/Connected/);
 });
@@ -284,4 +284,77 @@ test('failed tab sharing releases its reservation',async()=>{
   let closed=false;browser.tabs.remove=async()=>{closed=true;};
   await Socket.last.receive({id:302,session:202,method:'browser',value:JSON.stringify({action:'tab_close',tab_id:43})});
   assert.equal(closed,true);
+});
+
+test('run batches form controls and waits in the document with an absolute deadline',async()=>{
+  const {listener,Socket,messages,browser}=fixture(async()=>{},true);
+  const pairing=listener({type:'pair',code});await new Promise(setImmediate);
+  Socket.last.open();await Socket.last.receive({type:'paired',protocol:2});await pairing;
+  await listener({type:'share'});
+  const commands=[];
+  browser.tabs.sendMessage=async(_id,message)=>{commands.push(message);return {value:{completed:true,matched:true}};};
+  const steps=[
+    {action:'select_role',role:'combobox',name:'Status',value:'complete'},
+    {action:'check_ref',ref:'ax-2',checked:true},
+    {action:'hover_role',role:'button',name:'Menu'},
+    {action:'submit_role',role:'textbox',name:'Search'},
+    {action:'wait_for',selector:'.row',state:'visible',timeout_ms:1000},
+    {action:'wait_for',text:'long '.repeat(60).trim(),timeout_ms:1000},
+  ];
+  const before=Date.now();
+  await Socket.last.receive({id:303,method:'run',value:JSON.stringify({steps})});
+  assert.equal(messages.at(-1).error,undefined);
+  assert.equal(messages.at(-1).result.completed,steps.length);
+  assert.deepEqual(commands.map(m=>JSON.parse(m.value).action),['select','check','hover','submit','wait_for','wait_for']);
+  assert(commands.every(m=>m.deadline>=before && m.deadline<=before+60000));
+  assert.equal(new Set(commands.slice(0,4).map(m=>m.deadline)).size,1);
+  assert(commands.slice(4).every(m=>m.deadline<=Date.now()+1000));
+});
+
+test('run rejects invalid waits before dispatching subsequent actions',async()=>{
+  const {listener,Socket,messages,browser}=fixture(async()=>{},true);
+  const pairing=listener({type:'pair',code});await new Promise(setImmediate);
+  Socket.last.open();await Socket.last.receive({type:'paired',protocol:2});await pairing;
+  await listener({type:'share'});
+  let dispatched=0;browser.tabs.sendMessage=async()=>{dispatched++;return {value:{completed:true}};};
+  for(const ms of [undefined,0,-1,1.5,6000,'20']){
+    await Socket.last.receive({id:304,method:'run',value:JSON.stringify({steps:[{action:'wait',ms},{action:'click_ref',ref:'ax-1'}]})});
+    assert.match(messages.at(-1).error,/Run stopped at step 1.*integer ms/);
+  }
+  assert.equal(dispatched,0);
+});
+
+test('read-only wait resumes across navigation without extending its deadline',async()=>{
+  const {listener,Socket,messages,browser,updateListener,domListener}=fixture(async()=>{},true);
+  const pairing=listener({type:'pair',code});await new Promise(setImmediate);
+  Socket.last.open();await Socket.last.receive({type:'paired',protocol:2});await pairing;
+  await listener({type:'share'});
+  const waits=[];
+  browser.tabs.sendMessage=async(_id,message)=>{
+    if(message.type!=='action')return {value:true};
+    waits.push(message);
+    if(waits.length===1){
+      updateListener(42,{status:'loading'});domListener({tabId:42,frameId:0});
+      await new Promise(setImmediate);
+      throw new Error('The document unloaded');
+    }
+    return {value:{matched:true}};
+  };
+  await Socket.last.receive({id:305,method:'run',value:JSON.stringify({steps:[{action:'wait_for',selector:'#result',timeout_ms:1000}]})});
+  assert.equal(messages.at(-1).error,undefined);
+  assert.equal(messages.at(-1).result.completed,1);
+  assert.equal(waits.length,2);
+  assert.equal(waits[0].deadline,waits[1].deadline);
+});
+
+
+test('release revokes all frames and frame navigation requires explicit reselection',async()=>{
+ const {listener,Socket,messages,browser,commitListener}=fixture(async()=>{},true);
+ const pairing=listener({type:'pair',code});await new Promise(setImmediate);Socket.last.open();await Socket.last.receive({type:'paired',protocol:2});await pairing;await listener({type:'share'});
+ await Socket.last.receive({id:401,method:'frame',value:JSON.stringify({frame_id:7})});
+ commitListener({tabId:42,frameId:7});
+ await Socket.last.receive({id:402,method:'snapshot'});assert.match(messages.at(-1).error,/selected frame navigated/);
+ await Socket.last.receive({id:403,method:'frame',value:JSON.stringify({frame_id:7})});assert.equal(messages.at(-1).error,undefined);
+ const revoked=[];browser.tabs.sendMessage=async(id,message,options)=>{if(message.type==='revoke')revoked.push(options.frameId);return {value:true};};
+ await listener({type:'stop'});assert.deepEqual(revoked.sort(),[0,7]);
 });

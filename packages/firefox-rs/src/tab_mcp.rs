@@ -189,8 +189,8 @@ fn tools() -> Value {
         {"name":"callisto_submit","description":"Submit the form associated with a snapshot ref, preserving browser validation and submit handlers. Use an input or submit-button ref. Submission may navigate; the next snapshot waits for the page.","inputSchema":{"type":"object","properties":{"ref":{"type":"string","pattern":"^ax-[0-9]+$"}},"required":["ref"]}},
         {"name":"callisto_batch","description":"Execute 1–10 dependent actions in the controlled tab and return a final snapshot in one tool call. Batches stop if tab ownership changes. Earlier actions are not rolled back on failure. Ten-second deadline; input remains synthetic.","inputSchema":{"type":"object","properties":{"actions":{"type":"array","minItems":1,"maxItems":10,"items":{"type":"object","properties":{"action":{"type":"string","enum":["navigate","click_ref","fill_ref","submit_ref","click_role","fill_role","submit_role","scroll"]},"url":{"type":"string"},"ref":{"type":"string"},"role":{"type":"string"},"name":{"type":"string"},"value":{"type":"string"},"delta_x":{"type":"number"},"delta_y":{"type":"number"}},"required":["action"]}}},"required":["actions"]}},
         {"name":"callisto_extract","description":"Read structured rows from the shared page using CSS selectors: a row selector plus a field map. Optionally follow a next-page control and merge pages. Returns typed rows, not a snapshot, so counting and aggregation need one call.","inputSchema":{"type":"object","properties":{"selector":{"type":"string","minLength":1,"maxLength":500},"fields":{"type":"object","minProperties":1,"maxProperties":20,"additionalProperties":{"anyOf":[{"type":"string"},{"type":"object","properties":{"selector":{"type":"string"},"attribute":{"type":"string"},"type":{"type":"string","enum":["text","number"]}}}]}},"limit":{"type":"integer","minimum":1,"maximum":1000},"include_text":{"type":"boolean"},"paginate":{"type":"object","properties":{"next":{"type":"string","minLength":1,"maxLength":500},"max_pages":{"type":"integer","minimum":1,"maximum":25}},"required":["next"]}},"required":["selector","fields"]}},
-        {"name":"callisto_run","description":"Run 1–40 dependent steps in one call: navigate, click/fill by ref or exact role, press, scroll, wait, wait_for text, and extract rows. Returns the last extraction and an optional final snapshot. Stops at the first failure within a 60-second budget; earlier steps are not rolled back. Input remains synthetic.","inputSchema":{"type":"object","properties":{"steps":{"type":"array","minItems":1,"maxItems":40,"items":{"type":"object","properties":{"action":{"type":"string","enum":["navigate","click_ref","click_role","fill_ref","fill_role","press","scroll","wait","wait_for","extract"]},"url":{"type":"string"},"ref":{"type":"string"},"role":{"type":"string"},"name":{"type":"string"},"value":{"type":"string"},"key":{"type":"string"},"delta_x":{"type":"number"},"delta_y":{"type":"number"},"ms":{"type":"integer","minimum":1,"maximum":5000},"text":{"type":"string"},"timeout_ms":{"type":"integer"},"spec":{"type":"object"}},"required":["action"]}},"snapshot":{"type":"boolean"}},"required":["steps"]}},
-        {"name":"callisto_snapshot","description":"Inspect the explicitly shared active tab. This experimental DOM-derived snapshot can omit content and frames.","inputSchema":{"type":"object","properties":{}}},
+        {"name":"callisto_run","description":"Run 1–40 dependent steps in one call: navigate; click/fill/submit/select/check/hover by ref or exact role; press; scroll; wait; wait_for text or CSS selector state; extract rows. Use submit instead of synthetic Enter for forms. Returns the last extraction and an optional final snapshot. Stops at the first failure within a 60-second budget; earlier steps are not rolled back. Input remains synthetic.","inputSchema":{"type":"object","properties":{"steps":{"type":"array","minItems":1,"maxItems":40,"items":{"type":"object","properties":{"action":{"type":"string","enum":["navigate","click_ref","click_role","fill_ref","fill_role","submit_ref","submit_role","select_ref","select_role","check_ref","check_role","hover_ref","hover_role","press","scroll","wait","wait_for","extract"]},"url":{"type":"string"},"ref":{"type":"string"},"role":{"type":"string"},"name":{"type":"string"},"value":{"type":"string"},"key":{"type":"string"},"delta_x":{"type":"number"},"delta_y":{"type":"number"},"ms":{"type":"integer","minimum":1,"maximum":5000},"text":{"type":"string","minLength":1,"maxLength":500},"timeout_ms":{"type":"integer","minimum":100,"maximum":20000},"selector":{"type":"string","minLength":1,"maxLength":500},"state":{"type":"string","enum":["visible","hidden","attached","detached"]},"checked":{"type":"boolean"},"spec":{"type":"object"}},"required":["action"]}},"snapshot":{"type":"boolean"}},"required":["steps"]}},
+        {"name":"callisto_snapshot","description":"Inspect the explicitly shared active tab. Use max_chars to bound output and offset=next_offset to page through truncated controls. Refs belong to the latest snapshot. This experimental DOM-derived snapshot can omit content and frames.","inputSchema":{"type":"object","properties":{"offset":{"type":"integer","minimum":0,"maximum":10000},"max_chars":{"type":"integer","minimum":1000,"maximum":30000},"selector":{"type":"string","minLength":1,"maxLength":500},"query":{"type":"string","minLength":1,"maxLength":200},"include_text":{"type":"boolean","default":true}}}},
         {"name":"callisto_navigate","description":"Navigate the shared active tab to an HTTP(S) URL. Requires the user to grant optional access to all websites and re-share the tab. Poll callisto_status until ready, then take a fresh snapshot.","inputSchema":{"type":"object","properties":{"url":{"type":"string","maxLength":8192}},"required":["url"]}},
         {"name":"callisto_click","description":"Click a ref from the latest snapshot in the shared tab using a synthetic DOM click. Some websites reject synthetic input.","inputSchema":{"type":"object","properties":{"ref":{"type":"string","pattern":"^ax-[0-9]+$"}},"required":["ref"]}},
         {"name":"callisto_fill","description":"Fill a ref from the latest snapshot in the shared tab using synthetic input events. Some websites reject synthetic input.","inputSchema":{"type":"object","properties":{"ref":{"type":"string","pattern":"^ax-[0-9]+$"},"value":{"type":"string","maxLength":100000}},"required":["ref","value"]}},
@@ -270,9 +270,20 @@ async fn call_tool(bridge: &Bridge, session_id: u64, name: &str, args: &Value) -
                 )
                 .await
         }
-        "callisto_capabilities" => Ok(
-            json!({"schemaVersion":1,"backend":"firefox-extension","mode":"connected","snapshot":"dom","sessionModel":"per-client-tab","input":{"click":"synthetic-dom","keyboard":"synthetic-dom","fill":"synthetic-dom","nativeKeyDefaults":false},"capabilities":{"trustedInput":false,"frames":"same-origin","openShadowRoots":true,"upload":true,"existingTabAdoption":true,"cancellation":true,"handoff":true,"run":true,"extract":true}}),
-        ),
+        "callisto_capabilities" => {
+            let mut result = json!({"schemaVersion":1,"backend":"firefox-extension","mode":"connected","snapshot":"dom","sessionModel":"per-client-tab","input":{"click":"synthetic-dom","keyboard":"synthetic-dom","fill":"synthetic-dom","nativeKeyDefaults":false},"capabilities":{"trustedInput":false,"frames":"same-origin","openShadowRoots":true,"upload":true,"existingTabAdoption":true,"cancellation":true,"handoff":true}});
+            let connected = bridge.connection.lock().await.is_some();
+            let extension = if connected {
+                bridge.call_session(session_id, "status", None, None).await?["capabilities"].clone()
+            } else { Value::Null };
+            result["extensionConnected"] = json!(connected);
+            for feature in ["run", "extract", "snapshotPagination", "runFormControls", "selectorWait", "targetedObservation"] {
+                // An older extension may not recognize a newer action even
+                // though the compiled MCP facade exposes its schema.
+                result["capabilities"][feature] = json!(extension[feature].as_bool() == Some(true));
+            }
+            Ok(result)
+        }
         "callisto_upload" => {
             use base64::Engine;
             use tokio::io::AsyncReadExt;
@@ -385,8 +396,13 @@ async fn call_tool(bridge: &Bridge, session_id: u64, name: &str, args: &Value) -
                 .await
         }
         "callisto_snapshot" => {
+            let offset = args.get("offset").map(|v| v.as_u64().filter(|n| *n <= 10000).ok_or_else(|| anyhow!("Invalid snapshot offset"))).transpose()?.unwrap_or(0);
+            let max_chars = args.get("max_chars").map(|v| v.as_u64().filter(|n| (1000..=30000).contains(n)).ok_or_else(|| anyhow!("Invalid snapshot max_chars"))).transpose()?.unwrap_or(12000);
+            let mut options = args.as_object().cloned().ok_or_else(|| anyhow!("Snapshot arguments must be an object"))?;
+            options.insert("offset".into(),json!(offset));
+            options.insert("max_chars".into(),json!(max_chars));
             bridge
-                .call_session(session_id, "snapshot", None, None)
+                .call_session(session_id, "snapshot", None, Some(&Value::Object(options).to_string()))
                 .await
         }
         "callisto_status" => {
@@ -692,6 +708,38 @@ mod tests {
         connect_async,
         tungstenite::{client::IntoClientRequest, http::HeaderValue},
     };
+
+    #[tokio::test]
+    async fn snapshot_rejects_invalid_output_bounds_before_contacting_browser() {
+        let (bridge, _) = fixture().await;
+        for args in [json!({"offset":-1}), json!({"offset":10001}), json!({"offset":1.5}), json!({"max_chars":999}), json!({"max_chars":30001}), json!({"max_chars":"1000"})] {
+            let error = call_tool(&bridge, 1, "callisto_snapshot", &args).await.unwrap_err();
+            assert!(error.to_string().contains("Invalid snapshot"));
+        }
+    }
+
+    #[tokio::test]
+    async fn capabilities_negotiate_new_features_with_the_loaded_extension() {
+        let (bridge, _) = fixture().await;
+        let disconnected = call_tool(&bridge, 1, "callisto_capabilities", &json!({})).await.unwrap();
+        assert_eq!(disconnected["extensionConnected"], false);
+        assert_eq!(disconnected["capabilities"]["run"], false);
+        let (send, mut receive) = mpsc::unbounded_channel();
+        *bridge.connection.lock().await = Some(send);
+        for advertised in [json!({"trustedInput":false}), json!({"run":true,"extract":true,"selectorWait":true})] {
+            let cloned = bridge.clone();
+            let task = tokio::spawn(async move { call_tool(&cloned, 1, "callisto_capabilities", &json!({})).await });
+            let request = receive.recv().await.unwrap();
+            assert_eq!(request["method"], "status");
+            bridge.pending.lock().await.remove(&request["id"].as_u64().unwrap()).unwrap()
+                .send(Ok(json!({"capabilities":advertised}))).unwrap();
+            let result = task.await.unwrap().unwrap();
+            assert_eq!(result["extensionConnected"], true);
+            for feature in ["run", "extract", "snapshotPagination", "runFormControls", "selectorWait", "targetedObservation"] {
+                assert_eq!(result["capabilities"][feature], advertised[feature].as_bool() == Some(true));
+            }
+        }
+    }
 
     #[tokio::test]
     async fn deferred_cancellation_prevents_later_dispatch() {

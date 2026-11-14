@@ -25,6 +25,8 @@ class Handler(http.server.BaseHTTPRequestHandler):
    data=('<h1>Results '+html.escape(query)+'</h1>').encode()
   elif self.path.startswith('/async-grid'):
    data=b'''<div class="row">Page A</div><button id="next" onclick="setTimeout(()=>{document.querySelector('.row').textContent='Page B';this.disabled=true},700)">Next</button>'''
+  elif self.path.startswith('/animated'):
+   data=b'<button id="moving" style="position:relative" onclick="window.clicks=(window.clicks||0)+1">Moving action</button>'
   elif self.path.startswith('/stuck-grid'):
    data=b'<div class="row">Same</div><button id="next">Next</button>'
   elif self.path.startswith('/grid'):
@@ -96,6 +98,7 @@ try:
  assert value(tool('callisto_pair'))['code'] == pair
  assert value(tool('callisto_status'))['connected']
  caps=value(tool('callisto_capabilities'))
+ assert caps['extensionConnected'] and all(caps['capabilities'][feature] for feature in ['run','extract','snapshotPagination','runFormControls','selectorWait']),caps
  assert caps['capabilities']['run'] and caps['capabilities']['extract'],caps
  for i in range(100):
   if not value(tool('callisto_status'))['sharing']: break
@@ -115,6 +118,19 @@ try:
  assert value(tool('callisto_scroll',{'delta_y':50}))['completed']
  assert 'Visible fixture' in value(tool('callisto_page',{'action':'text'}))['text']
  print('check, select, text and find: verified in Firefox')
+ req('/session/'+session+'/execute/sync',{'script':'''document.body.insertAdjacentHTML('afterbegin','<form id="batched"><label>Search <input name="query"></label><button type="submit">Submit query</button></form>');document.querySelector('#batched').onsubmit=e=>{e.preventDefault();setTimeout(()=>document.body.insertAdjacentHTML('beforeend','<div id="ready-row">'+'Ready '.repeat(60)+'</div>'),100)};''','args':[]})
+ batched=value(tool('callisto_run',{'steps':[
+  {'action':'select_role','role':'combobox','name':'Choice','value':'a'},
+  {'action':'check_role','role':'checkbox','name':'Accept','checked':False},
+  {'action':'fill_role','role':'textbox','name':'Search','value':'Zen workflow'},
+  {'action':'submit_role','role':'textbox','name':'Search'},
+  {'action':'wait_for','selector':'#ready-row','state':'visible','timeout_ms':2000},
+  {'action':'wait_for','text':('Ready '*60).strip(),'timeout_ms':2000},
+  {'action':'extract','spec':{'selector':'#ready-row','fields':{'result':{}}}},
+ ]}))
+ assert batched['completed']==7 and batched['extraction']['count']==1,batched
+ assert req('/session/'+session+'/execute/sync',{'script':'return !document.querySelector("#check").checked && document.querySelector("#choice").value === "a"','args':[]})
+ print('seven-step form submission, selector/text waits and extraction in one MCP call: verified in Firefox')
  tabs=value(tool('callisto_browser',{'action':'tabs_list'}))['tabs']
  assert any(t.get('url','').startswith('http://127.0.0.1:') for t in tabs)
  shot=tool('callisto_browser',{'action':'screenshot'})
@@ -213,6 +229,22 @@ try:
  result=tool('callisto_extract',{'selector':'.row','fields':{'value':{}},'paginate':{'next':'#next','max_pages':2}})
  assert result.get('isError') and 'did not produce a stable' in str(result),result
  print('structured extraction across pager and scripted run: verified in Firefox')
+ value(tool('callisto_navigate',{'url':base+'animated'}))
+ value(tool('callisto_snapshot'))
+ req('/session/'+session+'/execute/sync',{'script':'''const el=document.querySelector('#moving'),start=performance.now();const timer=setInterval(()=>el.style.left=(performance.now()-start)/2+'px',10);setTimeout(()=>clearInterval(timer),220);''','args':[]})
+ animated=value(tool('callisto_run',{'steps':[{'action':'click_role','role':'button','name':'Moving action'}]}))
+ assert animated['completed']==1 and req('/session/'+session+'/execute/sync',{'script':'return window.clicks','args':[]})==1,animated
+ print('moving target settles in one call with exactly one click: verified in Firefox')
+ req('/session/'+session+'/execute/sync',{'script':'''const box=document.createElement('div');box.id='snapshot-fixture';box.innerHTML=Array.from({length:450},(_,i)=>'<button>Extra '+i+'</button>').join('');document.body.append(box);''','args':[]})
+ compact=value(tool('callisto_snapshot',{'max_chars':1000}))
+ assert compact['truncated'] and len(compact['text'])<=1000,compact
+ offset=compact['next_offset'];found=False
+ while offset is not None:
+  portion=value(tool('callisto_snapshot',{'offset':offset,'max_chars':30000}))
+  found=found or 'Extra 449' in portion['text'];offset=portion['next_offset']
+ assert found,'Last control was not reachable through snapshot pagination'
+ req('/session/'+session+'/execute/sync',{'script':'document.querySelector("#snapshot-fixture").remove()','args':[]})
+ print('bounded snapshot output and pagination reach all 450 extra controls: verified in Firefox')
  container=value(tool('callisto_browser',{'action':'agent_container'}))
  assert value(tool('callisto_browser',{'action':'agent_container'}))['cookieStoreId']==container['cookieStoreId']
  agent_tab=value(tool('callisto_browser',{'action':'tab_create','url':target,'agent_container':True}))

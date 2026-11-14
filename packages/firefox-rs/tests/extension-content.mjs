@@ -59,6 +59,29 @@ try {
   await page.evaluate(()=>{const host=[...document.querySelectorAll('div')].find(el=>el.shadowRoot);host.inert=true;});
   assert.match((await invoke({type:'action',method:'click',ref:shadowRef})).error,/not visible/);
   await page.evaluate(()=>{[...document.querySelectorAll('div')].find(el=>el.shadowRoot).inert=false;});
+  await page.evaluate(()=>{
+    document.body.insertAdjacentHTML('afterbegin','<div id="clipped" style="height:50px;overflow:auto"><div style="height:100px"></div><button onclick="window.clippedClicked=true">Clipped control</button></div>');
+  });
+  const clippedSnapshot=await invoke({type:'action',method:'snapshot'});
+  const clippedRef=clippedSnapshot.value.text.split('\n').find(line=>line.includes('"Clipped control"')).match(/\[(ax-\d+)\]/)[1];
+  assert.equal((await invoke({type:'action',method:'click',ref:clippedRef})).value?.completed,true);
+  assert.equal(await page.evaluate(()=>window.clippedClicked),true);
+  await page.evaluate(()=>{
+    document.body.insertAdjacentHTML('beforeend','<section id="observed"><p>Invoice total: 42 dollars</p><button>Open invoice</button></section>');
+    const host=document.createElement('div');host.id='observed-shadow';document.body.append(host);host.attachShadow({mode:'open'}).innerHTML='<p>Shadow invoice: 99 dollars</p><button>Shadow invoice</button><div class="shadow-row">S1</div>';
+  });
+  const observe=options=>invoke({type:'action',method:'snapshot',value:JSON.stringify(options)});
+  const observed=await observe({selector:'#observed',max_chars:1000});
+  assert(observed.value.text.includes('Invoice total: 42 dollars'));
+  assert(observed.value.text.includes('button "Open invoice"'));
+  assert(!observed.value.text.includes('Clipped control'));
+  assert(!(await observe({selector:'#observed',include_text:false})).value.text.includes('42 dollars'));
+  const queried=await observe({selector:'#observed-shadow',query:'99 dollars'});
+  assert(queried.value.text.includes('Shadow invoice: 99 dollars'));
+  const shadowRows=await invoke({type:'action',method:'page',value:JSON.stringify({action:'extract',spec:{selector:'.shadow-row',fields:{value:{}}}})});
+  assert.deepEqual(shadowRows.value.rows,[{value:'S1'}]);
+  assert.match((await observe({selector:'[['})).error,/Invalid observation selector/);
+  assert.match((await observe({selector:'button'})).error,/exactly one/);
   await page.evaluate(()=>document.body.insertAdjacentHTML('beforeend','<input type="file" aria-label="Attachment">'));
   const uploadSnapshot=await invoke({type:'action',method:'snapshot'});
   const uploadRef=uploadSnapshot.value.text.split('\n').find(line=>line.includes('"Attachment"')).match(/\[(ax-\d+)\]/)[1];
@@ -99,6 +122,55 @@ try {
   assert.equal(limited.value.omitted,true);
   assert.match(limited.value.rows[0]._text,/^Alpha 3$/);
   assert.match((await invoke({type:'action',method:'page',value:JSON.stringify({action:'extract',spec:{selector:'[[',fields:{name:'td'}}})})).error,/Invalid row selector/);
+  // A short animation must settle within one action, without replaying a click.
+  await page.evaluate(()=>{
+    document.body.insertAdjacentHTML('afterbegin','<button id="moving" style="position:relative">Moving action</button>');
+    window.movingClicks=0;moving.onclick=()=>window.movingClicks++;
+    const start=performance.now();
+    window.motion=setInterval(()=>{moving.style.left=`${(performance.now()-start)/2}px`;},10);
+    setTimeout(()=>clearInterval(window.motion),220);
+  });
+  const movingSnapshot=await invoke({type:'action',method:'snapshot'});
+  const movingRef=movingSnapshot.value.text.split('\n').find(line=>line.includes('"Moving action"')).match(/\[(ax-\d+)\]/)[1];
+  assert.equal((await invoke({type:'action',method:'click',ref:movingRef})).value?.completed,true);
+  assert.equal(await page.evaluate(()=>window.movingClicks),1);
+  await page.evaluate(()=>{
+    document.body.insertAdjacentHTML('afterbegin','<button id="covered">Covered action</button><div id="cover" style="position:fixed;inset:0;background:white;z-index:9999"></div>');
+    window.coveredClicks=0;covered.onclick=()=>window.coveredClicks++;
+    setTimeout(()=>document.querySelector('#cover').remove(),120);
+  });
+  const coveredSnapshot=await invoke({type:'action',method:'snapshot'});
+  const coveredRef=coveredSnapshot.value.text.split('\n').find(line=>line.includes('"Covered action"')).match(/\[(ax-\d+)\]/)[1];
+  assert.equal((await invoke({type:'action',method:'click',ref:coveredRef})).value?.completed,true);
+  assert.equal(await page.evaluate(()=>window.coveredClicks),1);
+  await page.evaluate(()=>setTimeout(()=>document.body.insertAdjacentHTML('beforeend','<div id="async-result">'+'ready '.repeat(60)+'</div>'),100));
+  const wait=spec=>invoke({type:'action',method:'page',value:JSON.stringify({action:'wait_for',...spec})});
+  assert.equal((await wait({selector:'#async-result',state:'visible',timeout_ms:1000})).value?.matched,true);
+  assert.equal((await wait({text:'ready '.repeat(60).trim(),timeout_ms:1000})).value?.matched,true);
+  assert.equal((await wait({selector:'#missing',state:'hidden',timeout_ms:1000})).value?.matched,true);
+  assert.match((await wait({selector:'[[',timeout_ms:100})).error,/Invalid wait selector/);
+  assert.match((await wait({selector:'#missing',timeout_ms:100})).error,/timed out/);
+  await page.evaluate(()=>setTimeout(()=>document.querySelector('#async-result').remove(),50));
+  assert.equal((await wait({selector:'#async-result',state:'detached',timeout_ms:1000})).value?.matched,true);
+  await page.evaluate(()=>{
+    document.body.insertAdjacentHTML('afterbegin','<div id="persistent-cover" style="position:fixed;inset:0;background:white;z-index:9999"></div>');
+  });
+  const bounded=await invoke({type:'action',method:'click',ref:coveredRef,deadline:Date.now()+150});
+  assert.match(bounded.error,/deadline|covered/);
+  assert.equal(await page.evaluate(()=>window.coveredClicks),1);
+  await page.locator('#persistent-cover').evaluate(el=>el.remove());
+  // Disabled/read-only state must be checked again after waiting for stability.
+  await page.evaluate(()=>{
+    covered.disabled=false;
+    requestAnimationFrame(()=>{covered.disabled=true;});
+  });
+  assert.match((await invoke({type:'action',method:'click',ref:coveredRef})).error,/disabled/);
+  await page.evaluate(()=>{covered.disabled=false;});
+  const pendingWait=wait({selector:'#never-arrives',timeout_ms:5000});
+  await page.waitForTimeout(60);
+  await invoke({type:'revoke'});
+  await invoke({type:'ping'});
+  assert.match((await pendingWait).error,/Sharing stopped/);
   await page.evaluate(()=>{
     document.body.innerHTML='<form id="multi"><button name="first">First</button><button name="second">Second</button></form><div class="row">A</div><button id="hidden-next" style="display:none" onclick="document.body.dataset.clicked=1">Next</button>';
     document.querySelector('form').onsubmit=event=>{event.preventDefault();window.submitter=event.submitter.name;};
@@ -110,6 +182,27 @@ try {
   const hidden=await invoke({type:'action',method:'page',value:JSON.stringify({action:'click_next',selector:'#hidden-next'})});
   assert.match(hidden.error,/not visible/);
   assert.equal(await page.evaluate(()=>document.body.dataset.clicked),undefined);
+  await page.evaluate(()=>{
+    document.body.innerHTML=Array.from({length:450},(_,i)=>`<button onclick="window.lastClicked=${i}">Control ${i}</button>`).join('');
+  });
+  const compact=await invoke({type:'action',method:'snapshot',value:JSON.stringify({max_chars:1000})});
+  assert(compact.value.truncated && compact.value.text.length<=1000);
+  assert(compact.value.text.endsWith('"'));
+  const firstPage=await invoke({type:'action',method:'snapshot',value:JSON.stringify({max_chars:30000})});
+  assert.equal(firstPage.value.next_offset,400);
+  const lastPage=await invoke({type:'action',method:'snapshot',value:JSON.stringify({offset:firstPage.value.next_offset,max_chars:30000})});
+  assert.equal(lastPage.value.truncated,false);
+  assert.equal(lastPage.value.next_offset,null);
+  assert.equal(lastPage.value.text.split('\n').length,50);
+  assert(lastPage.value.text.includes('"Control 449"'));
+  const lastRef=lastPage.value.text.split('\n').at(-1).match(/\[(ax-\d+)\]/)[1];
+  await invoke({type:'action',method:'snapshot',value:JSON.stringify({preserve_refs:true})});
+  assert.equal((await invoke({type:'action',method:'click',ref:lastRef})).value?.completed,true);
+  assert.equal(await page.evaluate(()=>window.lastClicked),449);
+  const emptyPage=await invoke({type:'action',method:'snapshot',value:JSON.stringify({offset:450})});
+  assert.equal(emptyPage.value.text,'');
+  assert.equal(emptyPage.value.truncated,false);
+  assert.match((await invoke({type:'action',method:'snapshot',value:JSON.stringify({offset:-1})})).error,/Invalid snapshot/);
   const interrupted=invoke({type:'handoff',prompt:'This step will be revoked.',timeout_ms:5000});
   await page.getByText('This step will be revoked.',{exact:true}).waitFor();
   await invoke({type:'revoke'});

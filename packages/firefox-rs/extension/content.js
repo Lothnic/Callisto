@@ -6,7 +6,9 @@
   const nodeRefs = new WeakMap();
   let current = new Map();
   let enabled = true;
+  let lease = 0;
   let handoff = null;
+  const pendingWaits = new Set();
   function finishHandoff(error) {
     if (!handoff) return;
     const pending=handoff; handoff=null;
@@ -54,6 +56,8 @@
       return type === 'search' ? 'searchbox' : 'textbox';
     }
     if (/^H[1-6]$/.test(el.tagName)) return 'heading';
+    const textRoles={P:'paragraph',LI:'listitem',TD:'cell',TH:'columnheader',DT:'term',DD:'definition',PRE:'code',BLOCKQUOTE:'blockquote'};
+    if(textRoles[el.tagName])return textRoles[el.tagName];
     return '';
   }
   const clean = text => String(text || '').replace(/\s+/g,' ').trim();
@@ -76,37 +80,90 @@
       if (el.shadowRoot) yield* elements(el.shadowRoot, selector);
     }
   }
-  function snapshot() {
+  function queryDeep(root,selector) {
+    const matches=[...root.querySelectorAll(selector)];
+    if(root.shadowRoot)matches.push(...queryDeep(root.shadowRoot,selector));
+    for(const el of root.querySelectorAll('*'))if(el.shadowRoot)matches.push(...queryDeep(el.shadowRoot,selector));
+    return matches;
+  }
+  function snapshot(options = {}) {
+    if(options.preserve_refs){const previous=current;try{return snapshot({...options,preserve_refs:false});}finally{current=previous;}}
+    const offset = options.offset ?? 0, maxChars = options.max_chars ?? 12000;
+    if (!Number.isInteger(offset) || offset < 0 || offset > 10000 || !Number.isInteger(maxChars) || maxChars < 1000 || maxChars > 30000) throw new Error('Invalid snapshot offset or max_chars.');
+    if(options.query!==undefined && (typeof options.query!=='string' || !options.query || options.query.length>200))throw new Error('Snapshot query must be 1-200 characters.');
+    let root=document;
+    if(options.selector!==undefined){
+      if(typeof options.selector!=='string' || !options.selector || options.selector.length>500)throw new Error('Invalid observation selector.');
+      let matches;try{matches=queryDeep(document,options.selector);}catch{throw new Error('Invalid observation selector.');}
+      if(matches.length!==1)throw new Error('Observation selector must match exactly one element, including open shadow roots.');
+      root=matches[0];
+    }
     current = new Map();
     const lines = [];
-    for (const el of elements(document, 'button,a[href],input,textarea,select,[role],h1,h2,h3,h4,h5,h6')) {
-      if (lines.length >= 400) break;
+    let skipped = 0, chars = 0, truncated = false;
+    const controls='button,a[href],input,textarea,select,[role],h1,h2,h3,h4,h5,h6';
+    const selector=options.include_text===false ? controls : controls+',p,li,td,th,dt,dd,pre,blockquote';
+    const candidates=function*(){if(root!==document && root.matches(selector))yield root;if(root.shadowRoot)yield* elements(root.shadowRoot,selector);yield* elements(root,selector);};
+    for (const el of candidates()) {
       const r = role(el);
       if (!r || !visible(el)) continue;
-      const label = name(el).slice(0,200);
-      const interactive = !['heading','none','presentation'].includes(r);
+      const fullName=name(el),label = fullName.slice(0,200);
+      if(options.query && !`${r} ${fullName} ${el.type==='password'?'':el.value || ''}`.toLowerCase().includes(options.query.toLowerCase()))continue;
+      if (skipped < offset) { skipped++; continue; }
+      const interactive = !['heading','none','presentation','paragraph','listitem','cell','columnheader','term','definition','code','blockquote','group','row','table','region'].includes(r);
       let line = `${interactive ? `[${reference(el)}] ` : ''}${r} ${JSON.stringify(label)}`;
       if (el.disabled || el.getAttribute('aria-disabled') === 'true') line += ' {disabled}';
       if (r === 'textbox' || r === 'searchbox' || (r === 'combobox' && el.matches('input,textarea'))) {
         const value = el.type === 'password' ? '[REDACTED]' : clean(el.value).slice(0,200);
         if (value) line += ` =${value}`;
       }
+      if (lines.length >= 400 || chars + line.length + (lines.length ? 1 : 0) > maxChars) { truncated = true; break; }
+      chars += line.length + (lines.length ? 1 : 0);
       lines.push(line);
     }
-    const warnings = ['Experimental DOM-derived snapshot; page text and frames may be omitted.'];
+    const warnings = ['DOM-derived snapshot; closed shadow roots, unselected frames and some text may be omitted.'];
     if (document.querySelector('iframe,frame')) warnings.push('Iframe contents are not included.');
-    if (lines.length >= 400) warnings.push('Snapshot is limited to 400 elements.');
-    return {url:location.href,title:withoutTitleMarker(document.title),text:lines.join('\n').slice(0,12000),warnings};
+    if (truncated) warnings.push('Snapshot truncated; request next_offset to inspect more controls.');
+    return {url:location.href,title:withoutTitleMarker(document.title),text:lines.join('\n'),offset,next_offset:truncated ? offset + lines.length : null,truncated,warnings};
   }
-  async function actionable(ref, action) {
+  async function actionable(ref, action, deadline = Date.now() + 2000) {
+    deadline = Math.min(deadline, Date.now() + 2000);
+    const expectedLease = lease;
+    let lastError;
+    for (;;) {
+      if (expectedLease !== lease) throw new Error('Sharing changed before the action.');
+      try { return await checkActionable(ref, action, deadline, expectedLease); }
+      catch (error) {
+        // Only retry preconditions: an input event is never dispatched twice.
+        if (!/^(Target is moving\.|Target is covered or not receiving events\.|Frame is moving or detached\.|Frame is covered or outside the parent viewport\.)$/.test(error.message) || Date.now() >= deadline) throw error;
+        lastError = error;
+      }
+      await new Promise(resolve => setTimeout(resolve, Math.min(25, Math.max(0, deadline - Date.now()))));
+      if (Date.now() >= deadline) throw lastError;
+    }
+  }
+  function nextFrame(deadline) {
+    // The timer also resolves on throttled pages where animation frames stop.
+    return new Promise(resolve => {
+      let frame;
+      const timer = setTimeout(() => { cancelAnimationFrame(frame); resolve(); }, Math.min(50, Math.max(0, deadline - Date.now())));
+      frame = requestAnimationFrame(() => { clearTimeout(timer); resolve(); });
+    });
+  }
+  async function checkActionable(ref, action, deadline, expectedLease) {
     if (!enabled) throw new Error('Sharing stopped.');
+    if (expectedLease !== lease) throw new Error('Sharing changed before the action.');
+    if (handoff) throw new Error('Human handoff is pending; wait for confirmation.');
     const el = current.get(ref);
     if (!el || !el.isConnected) throw new Error('Unknown or stale reference; capture a new snapshot.');
     if (document.visibilityState !== 'visible') throw new Error('The shared tab is not visible.');
     if (!visible(el)) throw new Error('Target is not visible.');
     if (el.matches(':disabled') || composedClosest(el,'[aria-disabled="true"]')) throw new Error('Target is disabled.');
     if (action === 'fill' && (el.readOnly || el.getAttribute('aria-readonly') === 'true' || !(el.matches('input,textarea') || el.isContentEditable))) throw new Error('Target is not editable.');
-    el.scrollIntoView({block:'center',inline:'center'});
+    if (Date.now() >= deadline) throw new Error('Action deadline exceeded; inspect before retrying.');
+    // Nearest scrolls only as needed, including nested overflow containers;
+    // repeated centering can itself animate sticky layouts in Zen.
+    el.scrollIntoView({block:'nearest',inline:'nearest',behavior:'instant'});
     const frames=[];let view=window;
     while(view!==view.top) {
       let host;try{host=view.frameElement;}catch{}
@@ -118,8 +175,13 @@
       }
       frames.push({host,parent,rect:host.getBoundingClientRect()});view=parent;
     }
+    await nextFrame(deadline);
     const a = el.getBoundingClientRect();
-    await new Promise(resolve => setTimeout(resolve, 75));
+    await nextFrame(deadline);
+    if (!enabled) throw new Error('Sharing stopped.');
+    if (expectedLease !== lease) throw new Error('Sharing changed before the action.');
+    if (handoff) throw new Error('Human handoff is pending; wait for confirmation.');
+    if (Date.now() >= deadline) throw new Error('Action deadline exceeded; inspect before retrying.');
     const b = el.getBoundingClientRect();
     if ([a.x-b.x,a.y-b.y,a.width-b.width,a.height-b.height].some(n => Math.abs(n) > .25)) throw new Error('Target is moving.');
     const x = Math.max(0,b.left) + (Math.min(innerWidth,b.right)-Math.max(0,b.left))/2;
@@ -142,7 +204,45 @@
     }
     if (!enabled) throw new Error('Sharing stopped.');
     if (!el.isConnected || !visible(el)) throw new Error('Target changed before the action.');
+    if (el.matches(':disabled') || composedClosest(el,'[aria-disabled="true"]')) throw new Error('Target is disabled.');
+    if (action === 'fill' && (el.readOnly || el.getAttribute('aria-readonly') === 'true')) throw new Error('Target is not editable.');
     return el;
+  }
+  function waitFor(args, commandDeadline) {
+    const timeout = args.timeout_ms ?? 5000;
+    if (!Number.isInteger(timeout) || timeout < 100 || timeout > 20000) throw new Error('wait_for timeout_ms must be an integer from 100 to 20000.');
+    const bySelector = args.selector !== undefined;
+    const state = args.state ?? 'visible';
+    if (bySelector) {
+      if (typeof args.selector !== 'string' || !args.selector || args.selector.length > 500) throw new Error('wait_for requires a selector (1-500 characters).');
+      if (!['visible','hidden','attached','detached'].includes(state)) throw new Error('Invalid wait state.');
+      try { queryDeep(document,args.selector); } catch { throw new Error('Invalid wait selector.'); }
+    } else if (typeof args.text !== 'string' || !args.text || args.text.length > 500) throw new Error('wait_for requires text (1-500 characters) or a selector.');
+    const deadline = Math.min(commandDeadline, Date.now() + timeout);
+    return new Promise((resolve, reject) => {
+      let timer, observer;
+      const finish = error => {
+        clearTimeout(timer); observer?.disconnect(); pendingWaits.delete(finish);
+        error ? reject(new Error(error)) : resolve({matched:true});
+      };
+      const check = () => {
+        clearTimeout(timer);
+        if (!enabled) return finish('Sharing stopped.');
+        if (handoff) return finish('Human handoff is pending; wait for confirmation.');
+        if (Date.now() >= deadline) return finish('wait_for timed out; inspect the page before retrying.');
+        let matched;
+        if (bySelector) {
+          const el = queryDeep(document,args.selector)[0];
+          matched = state === 'attached' ? !!el : state === 'detached' ? !el : state === 'visible' ? !!el && visible(el) : !el || !visible(el);
+        } else matched = (document.body?.innerText || '').toLowerCase().includes(args.text.toLowerCase());
+        if (matched) return finish();
+        timer = setTimeout(check, Math.min(50, Math.max(0, deadline - Date.now())));
+      };
+      pendingWaits.add(finish);
+      observer = new MutationObserver(check);
+      observer.observe(document.documentElement,{childList:true,subtree:true,attributes:true,characterData:true});
+      check();
+    });
   }
   // Structured extraction. Keep behaviour identical to extract.ts in the
   // Chromium backend; both are covered by the shared contract tests.
@@ -152,7 +252,7 @@
     if (!entries.length || entries.length > 20) throw new Error('Provide 1-20 fields.');
     const cleanText = value => String(value ?? '').replace(/\s+/g, ' ').trim();
     let rows = [];
-    try { rows = Array.from(document.querySelectorAll(spec.selector)); }
+    try { rows = queryDeep(document,spec.selector); }
     catch { throw new Error('Invalid row selector.'); }
     const limit = Number.isInteger(spec.limit) ? Math.max(1, Math.min(spec.limit, 1000)) : 500;
     const out = [];
@@ -165,7 +265,7 @@
         let element = row;
         if (field.selector !== undefined) {
           if (typeof field.selector !== 'string' || !field.selector || field.selector.length > 500) throw new Error('Invalid field selector.');
-          try { element = row.querySelector(field.selector); } catch { throw new Error('Invalid field selector.'); }
+          try { element = queryDeep(row,field.selector)[0]; } catch { throw new Error('Invalid field selector.'); }
         }
         if (!element) { item[name] = null; continue; }
         const raw = field.attribute ? element.getAttribute(field.attribute) : element.textContent;
@@ -190,7 +290,7 @@
   }
   browser.runtime.onMessage.addListener(async function handle(message) {
     if (message.type === 'ping') { enabled = true; mark(); return {value:true}; }
-    if (message.type === 'revoke') { enabled = false; finishHandoff('Sharing stopped during human handoff.'); current.clear(); unmark(); return {value:true}; }
+    if (message.type === 'revoke') { enabled = false; lease++; for (const finish of pendingWaits) finish('Sharing stopped.'); finishHandoff('Sharing stopped during human handoff.'); current.clear(); unmark(); return {value:true}; }
     if (message.type === 'handoff') {
       if (!enabled || handoff) return {error:'Sharing stopped or a handoff is already pending.'};
       if (typeof message.prompt!=='string' || !message.prompt.trim() || message.prompt.length>1000 || !Number.isInteger(message.timeout_ms) || message.timeout_ms<1000 || message.timeout_ms>120000) return {error:'Invalid handoff prompt or timeout.'};
@@ -210,10 +310,13 @@
     if (message.type !== 'action') return undefined;
     try {
       if (!enabled) throw new Error('Sharing stopped.');
+      const deadline = Number.isFinite(message.deadline) ? message.deadline : Date.now() + 10000;
+      if (Date.now() >= deadline) throw new Error('Command deadline exceeded; inspect before retrying.');
       if (handoff && message.method !== 'snapshot') throw new Error('Human handoff is pending; wait for confirmation.');
-      if (message.method === 'snapshot') return {value:snapshot()};
+      if (message.method === 'snapshot') return {value:snapshot(message.value ? JSON.parse(message.value) : {})};
       if (message.method === 'page') {
         const args = JSON.parse(message.value);
+        if (args.action === 'wait_for') return {value:await waitFor(args,deadline)};
         if (args.action === 'press') {
           if(typeof args.key!=='string' || args.key.length>40)throw new Error('Invalid key.');
           const parts=args.key.split('+'),key=parts.pop();
@@ -222,7 +325,7 @@
           let focused=document.activeElement;
           while(focused?.shadowRoot?.activeElement)focused=focused.shadowRoot.activeElement;
           if(!focused || focused===document.body)throw new Error('Focus a control with fill or click before pressing a key.');
-          const target=await actionable(reference(focused),'press');
+          const target=await actionable(reference(focused),'press',deadline);
           const options={key,bubbles:true,cancelable:true,composed:true};
           for(const part of parts)options[modifiers[part]]=true;
           target.dispatchEvent(new KeyboardEvent('keydown',options));
@@ -249,7 +352,7 @@
           try { next = document.querySelector(args.selector); } catch { throw new Error('Invalid next-page selector.'); }
           if (!next) throw new Error('No next-page control matched the selector.');
           if (next.hasAttribute('disabled') || next.getAttribute('aria-disabled') === 'true' || next.classList.contains('disabled')) throw new Error('The next-page control is disabled.');
-          const target = await actionable(reference(next), 'click');
+          const target = await actionable(reference(next), 'click',deadline);
           target.click();
           return {value:{clicked:true}};
         }
@@ -258,23 +361,26 @@
           if (![x,y].every(n => typeof n === 'number' && Number.isFinite(n) && Math.abs(n)<=100000)) throw new Error('Invalid scroll deltas.');
           window.scrollBy({left:x,top:y,behavior:'instant'}); return {value:{completed:true}};
         }
-        if (['fill','click','submit'].includes(args.action)) {
+        if (['fill','click','submit','select','check','hover'].includes(args.action)) {
           let target = args.ref;
           if (!target) {
             if (typeof args.role !== 'string' || typeof args.name !== 'string') throw new Error('ref or exact role and name are required.');
-            const deadline=Date.now()+2000;
+            const locatorDeadline=Math.min(deadline,Date.now()+2000);
+            const locatorLease=lease;
             while (!target) {
               if(!enabled)throw new Error('Sharing stopped.');
+              if(locatorLease!==lease)throw new Error('Sharing changed while locating the target.');
               const matches=[...elements(document,'button,a[href],input,textarea,select,[role]')].filter(el=>visible(el) && role(el)===args.role && name(el)===args.name);
               if(matches.length>1)throw new Error('Role locator must match exactly one visible element.');
               if(matches.length===1){target=reference(matches[0]);break;}
-              if(Date.now()>=deadline)throw new Error('No visible element matched the exact role and name within 2 seconds.');
+              if(Date.now()>=locatorDeadline)throw new Error('No visible element matched the exact role and name within 2 seconds.');
               await new Promise(resolve=>setTimeout(resolve,25));
             }
           }
-          return handle({type:'action',method:args.action,ref:target,value:args.value});
+          if (['fill','click','submit'].includes(args.action)) return handle({type:'action',method:args.action,ref:target,value:args.value,deadline});
+          args.ref = target;
         }
-        const el = await actionable(args.ref,args.action);
+        const el = await actionable(args.ref,args.action,deadline);
         if (args.action === 'upload') {
           if (!el.matches('input[type=file]') || !Array.isArray(args.files) || !args.files.length || args.files.length>10) throw new Error('Expected file input and 1–10 files.');
           if (!el.multiple && args.files.length>1) throw new Error('This input accepts only one file.');
@@ -302,7 +408,7 @@
         } else throw new Error('Unsupported page action.');
         return {value:{completed:true,synthetic:true}};
       }
-      const el = await actionable(message.ref,message.method);
+      const el = await actionable(message.ref,message.method,deadline);
       if (message.method === 'submit') {
         const form = el.form;
         if (!(form instanceof HTMLFormElement)) throw new Error('Target is not associated with a form.');
