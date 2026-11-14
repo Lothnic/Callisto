@@ -11,6 +11,9 @@ ROOT=str(Path(__file__).resolve().parent.parent)+'/'
 DRIVER=os.environ.get('GECKODRIVER_URL', 'http://127.0.0.1:4444').rstrip('/')
 class Handler(http.server.BaseHTTPRequestHandler):
  def do_GET(self):
+  if self.path.startswith('/api/'):
+   data=json.dumps({'path':self.path,'items':[{'id':1,'name':'Fixture item'}],'access_token':'must-be-redacted'}).encode()
+   self.send_response(200);self.send_header('Content-Type','application/json');self.end_headers();self.wfile.write(data);return
   data=b'<h1>Callisto test</h1><label for="field">Name</label><input id="field"><p>Visible fixture text</p><label for="check">Accept</label><input id="check" type="checkbox"><label for="choice">Choice</label><select id="choice"><option value="a">A</option><option value="b">B</option></select><button id="send" onclick="document.title=\"done\"">Send</button>'
   if self.path.startswith('/frame'):
    data=b'<h1>Frame host</h1><iframe src="/inner" title="Fixture child"></iframe>'
@@ -61,7 +64,7 @@ try:
   for name in os.listdir(ROOT+'extension'):
    data=open(ROOT+'extension/'+name,'rb').read()
    if name=='manifest.json':
-    manifest=json.loads(data);manifest['permissions']=list(dict.fromkeys(manifest['permissions']+['<all_urls>','tabs','cookies','bookmarks','history','downloads']));data=json.dumps(manifest).encode()
+    manifest=json.loads(data);manifest['permissions']=list(dict.fromkeys(manifest['permissions']+['<all_urls>','tabs','cookies','bookmarks','history','downloads','webRequest','webRequestBlocking']));data=json.dumps(manifest).encode()
    if name=='background.js': data+=('\nsetTimeout(async () => { try { await browser.storage.local.set({callistoAgentContainersEnabled:true}); await pair('+json.dumps(pair)+'); await share(); } catch(e) { console.error(e); } }, 1000);').encode()
    z.writestr(name,data)
  req('/session/'+session+'/moz/addon/install',{'addon':base64.b64encode(out.getvalue()).decode(),'temporary':True})
@@ -138,6 +141,30 @@ try:
  shot=tool('callisto_screenshot')
  assert shot['content'][0]['type'] == 'image' and shot['content'][0]['mimeType']=='image/jpeg', shot
  base='http://127.0.0.1:'+str(server.server_address[1])+'/'
+ origin=base.rstrip('/')
+ assert value(tool('callisto_network',{'action':'start','origins':[origin],'capture_bodies':True}))['active']
+ req('/session/'+session+'/execute/async',{'script':'''const done=arguments[arguments.length-1];fetch('/api/data?token=hidden-url-token',{headers:{Authorization:'Bearer hidden-header-token'}}).then(r=>r.json()).then(done);''','args':[]})
+ value(tool('callisto_network',{'action':'rules','rules':[{'action':'block','url_prefix':base+'api/blocked'}]}))
+ blocked=req('/session/'+session+'/execute/async',{'script':"const done=arguments[arguments.length-1];fetch('/api/blocked').then(()=>done(false)).catch(()=>done(true));",'args':[]})
+ assert blocked,'Scoped blocking did not cancel the request'
+ value(tool('callisto_network',{'action':'rules','rules':[{'action':'redirect','url_prefix':base+'api/old','redirect_url':base+'api/new'}]}))
+ redirected=req('/session/'+session+'/execute/async',{'script':"const done=arguments[arguments.length-1];fetch('/api/old').then(r=>r.json()).then(done);",'args':[]})
+ assert redirected['path'].startswith('/api/new'),redirected
+ value(tool('callisto_network',{'action':'rules','rules':[]}))
+ for i in range(30):
+  captured=value(tool('callisto_network',{'action':'list','include_bodies':True}))
+  if any('text' in e['response']['content'] for e in captured['entries']):break
+  time.sleep(.05)
+ assert any('Fixture item' in e['response']['content'].get('text','') for e in captured['entries']),captured
+ serialized=json.dumps(captured)
+ assert all(secret not in serialized for secret in ['must-be-redacted','hidden-header-token','hidden-url-token']),captured
+ endpoints=value(tool('callisto_network',{'action':'endpoints'}))
+ assert any('/api/data'==entry['path'] and 'items' in entry['response_fields'] for entry in endpoints['endpoints']),endpoints
+ har_path=Path(state.name)/'capture.har'
+ value(tool('callisto_network',{'action':'export','output_path':str(har_path)}))
+ assert json.loads(har_path.read_text())['log']['entries']
+ value(tool('callisto_network',{'action':'stop'}))
+ print('scoped network capture, redacted JSON bodies, block/redirect and HAR export: verified in Firefox')
  value(tool('callisto_browser',{'action':'cookie_set','url':base,'name':'callisto-test','value':'ok'}))
  cookies=value(tool('callisto_browser',{'action':'cookies_list','url':base}))
  assert any(c['name']=='callisto-test' and c['value']=='ok' for c in cookies)

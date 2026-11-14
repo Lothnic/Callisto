@@ -6,6 +6,7 @@ let reconnectTimer = null;
 let retryDelay = 1000;
 let pairAttempt = 0;
 let storageWrites = Promise.resolve();
+const networkInspector = typeof createNetworkInspector === 'function' ? createNetworkInspector(browser) : null;
 function savePairing(code) {
   const write = storageWrites.then(() => code === null ? browser.storage.local.remove('callistoPairing') : browser.storage.local.set({callistoPairing:code}));
   storageWrites = write.catch(() => {}); return write;
@@ -78,7 +79,7 @@ browser.runtime.onMessage.addListener(async message => {
 });
 browser.tabs.onRemoved.addListener(id=>{for(const session of sessions.values())session.removed(id);});
 browser.tabs.onUpdated.addListener((id,change)=>{for(const session of sessions.values())session.updated(id,change);});
-browser.permissions.onRemoved.addListener(permissions=>{for(const session of sessions.values())session.permissionsRemoved(permissions);});
+browser.permissions.onRemoved.addListener(permissions=>{if(permissions.permissions?.some(p=>['webRequest','webRequestBlocking'].includes(p)) || permissions.origins?.includes('<all_urls>'))networkInspector?.revoke();for(const session of sessions.values())session.permissionsRemoved(permissions);});
 browser.menus.create({id:'callisto-share', title:'Share this tab with Callisto', contexts:['page']});
 browser.menus.onClicked.addListener(async (info, tab) => {
   if (info.menuItemId !== 'callisto-share' || !tab?.id) return;
@@ -158,6 +159,7 @@ function status() {
 async function stop() {
   const previous = selected;
   selected = null; reserved = null; selectedFrame = 0; frameStale = false; ready = false; continuous = false; generation++; ownership++;
+  networkInspector?.release(context);
   await browser.browserAction.setBadgeText({text:[...sessions.values()].some(s=>s.target!==null)?'ON':''}).catch(() => {});
   if (previous !== null) {
     const frames=await browser.webNavigation.getAllFrames({tabId:previous}).catch(()=>[{frameId:0}]);
@@ -240,7 +242,7 @@ async function executeCommand(request, connection, deadline = Date.now()+10000) 
   if (request.method === 'status') {
     const target = chosen === null ? null : await browser.tabs.get(chosen);
     const [active] = target ? await browser.tabs.query({active:true,windowId:target.windowId}) : [];
-    return {connected:true,sharing:chosen !== null,active:chosen !== null && active?.id === chosen,ready,continuous,browserAccess:await browser.permissions.contains(fullBrowserPermissions),capabilities:{trustedInput:false,frames:'same-origin',playwrightExecution:false,run:true,extract:true,snapshotPagination:true,runFormControls:true,selectorWait:true,targetedObservation:true}};
+    return {connected:true,sharing:chosen !== null,active:chosen !== null && active?.id === chosen,ready,continuous,browserAccess:await browser.permissions.contains(fullBrowserPermissions),capabilities:{trustedInput:false,frames:'same-origin',playwrightExecution:false,run:true,extract:true,snapshotPagination:true,runFormControls:true,selectorWait:true,targetedObservation:true,networkInspection:!!networkInspector}};
   }
   if (Date.now() >= deadline) throw new Error('Command deadline exceeded; inspect before retrying.');
   if (request.method === 'browser') {
@@ -249,6 +251,21 @@ async function executeCommand(request, connection, deadline = Date.now()+10000) 
     return browserControl(args, context, owner);
   }
   if (chosen === null) throw new Error('No tab shared. Open the desired tab and click Share this tab in the Callisto extension.');
+  if (request.method === 'network') {
+    if(!networkInspector)throw new Error('Network inspection is unavailable; reload the extension.');
+    const args=JSON.parse(request.value);
+    if(args.action==='start'){
+      const result=await networkInspector.start(context,chosen,args);
+      if(owner!==ownership || chosen!==selected || socket!==connection){networkInspector.release(context);throw new Error('Tab sharing changed while starting network capture.');}
+      return result;
+    }
+    if(args.action==='list')return networkInspector.list(context,args);
+    if(args.action==='endpoints')return networkInspector.endpoints(context);
+    if(args.action==='rules')return networkInspector.rules(context,args.rules);
+    if(args.action==='stop')return networkInspector.stop(context);
+    if(args.action==='export')return networkInspector.export(context);
+    throw new Error('Unsupported network action.');
+  }
   if (request.method === 'frames') return {frames:await browser.webNavigation.getAllFrames({tabId:chosen}),selectedFrame};
   if (request.method === 'frame') {
     const id=JSON.parse(request.value).frame_id;

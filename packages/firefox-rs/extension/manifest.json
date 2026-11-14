@@ -8,7 +8,14 @@
       "id": "callisto-tab-bridge@lothnic.dev",
       "strict_min_version": "140.0",
       "data_collection_permissions": {
-        "required": ["websiteContent", "browsingActivity", "websiteActivity", "bookmarksInfo", "authenticationInfo", "searchTerms"]
+        "required": [
+          "websiteContent",
+          "browsingActivity",
+          "websiteActivity",
+          "bookmarksInfo",
+          "authenticationInfo",
+          "searchTerms"
+        ]
       }
     }
   },
@@ -25,11 +32,14 @@
     "cookies",
     "bookmarks",
     "history",
-    "downloads"
+    "downloads",
+    "webRequest",
+    "webRequestBlocking"
   ],
   "background": {
     "scripts": [
       "browser-control.js",
+      "network.js",
       "background.js"
     ]
   },

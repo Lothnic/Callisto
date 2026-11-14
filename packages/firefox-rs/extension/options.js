@@ -23,3 +23,7 @@ document.getElementById('containers').addEventListener('click',async()=>{
  try { const granted=await browser.permissions.request({permissions:['cookies']});if(granted)await send({type:'enable-containers'});else status.textContent='Container permission was not granted.'; } catch(error){status.textContent=`Error: ${error.message}`;}
 });
 send({type:'status'});
+
+document.getElementById('network').addEventListener('click',async()=>{
+ try { const granted=await browser.permissions.request({origins:['<all_urls>'],permissions:['webRequest','webRequestBlocking']});status.textContent=granted?'Network access enabled. The agent must start a capture with explicit origins.':'Network access was not granted.'; } catch(error){status.textContent=`Error: ${error.message}`;}
+});

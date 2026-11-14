@@ -86,7 +86,7 @@ test('pairing requires server confirmation and stop prevents further sharing', a
   assert.match((await connecting).message,/Connected/);
   assert.match((await listener({type:'share'})).message,/shared/);
   await ws.receive({id:1,method:'status'});
-  assert.deepEqual(messages.at(-1).result,{connected:true,sharing:true,active:true,ready:true,continuous:false,browserAccess:false,capabilities:{trustedInput:false,frames:'same-origin',playwrightExecution:false,run:true,extract:true,snapshotPagination:true,runFormControls:true,selectorWait:true,targetedObservation:true}});
+  assert.deepEqual(messages.at(-1).result,{connected:true,sharing:true,active:true,ready:true,continuous:false,browserAccess:false,capabilities:{trustedInput:false,frames:'same-origin',playwrightExecution:false,run:true,extract:true,snapshotPagination:true,runFormControls:true,selectorWait:true,targetedObservation:true,networkInspection:false}});
   await listener({type:'stop'});
   assert.match((await listener({type:'status'})).message,/Connected/);
 });
