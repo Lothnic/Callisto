@@ -61,7 +61,11 @@ async function browserControl(args, session, owner) {
       const [active] = await browser.tabs.query({active:true,windowId:tab.windowId});
       session.guard(owner);
       if (active?.id !== session.selected) throw new Error('The controlled tab is not active.');
-      if (args.action === 'screenshot') return {dataUrl:await browser.tabs.captureVisibleTab(tab.windowId,{format:'jpeg',quality:70})};
+      if (args.action === 'screenshot') {
+        const format=args.format ?? 'jpeg';
+        if(!['jpeg','png'].includes(format))throw new Error('Screenshot format must be jpeg or png.');
+        return {dataUrl:await browser.tabs.captureVisibleTab(tab.windowId,{format,...(format==='jpeg'?{quality:70}:{})})};
+      }
       if (args.action === 'back') await browser.tabs.goBack(session.selected);
       else if (args.action === 'forward') await browser.tabs.goForward(session.selected);
       else if (args.action === 'reload') await browser.tabs.reload(session.selected);

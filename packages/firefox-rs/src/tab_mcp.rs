@@ -34,6 +34,7 @@ struct Bridge {
     connection: Mutex<Option<mpsc::UnboundedSender<Value>>>,
     pending: Mutex<Pending>,
     next_id: AtomicU64,
+    traces: Mutex<HashMap<u64, trace::Recorder>>,
 }
 impl Bridge {
     #[cfg(test)]
@@ -192,6 +193,7 @@ fn tools() -> Value {
         {"name":"callisto_extract","description":"Read structured rows from the shared page using CSS selectors: a row selector plus a field map. Optionally follow a next-page control and merge pages. Returns typed rows, not a snapshot, so counting and aggregation need one call.","inputSchema":{"type":"object","properties":{"selector":{"type":"string","minLength":1,"maxLength":500},"fields":{"type":"object","minProperties":1,"maxProperties":20,"additionalProperties":{"anyOf":[{"type":"string"},{"type":"object","properties":{"selector":{"type":"string"},"attribute":{"type":"string"},"type":{"type":"string","enum":["text","number"]}}}]}},"limit":{"type":"integer","minimum":1,"maximum":1000},"include_text":{"type":"boolean"},"paginate":{"type":"object","properties":{"next":{"type":"string","minLength":1,"maxLength":500},"max_pages":{"type":"integer","minimum":1,"maximum":25}},"required":["next"]}},"required":["selector","fields"]}},
         {"name":"callisto_run","description":"Run 1–40 dependent steps in one call: navigate; click/fill/submit/select/check/hover by ref or exact role; press; scroll; wait; wait_for text or CSS selector state; extract rows. Use submit instead of synthetic Enter for forms. Returns the last extraction and an optional final snapshot. Stops at the first failure within a 60-second budget; earlier steps are not rolled back. Input remains synthetic.","inputSchema":{"type":"object","properties":{"steps":{"type":"array","minItems":1,"maxItems":40,"items":{"type":"object","properties":{"action":{"type":"string","enum":["navigate","click_ref","click_role","fill_ref","fill_role","submit_ref","submit_role","select_ref","select_role","check_ref","check_role","hover_ref","hover_role","press","scroll","wait","wait_for","extract"]},"url":{"type":"string"},"ref":{"type":"string"},"role":{"type":"string"},"name":{"type":"string"},"value":{"type":"string"},"key":{"type":"string"},"delta_x":{"type":"number"},"delta_y":{"type":"number"},"ms":{"type":"integer","minimum":1,"maximum":5000},"text":{"type":"string","minLength":1,"maxLength":500},"timeout_ms":{"type":"integer","minimum":100,"maximum":20000},"selector":{"type":"string","minLength":1,"maxLength":500},"state":{"type":"string","enum":["visible","hidden","attached","detached"]},"checked":{"type":"boolean"},"spec":{"type":"object"}},"required":["action"]}},"snapshot":{"type":"boolean"}},"required":["steps"]}},
         {"name":"callisto_network","description":"Inspect traffic in the explicitly shared tab with optional network permission. Start with 1-10 exact origins; list bounded redacted metadata; endpoints summarizes observed paths and field names; optional JSON/form bodies; rules block or redirect within scope. Stop removes rules. Export HAR to a new absolute output_path or return JSON. Capture never supplies credentials or bypasses site authorization.","inputSchema":{"type":"object","properties":{"action":{"type":"string","enum":["start","list","endpoints","rules","stop","export"]},"origins":{"type":"array","minItems":1,"maxItems":10,"items":{"type":"string"}},"capture_bodies":{"type":"boolean","default":false},"limit":{"type":"integer","minimum":1,"maximum":500},"offset":{"type":"integer","minimum":0},"include_bodies":{"type":"boolean"},"rules":{"type":"array","maxItems":20,"items":{"type":"object","properties":{"action":{"type":"string","enum":["block","redirect"]},"url_prefix":{"type":"string"},"method":{"type":"string"},"redirect_url":{"type":"string"}},"required":["action","url_prefix"]}},"output_path":{"type":"string"}},"required":["action"]}},
+        {"name":"callisto_trace","description":"Record private per-client action JSONL and optional DOM snapshots/screenshots. Start requires a new absolute directory. Checkpoint captures enabled evidence; stop writes a manifest and HAR if a network capture exists. This is not a Playwright trace; screenshots and snapshots can expose private page content.","inputSchema":{"type":"object","properties":{"action":{"type":"string","enum":["start","status","checkpoint","stop"]},"directory":{"type":"string"},"screenshots":{"type":"boolean","default":false},"snapshots":{"type":"boolean","default":false}},"required":["action"]}},
         {"name":"callisto_snapshot","description":"Inspect the explicitly shared active tab. Use max_chars to bound output and offset=next_offset to page through truncated controls. Refs belong to the latest snapshot. This experimental DOM-derived snapshot can omit content and frames.","inputSchema":{"type":"object","properties":{"offset":{"type":"integer","minimum":0,"maximum":10000},"max_chars":{"type":"integer","minimum":1000,"maximum":30000},"selector":{"type":"string","minLength":1,"maxLength":500},"query":{"type":"string","minLength":1,"maxLength":200},"include_text":{"type":"boolean","default":true}}}},
         {"name":"callisto_navigate","description":"Navigate the shared active tab to an HTTP(S) URL. Requires the user to grant optional access to all websites and re-share the tab. Poll callisto_status until ready, then take a fresh snapshot.","inputSchema":{"type":"object","properties":{"url":{"type":"string","maxLength":8192}},"required":["url"]}},
         {"name":"callisto_click","description":"Click a ref from the latest snapshot in the shared tab using a synthetic DOM click. Some websites reject synthetic input.","inputSchema":{"type":"object","properties":{"ref":{"type":"string","pattern":"^ax-[0-9]+$"}},"required":["ref"]}},
@@ -213,6 +215,48 @@ fn failure(error: impl std::fmt::Display) -> Value {
     json!({"isError":true,"content":[{"type":"text","text":error.to_string()}]})
 }
 async fn call_tool(bridge: &Bridge, session_id: u64, name: &str, args: &Value) -> Result<Value> {
+    if name == "callisto_trace" {
+        return match args["action"].as_str().unwrap_or("") {
+            "start" => {
+                let mut traces=bridge.traces.lock().await;
+                if traces.contains_key(&session_id){bail!("A trace is already active for this session");}
+                let recorder=trace::Recorder::start(args)?;let result=recorder.status();traces.insert(session_id,recorder);Ok(result)
+            }
+            "status" => Ok(bridge.traces.lock().await.get(&session_id).map(|r|r.status()).unwrap_or(json!({"active":false}))),
+            "checkpoint" => {let result=trace_checkpoint(bridge,session_id).await;if result.is_err(){if let Some(r)=bridge.traces.lock().await.get_mut(&session_id){r.capture_failed();}}result},
+            "stop" => {
+                if !bridge.traces.lock().await.contains_key(&session_id){bail!("No active trace");}
+                let har=bridge.call_session(session_id,"network",None,Some("{\"action\":\"export\"}")).await;
+                let mut recorder=bridge.traces.lock().await.remove(&session_id).ok_or_else(||anyhow!("No active trace"))?;
+                if let Ok(har)=har {recorder.artifact("network.har","har-1.2",&serde_json::to_vec_pretty(&har)?)?;}
+                recorder.stop()
+            }
+            _ => bail!("Unsupported trace action"),
+        };
+    }
+    let started=std::time::Instant::now();
+    let sequence=match bridge.traces.lock().await.get_mut(&session_id){Some(r)=>Some(r.begin(name,args)?),None=>None};
+    let result=call_tool_inner(bridge,session_id,name,args).await;
+    if let Some(sequence)=sequence {
+        if let Some(recorder)=bridge.traces.lock().await.get_mut(&session_id){recorder.finish(sequence,result.is_ok(),started.elapsed().as_millis())?;}
+        if result.is_ok() && ["callisto_navigate","callisto_click","callisto_fill","callisto_press","callisto_batch","callisto_run","callisto_frame"].contains(&name){
+            // Evidence errors are reported explicitly without misreporting a
+            // completed input as failed and encouraging an unsafe retry.
+            if let Err(error)=trace_checkpoint(bridge,session_id).await {if let Some(r)=bridge.traces.lock().await.get_mut(&session_id){r.capture_failed();}eprintln!("Callisto trace checkpoint failed: {error}");}
+        }
+    }
+    result
+}
+
+async fn trace_checkpoint(bridge:&Bridge,session_id:u64)->Result<Value>{
+    let (snapshots,screenshots)={let traces=bridge.traces.lock().await;let r=traces.get(&session_id).ok_or_else(||anyhow!("No active trace"))?;(r.snapshots,r.screenshots)};
+    let snapshot=if snapshots{Some(bridge.call_session(session_id,"snapshot",None,Some("{\"preserve_refs\":true}")).await?)}else{None};
+    let image=if screenshots{Some(bridge.call_session(session_id,"browser",None,Some("{\"action\":\"screenshot\",\"format\":\"png\"}")).await?)}else{None};
+    let mut traces=bridge.traces.lock().await;let recorder=traces.get_mut(&session_id).ok_or_else(||anyhow!("Trace ended during checkpoint"))?;
+    recorder.checkpoint(snapshot.as_ref(),image.as_ref())?;Ok(recorder.status())
+}
+
+async fn call_tool_inner(bridge: &Bridge, session_id: u64, name: &str, args: &Value) -> Result<Value> {
     match name {
         "callisto_press" => {
             let key = args["key"]
@@ -273,7 +317,7 @@ async fn call_tool(bridge: &Bridge, session_id: u64, name: &str, args: &Value) -
                 .await
         }
         "callisto_capabilities" => {
-            let mut result = json!({"schemaVersion":1,"backend":"firefox-extension","mode":"connected","snapshot":"dom","sessionModel":"per-client-tab","input":{"click":"synthetic-dom","keyboard":"synthetic-dom","fill":"synthetic-dom","nativeKeyDefaults":false},"capabilities":{"trustedInput":false,"frames":"same-origin","openShadowRoots":true,"upload":true,"existingTabAdoption":true,"cancellation":true,"handoff":true}});
+            let mut result = json!({"schemaVersion":1,"backend":"firefox-extension","mode":"connected","snapshot":"dom","sessionModel":"per-client-tab","input":{"click":"synthetic-dom","keyboard":"synthetic-dom","fill":"synthetic-dom","nativeKeyDefaults":false},"capabilities":{"trustedInput":false,"frames":"same-origin","openShadowRoots":true,"upload":true,"existingTabAdoption":true,"cancellation":true,"handoff":true,"trace":true}});
             let connected = bridge.connection.lock().await.is_some();
             let extension = if connected {
                 bridge.call_session(session_id, "status", None, None).await?["capabilities"].clone()
@@ -518,6 +562,7 @@ async fn main() -> Result<()> {
         connection: Mutex::new(None),
         pending: Mutex::new(HashMap::new()),
         next_id: AtomicU64::new(1),
+        traces: Mutex::new(HashMap::new()),
     });
     let accept_bridge = bridge.clone();
     tokio::spawn(async move {
@@ -539,6 +584,7 @@ async fn main() -> Result<()> {
                 .await
                 .retain(|_, sender| !sender.is_closed());
             let _operation = operations.lock().await;
+            if let Some(recorder)=bridge.traces.lock().await.remove(&client_id){let _=recorder.stop();}
             let _ = bridge
                 .call_session(client_id, "release_session", None, None)
                 .await;
@@ -991,6 +1037,7 @@ mod tests {
             connection: Mutex::new(None),
             pending: Mutex::new(HashMap::new()),
             next_id: AtomicU64::new(1),
+        traces: Mutex::new(HashMap::new()),
         });
         let shared = bridge.clone();
         tokio::spawn(async move {

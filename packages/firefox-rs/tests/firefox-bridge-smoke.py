@@ -143,6 +143,9 @@ try:
  base='http://127.0.0.1:'+str(server.server_address[1])+'/'
  origin=base.rstrip('/')
  assert value(tool('callisto_network',{'action':'start','origins':[origin],'capture_bodies':True}))['active']
+ trace_dir=Path(state.name)/'evidence'
+ value(tool('callisto_trace',{'action':'start','directory':str(trace_dir),'screenshots':True,'snapshots':True}))
+ value(tool('callisto_trace',{'action':'checkpoint'}))
  req('/session/'+session+'/execute/async',{'script':'''const done=arguments[arguments.length-1];fetch('/api/data?token=hidden-url-token',{headers:{Authorization:'Bearer hidden-header-token'}}).then(r=>r.json()).then(done);''','args':[]})
  value(tool('callisto_network',{'action':'rules','rules':[{'action':'block','url_prefix':base+'api/blocked'}]}))
  blocked=req('/session/'+session+'/execute/async',{'script':"const done=arguments[arguments.length-1];fetch('/api/blocked').then(()=>done(false)).catch(()=>done(true));",'args':[]})
@@ -163,8 +166,17 @@ try:
  har_path=Path(state.name)/'capture.har'
  value(tool('callisto_network',{'action':'export','output_path':str(har_path)}))
  assert json.loads(har_path.read_text())['log']['entries']
+ value(tool('callisto_fill',{'ref':re.search(r'\[(ax-\d+)\] textbox "Name"',value(tool('callisto_snapshot'))['text']).group(1),'value':'private-fill-value'}))
  value(tool('callisto_network',{'action':'stop'}))
- print('scoped network capture, redacted JSON bodies, block/redirect and HAR export: verified in Firefox')
+ value(tool('callisto_trace',{'action':'stop'}))
+ evidence=json.loads((trace_dir/'manifest.json').read_text())
+ assert evidence['complete'] and not evidence['compatibility']['playwright_trace_viewer'],evidence
+ assert (trace_dir/'network.har').exists() and (trace_dir/'screenshot1.png').exists() and (trace_dir/'snapshot1.json').exists()
+ assert 'private-fill-value' not in (trace_dir/'actions.jsonl').read_text()
+ if os.environ.get('CALLISTO_SMOKE_EVIDENCE_DIR'):
+  import shutil
+  shutil.copytree(trace_dir,os.environ['CALLISTO_SMOKE_EVIDENCE_DIR'])
+ print('scoped network capture, redacted JSON bodies, block/redirect, HAR and private evidence trace: verified in Firefox')
  value(tool('callisto_browser',{'action':'cookie_set','url':base,'name':'callisto-test','value':'ok'}))
  cookies=value(tool('callisto_browser',{'action':'cookies_list','url':base}))
  assert any(c['name']=='callisto-test' and c['value']=='ok' for c in cookies)
