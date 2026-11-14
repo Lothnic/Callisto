@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import hashlib
 import platform
 import subprocess
 import sys
@@ -84,6 +85,34 @@ class ArtifactWriter:
 
     def write_json(self, name: str, data: dict[str, Any]) -> None:
         (self.out_dir / name).write_text(json.dumps(data, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+    def validate_artifact_links(self, task_id: str, supplied: dict[str, str]) -> dict[str, str]:
+        """Retain only supplied, existing files inside this run, never predicted paths."""
+        root = self.out_dir.resolve()
+        links: dict[str, str] = {}
+        records = []
+        for kind, name in supplied.items():
+            path = Path(name) if Path(name).is_absolute() else root / name
+            resolved = path.resolve()
+            if path.is_symlink() or not resolved.is_relative_to(root):
+                records.append({"kind": kind, "state": "outside_run_rejected"})
+                continue
+            files = [resolved] if resolved.is_file() else sorted(p for p in resolved.rglob("*") if p.is_file()) if resolved.is_dir() else []
+            if not files or any(p.is_symlink() or not p.resolve().is_relative_to(root) for p in files):
+                records.append({"kind": kind, "state": "missing_or_unsafe"})
+                continue
+            links[kind] = str(resolved.relative_to(root))
+            records.append({"kind": kind, "state": "present", "files": [
+                {"path": str(p.relative_to(root)), "bytes": p.stat().st_size,
+                 "sha256": hashlib.sha256(p.read_bytes()).hexdigest()} for p in files
+            ]})
+        # Task IDs come from datasets; avoid allowing them to become paths.
+        index_path = self.out_dir / "artifact-index.json"
+        index = json.loads(index_path.read_text()) if index_path.exists() else {"schema": 1, "tasks": {}}
+        index["tasks"][task_id] = {"artifacts": records, "playwright_trace_compatible": False,
+                                   "native_evaluation_executed": False}
+        index_path.write_text(json.dumps(index, indent=2, sort_keys=True) + "\n")
+        return links
 
     def write_tasks(self, tasks: list[EvalTask]) -> None:
         self.write_jsonl("tasks.jsonl", [asdict(t) for t in tasks])

@@ -61,8 +61,10 @@ def run_eval(
     results: list[TaskResult] = []
     for task in tasks:
         start = time.monotonic()
+        artifact_links = writer.validate_artifact_links(task.id, {})
         try:
             raw = agent.run(task)
+            artifact_links = writer.validate_artifact_links(task.id, raw.artifacts)
             score = scorer.score(task, raw)
             result = replace(
                 raw,
@@ -71,11 +73,7 @@ def run_eval(
                 scorer=score.scorer,
                 failure_reason=score.reason,
                 duration_s=time.monotonic() - start,
-                artifacts={
-                    "audit": f"audit/{task.id}.jsonl",
-                    "screenshots": f"screenshots/{task.id}/",
-                    "snapshots": f"snapshots/{task.id}/",
-                },
+                artifacts=artifact_links,
             )
         except Exception as exc:
             result = TaskResult(
@@ -86,6 +84,7 @@ def run_eval(
                 scorer=scorer_name,
                 failure_reason=f"{type(exc).__name__}: {exc}",
                 duration_s=time.monotonic() - start,
+                artifacts=artifact_links,
             )
         results.append(result)
 
