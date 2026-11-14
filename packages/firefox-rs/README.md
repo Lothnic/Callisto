@@ -71,11 +71,11 @@ Shared with the Chromium backend (same names, matching semantics):
 - `callisto_capabilities` / `callisto_status` — what the connected build supports.
 - `callisto_pair` — persistent local pairing code (once per profile).
 
-`callisto_run` and `callisto_extract` are advertised by `callisto_capabilities`
-since the 2026-11-13 build (`capabilities.run` / `capabilities.extract`), but
-the action dispatch lives in the extension: a stale extension copy returns
-`Unsupported action.` even then. Reload the extension after upgrading and check
-the flags before relying on either tool.
+`callisto_capabilities` checks the connected extension's status before reporting
+`capabilities.run`, `extract`, `snapshotPagination`, `runFormControls`,
+`selectorWait`, `targetedObservation` and `networkInspection`. A disconnected or older extension that does not advertise a
+feature returns false for that feature. Reload the extension after upgrading
+and check the flags before relying on newer actions.
 
 A temporary add-on is removed when the browser exits; a signed,
 permanently installable extension and a streamlined setup are still needed.
@@ -172,11 +172,57 @@ round trips; it does not remove the existing input stability checks.
 map, optionally following a next-page control and merging pages. It returns
 typed rows rather than a snapshot, so counting and aggregation need one call.
 `callisto_run` executes up to 40 dependent steps in order: `navigate`,
-`click_ref`, `click_role`, `fill_ref`, `fill_role`, `press`, `scroll`, `wait`,
-`wait_for` and `extract`. It returns the last extraction and, on request, a
+`click_ref`, `click_role`, `fill_ref`, `fill_role`, `submit_ref`, `submit_role`,
+`select_ref`, `select_role`, `check_ref`, `check_role`, `hover_ref`, `hover_role`,
+`press`, `scroll`, `wait`, `wait_for` and `extract`. Select uses `value`; check
+uses `checked`. Use submit for form submission: synthetic Enter does not invoke
+the browser's native form default. It returns the last extraction and, on request, a
 final snapshot. Both tools use the same declarative interface as the Chromium
 backend and do not evaluate arbitrary page JavaScript. Steps stop at the first
 failure within a 60-second budget, and earlier steps are not rolled back.
+
+`wait_for` accepts either `text` (up to 500 characters) or a CSS `selector` with
+`state: "visible" | "hidden" | "attached" | "detached"` (default `visible`).
+`timeout_ms` is 100–20,000, default 5,000. Waiting runs in the selected document,
+responds to DOM mutations and checks at most every 50 ms for CSS-only changes.
+A navigation-interrupted wait can resume in the new document within the original
+deadline. Interrupted input is never replayed. Revoking sharing cancels pending
+waits immediately.
+
+Input samples geometry across two animation frames and waits up to two seconds
+for moving targets and temporary overlays to settle, bounded by the enclosing
+command deadline. It rechecks ownership, visibility and disabled/editable state
+before dispatch. Stable visible controls are not unnecessarily scrolled to the
+center of the viewport. These checks do not make synthetic input trusted.
+
+`callisto_snapshot` accepts `max_chars` (1,000–30,000, default 12,000) and an
+element `offset`. If `truncated` is true, pass `next_offset` to read the next
+portion. Each portion contains complete lines with actionable refs; take refs
+from the latest snapshot. This pages the controls in the live DOM, so changes
+to the page between calls can shift the offsets. Paragraph, list and table-cell
+text now appears alongside controls. `include_text: false` produces a controls
+view; `selector` scopes to one element and `query` filters names/values, including
+open shadow roots. Some text in generic wrappers still needs full text/extraction.
+
+For example, a search and result read can use one tool call:
+
+```json
+{"steps":[
+  {"action":"fill_role","role":"textbox","name":"Search","value":"browser automation"},
+  {"action":"submit_role","role":"textbox","name":"Search"},
+  {"action":"wait_for","selector":".result","state":"visible"},
+  {"action":"extract","spec":{"selector":".result","fields":{"title":"h2","url":{"selector":"a","attribute":"href"}}}}
+]}
+```
+
+Reload the extension and rebuild the MCP binary to expose the additional run
+actions. Close MCP clients, stop the old persistent relay with
+`packages/firefox-rs/target/release/callisto-firefox-tab-mcp --stop-relay` from
+the repository root, then restart the MCP connections so the host refreshes
+tool schemas. The deterministic action benchmark is
+`node eval/agent-comparison/zen-actionability.mjs` from the repository root;
+`ZEN_BASELINE_REF` pins the baseline revision. It measures injected DOM code in
+disposable Chromium, not Zen or model cost.
 
 Snapshots and actions wait for controlled-page readiness instead of immediately
 failing during a load. Reattachment can happen at DOMContentLoaded; it need not
@@ -264,9 +310,10 @@ error. Already dispatched actions may still have completed; inspect before
 retrying. Queued requests can also cancel before acquiring the operation lock.
 Transport tests cover queue cancellation, pending request cleanup and revocation.
 
-This is **not browse parity**. There is no arbitrary Playwright `execute`,
-trusted input, network interception, protected
-secret store or full Playwright execution. The snapshot is a limited
+This is **not browse parity**. The extension transport has no arbitrary Playwright
+`execute`, trusted input, protected secret store or full Playwright execution.
+Optional network inspection and scoped blocking/redirects are available; see the
+[advanced runtime guide](../../docs/zen-advanced-runtime.md). The snapshot is a limited
 DOM view; it traverses open shadow roots but omits closed shadow roots and
 some text. Password input values are redacted, but other sensitive page content
 may be visible.
@@ -309,6 +356,12 @@ Callisto's Chromium implementation. Do not expose a debugging port to an
 untrusted network.
 
 ## Tests
+
+The [advanced runtime guide](../../docs/zen-advanced-runtime.md) covers the explicit
+`zen-bidi`/`firefox-bidi` trusted-input experiment, targeted observations,
+`callisto_network`, `callisto_trace`, HAR/PNG exports and benchmark limitations.
+The BiDi path is separate: the extension's Stop sharing button does not revoke it.
+Network unit tests run with `node --test tests/extension-network.test.cjs`.
 
 `cargo test --locked` tests the transport and pairing. Run
 `node --test tests/extension-background.test.cjs` for extension pairing and

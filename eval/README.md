@@ -5,6 +5,12 @@ per-task JSONL results, and summaries that can feed root `BENCHMARKS.md`.
 
 ## Install
 
+Browser evidence is separate from scoring. The
+[advanced runtime guide](../docs/zen-advanced-runtime.md) documents real HAR/PNG/action
+capture and `python -m callisto_eval.evidence` export. The runner links only files
+actually supplied and present; empty artifact directories do not prove capture.
+See [pinned upstream trace requirements](../research/2026-11-14-benchmark-trace-requirements.md).
+
 ```bash
 cd eval
 python -m venv .venv

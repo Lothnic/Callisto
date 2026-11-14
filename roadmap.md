@@ -6,6 +6,27 @@ develop and measure it. This is a working plan, not a claim of Playwright or
 browse parity. The [original phased roadmap](docs/history/roadmap-2026.md) is
 preserved for historical context.
 
+## Current focus — 14 November 2026
+
+The current work prioritizes Zen input, useful observations, recovery and network
+inspection. Extension shipping and a new controlled browse comparison are deferred
+by the current project direction.
+
+- Explicit BiDi input has passed disposable Firefox and headful Zen probes for
+  trusted fill, native form submission, open-shadow/same-origin frame input and
+  detach/reacquire. It remains a separate debug-enabled transport; integration with
+  the extension's ownership/Stop sharing contract is still open.
+- The extension now supports scoped text/control snapshots, shadow-aware selection
+  and extraction, subframe-navigation invalidation and revocation across frames.
+- Scoped network capture, block/redirect rules, endpoint summaries, redacted HAR
+  and private action/PNG/DOM evidence are implemented. Native Verified HAR parsing
+  is checked; benchmark judges and new comparative task runs have not been run.
+- Continue with production-profile recovery, unified transport ownership and
+  task-specific evidence coverage before widening the supported browser matrix.
+
+See [advanced runtime usage](docs/zen-advanced-runtime.md) and
+[benchmark artifact contracts](research/2026-11-14-benchmark-trace-requirements.md).
+
 ## 1. Correctness and usable perception
 
 - Support actions in same-origin frames and fail explicitly for cross-origin or
