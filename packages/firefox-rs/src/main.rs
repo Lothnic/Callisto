@@ -79,6 +79,12 @@ impl State {
     }
 
     async fn ensure_engine(&mut self) -> Result<&mut Engine> {
+        if self.engine.as_ref().is_some_and(|engine|engine.browser().bidi.is_closed()) {
+            self.cache=None;
+            // Reconnect only on the next explicit tool call. A failed input is
+            // never replayed, and the configured tab selector is revalidated.
+            if let Some(engine)=self.engine.take(){let _=engine.close().await;}
+        }
         if self.engine.is_none() {
             let engine = match self.mode.as_str() {
                 "isolated" => {
@@ -183,6 +189,7 @@ fn non_empty_env(key: &str) -> Option<String> {
 
 fn tool_catalog() -> Value {
     json!([
+        {"name":"callisto_capabilities","description":"Report the explicit Firefox/Zen BiDi transport and input contract without opening a browser.","inputSchema":{"type":"object","properties":{}}},
         {
             "name": "callisto_navigate",
             "description": "Open an HTTP(S) URL in the configured Callisto browser session and return its accessibility snapshot. The browser session starts on the first call.",
@@ -456,6 +463,7 @@ fn required_http_url(args: &Value) -> Result<String> {
 
 async fn call_tool(state: &mut State, name: &str, args: &Value) -> Result<Value> {
     match name {
+        "callisto_capabilities" => Ok(json!({"schemaVersion":1,"backend":"firefox-bidi","mode":state.mode,"snapshot":"dom","sessionModel":"explicit-debug-context","input":{"click":"webdriver-bidi","keyboard":"webdriver-bidi","fill":"webdriver-bidi-keys","nativeKeyDefaults":true},"capabilities":{"trustedInput":true,"frames":"same-origin","openShadowRoots":true,"upload":false,"existingTabAdoption":true,"cancellation":false,"handoff":false,"run":false,"extract":false,"networkInspection":false,"trace":false,"extensionSharingControls":false},"connected":state.engine.as_ref().is_some_and(|e|!e.browser().bidi.is_closed()),"requiresExplicitDebugEndpoint":state.mode=="connected","requiresExplicitTab":state.mode=="connected"})),
         "callisto_navigate" => {
             let url = required_http_url(args)?;
             let engine = state.ensure_engine().await?;

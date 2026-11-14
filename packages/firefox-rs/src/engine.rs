@@ -204,12 +204,10 @@ impl Engine {
             "wait": wait,
         });
         let call = self.browser.bidi.call("browsingContext.navigate", params);
-        tokio::time::timeout(Duration::from_millis(timeout_ms), call)
-            .await
-            .map_err(|_| anyhow!("goto: timed out after {timeout_ms}ms"))?
-            .context("goto failed")?;
+        let outcome=tokio::time::timeout(Duration::from_millis(timeout_ms), call).await;
         // Even a timed-out navigation may have changed the document.
         self.reset_page_state();
+        outcome.map_err(|_| anyhow!("goto: timed out after {timeout_ms}ms"))?.context("goto failed")?;
         Ok(())
     }
 
@@ -431,7 +429,7 @@ impl Engine {
                             // A background tab has no hit-testable viewport, so
                             // elementFromPoint reports the target as covered.
                             // Bring the tab forward once and try again.
-                            if !reactivated && reason.contains("covered") {
+                            if !reactivated && (reason.contains("covered") || reason.contains("no layout viewport")) {
                                 reactivated = true;
                                 let visible = self.ensure_visible(&self.browser.context).await;
                                 if std::env::var("CALLISTO_DEBUG")
@@ -499,11 +497,13 @@ impl Engine {
             "context": self.browser.context,
             "actions": sources,
         });
-        self.browser
+        let result=self.browser
             .bidi
             .call("input.performActions", params)
             .await
-            .context("input action failed")?;
+            .context("input action failed; outcome may be partial, inspect before retrying");
+        if result.is_err(){let _=tokio::time::timeout(Duration::from_secs(2),self.browser.bidi.call("input.releaseActions",json!({"context":self.browser.context}))).await;}
+        result?;
         Ok(())
     }
 
@@ -854,10 +854,11 @@ impl Engine {
     }
 
     async fn visibility(&self, context: &str) -> Option<bool> {
-        self.evaluate_in_context(context, "document.visibilityState")
+        self.evaluate_in_context(context, "JSON.stringify({visible:document.visibilityState==='visible',width:innerWidth||document.documentElement.clientWidth,height:innerHeight||document.documentElement.clientHeight})")
             .await
             .ok()
-            .and_then(|value| value.as_str().map(|state| state == "visible"))
+            .and_then(|value| value.as_str().and_then(|text|serde_json::from_str::<Value>(text).ok()))
+            .map(|state|state["visible"]==true && state["width"].as_f64().unwrap_or(0.0)>0.0 && state["height"].as_f64().unwrap_or(0.0)>0.0)
     }
 
     /// Make a tab the visible one, tolerating Zen's slow `browsingContext.activate`.

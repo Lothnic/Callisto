@@ -131,12 +131,13 @@ pub const SNAPSHOT_JS: &str = r#"(() => {
     return s;
   };
   const hidden = (el) => {
-    if (el.hasAttribute("hidden")) return true;
+    if (el.hasAttribute("hidden") || el.inert || el.getAttribute("aria-hidden")==="true") return true;
     const cs = getComputedStyle(el);
     return cs.display === "none" || cs.visibility === "hidden" || cs.visibility === "collapse";
   };
   const push = (node) => { const index = out.length; out.push(node); return index; };
   const walk = (node, parent, frameId) => {
+    if(out.length>=20000){if(!warnings.includes("DOM snapshot node limit reached"))warnings.push("DOM snapshot node limit reached");return;}
     if (node.nodeType === Node.TEXT_NODE) {
       const text = (node.nodeValue || "").replace(/\s+/g, " ").trim();
       if (!text) return;
@@ -146,6 +147,11 @@ pub const SNAPSHOT_JS: &str = r#"(() => {
     if (node.nodeType !== Node.ELEMENT_NODE) return;
     const el = node;
     const tag = el.tagName;
+    if(tag==="SLOT"){
+      const assigned=el.assignedNodes({flatten:true});
+      for(const child of assigned.length?assigned:el.childNodes)walk(child,parent,frameId);
+      return;
+    }
     if (skip.has(tag)) return;
     if (hidden(el)) return;
     if (tag === "IFRAME" || tag === "FRAME") {
@@ -174,7 +180,7 @@ pub const SNAPSHOT_JS: &str = r#"(() => {
       parent,
       frameId
     });
-    for (const child of el.childNodes) walk(child, index, frameId);
+    for (const child of (el.shadowRoot || el).childNodes) walk(child, index, frameId);
   };
   const root = push({ id: -1, role: "RootWebArea", name: document.title || "", description: "", value: "", state: [], parent: -1, frameId: "main" });
   const rootEl = document.body || document.documentElement;
@@ -189,11 +195,12 @@ pub const ACTIONABLE_JS: &str = r#"function(id, action) {
   const el = st && st.byId.get(id);
   if (!el) return JSON.stringify({ reason: "detached" });
   if (!el.isConnected) return JSON.stringify({ reason: "detached" });
-  el.scrollIntoView({ block: "center", inline: "center" });
+  el.scrollIntoView({ block: "nearest", inline: "nearest", behavior:"instant" });
+  const composedClosest=(el,selector)=>{for(let node=el;node;node=node.parentElement||node.getRootNode()?.host)if(node.matches(selector))return node;return null;};
   const style = getComputedStyle(el), r = el.getBoundingClientRect();
   if (!r.width || !r.height || style.visibility !== "visible" || style.display === "none") return JSON.stringify({ reason: "not visible" });
-  if (el.closest("[inert]")) return JSON.stringify({ reason: "inert" });
-  if (action !== "hover" && (el.matches(":disabled") || el.closest('[aria-disabled="true"]'))) return JSON.stringify({ reason: "disabled" });
+  if (composedClosest(el,'[inert],[hidden],[aria-hidden="true"]')) return JSON.stringify({ reason: "inert or hidden" });
+  if (action !== "hover" && (el.matches(":disabled") || composedClosest(el,'[aria-disabled="true"]'))) return JSON.stringify({ reason: "disabled" });
   if (action === "fill" && (el.matches("[readonly]") || el.getAttribute("aria-readonly") === "true" || !(el.matches("input,textarea") || el.isContentEditable))) return JSON.stringify({ reason: "not editable" });
   let view = el.ownerDocument.defaultView;
   // Zen headless reports innerWidth/innerHeight as 0 even though layout has a
@@ -207,8 +214,8 @@ pub const ACTIONABLE_JS: &str = r#"function(id, action) {
   const vh = view.innerHeight || view.document.documentElement.clientHeight || r.bottom;
   let x = Math.max(0, r.left) + (Math.min(vw, r.right) - Math.max(0, r.left)) / 2;
   let y = Math.max(0, r.top) + (Math.min(vh, r.bottom) - Math.max(0, r.top)) / 2;
-  const root = el.getRootNode();
-  const hit = root.elementFromPoint ? root.elementFromPoint(x, y) : el.ownerDocument.elementFromPoint(x, y);
+  const deepHit=(doc,x,y)=>{let hit=doc.elementFromPoint(x,y);while(hit?.shadowRoot){const inner=hit.shadowRoot.elementFromPoint(x,y);if(!inner || inner===hit)break;hit=inner;}return hit;};
+  const hit = deepHit(el.ownerDocument,x,y);
   if (!hit || !(el === hit || el.contains(hit))) return JSON.stringify({ reason: "covered or not receiving events", x, y, vw, vh, rect: [r.left, r.top, r.width, r.height], hit: hit ? hit.tagName : null, hitClass: hit ? String(hit.className) : null, vis: el.ownerDocument.visibilityState, inner: [view.innerWidth, view.innerHeight], client: [el.ownerDocument.documentElement.clientWidth, el.ownerDocument.documentElement.clientHeight], focus: el.ownerDocument.hasFocus() });
   while (view !== view.top) {
     let frame;
@@ -219,7 +226,7 @@ pub const ACTIONABLE_JS: &str = r#"function(id, action) {
     x += fr.left + frame.clientLeft;
     y += fr.top + frame.clientTop;
     const parent = frame.ownerDocument.defaultView;
-    const parentHit = frame.ownerDocument.elementFromPoint(x, y);
+    const parentHit = deepHit(frame.ownerDocument,x,y);
     if (parentHit !== frame) return JSON.stringify({ reason: "iframe covered or not receiving events" });
     view = parent;
   }

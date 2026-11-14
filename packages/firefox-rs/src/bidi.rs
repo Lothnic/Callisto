@@ -51,7 +51,7 @@ pub struct Bidi {
 
 impl Bidi {
     pub async fn connect(url: &str) -> Result<Arc<Self>> {
-        let (socket, _) = tokio_tungstenite::connect_async(url).await?;
+        let (socket, _) = tokio::time::timeout(std::time::Duration::from_secs(5),tokio_tungstenite::connect_async(url)).await.map_err(|_|anyhow!("BiDi connection timed out"))??;
         let (write, mut read) = socket.split();
         let pending: Pending = Arc::new(StdMutex::new(HashMap::new()));
         let events = broadcast::channel(256).0;
@@ -135,16 +135,18 @@ impl Bidi {
             .await
             .send(Message::Text(message.to_string().into()))
             .await?;
-        match receiver.await {
-            Ok(Ok(value)) => Ok(value),
-            Ok(Err(error)) => Err(anyhow!("{method} failed: {error}")),
-            Err(_) => Err(anyhow!("{method} failed: BiDi connection closed")),
+        match tokio::time::timeout(std::time::Duration::from_secs(30),receiver).await {
+            Ok(Ok(Ok(value))) => Ok(value),
+            Ok(Ok(Err(error))) => Err(anyhow!("{method} failed: {error}")),
+            Ok(Err(_)) => Err(anyhow!("{method} failed: BiDi connection closed")),
+            Err(_) => Err(anyhow!("{method} timed out; dispatched input may have completed. Inspect before retrying")),
         }
     }
 
     pub fn subscribe(&self) -> broadcast::Receiver<BidiEvent> {
         self.events.subscribe()
     }
+    pub fn is_closed(&self)->bool {self.closed.load(Ordering::SeqCst)}
 }
 
 /// Turn a BiDi `RemoteValue` into a plain JSON value.

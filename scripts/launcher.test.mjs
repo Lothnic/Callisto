@@ -6,6 +6,21 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 const launcher=fileURLToPath(new URL('./callisto.mjs',import.meta.url));
+for(const backend of ['firefox-bidi','zen-bidi']) test(`launcher selects explicit ${backend} input without opening a browser`,async()=>{
+  const child=spawn(process.execPath,[launcher,backend],{stdio:['pipe','pipe','pipe']});
+  let output='',errors='';child.stderr.on('data',b=>errors+=b);
+  try{
+    const result=await new Promise((resolve,reject)=>{
+      const timer=setTimeout(()=>reject(new Error(`MCP timeout: ${errors}`)),10000);
+      child.on('error',error=>{clearTimeout(timer);reject(error);});
+      child.stdout.on('data',bytes=>{output+=bytes;if(output.includes('\n')){clearTimeout(timer);resolve(JSON.parse(output.split('\n')[0]));}});
+      child.stdin.write(JSON.stringify({id:1,method:'tools/call',params:{name:'callisto_capabilities',arguments:{}}})+'\n');
+    });
+    const caps=JSON.parse(result.result.content[0].text);
+    assert.equal(caps.backend,'firefox-bidi');assert.equal(caps.mode,'connected');assert.equal(caps.connected,false);
+    assert.equal(caps.capabilities.trustedInput,true);assert.equal(caps.capabilities.extensionSharingControls,false);
+  }finally{child.stdin.end();await new Promise(resolve=>child.once('exit',resolve));}
+});
 for(const backend of ['chromium','zen']) test(`launcher forwards ${backend} MCP capabilities`,async()=>{
   const state=mkdtempSync(join(tmpdir(),'callisto-launcher-'));
   const env={...process.env,CALLISTO_FIREFOX_STATE_DIR:state};

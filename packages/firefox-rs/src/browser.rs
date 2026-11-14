@@ -220,67 +220,6 @@ fn port_from_args(args: &[String]) -> Option<u16> {
         .and_then(|port| port.parse().ok())
 }
 
-/// Find a running Firefox-family process that was started with a BiDi port.
-/// This is what makes `CALLISTO_MCP_BROWSER=connected` work with no extra
-/// configuration when the person launched their browser for debugging.
-#[cfg(target_os = "linux")]
-fn discover_debug_port() -> Option<u16> {
-    let entries = std::fs::read_dir("/proc").ok()?;
-    for entry in entries.flatten() {
-        let name = entry.file_name();
-        let name = name.to_string_lossy();
-        if name.is_empty() || !name.chars().all(|c| c.is_ascii_digit()) {
-            continue;
-        }
-        let Ok(raw) = std::fs::read(entry.path().join("cmdline")) else {
-            continue;
-        };
-        if raw.is_empty() {
-            continue;
-        }
-        let parts: Vec<String> = raw
-            .split(|byte| *byte == 0)
-            .filter(|part| !part.is_empty())
-            .map(|part| String::from_utf8_lossy(part).to_string())
-            .collect();
-        let joined = parts.join(" ").to_ascii_lowercase();
-        let is_browser = joined.contains("firefox")
-            || joined.contains("librewolf")
-            || joined.contains("waterfox")
-            || joined.contains("floorp")
-            || joined.contains("zen_browser")
-            || joined.contains("/zen ")
-            || joined.ends_with("/zen");
-        if !is_browser {
-            continue;
-        }
-        let mut index = 0;
-        while index < parts.len() {
-            if let Some(port) = parts[index]
-                .strip_prefix("--remote-debugging-port=")
-                .and_then(|port| port.parse::<u16>().ok())
-            {
-                return Some(port);
-            }
-            if parts[index] == "--remote-debugging-port" {
-                if let Some(port) = parts
-                    .get(index + 1)
-                    .and_then(|port| port.parse::<u16>().ok())
-                {
-                    return Some(port);
-                }
-            }
-            index += 1;
-        }
-    }
-    None
-}
-
-#[cfg(not(target_os = "linux"))]
-fn discover_debug_port() -> Option<u16> {
-    None
-}
-
 async fn subscribe(bidi: &Bidi) {
     let events = [
         "browsingContext.contextCreated",
@@ -413,12 +352,12 @@ async fn pick_context(bidi: &Bidi, tree: &Value, options: &AttachOptions) -> Res
             );
         }
         let needle = tab.to_lowercase();
-        if let Some((id, _, _, _)) = described
+        let matching:Vec<_>=described
             .iter()
-            .find(|(_, href, _, _)| href.to_lowercase().contains(&needle))
-        {
-            return Ok(id.clone());
-        }
+            .filter(|(_, href, _, _)| href.to_lowercase().contains(&needle)).collect();
+        if matching.len()>1{bail!("Tab selector is ambiguous; use CALLISTO_BIDI_CONTEXT");}
+        if let Some((id,_,_,_))=matching.first(){return Ok(id.clone());}
+        let mut matching_titles=Vec::new();
         for (id, _, _, _) in &described {
             if let Ok(title) = evaluate_in(bidi, id, "document.title").await {
                 if title
@@ -426,10 +365,12 @@ async fn pick_context(bidi: &Bidi, tree: &Value, options: &AttachOptions) -> Res
                     .map(|title| title.to_lowercase().contains(&needle))
                     .unwrap_or(false)
                 {
-                    return Ok(id.clone());
+                    matching_titles.push(id.clone());
                 }
             }
         }
+        if matching_titles.len()>1{bail!("Tab selector is ambiguous; use CALLISTO_BIDI_CONTEXT");}
+        if let Some(id)=matching_titles.first(){return Ok(id.clone());}
         bail!("no tab matching {tab:?}");
     }
 
@@ -450,13 +391,14 @@ async fn pick_context(bidi: &Bidi, tree: &Value, options: &AttachOptions) -> Res
 }
 
 fn attach_endpoint(options: &AttachOptions) -> Result<String> {
+    if options.context.is_none() && options.tab.is_none() {
+        bail!("Connected BiDi input requires CALLISTO_BIDI_CONTEXT or CALLISTO_TAB; refusing to choose a tab implicitly");
+    }
     if let Some(url) = &options.url {
+        validate_endpoint(url)?;
         return Ok(url.clone());
     }
     if let Some(port) = options.port {
-        return Ok(format!("ws://127.0.0.1:{port}/session"));
-    }
-    if let Some(port) = discover_debug_port() {
         return Ok(format!("ws://127.0.0.1:{port}/session"));
     }
     bail!(
@@ -465,6 +407,14 @@ fn attach_endpoint(options: &AttachOptions) -> Result<String> {
          \n  zen --remote-debugging-port=9222\n  flatpak run app.zen_browser.zen --remote-debugging-port=9222\n  firefox --remote-debugging-port=9222\n\
          \nYour existing profile and tabs are reused; no new profile is created."
     )
+}
+
+fn validate_endpoint(endpoint:&str)->Result<()> {
+    let uri=endpoint.parse::<tokio_tungstenite::tungstenite::http::Uri>().context("Invalid BiDi endpoint")?;
+    if uri.scheme_str()!=Some("ws") || !matches!(uri.host(),Some("127.0.0.1"|"[::1]"|"localhost")) || uri.authority().is_some_and(|a|a.as_str().contains('@')) || uri.query().is_some() {
+        bail!("BiDi endpoint must be an explicit loopback ws:// URL without credentials or query parameters");
+    }
+    Ok(())
 }
 
 /// Attach to an already-running browser and select the tab to take over.
@@ -483,11 +433,11 @@ pub async fn attach(options: AttachOptions) -> Result<Browser> {
         .context("could not create a BiDi session (another client may already own this browser)")?;
     subscribe(&bidi).await;
 
-    let tree = bidi
-        .call("browsingContext.getTree", json!({}))
-        .await
-        .context("could not list browsing contexts")?;
-    let context = pick_context(&bidi, &tree, &options).await?;
+    let selection=async {
+        let tree=bidi.call("browsingContext.getTree",json!({})).await.context("could not list browsing contexts")?;
+        pick_context(&bidi,&tree,&options).await
+    }.await;
+    let context=match selection {Ok(context)=>context,Err(error)=>{let _=tokio::time::timeout(Duration::from_secs(2),bidi.call("session.end",json!({}))).await;return Err(error);}};
 
     Ok(Browser {
         bidi,
@@ -620,5 +570,17 @@ impl Browser {
             .await;
         }
         Ok(())
+    }
+}
+
+#[cfg(test)]
+mod attach_tests {
+    use super::*;
+    #[test]
+    fn privileged_input_requires_explicit_tab_and_loopback_endpoint(){
+        let options=AttachOptions{url:Some("ws://127.0.0.1:9222/session".into()),port:None,context:None,tab:None};
+        assert!(attach_endpoint(&options).is_err());
+        for endpoint in ["ws://example.com/session","wss://127.0.0.1/session","ws://user:secret@127.0.0.1/session","ws://127.0.0.1/session?token=x"]{assert!(validate_endpoint(endpoint).is_err());}
+        for endpoint in ["ws://127.0.0.1:9222/session","ws://[::1]:9222/session","ws://localhost:9222/session"]{assert!(validate_endpoint(endpoint).is_ok(),"{endpoint}");}
     }
 }

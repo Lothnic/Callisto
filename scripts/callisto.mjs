@@ -21,18 +21,19 @@ if(args[0]==='setup') {
   setup.on('exit',code=>{process.exitCode=code??1;if(code===0)console.error('MCP entry registered. Restart MCP servers in your host to load it. Firefox/Zen still requires extension installation and initial pairing.');});
 } else {
 const backend = args[0] || process.env.CALLISTO_BROWSER || 'chromium';
-if (!['chromium','firefox','zen'].includes(backend) || args.length > 1) {
-  console.error('Usage: node scripts/callisto.mjs [chromium|firefox|zen]'); process.exit(2);
+if (!['chromium','firefox','zen','firefox-bidi','zen-bidi'].includes(backend) || args.length > 1) {
+  console.error('Usage: node scripts/callisto.mjs [chromium|firefox|zen|firefox-bidi|zen-bidi]'); process.exit(2);
 }
 const firefox = backend !== 'chromium';
+const bidi = backend.endsWith('-bidi');
 const target = firefox
-  ? process.env.CALLISTO_FIREFOX_BINARY || resolve(root,'packages/firefox-rs/target/release/callisto-firefox-tab-mcp')
+  ? (bidi ? process.env.CALLISTO_BIDI_BINARY : process.env.CALLISTO_FIREFOX_BINARY) || resolve(root,`packages/firefox-rs/target/release/${bidi?'callisto-firefox-mcp':'callisto-firefox-tab-mcp'}`)
   : resolve(root,'packages/mini/dist/mcp.js');
 if (!existsSync(target)) {
-  console.error(firefox ? 'Build the bridge: cargo build --locked --release --manifest-path packages/firefox-rs/Cargo.toml --bin callisto-firefox-tab-mcp' : 'Build Mini: npm --prefix packages/mini ci && npm --prefix packages/mini run build');
+  console.error(firefox ? `Build the runtime: cargo build --locked --release --manifest-path packages/firefox-rs/Cargo.toml --bin ${bidi?'callisto-firefox-mcp':'callisto-firefox-tab-mcp'}` : 'Build Mini: npm --prefix packages/mini ci && npm --prefix packages/mini run build');
   process.exit(1);
 }
-const child = spawn(firefox ? target : process.execPath, firefox ? [] : [target], {stdio:'inherit'});
+const child = spawn(firefox ? target : process.execPath, firefox ? [] : [target], {stdio:'inherit',env:bidi?{...process.env,CALLISTO_BROWSER:backend.split('-')[0],CALLISTO_MCP_BROWSER:process.env.CALLISTO_MCP_BROWSER||'connected'}:process.env});
 for (const signal of ['SIGINT','SIGTERM']) process.on(signal,()=>child.kill(signal));
 child.on('error',error=>{console.error(error.message);process.exitCode=1;});
 child.on('exit',(code,signal)=>{process.exitCode=code ?? (signal ? 1 : 0);});
