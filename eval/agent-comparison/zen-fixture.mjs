@@ -1,7 +1,7 @@
 // Dedicated persistent test profile. Never attaches to a person's browser.
 import {spawn,execFile} from 'node:child_process';
 import {promisify} from 'node:util';
-import {mkdtemp,mkdir,writeFile,readFile,copyFile,chmod,rm,access} from 'node:fs/promises';
+import {mkdtemp,mkdir,writeFile,readFile,copyFile,chmod,rm} from 'node:fs/promises';
 import {join,resolve} from 'node:path';
 import {homedir} from 'node:os';
 import {createServer} from 'node:net';
@@ -30,11 +30,6 @@ export class ZenFixture {
    const auth=join(this.directory,'fixture.Xauthority');
    await writeFile(this.binary,'#!/bin/sh\ncp -- "$XAUTHORITY" '+shellQuote(auth)+'\nchmod 600 '+shellQuote(auth)+'\nexec flatpak run --socket=x11 --nosocket=wayland --env=DISPLAY="$DISPLAY" --env=XAUTHORITY='+shellQuote(auth)+' --env=MOZ_ENABLE_WAYLAND=0 --env=GDK_BACKEND=x11 app.zen_browser.zen "$@"\n',{mode:0o700});
    for(const name of ['application.ini','platform.ini'])await copyFile(join(location,'files/zen',name),join(this.directory,name));
-  }
-  if(this.kind==='firefox'&&!this.headless&&await access('/snap/firefox/current/usr/lib/firefox/application.ini').then(()=>true,()=>false)){
-   this.binary=join(this.directory,'firefox-wrapper');const auth=join(this.directory,'fixture.Xauthority');
-   await writeFile(this.binary,'#!/bin/sh\ncp -- "$XAUTHORITY" '+shellQuote(auth)+'\nchmod 600 '+shellQuote(auth)+'\nexport XAUTHORITY='+shellQuote(auth)+'\nexec /snap/bin/firefox "$@"\n',{mode:0o700});
-   for(const name of ['application.ini','platform.ini'])await copyFile(join('/snap/firefox/current/usr/lib/firefox',name),join(this.directory,name));
   }
   await this.openBrowser();await this.installExtension(true);await this.share();return this;
  }
