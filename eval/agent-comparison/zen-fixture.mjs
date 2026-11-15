@@ -36,7 +36,7 @@ export class ZenFixture {
   const created=await this.request('/session',{capabilities:{alwaysMatch:{browserName:'firefox',webSocketUrl:true,'moz:firefoxOptions':options}}});this.session=created.sessionId;this.capabilities=created.capabilities;this.endpoint=created.capabilities.webSocketUrl;
   // Zen can expose an internal empty-workspace placeholder as the initial
   // WebDriver context after restart. Create a genuine owned tab explicitly.
-  const tab=await this.request(`/session/${this.session}/window/new`,{type:'tab'});
+  const tab=await this.request(`/session/${this.session}/window/new`,{type:'tab'});this.handle=tab.handle;
   await this.request(`/session/${this.session}/window`,{handle:tab.handle});
   await this.request(`/session/${this.session}/window/rect`,{width:1440,height:900});
   await this.request(`/session/${this.session}/url`,{url:this.url});
@@ -63,6 +63,16 @@ with zipfile.ZipFile(sys.argv[2],'w',zipfile.ZIP_DEFLATED) as z:
   const tab=await until(async()=>{const listing=await this.call('callisto_browser',{action:'tabs_list'});const tabs=listing.tabs;this.lastTabs=tabs;this.lastDiagnostics=listing.fixture_diagnostics;const matches=tabs.filter(tab=>tab.url===this.url);return matches.find(tab=>tab.active)||(matches.length===1?matches[0]:null);}).catch(()=>{throw Error('Persistent fixture tab missing: '+JSON.stringify({tabs:this.lastTabs,extension:this.lastDiagnostics}));});
   this.tabId=tab.id;await this.call('callisto_browser',{action:'tab_select',tab_id:tab.id});
   await this.call('callisto_input',{action:'enable',endpoint:this.endpoint});
+ }
+ async navigate(url){
+  // WebDriver navigation does not establish the extension's active-tab lease.
+  // Reacquire only the original owned fixture tab before each measured task.
+  await this.request(`/session/${this.session}/window`,{handle:this.handle});
+  await this.request(`/session/${this.session}/url`,{url});
+  await this.call('callisto_browser',{action:'tab_select',tab_id:this.tabId});
+  await until(()=>this.script('return document.visibilityState === "visible" && document.readyState !== "loading"'));
+  await this.call('callisto_input',{action:'enable',endpoint:this.endpoint});
+  await this.call('callisto_frame',{frame_id:0});
  }
  async script(script){return this.request(`/session/${this.session}/execute/sync`,{script,args:[]});}
  async ownedInstance(){

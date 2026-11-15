@@ -1,0 +1,12 @@
+import {createServer} from 'node:http';
+export const tasks=[{id:'form',instruction:'Enter Mango in Fruit and submit the form. Report the resulting heading.',answer:'Saved Mango',state:true},{id:'grid',instruction:'Find the total Amount of every order across both pages. Report a number.',answer:210},{id:'frame',instruction:'Confirm the action inside the embedded frame, including its open shadow root. Report confirmed.',answer:'confirmed',state:true},{id:'search',instruction:'Find the stock quantity for Aster helmet. Report the integer quantity.',answer:17}];
+export function createFixtureServer(){return createServer((req,res)=>{
+ const url=new URL(req.url,'http://fixture');res.setHeader('Content-Type','text/html; charset=utf-8');let body='';
+ if(url.pathname==='/form')body='<form action="/saved"><label>Fruit <input name="fruit" required></label><button>Save</button></form>';
+ if(url.pathname==='/saved'){const fruit=(url.searchParams.get('fruit')||'').replace(/[^a-z]/gi,'');body=`<h1>Saved ${fruit}</h1><script>document.body.dataset.done=${JSON.stringify(fruit==='Mango'?'yes':'no')}</script>`;}
+ if(url.pathname==='/grid'){const page=Number(url.searchParams.get('page')||1);body='<h1>Orders</h1><table><thead><tr><th>Order</th><th>Amount</th></tr></thead><tbody>'+Array.from({length:3},(_,i)=>{const n=(page-1)*3+i+1;return `<tr><td>${n}</td><td>${n*10}</td></tr>`;}).join('')+'</tbody></table>'+(page===1?'<a class="next" href="/grid?page=2">Next page</a>':'<span class="next disabled">End</span>');}
+ if(url.pathname==='/frame')body='<h1>Confirmation</h1><iframe title="Action" src="/inner"></iframe><p id="result">Waiting</p>';
+ if(url.pathname==='/inner')body=`<div id="shadow"></div><script>shadow.attachShadow({mode:'open'}).innerHTML='<button>Confirm</button>';shadow.shadowRoot.querySelector('button').onclick=e=>{parent.document.body.dataset.done=e.isTrusted?'yes':'untrusted';parent.document.querySelector('#result').textContent='confirmed';};</script>`;
+ if(url.pathname==='/search'){const q=url.searchParams.get('q')||'';body='<h1>Inventory</h1><form><label>Search inventory <input type="search" name="q"></label><button>Search</button></form><div id="products">'+(q.toLowerCase().includes('aster')?'<div class="product"><span>Aster helmet</span><span>Stock: 17</span></div>':Array.from({length:600},(_,i)=>`<div class="product"><span>${i===487?'Aster helmet':'Fixture item '+i}</span><span>Stock: ${i===487?17:i%29}</span></div>`).join(''))+'</div>';}
+ res.end('<!doctype html><title>Matched local fixture</title><body>'+body+'</body>');
+});}
