@@ -40,9 +40,19 @@ Then visit <http://127.0.0.1:8087/>.
   `data-reveal` attributes. Adding a step means adding all four.
 - Motion respects `prefers-reduced-motion`; test changes with that setting on.
 - Claims on the page must stay true to the MCP server in
-  `packages/mini/src/mcp.ts`. Callisto is experimental, is not a Playwright
+  `packages/mini/src/mcp.ts` and `packages/firefox-rs/src/tab_mcp.rs`, with
+  runtime limits in `docs/zen-advanced-runtime.md`. Callisto is experimental, is not a Playwright
   replacement, and is not a sandbox.
 - The installer fetches the explicitly pinned Git revision, builds Mini and
   prints an MCP configuration; it does not install Chrome or edit host configs.
   `CALLISTO_INSTALL_DIR` changes the destination, which must not already exist.
   Update the revision only after the corresponding commit is available on GitHub.
+
+## Current source capabilities
+
+The Zen/Firefox section describes extension-owned optional trusted input, stable
+snapshot captures, scoped network/API inspection and explicit failure evidence.
+The Chromium installer remains pinned to its existing revision and does not
+install the Zen bridge. Keep source availability, signed distribution and benchmark
+results distinct. The 14 November fixture validation is not a browse time/cost
+comparison or a benchmark judge run.

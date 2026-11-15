@@ -1616,3 +1616,24 @@ footer {
   .hero-watermark { width: 90%; right: -30%; }
 }
 .site-nav-link { color: #102c45; font-weight: 600; }
+
+/* Firefox/Zen capabilities follow the existing type and ruled-list vocabulary. */
+.zen-section { padding: 6rem 0; scroll-margin-top: 2rem; }
+.zen-layout { display: grid; grid-template-columns: 1fr 1.25fr; gap: clamp(2rem, 5vw, 5rem); }
+.zen-intro h2 { font-size: clamp(2.25rem, 4vw, 3.5rem); line-height: 1.08; margin-bottom: 1.5rem; }
+.zen-intro p, .zen-features dd { color: var(--paper); line-height: 1.65; }
+.zen-intro p { max-width: 42ch; margin-bottom: 1rem; }
+.zen-guide { display: inline-block; color: #a8c9f4; margin-top: .75rem; text-underline-offset: .25em; }
+.zen-guide:hover { color: var(--paper); }
+.zen-guide:focus-visible { outline: 2px solid var(--paper); outline-offset: 5px; }
+.zen-features > div { display: grid; grid-template-columns: 9rem 1fr; gap: 1.5rem; padding: 1.25rem 0; border-top: 1px solid var(--border); }
+.zen-features dt { font-weight: 700; line-height: 1.65; }
+.zen-validation { color: var(--paper); font-size: .88rem; line-height: 1.65; margin-top: 1.5rem; max-width: 70ch; }
+@media (max-width: 900px) {
+  .zen-layout { grid-template-columns: 1fr; }
+  .zen-intro p { max-width: 65ch; }
+}
+@media (max-width: 600px) {
+  .zen-section { padding: 4rem 0; }
+  .zen-features > div { grid-template-columns: 1fr; gap: .4rem; }
+}

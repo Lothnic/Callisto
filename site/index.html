@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Callisto — A lean browser runtime for agents</title>
-<meta name="description" content="Callisto is an experimental local browser runtime for agents. Connect over MCP to navigate Chromium, inspect accessibility snapshots, and act on page references.">
+<meta name="description" content="Callisto is an experimental local browser runtime for agents. Connect over MCP to navigate Chromium or share Firefox/Zen tabs, inspect bounded snapshots, and act on page references.">
 <meta property="og:title" content="Callisto — A lean browser runtime for agents">
 <meta property="og:description" content="Give your agent browser tools over MCP, with experimental Chromium and Firefox/Zen runtimes.">
 <meta property="og:type" content="website">
@@ -19,7 +19,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Chivo+Mono:wght@400;700&family=Instrument+Sans:wght@400;500;600;700&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=20261112-5">
+<link rel="stylesheet" href="styles.css?v=20261114-1">
 </head>
 <body>
 
@@ -51,6 +51,7 @@
       </a>
       <div class="site-nav-links">
         <a href="#how" class="site-nav-link">How it works</a>
+        <a href="#zen" class="site-nav-link">Zen &amp; Firefox</a>
         <a href="#evidence" class="site-nav-link">Evidence</a>
         <a href="https://github.com/Lothnic/callisto" class="site-nav-link" rel="noreferrer">GitHub</a>
         <a href="#install" class="btn-chamfer btn-dark site-nav-cta">Install Callisto</a>
@@ -116,7 +117,7 @@
     <div class="container runtime-status-inner">
       <div class="runtime-status-label"><span class="status-pulse"></span> THE RUNTIME / TODAY</div>
       <div><strong>Isolated by default</strong><span>A fresh Chromium session for each MCP process.</span></div>
-      <div><strong>Existing Zen tabs</strong><span>Experimental Firefox and Zen bridge connects to your profile.</span></div>
+      <div><strong>Existing Zen tabs</strong><span>Share existing Firefox/Zen tabs, with optional trusted input.</span></div>
       <a href="https://github.com/Lothnic/callisto#status-and-evidence">Read the project status <span aria-hidden="true">↗</span></a>
     </div>
   </section>
@@ -469,6 +470,30 @@
 
   <div class="section-divider"></div>
 
+  <section class="zen-section" id="zen" aria-labelledby="zen-title">
+    <div class="container zen-layout">
+      <div class="zen-intro">
+        <h2 id="zen-title" class="display">Work In Your<br>Zen Or Firefox Tab.</h2>
+        <p>Keep the tab, profile and login you already use. Pair the local bridge and explicitly share a tab with your agent.</p>
+        <p>Available from source, with a temporary extension. Trusted input needs a deliberately debug-enabled browser. Signed extension distribution is still ahead.</p>
+        <a class="zen-guide" href="https://github.com/Lothnic/callisto/blob/main/docs/getting-started.md">Set up Zen or Firefox <span aria-hidden="true">↗</span></a>
+      </div>
+      <div>
+        <dl class="zen-features">
+          <div><dt>Trusted input</dt><dd>Native typing, form controls and pagination under the same sharing controls. Stop sharing revokes new input; an action already sent may finish.</dd></div>
+          <div><dt>Useful observations</dt><dd>Scope a snapshot, follow a stable captured revision, or read a compact diff. Open shadow roots and explicitly selected same-origin frames are supported.</dd></div>
+          <div><dt>Network &amp; APIs</dt><dd>Inspect scoped traffic, compare requests and export draft OpenAPI. Explicit same-origin GET/HEAD replay uses the page session and refuses redirects.</dd></div>
+          <div><dt>Explicit recovery</dt><dd>Uncertain writes are never replayed. Lost sharing requires reacquisition; trusted mode never silently switches to synthetic input.</dd></div>
+          <div><dt>Failure evidence</dt><dd>Keep private action logs, HAR, screenshots and DOM checkpoints. Interrupted actions report unknown outcomes and missing evidence.</dd></div>
+        </dl>
+        <p class="zen-validation">Validated on disposable Firefox and Zen fixtures. Evidence export checks artifact formats and optional task requirements; it does not run benchmark judges. No new browse time or cost comparison has run.</p>
+        <a class="zen-guide" href="https://github.com/Lothnic/callisto/blob/main/docs/zen-advanced-runtime.md">Read capabilities and limits <span aria-hidden="true">↗</span></a>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
   <!-- ═══════════ HOW IT WORKS ═══════════ -->
   <section class="how-section" id="how" aria-labelledby="how-title">
     <div class="container">
@@ -658,7 +683,7 @@ the top three Show HN posts.</code></pre>
             <span class="faq-question-text">Does it use my browser or my logins?</span>
             <svg class="faq-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 6l5 5 5-5" stroke="currentColor" stroke-width="1.5"/></svg>
           </summary>
-          <div class="faq-answer-wrap"><div class="faq-answer"><p>Mini starts isolated Chromium by default; its experimental browse connection opens an agent-owned tab in your existing profile. The separate experimental Firefox and Zen bridge can control existing tabs and logins after pairing and permission. It uses a temporary extension and has capability limits. <a href="https://github.com/Lothnic/Callisto/blob/main/packages/firefox-rs/README.md">Read Firefox and Zen setup ↗</a></p></div></div>
+          <div class="faq-answer-wrap"><div class="faq-answer"><p>Mini starts isolated Chromium by default; its experimental browse connection opens an agent-owned tab in your existing profile. The experimental Firefox/Zen bridge shares an existing tab and its login after pairing and permission. Optional trusted input follows the same sharing controls; it requires a debugging endpoint. It currently uses a temporary extension. <a href="https://github.com/Lothnic/Callisto/blob/main/packages/firefox-rs/README.md">Read Firefox and Zen setup ↗</a></p></div></div>
         </details>
         <details class="faq-item">
           <summary class="faq-question">
@@ -674,7 +699,7 @@ the top three Show HN posts.</code></pre>
             <span class="faq-question-text">How big are the snapshots?</span>
             <svg class="faq-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 6l5 5 5-5" stroke="currentColor" stroke-width="1.5"/></svg>
           </summary>
-          <div class="faq-answer-wrap"><div class="faq-answer"><p>MCP snapshots default to 12,000 characters. Use <code>nextOffset</code> to page through the last capture, or <code>callisto_find</code> to search the full tree without sending all of it.</p></div></div>
+          <div class="faq-answer-wrap"><div class="faq-answer"><p>MCP snapshots default to 12,000 characters. Mini uses <code>nextOffset</code> for continuation. Firefox/Zen uses <code>next_offset</code> and <code>revision</code> to read the same capture, with scoped observations and optional diffs. Use <code>callisto_find</code> for targeted search.</p></div></div>
         </details>
         <details class="faq-item">
           <summary class="faq-question">
@@ -690,7 +715,7 @@ the top three Show HN posts.</code></pre>
             <span class="faq-question-text">What is actually shipped today?</span>
             <svg class="faq-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 6l5 5 5-5" stroke="currentColor" stroke-width="1.5"/></svg>
           </summary>
-          <div class="faq-answer-wrap"><div class="faq-answer"><p>The CDP engine, the MCP server, bounded snapshots, same-origin frame actions, batching, and an eval kit. Cross-origin frames, toolbar take-back, and full Playwright compatibility are still open work. The project is experimental and says so.</p></div></div>
+          <div class="faq-answer-wrap"><div class="faq-answer"><p>Source includes Chromium Mini and the Firefox/Zen bridge, structured actions, bounded snapshots, batches and evidence tooling. The Zen bridge adds optional trusted input and scoped API inspection. Signed extension distribution, production-profile recovery hardening and full Playwright compatibility remain open. <a href="https://github.com/Lothnic/callisto/blob/main/roadmap.md">Read the roadmap</a>.</p></div></div>
         </details>
       </div>
     </div>
@@ -729,13 +754,14 @@ the top three Show HN posts.</code></pre>
             </svg>
             <span>CALLISTO</span>
           </a>
-          <p>A lean browser runtime for agents you already use. Local, isolated, and honest about what is still experimental.</p>
+          <p>A lean browser runtime for agents you already use. Local, with isolated Chromium and explicitly shared Firefox/Zen tabs.</p>
         </div>
         <div class="footer-col">
           <h3 class="mono">Product</h3>
           <ul>
             <li><a href="#how">How it works</a></li>
             <li><a href="#evidence">Evidence</a></li>
+            <li><a href="#zen">Zen &amp; Firefox</a></li>
             <li><a href="#install">Install</a></li>
             <li><a href="#faq">FAQ</a></li>
           </ul>
