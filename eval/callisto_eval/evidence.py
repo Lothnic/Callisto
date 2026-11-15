@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+from fnmatch import fnmatchcase
 import json
 from pathlib import Path
 import re
@@ -45,10 +46,10 @@ def _validate_png(data: bytes) -> None:
     raise ValueError("PNG lacks a complete IEND chunk")
 
 
-def validate_capture(source: Path) -> dict[str, Any]:
+def validate_capture(source: Path, *, allow_incomplete: bool = False) -> dict[str, Any]:
     source = source.resolve(strict=True)
     manifest = json.loads((source / "manifest.json").read_text())
-    if manifest.get("schema") != "callisto.browser-evidence.v1" or not manifest.get("complete"):
+    if manifest.get("schema") != "callisto.browser-evidence.v1" or (not manifest.get("complete") and not allow_incomplete):
         raise ValueError("Evidence must have a completed Callisto capture manifest")
     files = []
     for artifact in [manifest["action_log"], *manifest["files"]]:
@@ -66,29 +67,121 @@ def validate_capture(source: Path) -> dict[str, Any]:
         if artifact["format"] == "har-1.2":
             har = json.loads(data)
             entries = har.get("log", {}).get("entries")
-            if not isinstance(entries, list) or not entries:
+            if not isinstance(entries, list) or (not entries and not allow_incomplete):
                 raise ValueError("HAR must contain real recorded request/response entries")
             capture = har["log"].get("_capture", {})
-            if capture.get("dropped") or not capture.get("complete") or capture.get("active"):
+            if not allow_incomplete and (capture.get("dropped") or not capture.get("complete") or capture.get("active")):
                 raise ValueError("Stop network capture and resolve missing events before benchmark export")
             for entry in entries:
                 if not isinstance(entry.get("request", {}).get("url"), str) or not isinstance(entry.get("response", {}).get("status"), int):
                     raise ValueError("HAR entry lacks request URL or response status")
         files.append({**artifact, "bytes": len(data), "sha256": hashlib.sha256(data).hexdigest()})
     actions = [json.loads(line) for line in (source / manifest["action_log"]["path"]).read_text().splitlines() if line]
-    starts = [row["sequence"] for row in actions if row.get("event") == "start"]
-    ends = [row["sequence"] for row in actions if row.get("event") == "end"]
-    if len(set(starts)) != len(starts) or sorted(starts) != sorted(ends):
-        raise ValueError("Action log contains unfinished or duplicated actions")
+    pending, seen = set(), set()
+    for row in actions:
+        sequence = row.get("sequence")
+        if row.get("event") == "start":
+            if sequence in seen:
+                raise ValueError("Action log contains duplicated actions")
+            pending.add(sequence)
+            seen.add(sequence)
+        elif row.get("event") == "end":
+            if sequence not in pending:
+                raise ValueError("Action ended before start or ended twice")
+            pending.remove(sequence)
+    if pending and not allow_incomplete:
+        raise ValueError("Action log contains unfinished actions")
     return {"schema": "callisto.evidence-index.v1", "source": str(source), "files": files,
+            "capture_complete": bool(manifest.get("complete")), "pending_actions": sorted(pending),
+            "action_outcomes": [row for row in actions if row.get("event") == "end"],
+            "requested_evidence": manifest.get("requested_evidence", {}),
             "evaluation_executed": False, "playwright_trace_viewer_compatible": False}
 
 
+def check_requirements(index: dict, requirements: dict) -> dict:
+    """Check an explicit task evidence contract, independently of benchmark scoring.
+
+    JSON pointers name required non-redacted values. URL globs match whole URLs.
+    Requirements must be derived from the selected task's evaluator by its author;
+    parser acceptance alone says nothing about these requirements.
+    """
+    if requirements.get("schema") != "callisto.task-evidence.v1":
+        raise ValueError("Unsupported task evidence requirements schema")
+    if set(requirements) - {"schema", "network", "screenshots", "require_successful_actions"}:
+        raise ValueError("Unknown task evidence requirement")
+    source = Path(index["source"])
+    entries = []
+    for artifact in index["files"]:
+        if artifact["format"] == "har-1.2":
+            entries.extend(json.loads((source / artifact["path"]).read_text())["log"]["entries"])
+    def json_field(entry, side, pointer):
+        if not isinstance(pointer, str) or not pointer.startswith("/") or len(pointer) > 500:
+            raise ValueError("Required fields use bounded JSON pointers")
+        try:
+            obj = entry[side]["postData" if side == "request" else "content"]
+            value = json.loads(obj["text"])
+            for part in pointer[1:].split("/"):
+                key = part.replace("~1", "/").replace("~0", "~")
+                value = value[int(key)] if isinstance(value, list) else value[key]
+            return value is not None and "[REDACTED]" not in json.dumps(value)
+        except (KeyError, IndexError, TypeError, ValueError):
+            return False
+    checks = []
+    network = requirements.get("network", [])
+    if not isinstance(network, list) or len(network) > 100:
+        raise ValueError("Expected at most 100 network requirements")
+    for spec in network:
+        if set(spec) - {"method", "url_glob", "status", "min_count", "request_json_pointers", "response_json_pointers"}:
+            raise ValueError("Unknown network requirement")
+        method, pattern = spec.get("method"), spec.get("url_glob")
+        count = spec.get("min_count", 1)
+        if not isinstance(method, str) or not isinstance(pattern, str) or not 1 <= len(pattern) <= 500 or type(count) is not int or not 1 <= count <= 1000:
+            raise ValueError("Network requirement needs method, bounded URL glob and positive min_count")
+        for side in ("request", "response"):
+            pointers = spec.get(side + "_json_pointers", [])
+            if not isinstance(pointers, list) or len(pointers) > 100 or any(not isinstance(p, str) or not p.startswith("/") or len(p) > 500 for p in pointers):
+                raise ValueError("Required fields use bounded JSON pointers")
+        matches = [i for i, entry in enumerate(entries)
+                   if entry["request"].get("method") == method
+                   and fnmatchcase(entry["request"]["url"], pattern)
+                   and ("status" not in spec or entry["response"]["status"] == spec["status"])
+                   and all(json_field(entry, side, pointer)
+                           for side in ("request", "response")
+                           for pointer in spec.get(side + "_json_pointers", []))]
+        checks.append({"kind": "network", "requirement": spec, "matched_entries": matches,
+                       "passed": len(matches) >= count})
+    if "require_successful_actions" in requirements and type(requirements["require_successful_actions"]) is not bool:
+        raise ValueError("require_successful_actions must be boolean")
+    screenshots = requirements.get("screenshots", {})
+    if not isinstance(screenshots, dict) or ("after_each_action" in screenshots and type(screenshots["after_each_action"]) is not bool):
+        raise ValueError("Invalid screenshot requirements")
+    if set(screenshots) - {"min_count", "after_each_action"}:
+        raise ValueError("Unknown screenshot requirement")
+    count = screenshots.get("min_count", 0)
+    if type(count) is not int or not 0 <= count <= 1000:
+        raise ValueError("Invalid screenshot min_count")
+    pngs = [a for a in index["files"] if a["format"] == "png"]
+    checks.append({"kind": "screenshots", "passed": len(pngs) >= count, "count": len(pngs), "minimum": count})
+    if screenshots.get("after_each_action"):
+        covered = {a.get("after_sequence") for a in pngs}
+        missing = [a["sequence"] for a in index["action_outcomes"] if a["sequence"] not in covered]
+        checks.append({"kind": "action_screenshots", "passed": not missing and not index["pending_actions"], "missing_sequences": missing})
+    if requirements.get("require_successful_actions"):
+        checks.append({"kind": "action_outcomes", "passed": not index["pending_actions"] and all(a.get("success") is True for a in index["action_outcomes"])})
+    return {"schema": "callisto.task-evidence-report.v1", "passed": index["capture_complete"] and all(c["passed"] for c in checks),
+            "capture_complete": index["capture_complete"], "checks": checks, "benchmark_evaluation_executed": False}
+
+
 def export_evidence(*, source: Path, destination: Path, benchmark: str, task_id: str,
-                    instruction: str = "", answer: str = "", response: dict | None = None) -> Path:
+                    instruction: str = "", answer: str = "", response: dict | None = None,
+                    requirements: dict | None = None) -> Path:
     if not re.fullmatch(r"[A-Za-z0-9_-]{1,100}", task_id):
         raise ValueError("Use a single safe task identifier")
     index = validate_capture(source)
+    if requirements is not None:
+        index["task_coverage"] = check_requirements(index, requirements)
+        if not index["task_coverage"]["passed"]:
+            raise ValueError("Task-specific evidence requirements are not covered; inspect the coverage report")
     source = Path(index["source"])
     pngs = sorted((a for a in index["files"] if a["format"] == "png"),
                   key=lambda a: int(re.search(r"(\d+)\.png$", a["path"]).group(1)))
@@ -129,7 +222,7 @@ def export_evidence(*, source: Path, destination: Path, benchmark: str, task_id:
             index["native_input"] = "WebVoyager auto-eval envelope and ordered PNGs; no model reasoning transcript"
         else:
             (output / "agent_response.json").write_text(json.dumps(response, indent=2) + "\n")
-            index["native_input"] = "Verified 1.2.3 response schema and HAR parser validated; task-specific field coverage not checked"
+            index["native_input"] = "Verified 1.2.3 response schema and HAR parser validated; task-specific coverage only checked when an explicit requirements contract is supplied"
         index.update(benchmark=benchmark, task_id=task_id, benchmark_native_evaluation_executed=False,
                      network_redaction_may_remove_evaluator_fields=True)
         (output / "evidence_index.json").write_text(json.dumps(index, indent=2) + "\n")
@@ -145,16 +238,27 @@ def export_evidence(*, source: Path, destination: Path, benchmark: str, task_id:
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("source", type=Path)
-    parser.add_argument("destination", type=Path)
-    parser.add_argument("--benchmark", choices=["webvoyager", "webarena-verified"], required=True)
-    parser.add_argument("--task-id", required=True)
+    parser.add_argument("destination", type=Path, nargs="?")
+    parser.add_argument("--benchmark", choices=["webvoyager", "webarena-verified"])
+    parser.add_argument("--task-id")
     parser.add_argument("--instruction", default="")
     parser.add_argument("--answer", default="")
     parser.add_argument("--response", type=Path)
+    parser.add_argument("--requirements", type=Path)
+    parser.add_argument("--inspect", action="store_true", help="Diagnose complete or interrupted captures without exporting")
     args = parser.parse_args()
+    requirements = json.loads(args.requirements.read_text()) if args.requirements else None
+    if args.inspect:
+        index = validate_capture(args.source, allow_incomplete=True)
+        if requirements is not None:
+            index["task_coverage"] = check_requirements(index, requirements)
+        print(json.dumps(index, indent=2))
+        return
+    if not args.destination or not args.task_id or not args.benchmark:
+        parser.error("Export requires destination, --task-id and --benchmark")
     response = json.loads(args.response.read_text()) if args.response else None
     print(export_evidence(source=args.source, destination=args.destination, benchmark=args.benchmark,
-                          task_id=args.task_id, instruction=args.instruction, answer=args.answer, response=response))
+                          task_id=args.task_id, instruction=args.instruction, answer=args.answer, response=response, requirements=requirements))
 
 
 if __name__ == "__main__":

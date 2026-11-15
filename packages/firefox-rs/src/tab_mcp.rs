@@ -223,46 +223,148 @@ fn failure(error: impl std::fmt::Display) -> Value {
     json!({"isError":true,"content":[{"type":"text","text":error.to_string()}]})
 }
 async fn call_tool(bridge: &Bridge, session_id: u64, name: &str, args: &Value) -> Result<Value> {
-    if !args.is_object() {bail!("Tool arguments must be an object");}
+    if !args.is_object() {
+        bail!("Tool arguments must be an object");
+    }
     if name == "callisto_trace" {
         return match args["action"].as_str().unwrap_or("") {
             "start" => {
-                let mut traces=bridge.traces.lock().await;
-                if traces.contains_key(&session_id){bail!("A trace is already active for this session");}
-                let recorder=trace::Recorder::start(args)?;let result=recorder.status();traces.insert(session_id,recorder);Ok(result)
+                let mut traces = bridge.traces.lock().await;
+                if traces.contains_key(&session_id) {
+                    bail!("A trace is already active for this session");
+                }
+                let recorder = trace::Recorder::start(args)?;
+                let result = recorder.status();
+                traces.insert(session_id, recorder);
+                Ok(result)
             }
-            "status" => Ok(bridge.traces.lock().await.get(&session_id).map(|r|r.status()).unwrap_or(json!({"active":false}))),
-            "checkpoint" => {let result=trace_checkpoint(bridge,session_id).await;if result.is_err(){if let Some(r)=bridge.traces.lock().await.get_mut(&session_id){r.capture_failed();}}result},
+            "status" => Ok(bridge
+                .traces
+                .lock()
+                .await
+                .get(&session_id)
+                .map(|r| r.status())
+                .unwrap_or(json!({"active":false}))),
+            "checkpoint" => {
+                let result = trace_checkpoint(bridge, session_id).await;
+                if result.is_err() {
+                    if let Some(r) = bridge.traces.lock().await.get_mut(&session_id) {
+                        r.capture_failed();
+                    }
+                }
+                result
+            }
             "stop" => {
-                if !bridge.traces.lock().await.contains_key(&session_id){bail!("No active trace");}
-                let har=bridge.call_session(session_id,"network",None,Some("{\"action\":\"export\"}")).await;
-                let mut recorder=bridge.traces.lock().await.remove(&session_id).ok_or_else(||anyhow!("No active trace"))?;
-                if let Ok(har)=har {recorder.artifact("network.har","har-1.2",&serde_json::to_vec_pretty(&har)?)?;}
+                if !bridge.traces.lock().await.contains_key(&session_id) {
+                    bail!("No active trace");
+                }
+                let har = bridge
+                    .call_session(session_id, "network", None, Some("{\"action\":\"export\"}"))
+                    .await;
+                let mut recorder = bridge
+                    .traces
+                    .lock()
+                    .await
+                    .remove(&session_id)
+                    .ok_or_else(|| anyhow!("No active trace"))?;
+                if let Ok(har) = har {
+                    recorder.artifact(
+                        "network.har",
+                        "har-1.2",
+                        &serde_json::to_vec_pretty(&har)?,
+                    )?;
+                }
                 recorder.stop()
             }
             _ => bail!("Unsupported trace action"),
         };
     }
-    let started=std::time::Instant::now();
-    let sequence=match bridge.traces.lock().await.get_mut(&session_id){Some(r)=>Some(r.begin(name,args)?),None=>None};
-    let result=call_tool_inner(bridge,session_id,name,args).await;
-    if let Some(sequence)=sequence {
-        if let Some(recorder)=bridge.traces.lock().await.get_mut(&session_id){recorder.finish(sequence,result.is_ok(),started.elapsed().as_millis())?;}
-        if result.is_ok() && ["callisto_navigate","callisto_click","callisto_fill","callisto_press","callisto_batch","callisto_run","callisto_frame"].contains(&name){
+    let started = std::time::Instant::now();
+    let sequence = match bridge.traces.lock().await.get_mut(&session_id) {
+        Some(r) => Some(r.begin(name, args)?),
+        None => None,
+    };
+    let result = call_tool_inner(bridge, session_id, name, args).await;
+    if let Some(sequence) = sequence {
+        if let Some(recorder) = bridge.traces.lock().await.get_mut(&session_id) {
+            recorder.finish(sequence, result.is_ok(), started.elapsed().as_millis())?;
+        }
+        if [
+            "callisto_navigate",
+            "callisto_click",
+            "callisto_fill",
+            "callisto_press",
+            "callisto_submit",
+            "callisto_page",
+            "callisto_scroll",
+            "callisto_batch",
+            "callisto_run",
+            "callisto_extract",
+            "callisto_frame",
+        ]
+        .contains(&name)
+        {
             // Evidence errors are reported explicitly without misreporting a
             // completed input as failed and encouraging an unsafe retry.
-            if let Err(error)=trace_checkpoint(bridge,session_id).await {if let Some(r)=bridge.traces.lock().await.get_mut(&session_id){r.capture_failed();}eprintln!("Callisto trace checkpoint failed: {error}");}
+            if let Err(error) = trace_checkpoint(bridge, session_id).await {
+                if let Some(r) = bridge.traces.lock().await.get_mut(&session_id) {
+                    r.capture_failed();
+                }
+                eprintln!("Callisto trace checkpoint failed: {error}");
+            }
         }
     }
     result
 }
 
-async fn trace_checkpoint(bridge:&Bridge,session_id:u64)->Result<Value>{
-    let (snapshots,screenshots)={let traces=bridge.traces.lock().await;let r=traces.get(&session_id).ok_or_else(||anyhow!("No active trace"))?;(r.snapshots,r.screenshots)};
-    let snapshot=if snapshots{Some(bridge.call_session(session_id,"snapshot",None,Some("{\"preserve_refs\":true}")).await?)}else{None};
-    let image=if screenshots{Some(bridge.call_session(session_id,"browser",None,Some("{\"action\":\"screenshot\",\"format\":\"png\"}")).await?)}else{None};
-    let mut traces=bridge.traces.lock().await;let recorder=traces.get_mut(&session_id).ok_or_else(||anyhow!("Trace ended during checkpoint"))?;
-    recorder.checkpoint(snapshot.as_ref(),image.as_ref())?;Ok(recorder.status())
+async fn trace_checkpoint(bridge: &Bridge, session_id: u64) -> Result<Value> {
+    let (snapshots, screenshots) = {
+        let traces = bridge.traces.lock().await;
+        let r = traces
+            .get(&session_id)
+            .ok_or_else(|| anyhow!("No active trace"))?;
+        (r.snapshots, r.screenshots)
+    };
+    let snapshot = if snapshots {
+        Some(
+            bridge
+                .call_session(
+                    session_id,
+                    "snapshot",
+                    None,
+                    Some("{\"preserve_refs\":true}"),
+                )
+                .await,
+        )
+    } else {
+        None
+    };
+    let image = if screenshots {
+        Some(
+            bridge
+                .call_session(
+                    session_id,
+                    "browser",
+                    None,
+                    Some("{\"action\":\"screenshot\",\"format\":\"png\"}"),
+                )
+                .await,
+        )
+    } else {
+        None
+    };
+    let mut traces = bridge.traces.lock().await;
+    let recorder = traces
+        .get_mut(&session_id)
+        .ok_or_else(|| anyhow!("Trace ended during checkpoint"))?;
+    recorder.checkpoint(
+        snapshot.as_ref().and_then(|r| r.as_ref().ok()),
+        image.as_ref().and_then(|r| r.as_ref().ok()),
+    )?;
+    if snapshot.as_ref().is_some_and(|r| r.is_err()) || image.as_ref().is_some_and(|r| r.is_err()) {
+        bail!("Some requested evidence could not be captured; available artifacts were saved");
+    }
+    Ok(recorder.status())
 }
 
 async fn run_trusted(bridge: &Bridge, client: u64, name: &str, args: &Value) -> Result<Value> {
@@ -1008,6 +1110,11 @@ async fn serve_mcp<R: AsyncRead + Unpin, W: AsyncWrite + Unpin>(
                                 .lock()
                                 .await
                                 .retain(|_, sender| !sender.is_closed());
+                            if let Some(recorder) = bridge.traces.lock().await.get_mut(&client_id) {
+                                if let Err(error) = recorder.interrupt() {
+                                    eprintln!("Trace interruption could not be saved: {error}");
+                                }
+                            }
                             bridge.trusted.cancel(client_id).await;
                             let _ = bridge.call_session(client_id, "release", None, None).await;
                         }

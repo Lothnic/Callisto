@@ -104,7 +104,9 @@ pub struct Recorder {
     files: Vec<Value>,
     started: u128,
     checkpoints: u64,
-    pending: u64,
+    pending: std::collections::BTreeMap<u64, u128>,
+    failed_actions: u64,
+    interrupted_actions: u64,
     capture_errors: u64,
 }
 impl Recorder {
@@ -145,7 +147,9 @@ impl Recorder {
             files: vec![],
             started: now_ms(),
             checkpoints: 0,
-            pending: 0,
+            pending: Default::default(),
+            failed_actions: 0,
+            interrupted_actions: 0,
             capture_errors: 0,
         };
         recorder.manifest(false)?;
@@ -156,30 +160,58 @@ impl Recorder {
     }
     pub fn capture_failed(&mut self) {
         self.capture_errors += 1;
+        let _ = self.manifest(false);
     }
     pub fn begin(&mut self, name: &str, args: &Value) -> Result<u64> {
         if self.sequence >= 10000 {
             bail!("Trace action limit reached; stop the trace before continuing");
         }
         self.sequence += 1;
-        self.pending += 1;
+        self.pending.insert(self.sequence, now_ms());
         writeln!(
             self.log,
             "{}",
             json!({"schema":"callisto.action-log.v1","event":"start","sequence":self.sequence,"time_ms":now_ms(),"tool":name,"arguments":redact(args,"",0)})
         )?;
         self.log.flush()?;
+        self.manifest(false)?;
         Ok(self.sequence)
     }
     pub fn finish(&mut self, sequence: u64, success: bool, elapsed: u128) -> Result<()> {
-        self.pending = self.pending.saturating_sub(1);
+        if self.pending.remove(&sequence).is_none() {
+            bail!("Action already ended or never started");
+        }
+        if !success {
+            self.failed_actions += 1;
+        }
         writeln!(
             self.log,
             "{}",
             json!({"event":"end","sequence":sequence,"time_ms":now_ms(),"success":success,"elapsed_ms":elapsed})
         )?;
         self.log.flush()?;
+        self.manifest(false)?;
         Ok(())
+    }
+    pub fn interrupt(&mut self) -> Result<()> {
+        // A dropped future cannot tell whether the browser performed the write.
+        // Close the action explicitly with an unknown outcome, never success.
+        let pending = std::mem::take(&mut self.pending);
+        for (sequence, started) in pending {
+            self.interrupted_actions += 1;
+            self.failed_actions += 1;
+            writeln!(
+                self.log,
+                "{}",
+                json!({"event":"end","sequence":sequence,"time_ms":now_ms(),"success":false,"outcome":"unknown","interrupted":true,"elapsed_ms":now_ms().saturating_sub(started),"evidence":"sharing revoked; post-action checkpoint unavailable"})
+            )?;
+        }
+        // Cancellation can also interrupt the checkpoint after a finished action.
+        if self.screenshots || self.snapshots {
+            self.capture_errors += 1;
+        }
+        self.log.flush()?;
+        self.manifest(false)
     }
     pub fn checkpoint(&mut self, snapshot: Option<&Value>, image: Option<&Value>) -> Result<()> {
         if self.checkpoints >= 1000 {
@@ -211,11 +243,12 @@ impl Recorder {
     pub fn artifact(&mut self, name: &str, format: &str, bytes: &[u8]) -> Result<()> {
         write_new(&self.directory.join(name), bytes)?;
         self.files
-            .push(json!({"path":name,"format":format,"bytes":bytes.len()}));
+            .push(json!({"path":name,"format":format,"bytes":bytes.len(),"after_sequence":self.sequence,"time_ms":now_ms()}));
+        self.manifest(false)?;
         Ok(())
     }
     fn manifest(&self, complete: bool) -> Result<()> {
-        let value = json!({"schema":"callisto.browser-evidence.v1","started_ms":self.started,"ended_ms":if complete{Some(now_ms())}else{None},"complete":complete && self.pending==0 && self.capture_errors==0,"pending_actions":self.pending,"capture_errors":self.capture_errors,"actions":self.sequence,"checkpoints":self.checkpoints,"files":self.files,"action_log":{"path":"actions.jsonl","format":"callisto-redacted-jsonl-v1"},"redaction":{"tool_arguments":"credential fields and fill values removed","screenshots_and_snapshots":"private page content; not guaranteed redacted","network":"see HAR capture metadata"},"compatibility":{"playwright_trace_viewer":false,"benchmark_native_evaluation_executed":false}});
+        let value = json!({"schema":"callisto.browser-evidence.v1","started_ms":self.started,"ended_ms":if complete{Some(now_ms())}else{None},"complete":complete && self.pending.is_empty() && self.capture_errors==0,"pending_actions":self.pending.len(),"failed_actions":self.failed_actions,"interrupted_actions":self.interrupted_actions,"task_success":null,"requested_evidence":{"screenshots":self.screenshots,"snapshots":self.snapshots},"capture_errors":self.capture_errors,"actions":self.sequence,"checkpoints":self.checkpoints,"files":self.files,"action_log":{"path":"actions.jsonl","format":"callisto-redacted-jsonl-v1"},"redaction":{"tool_arguments":"credential fields and fill values removed","screenshots_and_snapshots":"private page content; not guaranteed redacted","network":"see HAR capture metadata"},"compatibility":{"playwright_trace_viewer":false,"benchmark_native_evaluation_executed":false}});
         // Only overwrite the manifest created by this recorder, atomically.
         let temporary = self.directory.join("manifest.next.json");
         write_new(&temporary, &serde_json::to_vec_pretty(&value)?)?;
@@ -271,5 +304,50 @@ mod tests {
         let manifest: Value =
             serde_json::from_slice(&std::fs::read(dir.join("manifest.json")).unwrap()).unwrap();
         assert_eq!(manifest["complete"], false);
+    }
+    #[test]
+    fn interrupted_writes_have_unknown_outcomes_and_missing_capture_is_explicit() {
+        let root = tempfile::tempdir().unwrap();
+        let dir = root.path().join("task");
+        let mut recorder = Recorder::start(&json!({"directory":dir,"screenshots":true})).unwrap();
+        recorder
+            .begin("callisto_click", &json!({"ref":"ax-1"}))
+            .unwrap();
+        recorder.interrupt().unwrap();
+        recorder.stop().unwrap();
+        let manifest: Value =
+            serde_json::from_slice(&std::fs::read(dir.join("manifest.json")).unwrap()).unwrap();
+        assert_eq!(manifest["complete"], false);
+        assert_eq!(manifest["pending_actions"], 0);
+        assert_eq!(manifest["interrupted_actions"], 1);
+        assert_eq!(manifest["capture_errors"], 1);
+        let events: Vec<Value> = std::fs::read_to_string(dir.join("actions.jsonl"))
+            .unwrap()
+            .lines()
+            .map(|line| serde_json::from_str(line).unwrap())
+            .collect();
+        assert_eq!(events[1]["outcome"], "unknown");
+        assert_eq!(events[1]["success"], false);
+    }
+    #[test]
+    fn failed_tasks_can_have_complete_attributed_recordings() {
+        let root = tempfile::tempdir().unwrap();
+        let dir = root.path().join("task");
+        let mut recorder = Recorder::start(&json!({"directory":dir,"snapshots":true})).unwrap();
+        let sequence = recorder
+            .begin("callisto_click", &json!({"ref":"ax-1"}))
+            .unwrap();
+        recorder.finish(sequence, false, 10).unwrap();
+        recorder
+            .checkpoint(Some(&json!({"text":"Failure state"})), None)
+            .unwrap();
+        assert!(recorder.finish(sequence, true, 10).is_err());
+        recorder.stop().unwrap();
+        let manifest: Value =
+            serde_json::from_slice(&std::fs::read(dir.join("manifest.json")).unwrap()).unwrap();
+        assert_eq!(manifest["complete"], true);
+        assert_eq!(manifest["failed_actions"], 1);
+        assert_eq!(manifest["files"][0]["after_sequence"], sequence);
+        assert!(manifest["task_success"].is_null());
     }
 }
