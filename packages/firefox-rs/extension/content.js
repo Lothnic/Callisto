@@ -8,6 +8,7 @@
   let enabled = true;
   let lease = 0;
   let handoff = null;
+  let preparedInput = null;
   const pendingWaits = new Set();
   const pendingRequests = new Set();
   function finishHandoff(error) {
@@ -86,6 +87,66 @@
     if(root.shadowRoot)matches.push(...queryDeep(root.shadowRoot,selector));
     for(const el of root.querySelectorAll('*'))if(el.shadowRoot)matches.push(...queryDeep(el.shadowRoot,selector));
     return matches;
+  }
+  function clearPreparedInput(){
+    if(!preparedInput)return;
+    const {el,nonce}=preparedInput;
+    if(el?.getAttribute('data-callisto-target')===nonce)el.removeAttribute('data-callisto-target');
+    if(document.documentElement.getAttribute('data-callisto-lease')===nonce)document.documentElement.removeAttribute('data-callisto-lease');
+    preparedInput=null;
+  }
+  async function prepareInput(args,deadline){
+    if(typeof args.nonce!=='string' || !/^[a-f0-9]{64}$/.test(args.nonce))throw new Error('Invalid input binding nonce.');
+    if(!['bind','click','fill','press','hover','check','select','submit'].includes(args.action))throw new Error('Unsupported trusted input action.');
+    clearPreparedInput();
+    let el;
+    if(args.action==='press'){
+      el=document.activeElement;while(el?.shadowRoot?.activeElement)el=el.shadowRoot.activeElement;
+      if(!el || el===document.body)throw new Error('Focus a control before pressing a key.');
+    }else if(args.action!=='bind'){
+      if(args.ref)el=current.get(args.ref);
+      else if(args.selector){
+        if(typeof args.selector!=='string' || args.selector.length>500)throw new Error('Invalid native input selector.');
+        const matches=queryDeep(document,args.selector);if(matches.length!==1)throw new Error('Native input selector must match exactly one element.');el=matches[0];
+      }else{
+        const until=Math.min(deadline,Date.now()+2000),expected=lease;
+        for(;;){
+          if(!enabled || lease!==expected)throw new Error('Sharing changed while resolving input.');
+          const matches=[...elements(document,'button,a[href],input,textarea,select,[role]')].filter(el=>visible(el) && role(el)===args.role && name(el)===args.name);
+          if(matches.length>1)throw new Error('Role locator must match exactly one visible element.');
+          if(matches.length){el=matches[0];break;}
+          if(Date.now()>=until)throw new Error('Trusted input role locator did not match.');
+          await new Promise(resolve=>setTimeout(resolve,25));
+        }
+      }
+      if(!el?.isConnected)throw new Error('Unknown or stale reference; capture a new snapshot.');
+    }
+    let submit_via='click';
+    if(args.action==='submit'){
+      const form=el.form;if(!form || !HTMLFormElement.prototype.checkValidity.call(form))throw new Error('Target needs a valid associated form.');
+      const submitSelector='button[type=submit],button:not([type]),input[type=submit]';
+      const button=el.matches(submitSelector)?el:[...form.elements].find(node=>node.matches(submitSelector) && !node.disabled && visible(node));
+      if(button)el=button;else if(el.matches('input:not([type=checkbox]):not([type=radio]),textarea'))submit_via='enter';else throw new Error('No supported native submit control.');
+    }
+    if(args.action==='check' && (!el.matches('input[type=checkbox]') || typeof args.checked!=='boolean'))throw new Error('Trusted check requires a checkbox and checked boolean.');
+    let select_steps;
+    if(args.action==='select'){
+      if(!(el instanceof HTMLSelectElement) || el.multiple)throw new Error('Trusted select requires a single native select.');
+      const options=[...el.options].filter(option=>!option.disabled && !option.parentElement.disabled);
+      select_steps=options.findIndex(option=>option.value===args.value);
+      if(select_steps<0 || select_steps>200)throw new Error('No supported enabled select option.');
+    }
+    const point=el?await actionable(reference(el),args.action==='fill'?'fill':'click',deadline):null;
+    if(el)el.setAttribute('data-callisto-target',args.nonce);
+    document.documentElement.setAttribute('data-callisto-lease',args.nonce);
+    preparedInput={...args,el,lease,submit_via,select_steps};
+    const pointInTop=()=>{
+      const rect=el.getBoundingClientRect();let x=Math.max(0,rect.left)+(Math.min(innerWidth,rect.right)-Math.max(0,rect.left))/2,y=Math.max(0,rect.top)+(Math.min(innerHeight,rect.bottom)-Math.max(0,rect.top))/2,view=window;
+      while(view!==view.top){const host=view.frameElement,r=host.getBoundingClientRect();x+=r.left+host.clientLeft;y+=r.top+host.clientTop;view=host.ownerDocument.defaultView;}
+      return {x,y};
+    };
+    const coordinates=point?pointInTop():{};preparedInput.coordinates=coordinates;preparedInput.pointInTop=pointInTop;
+    return {nonce:args.nonce,url:location.href,action:args.action,...coordinates,submit_via,select_steps,skip:args.action==='check' && el.checked===args.checked};
   }
   let snapshotCache=null,diffBaseline=null,snapshotRevision=0,domVersion=0;
   const documentRevision=newRef();
@@ -311,11 +372,11 @@
       const disabled = !next || next.hasAttribute('disabled') || next.getAttribute('aria-disabled') === 'true' || next.classList.contains('disabled');
       has_next = !disabled && (next.tagName !== 'A' || Boolean(next.getAttribute('href')));
     }
-    return {rows: out, has_next, omitted: rows.length > limit};
+    return {url:location.href,title:withoutTitleMarker(document.title),rows: out, has_next, omitted: rows.length > limit};
   }
   browser.runtime.onMessage.addListener(async function handle(message) {
     if (message.type === 'ping') { enabled = true; mark(); return {value:true}; }
-    if (message.type === 'revoke') { enabled = false; lease++;snapshotCache=null;diffBaseline=null; for(const request of pendingRequests)request.abort();pendingRequests.clear();for (const finish of pendingWaits) finish('Sharing stopped.'); finishHandoff('Sharing stopped during human handoff.'); current.clear(); unmark(); return {value:true}; }
+    if (message.type === 'revoke') { enabled = false; lease++;snapshotCache=null;diffBaseline=null;clearPreparedInput(); for(const request of pendingRequests)request.abort();pendingRequests.clear();for (const finish of pendingWaits) finish('Sharing stopped.'); finishHandoff('Sharing stopped during human handoff.'); current.clear(); unmark(); return {value:true}; }
     if (message.type === 'handoff') {
       if (!enabled || handoff) return {error:'Sharing stopped or a handoff is already pending.'};
       if (typeof message.prompt!=='string' || !message.prompt.trim() || message.prompt.length>1000 || !Number.isInteger(message.timeout_ms) || message.timeout_ms<1000 || message.timeout_ms>120000) return {error:'Invalid handoff prompt or timeout.'};
@@ -338,6 +399,25 @@
       const deadline = Number.isFinite(message.deadline) ? message.deadline : Date.now() + 10000;
       if (Date.now() >= deadline) throw new Error('Command deadline exceeded; inspect before retrying.');
       if (handoff && message.method !== 'snapshot') throw new Error('Human handoff is pending; wait for confirmation.');
+      if(message.method==='input_prepare')return {value:await prepareInput(JSON.parse(message.value),deadline)};
+      if(message.method==='input_validate'){
+        const args=JSON.parse(message.value),prepared=preparedInput;
+        if(!prepared || prepared.nonce!==args.nonce || prepared.lease!==lease || document.documentElement.getAttribute('data-callisto-lease')!==args.nonce)throw new Error('Trusted input binding expired.');
+        if(prepared.el && (!prepared.el.isConnected || prepared.el.getAttribute('data-callisto-target')!==args.nonce))throw new Error('Trusted input target changed.');
+        if(prepared.el && !args.finish){
+          await actionable(reference(prepared.el),prepared.action==='fill'?'fill':'click',deadline);
+          prepared.coordinates=prepared.pointInTop();
+        }
+        if(args.keyboard){
+          let focused=document.activeElement;while(focused?.shadowRoot?.activeElement)focused=focused.shadowRoot.activeElement;
+          if(focused!==prepared.el)throw new Error('Trusted input focus changed; inspect before retrying.');
+        }
+        if(args.finish){
+          if(prepared.action==='check' && prepared.el.checked!==prepared.checked)throw new Error('Checkbox did not retain requested state.');
+          if(prepared.action==='select' && prepared.el.value!==prepared.value)throw new Error('Select did not retain requested value.');
+        }
+        return {value:{valid:true,...(prepared.el && !args.finish?prepared.coordinates:{})}};
+      }
       if (message.method === 'snapshot') return {value:snapshot(message.value ? JSON.parse(message.value) : {})};
       if (message.method === 'page') {
         const args = JSON.parse(message.value);

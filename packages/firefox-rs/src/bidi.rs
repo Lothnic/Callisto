@@ -51,7 +51,12 @@ pub struct Bidi {
 
 impl Bidi {
     pub async fn connect(url: &str) -> Result<Arc<Self>> {
-        let (socket, _) = tokio::time::timeout(std::time::Duration::from_secs(5),tokio_tungstenite::connect_async(url)).await.map_err(|_|anyhow!("BiDi connection timed out"))??;
+        let (socket, _) = tokio::time::timeout(
+            std::time::Duration::from_secs(5),
+            tokio_tungstenite::connect_async(url),
+        )
+        .await
+        .map_err(|_| anyhow!("BiDi connection timed out"))??;
         let (write, mut read) = socket.split();
         let pending: Pending = Arc::new(StdMutex::new(HashMap::new()));
         let events = broadcast::channel(256).0;
@@ -135,18 +140,35 @@ impl Bidi {
             .await
             .send(Message::Text(message.to_string().into()))
             .await?;
-        match tokio::time::timeout(std::time::Duration::from_secs(30),receiver).await {
+        match tokio::time::timeout(std::time::Duration::from_secs(30), receiver).await {
             Ok(Ok(Ok(value))) => Ok(value),
             Ok(Ok(Err(error))) => Err(anyhow!("{method} failed: {error}")),
             Ok(Err(_)) => Err(anyhow!("{method} failed: BiDi connection closed")),
-            Err(_) => Err(anyhow!("{method} timed out; dispatched input may have completed. Inspect before retrying")),
+            Err(_) => Err(anyhow!(
+                "{method} timed out; dispatched input may have completed. Inspect before retrying"
+            )),
         }
     }
 
     pub fn subscribe(&self) -> broadcast::Receiver<BidiEvent> {
         self.events.subscribe()
     }
-    pub fn is_closed(&self)->bool {self.closed.load(Ordering::SeqCst)}
+    pub fn is_closed(&self) -> bool {
+        self.closed.load(Ordering::SeqCst)
+    }
+    pub async fn disconnect(&self) {
+        self.closed.store(true, Ordering::SeqCst);
+        if let Ok(mut pending) = self.pending.lock() {
+            for (_, sender) in pending.drain() {
+                let _ = sender.send(Err("BiDi connection closed".into()));
+            }
+        }
+        // A blocked socket writer must not keep lease revocation waiting.
+        let _ = tokio::time::timeout(std::time::Duration::from_secs(1), async {
+            let _ = self.write.lock().await.close().await;
+        })
+        .await;
+    }
 }
 
 /// Turn a BiDi `RemoteValue` into a plain JSON value.

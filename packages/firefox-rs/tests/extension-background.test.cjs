@@ -86,7 +86,7 @@ test('pairing requires server confirmation and stop prevents further sharing', a
   assert.match((await connecting).message,/Connected/);
   assert.match((await listener({type:'share'})).message,/shared/);
   await ws.receive({id:1,method:'status'});
-  assert.deepEqual(messages.at(-1).result,{connected:true,sharing:true,active:true,ready:true,continuous:false,browserAccess:false,capabilities:{trustedInput:false,frames:'same-origin',playwrightExecution:false,run:true,extract:true,snapshotPagination:true,runFormControls:true,selectorWait:true,targetedObservation:true,networkInspection:false}});
+  assert.deepEqual(messages.at(-1).result,{connected:true,sharing:true,active:true,ready:true,continuous:false,browserAccess:false,capabilities:{trustedInput:false,trustedBinding:true,frames:'same-origin',playwrightExecution:false,run:true,extract:true,snapshotPagination:true,runFormControls:true,selectorWait:true,targetedObservation:true,networkInspection:false}});
   await listener({type:'stop'});
   assert.match((await listener({type:'status'})).message,/Connected/);
 });
@@ -306,7 +306,7 @@ test('run batches form controls and waits in the document with an absolute deadl
   assert.equal(messages.at(-1).error,undefined);
   assert.equal(messages.at(-1).result.completed,steps.length);
   assert.deepEqual(commands.map(m=>JSON.parse(m.value).action),['select','check','hover','submit','wait_for','wait_for']);
-  assert(commands.every(m=>m.deadline>=before && m.deadline<=before+60000));
+  assert(commands.every(m=>m.deadline>=before && m.deadline<=Date.now()+60000));
   assert.equal(new Set(commands.slice(0,4).map(m=>m.deadline)).size,1);
   assert(commands.slice(4).every(m=>m.deadline<=Date.now()+1000));
 });

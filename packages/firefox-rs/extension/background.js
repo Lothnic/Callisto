@@ -6,6 +6,7 @@ let reconnectTimer = null;
 let retryDelay = 1000;
 let pairAttempt = 0;
 let storageWrites = Promise.resolve();
+let nextLease = 0;
 const networkInspector = typeof createNetworkInspector === 'function' ? createNetworkInspector(browser) : null;
 function savePairing(code) {
   const write = storageWrites.then(() => code === null ? browser.storage.local.remove('callistoPairing') : browser.storage.local.set({callistoPairing:code}));
@@ -147,6 +148,7 @@ let ready = false;
 let continuous = false;
 let selectedFrame = 0;
 let frameStale = false;
+let leaseKey=String(++nextLease);
 let reserved=null;
   const context={get selected(){return selected;},share,assertAvailable,guard(expected){if(expected!==ownership)throw new Error('Tab ownership changed before the browser operation.');}};
   function assertAvailable(tabId){
@@ -158,6 +160,8 @@ function status() {
 }
 async function stop() {
   const previous = selected;
+  const revoked=leaseKey;leaseKey=String(++nextLease);
+  if(socket?.readyState===WebSocket.OPEN && previous!==null)socket.send(JSON.stringify({type:'lease_revoked',lease_id:revoked}));
   selected = null; reserved = null; selectedFrame = 0; frameStale = false; ready = false; continuous = false; generation++; ownership++;
   networkInspector?.release(context);
   await browser.browserAction.setBadgeText({text:[...sessions.values()].some(s=>s.target!==null)?'ON':''}).catch(() => {});
@@ -242,7 +246,7 @@ async function executeCommand(request, connection, deadline = Date.now()+10000) 
   if (request.method === 'status') {
     const target = chosen === null ? null : await browser.tabs.get(chosen);
     const [active] = target ? await browser.tabs.query({active:true,windowId:target.windowId}) : [];
-    return {connected:true,sharing:chosen !== null,active:chosen !== null && active?.id === chosen,ready,continuous,browserAccess:await browser.permissions.contains(fullBrowserPermissions),capabilities:{trustedInput:false,frames:'same-origin',playwrightExecution:false,run:true,extract:true,snapshotPagination:true,runFormControls:true,selectorWait:true,targetedObservation:true,networkInspection:!!networkInspector}};
+    return {connected:true,sharing:chosen !== null,active:chosen !== null && active?.id === chosen,ready,continuous,browserAccess:await browser.permissions.contains(fullBrowserPermissions),capabilities:{trustedInput:false,trustedBinding:true,frames:'same-origin',playwrightExecution:false,run:true,extract:true,snapshotPagination:true,runFormControls:true,selectorWait:true,targetedObservation:true,networkInspection:!!networkInspector}};
   }
   if (Date.now() >= deadline) throw new Error('Command deadline exceeded; inspect before retrying.');
   if (request.method === 'browser') {
@@ -411,7 +415,8 @@ async function executeCommand(request, connection, deadline = Date.now()+10000) 
     if (owner !== ownership || chosen !== selected) throw new Error('Batch ownership changed before observation.');
     return {completed,snapshot:await executeCommand({method:'snapshot'},connection,deadline)};
   }
-  if (!['snapshot','click','fill','submit','navigate','page'].includes(request.method)) throw new Error('Unsupported action.');
+  if (!['snapshot','click','fill','submit','navigate','page','input_prepare','input_validate'].includes(request.method)) throw new Error('Unsupported action.');
+  if(request.method==='input_validate' && JSON.parse(request.value).lease_id!==leaseKey)throw new Error('Trusted input lease was revoked.');
   if(frameStale && request.method!=='navigate')throw new Error('The selected frame navigated; list frames and explicitly select it again.');
   const target = await browser.tabs.get(chosen);
   const [active] = await browser.tabs.query({active:true,windowId:target.windowId});
@@ -443,7 +448,8 @@ async function executeCommand(request, connection, deadline = Date.now()+10000) 
   }
   if (owner !== ownership || chosen !== selected || socket !== connection) throw new Error('Tab sharing changed during the action; inspect the page before retrying.');
   if (!result || result.error) throw new Error(result?.error || 'The selected page did not respond.');
-  return stamp !== generation ? {...result.value,navigationStarted:true} : result.value;
+  const value=request.method==='input_prepare'?{...result.value,lease_id:leaseKey,tab_id:chosen,frame_id:selectedFrame}:result.value;
+  return stamp !== generation ? {...value,navigationStarted:true} : value;
 }
 
   Object.assign(context,{

@@ -116,7 +116,7 @@ try {
     document.body.insertAdjacentHTML('beforeend','<table id="extract-grid"><tbody><tr><td>Alpha</td><td>3</td></tr><tr><td>Beta</td><td>5</td></tr></tbody></table>');
   });
   const extracted=await invoke({type:'action',method:'page',value:JSON.stringify({action:'extract',spec:{selector:'#extract-grid tbody tr',fields:{name:'td:nth-child(1)',total:{selector:'td:nth-child(2)',type:'number'}}}})});
-  assert.deepEqual(extracted.value,{rows:[{name:'Alpha',total:3},{name:'Beta',total:5}],has_next:false,omitted:false});
+  assert.deepEqual(extracted.value,{url:'about:blank',title:'Site updated',rows:[{name:'Alpha',total:3},{name:'Beta',total:5}],has_next:false,omitted:false});
   const limited=await invoke({type:'action',method:'page',value:JSON.stringify({action:'extract',spec:{selector:'#extract-grid tbody tr',fields:{name:'td:nth-child(1)'},limit:1,include_text:true}})});
   assert.equal(limited.value.rows.length,1);
   assert.equal(limited.value.omitted,true);
@@ -225,6 +225,12 @@ try {
   const reordered=await invoke({type:'action',method:'snapshot',value:JSON.stringify({diff:true})});
   assert.equal(reordered.value.order_changed,true);
   assert.equal(reordered.value.text,'');
+  await page.evaluate(()=>document.body.innerHTML='<input aria-label="First"><input aria-label="Other">');
+  const inputNonce='a'.repeat(64);
+  assert((await invoke({type:'action',method:'input_prepare',value:JSON.stringify({action:'fill',role:'textbox',name:'First',nonce:inputNonce})})).value);
+  await page.locator('[aria-label="Other"]').focus();
+  const focusChanged=await invoke({type:'action',method:'input_validate',value:JSON.stringify({nonce:inputNonce,keyboard:true})});
+  assert.match(focusChanged.error,/focus changed/);
   const interrupted=invoke({type:'handoff',prompt:'This step will be revoked.',timeout_ms:5000});
   await page.getByText('This step will be revoked.',{exact:true}).waitFor();
   await invoke({type:'revoke'});
