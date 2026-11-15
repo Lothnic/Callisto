@@ -52,6 +52,10 @@ Then visit <http://127.0.0.1:8087/>.
 
 The Zen/Firefox section describes extension-owned optional trusted input, stable
 snapshot captures, scoped network/API inspection and explicit failure evidence.
+The background agent-window feature is source-only: user preparation may focus
+it once, then execution starts after returning to another window. The saved
+concurrent-use check covers headful Zen X11 only; do not imply inactive-tab,
+minimized-window or cross-platform support. See `docs/background-work.md`.
 The Chromium installer remains pinned to its existing revision and does not
 install the Zen bridge. Keep source availability, signed distribution and benchmark
 results distinct. The 15 November persistent-profile checks and observation byte measurements
