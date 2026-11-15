@@ -1,0 +1,340 @@
+{
+  "schema": "callisto.host-trace.v1",
+  "engine": "browse",
+  "task": "form",
+  "iteration": 0,
+  "success": true,
+  "outcome": "passed",
+  "answer": "Saved Mango",
+  "expected_answer": "Saved Mango",
+  "state_passed": true,
+  "elapsed_ms": 26283.210884999997,
+  "usage": {
+    "input_tokens": 79416,
+    "cached_input_tokens": 64896,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 419,
+    "reasoning_output_tokens": 15
+  },
+  "tool_calls": 4,
+  "tool_failures": 0,
+  "response_bytes": 498,
+  "forbidden_tool_calls": 0,
+  "host_exit_code": 0,
+  "timed_out": false,
+  "cost_usd": null,
+  "trace_file": "browse-form-0.json",
+  "prompt": "Complete the browser task using ONLY the browser MCP tools. The browser is already on the task page. Inspect what you need and verify the result. Use targeted observations, batches or extraction when useful. Do not access external websites, local files, other agents or non-browser tools. Finish with JSON {\"answer\": ...}. Maximum 35 browser tool calls. Use browse session callisto-matched-1794758195943. The execute tool runs Playwright with page. Open shadow roots are supported by Playwright locators.\nTask: Enter Mango in Fruit and submit the form. Report the resulting heading.",
+  "host": {
+    "code": 0,
+    "signal": null,
+    "error": null,
+    "timed_out": false,
+    "elapsed_ms": 26283.210884999997,
+    "usage": {
+      "input_tokens": 79416,
+      "cached_input_tokens": 64896,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 419,
+      "reasoning_output_tokens": 15
+    },
+    "final": "{\"answer\":\"Saved Mango\"}",
+    "events": [
+      {
+        "type": "thread.started",
+        "thread_id": "01a1dfed-06f8-7833-94d8-77dab97104c5"
+      },
+      {
+        "type": "turn.started"
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_0",
+          "type": "agent_message",
+          "text": "I’ll enter Mango in the Fruit field, submit the form, and check the resulting heading.\n"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_1",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "session": "callisto-matched-1794758195943",
+            "code": "console.log(await snapshot());"
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_1",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "session": "callisto-matched-1794758195943",
+            "code": "console.log(await snapshot());"
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "undefined"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_2",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "session": "callisto-matched-1794758195943",
+            "code": "console.log(await page.locator('body').innerText()); console.log(await page.locator('input').evaluateAll(es=>es.map(e=>({tag:e.tagName,type:e.type,id:e.id,name:e.name,placeholder:e.placeholder,outer:e.outerHTML}))));"
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_2",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "session": "callisto-matched-1794758195943",
+            "code": "console.log(await page.locator('body').innerText()); console.log(await page.locator('input').evaluateAll(es=>es.map(e=>({tag:e.tagName,type:e.type,id:e.id,name:e.name,placeholder:e.placeholder,outer:e.outerHTML}))));"
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "undefined"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_3",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "session": "callisto-matched-1794758195943",
+            "code": "return {url:page.url(), body:await page.locator('body').innerText(), inputs:await page.locator('input').evaluateAll(es=>es.map(e=>({type:e.type,id:e.id,name:e.name,placeholder:e.placeholder}))) };"
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_3",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "session": "callisto-matched-1794758195943",
+            "code": "return {url:page.url(), body:await page.locator('body').innerText(), inputs:await page.locator('input').evaluateAll(es=>es.map(e=>({type:e.type,id:e.id,name:e.name,placeholder:e.placeholder}))) };"
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"url\":\"http://127.0.0.1:43379/form\",\"body\":\"Fruit Save\",\"inputs\":[{\"type\":\"text\",\"id\":\"\",\"name\":\"fruit\",\"placeholder\":\"\"}]}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_4",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "session": "callisto-matched-1794758195943",
+            "code": "await page.locator('input[name=\"fruit\"]').fill('Mango'); await page.getByRole('button',{name:'Save',exact:true}).click(); return {url:page.url(), headings:await page.getByRole('heading').allTextContents(),body:await page.locator('body').innerText()};"
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_4",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "session": "callisto-matched-1794758195943",
+            "code": "await page.locator('input[name=\"fruit\"]').fill('Mango'); await page.getByRole('button',{name:'Save',exact:true}).click(); return {url:page.url(), headings:await page.getByRole('heading').allTextContents(),body:await page.locator('body').innerText()};"
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"url\":\"http://127.0.0.1:43379/saved?fruit=Mango\",\"headings\":[\"Saved Mango\"],\"body\":\"Saved Mango\"}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_5",
+          "type": "agent_message",
+          "text": "{\"answer\":\"Saved Mango\"}"
+        }
+      },
+      {
+        "type": "turn.completed",
+        "usage": {
+          "input_tokens": 79416,
+          "cached_input_tokens": 64896,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 419,
+          "reasoning_output_tokens": 15
+        }
+      }
+    ],
+    "parse_errors": 0,
+    "diagnostic": null,
+    "configuration": {
+      "model": "gpt-6.1-sol",
+      "effort": "high",
+      "sandbox": "read-only",
+      "shell_tool": false,
+      "web_search": "disabled",
+      "user_config_loaded": false,
+      "project_instructions_loaded": false,
+      "skills_catalog_max_tokens": 1,
+      "automatic_skill_instructions": false,
+      "fixture_tool_approval": "explicit approve",
+      "auth": "existing signed-in Codex host",
+      "mcp_transport": "stdio → private Unix socket → native runtime MCP client"
+    }
+  },
+  "tools": [
+    {
+      "sequence": 1,
+      "name": "execute",
+      "arguments": {
+        "session": "callisto-matched-1794758195943",
+        "code": "console.log(await snapshot());"
+      },
+      "started_at": "2026-11-15T15:57:03.283Z",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "undefined"
+          }
+        ],
+        "isError": false
+      },
+      "failed": false,
+      "elapsed_ms": 42.24245900000096,
+      "response_bytes": 64
+    },
+    {
+      "sequence": 2,
+      "name": "execute",
+      "arguments": {
+        "session": "callisto-matched-1794758195943",
+        "code": "console.log(await page.locator('body').innerText()); console.log(await page.locator('input').evaluateAll(es=>es.map(e=>({tag:e.tagName,type:e.type,id:e.id,name:e.name,placeholder:e.placeholder,outer:e.outerHTML}))));"
+      },
+      "started_at": "2026-11-15T15:57:06.988Z",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "undefined"
+          }
+        ],
+        "isError": false
+      },
+      "failed": false,
+      "elapsed_ms": 77.76833199999965,
+      "response_bytes": 64
+    },
+    {
+      "sequence": 3,
+      "name": "execute",
+      "arguments": {
+        "session": "callisto-matched-1794758195943",
+        "code": "return {url:page.url(), body:await page.locator('body').innerText(), inputs:await page.locator('input').evaluateAll(es=>es.map(e=>({type:e.type,id:e.id,name:e.name,placeholder:e.placeholder}))) };"
+      },
+      "started_at": "2026-11-15T15:57:11.711Z",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"url\":\"http://127.0.0.1:43379/form\",\"body\":\"Fruit Save\",\"inputs\":[{\"type\":\"text\",\"id\":\"\",\"name\":\"fruit\",\"placeholder\":\"\"}]}"
+          }
+        ],
+        "isError": false
+      },
+      "failed": false,
+      "elapsed_ms": 37.06536900000356,
+      "response_bytes": 205
+    },
+    {
+      "sequence": 4,
+      "name": "execute",
+      "arguments": {
+        "session": "callisto-matched-1794758195943",
+        "code": "await page.locator('input[name=\"fruit\"]').fill('Mango'); await page.getByRole('button',{name:'Save',exact:true}).click(); return {url:page.url(), headings:await page.getByRole('heading').allTextContents(),body:await page.locator('body').innerText()};"
+      },
+      "started_at": "2026-11-15T15:57:16.055Z",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"url\":\"http://127.0.0.1:43379/saved?fruit=Mango\",\"headings\":[\"Saved Mango\"],\"body\":\"Saved Mango\"}"
+          }
+        ],
+        "isError": false
+      },
+      "failed": false,
+      "elapsed_ms": 940.115426999997,
+      "response_bytes": 165
+    }
+  ]
+}

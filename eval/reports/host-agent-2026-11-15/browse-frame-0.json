@@ -1,0 +1,340 @@
+{
+  "schema": "callisto.host-trace.v1",
+  "engine": "browse",
+  "task": "frame",
+  "iteration": 0,
+  "success": true,
+  "outcome": "passed",
+  "answer": "confirmed",
+  "expected_answer": "confirmed",
+  "state_passed": true,
+  "elapsed_ms": 24758.961677,
+  "usage": {
+    "input_tokens": 79656,
+    "cached_input_tokens": 51584,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 359,
+    "reasoning_output_tokens": 0
+  },
+  "tool_calls": 4,
+  "tool_failures": 0,
+  "response_bytes": 900,
+  "forbidden_tool_calls": 0,
+  "host_exit_code": 0,
+  "timed_out": false,
+  "cost_usd": null,
+  "trace_file": "browse-frame-0.json",
+  "prompt": "Complete the browser task using ONLY the browser MCP tools. The browser is already on the task page. Inspect what you need and verify the result. Use targeted observations, batches or extraction when useful. Do not access external websites, local files, other agents or non-browser tools. Finish with JSON {\"answer\": ...}. Maximum 35 browser tool calls. Use browse session callisto-matched-1794758195943. The execute tool runs Playwright with page. Open shadow roots are supported by Playwright locators.\nTask: Confirm the action inside the embedded frame, including its open shadow root. Report confirmed.",
+  "host": {
+    "code": 0,
+    "signal": null,
+    "error": null,
+    "timed_out": false,
+    "elapsed_ms": 24758.961677,
+    "usage": {
+      "input_tokens": 79656,
+      "cached_input_tokens": 51584,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 359,
+      "reasoning_output_tokens": 0
+    },
+    "final": "{\"answer\":\"confirmed\"}",
+    "events": [
+      {
+        "type": "thread.started",
+        "thread_id": "01a1dfee-7ffa-71e0-8006-7cf5aa982c9d"
+      },
+      {
+        "type": "turn.started"
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_0",
+          "type": "agent_message",
+          "text": "I’ll inspect the embedded frame, confirm the action in its shadow root, and verify the result."
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_1",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "session": "callisto-matched-1794758195943",
+            "code": "console.log(await snapshot()); console.log(page.frames().map(f => ({name:f.name(),url:f.url()})));"
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_1",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "session": "callisto-matched-1794758195943",
+            "code": "console.log(await snapshot()); console.log(page.frames().map(f => ({name:f.name(),url:f.url()})));"
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "undefined"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_2",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "session": "callisto-matched-1794758195943",
+            "code": "return {outline: await snapshot(),frames:page.frames().map(f=>({name:f.name(),url:f.url()}))};"
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_2",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "session": "callisto-matched-1794758195943",
+            "code": "return {outline: await snapshot(),frames:page.frames().map(f=>({name:f.name(),url:f.url()}))};"
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"outline\":\"- heading \\\"Confirmation\\\" [level=1]\\n  - p \\\"Waiting\\\"\",\"frames\":[{\"name\":\"\",\"url\":\"http://127.0.0.1:43379/frame\"},{\"name\":\"\",\"url\":\"http://127.0.0.1:43379/inner\"}]}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_3",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "session": "callisto-matched-1794758195943",
+            "code": "return {frame:await page.frames()[1].locator('body').ariaSnapshot(),elements:await page.frames()[1].locator('body').evaluate(el=>el.innerHTML)};"
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_3",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "session": "callisto-matched-1794758195943",
+            "code": "return {frame:await page.frames()[1].locator('body').ariaSnapshot(),elements:await page.frames()[1].locator('body').evaluate(el=>el.innerHTML)};"
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"frame\":\"- button \\\"Confirm\\\"\",\"elements\":\"<div id=\\\"shadow\\\"></div><script>shadow.attachShadow({mode:'open'}).innerHTML='<button>Confirm</button>';shadow.shadowRoot.querySelector('button').onclick=e=>{parent.document.body.dataset.done=e.isTrusted?'yes':'untrusted';parent.document.querySelector('#result').textContent='confirmed';};</script>\"}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_4",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "session": "callisto-matched-1794758195943",
+            "code": "await page.frames()[1].getByRole('button',{name:'Confirm',exact:true}).click(); return {outline:await snapshot(),done:await page.locator('body').getAttribute('data-done')};"
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_4",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "session": "callisto-matched-1794758195943",
+            "code": "await page.frames()[1].getByRole('button',{name:'Confirm',exact:true}).click(); return {outline:await snapshot(),done:await page.locator('body').getAttribute('data-done')};"
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"outline\":\"- heading \\\"Confirmation\\\" [level=1]\\n  - p \\\"confirmed\\\"\",\"done\":\"yes\"}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_5",
+          "type": "agent_message",
+          "text": "{\"answer\":\"confirmed\"}"
+        }
+      },
+      {
+        "type": "turn.completed",
+        "usage": {
+          "input_tokens": 79656,
+          "cached_input_tokens": 51584,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 359,
+          "reasoning_output_tokens": 0
+        }
+      }
+    ],
+    "parse_errors": 0,
+    "diagnostic": null,
+    "configuration": {
+      "model": "gpt-6.1-sol",
+      "effort": "high",
+      "sandbox": "read-only",
+      "shell_tool": false,
+      "web_search": "disabled",
+      "user_config_loaded": false,
+      "project_instructions_loaded": false,
+      "skills_catalog_max_tokens": 1,
+      "automatic_skill_instructions": false,
+      "fixture_tool_approval": "explicit approve",
+      "auth": "existing signed-in Codex host",
+      "mcp_transport": "stdio → private Unix socket → native runtime MCP client"
+    }
+  },
+  "tools": [
+    {
+      "sequence": 1,
+      "name": "execute",
+      "arguments": {
+        "session": "callisto-matched-1794758195943",
+        "code": "console.log(await snapshot()); console.log(page.frames().map(f => ({name:f.name(),url:f.url()})));"
+      },
+      "started_at": "2026-11-15T15:58:40.000Z",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "undefined"
+          }
+        ],
+        "isError": false
+      },
+      "failed": false,
+      "elapsed_ms": 166.67182600000524,
+      "response_bytes": 64
+    },
+    {
+      "sequence": 2,
+      "name": "execute",
+      "arguments": {
+        "session": "callisto-matched-1794758195943",
+        "code": "return {outline: await snapshot(),frames:page.frames().map(f=>({name:f.name(),url:f.url()}))};"
+      },
+      "started_at": "2026-11-15T15:58:42.571Z",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"outline\":\"- heading \\\"Confirmation\\\" [level=1]\\n  - p \\\"Waiting\\\"\",\"frames\":[{\"name\":\"\",\"url\":\"http://127.0.0.1:43379/frame\"},{\"name\":\"\",\"url\":\"http://127.0.0.1:43379/inner\"}]}"
+          }
+        ],
+        "isError": false
+      },
+      "failed": false,
+      "elapsed_ms": 35.16247400001157,
+      "response_bytes": 264
+    },
+    {
+      "sequence": 3,
+      "name": "execute",
+      "arguments": {
+        "session": "callisto-matched-1794758195943",
+        "code": "return {frame:await page.frames()[1].locator('body').ariaSnapshot(),elements:await page.frames()[1].locator('body').evaluate(el=>el.innerHTML)};"
+      },
+      "started_at": "2026-11-15T15:58:45.537Z",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"frame\":\"- button \\\"Confirm\\\"\",\"elements\":\"<div id=\\\"shadow\\\"></div><script>shadow.attachShadow({mode:'open'}).innerHTML='<button>Confirm</button>';shadow.shadowRoot.querySelector('button').onclick=e=>{parent.document.body.dataset.done=e.isTrusted?'yes':'untrusted';parent.document.querySelector('#result').textContent='confirmed';};</script>\"}"
+          }
+        ],
+        "isError": false
+      },
+      "failed": false,
+      "elapsed_ms": 127.07313199999044,
+      "response_bytes": 416
+    },
+    {
+      "sequence": 4,
+      "name": "execute",
+      "arguments": {
+        "session": "callisto-matched-1794758195943",
+        "code": "await page.frames()[1].getByRole('button',{name:'Confirm',exact:true}).click(); return {outline:await snapshot(),done:await page.locator('body').getAttribute('data-done')};"
+      },
+      "started_at": "2026-11-15T15:58:50.245Z",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"outline\":\"- heading \\\"Confirmation\\\" [level=1]\\n  - p \\\"confirmed\\\"\",\"done\":\"yes\"}"
+          }
+        ],
+        "isError": false
+      },
+      "failed": false,
+      "elapsed_ms": 2724.590989999997,
+      "response_bytes": 156
+    }
+  ]
+}

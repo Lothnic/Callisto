@@ -1,0 +1,340 @@
+{
+  "schema": "callisto.host-trace.v1",
+  "engine": "browse",
+  "task": "frame",
+  "iteration": 0,
+  "success": true,
+  "outcome": "passed",
+  "answer": "confirmed",
+  "expected_answer": "confirmed",
+  "state_passed": true,
+  "elapsed_ms": 22446.07628000001,
+  "usage": {
+    "input_tokens": 79418,
+    "cached_input_tokens": 64768,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 332,
+    "reasoning_output_tokens": 0
+  },
+  "tool_calls": 4,
+  "tool_failures": 0,
+  "response_bytes": 579,
+  "forbidden_tool_calls": 0,
+  "host_exit_code": 0,
+  "timed_out": false,
+  "cost_usd": null,
+  "trace_file": "browse-frame-0.json",
+  "prompt": "Complete the browser task using ONLY the browser MCP tools. The browser is already on the task page. Inspect what you need and verify the result. Use targeted observations, batches or extraction when useful. Do not access external websites, local files, other agents or non-browser tools. Finish with JSON {\"answer\": ...}. Maximum 35 browser tool calls. Use browse session callisto-matched-1794757534409. The execute tool runs Playwright with page. Open shadow roots are supported by Playwright locators.\nTask: Confirm the action inside the embedded frame, including its open shadow root. Report confirmed.",
+  "host": {
+    "code": 0,
+    "signal": null,
+    "error": null,
+    "timed_out": false,
+    "elapsed_ms": 22446.07628000001,
+    "usage": {
+      "input_tokens": 79418,
+      "cached_input_tokens": 64768,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 332,
+      "reasoning_output_tokens": 0
+    },
+    "final": "{\"answer\":\"confirmed\"}",
+    "events": [
+      {
+        "type": "thread.started",
+        "thread_id": "01a1dfe4-9978-7e11-b644-9243a4834d32"
+      },
+      {
+        "type": "turn.started"
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_0",
+          "type": "agent_message",
+          "text": "I’ll inspect the embedded frame, confirm the action, and verify the result."
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_1",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "session": "callisto-matched-1794757534409",
+            "code": "console.log(await snapshot()); console.log(page.frames().map(f=>({name:f.name(),url:f.url()})));"
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_1",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "session": "callisto-matched-1794757534409",
+            "code": "console.log(await snapshot()); console.log(page.frames().map(f=>({name:f.name(),url:f.url()})));"
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "undefined"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_2",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "session": "callisto-matched-1794757534409",
+            "code": "return {outline: await snapshot(), frames: page.frames().map(f=>({name:f.name(),url:f.url()}))};"
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_2",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "session": "callisto-matched-1794757534409",
+            "code": "return {outline: await snapshot(), frames: page.frames().map(f=>({name:f.name(),url:f.url()}))};"
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"outline\":\"- heading \\\"Confirmation\\\" [level=1]\\n  - p \\\"Waiting\\\"\",\"frames\":[{\"name\":\"\",\"url\":\"http://127.0.0.1:35889/frame\"},{\"name\":\"\",\"url\":\"http://127.0.0.1:35889/inner\"}]}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_3",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "session": "callisto-matched-1794757534409",
+            "code": "return await page.frames()[1].locator('body').ariaSnapshot();"
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_3",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "session": "callisto-matched-1794757534409",
+            "code": "return await page.frames()[1].locator('body').ariaSnapshot();"
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "- button \"Confirm\""
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_4",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "session": "callisto-matched-1794757534409",
+            "code": "await page.frames()[1].getByRole('button', {name:'Confirm',exact:true}).click(); return {outer:await snapshot(),inner:await page.frames()[1].locator('body').ariaSnapshot()};"
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_4",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "session": "callisto-matched-1794757534409",
+            "code": "await page.frames()[1].getByRole('button', {name:'Confirm',exact:true}).click(); return {outer:await snapshot(),inner:await page.frames()[1].locator('body').ariaSnapshot()};"
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"outer\":\"- heading \\\"Confirmation\\\" [level=1]\\n  - p \\\"confirmed\\\"\",\"inner\":\"- button \\\"Confirm\\\"\"}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_5",
+          "type": "agent_message",
+          "text": "{\"answer\":\"confirmed\"}"
+        }
+      },
+      {
+        "type": "turn.completed",
+        "usage": {
+          "input_tokens": 79418,
+          "cached_input_tokens": 64768,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 332,
+          "reasoning_output_tokens": 0
+        }
+      }
+    ],
+    "parse_errors": 0,
+    "diagnostic": null,
+    "configuration": {
+      "model": "gpt-6.1-sol",
+      "effort": "high",
+      "sandbox": "read-only",
+      "shell_tool": false,
+      "web_search": "disabled",
+      "user_config_loaded": false,
+      "project_instructions_loaded": false,
+      "skills_catalog_max_tokens": 1,
+      "automatic_skill_instructions": false,
+      "fixture_tool_approval": "explicit approve",
+      "auth": "existing signed-in Codex host",
+      "mcp_transport": "stdio → private Unix socket → native runtime MCP client"
+    }
+  },
+  "tools": [
+    {
+      "sequence": 1,
+      "name": "execute",
+      "arguments": {
+        "session": "callisto-matched-1794757534409",
+        "code": "console.log(await snapshot()); console.log(page.frames().map(f=>({name:f.name(),url:f.url()})));"
+      },
+      "started_at": "2026-11-15T15:47:51.117Z",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "undefined"
+          }
+        ],
+        "isError": false
+      },
+      "failed": false,
+      "elapsed_ms": 178.12711800000397,
+      "response_bytes": 64
+    },
+    {
+      "sequence": 2,
+      "name": "execute",
+      "arguments": {
+        "session": "callisto-matched-1794757534409",
+        "code": "return {outline: await snapshot(), frames: page.frames().map(f=>({name:f.name(),url:f.url()}))};"
+      },
+      "started_at": "2026-11-15T15:47:54.722Z",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"outline\":\"- heading \\\"Confirmation\\\" [level=1]\\n  - p \\\"Waiting\\\"\",\"frames\":[{\"name\":\"\",\"url\":\"http://127.0.0.1:35889/frame\"},{\"name\":\"\",\"url\":\"http://127.0.0.1:35889/inner\"}]}"
+          }
+        ],
+        "isError": false
+      },
+      "failed": false,
+      "elapsed_ms": 35.85461700000451,
+      "response_bytes": 264
+    },
+    {
+      "sequence": 3,
+      "name": "execute",
+      "arguments": {
+        "session": "callisto-matched-1794757534409",
+        "code": "return await page.frames()[1].locator('body').ariaSnapshot();"
+      },
+      "started_at": "2026-11-15T15:47:57.860Z",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "- button \"Confirm\""
+          }
+        ],
+        "isError": false
+      },
+      "failed": false,
+      "elapsed_ms": 181.77750500000548,
+      "response_bytes": 75
+    },
+    {
+      "sequence": 4,
+      "name": "execute",
+      "arguments": {
+        "session": "callisto-matched-1794757534409",
+        "code": "await page.frames()[1].getByRole('button', {name:'Confirm',exact:true}).click(); return {outer:await snapshot(),inner:await page.frames()[1].locator('body').ariaSnapshot()};"
+      },
+      "started_at": "2026-11-15T15:48:01.447Z",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"outer\":\"- heading \\\"Confirmation\\\" [level=1]\\n  - p \\\"confirmed\\\"\",\"inner\":\"- button \\\"Confirm\\\"\"}"
+          }
+        ],
+        "isError": false
+      },
+      "failed": false,
+      "elapsed_ms": 722.8923579999828,
+      "response_bytes": 176
+    }
+  ]
+}

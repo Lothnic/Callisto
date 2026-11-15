@@ -1,0 +1,294 @@
+{
+  "schema": "callisto.host-trace.v1",
+  "engine": "zen",
+  "task": "form",
+  "iteration": 0,
+  "success": true,
+  "outcome": "passed",
+  "answer": "Saved Mango",
+  "expected_answer": "Saved Mango",
+  "state_passed": true,
+  "elapsed_ms": 18810.433591,
+  "usage": {
+    "input_tokens": 60922,
+    "cached_input_tokens": 47744,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 186,
+    "reasoning_output_tokens": 0
+  },
+  "tool_calls": 3,
+  "tool_failures": 0,
+  "response_bytes": 1289,
+  "forbidden_tool_calls": 0,
+  "host_exit_code": 0,
+  "timed_out": false,
+  "cost_usd": null,
+  "trace_file": "zen-form-0.json",
+  "prompt": "Complete the browser task using ONLY the browser MCP tools. The browser is already on the task page. Inspect what you need and verify the result. Use targeted observations, batches or extraction when useful. Do not access external websites, local files, other agents or non-browser tools. Finish with JSON {\"answer\": ...}. Maximum 35 browser tool calls. Input is trusted BiDi in the shared Zen tab. Select frames explicitly. Tool results expose snapshot text, stable refs and structured rows. Navigation starts a page load; read a snapshot when needed.\nTask: Enter Mango in Fruit and submit the form. Report the resulting heading.",
+  "host": {
+    "code": 0,
+    "signal": null,
+    "error": null,
+    "timed_out": false,
+    "elapsed_ms": 18810.433591,
+    "usage": {
+      "input_tokens": 60922,
+      "cached_input_tokens": 47744,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 186,
+      "reasoning_output_tokens": 0
+    },
+    "final": "{\"answer\":\"Saved Mango\"}",
+    "events": [
+      {
+        "type": "thread.started",
+        "thread_id": "01a1dfec-bc5f-7b12-9e73-8a67822c2967"
+      },
+      {
+        "type": "turn.started"
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_0",
+          "type": "agent_message",
+          "text": "I’ll inspect the form, enter Mango, and verify the heading after submission."
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_1",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto_frames",
+          "arguments": {},
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_1",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto_frames",
+          "arguments": {},
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"frames\":[{\"frameId\":0,\"parentFrameId\":-1,\"tabId\":2,\"url\":\"http://127.0.0.1:43379/form\"}],\"selectedFrame\":0}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_2",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto_frame",
+          "arguments": {
+            "frame_id": 0
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_2",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto_frame",
+          "arguments": {
+            "frame_id": 0
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"frameId\":0,\"snapshot\":{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"next_offset\":null,\"offset\":0,\"order_changed\":false,\"revision\":\"ax-12870174090364233231:2\",\"text\":\"[ax-915568084654096427] textbox \\\"Fruit\\\"\\n[ax-9497404306291913401] button \\\"Save\\\"\",\"title\":\"Matched local fixture\",\"truncated\":false,\"url\":\"http://127.0.0.1:43379/form\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\"]}}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_3",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto_run",
+          "arguments": {
+            "steps": [
+              {
+                "action": "fill_ref",
+                "ref": "ax-915568084654096427",
+                "value": "Mango"
+              },
+              {
+                "action": "submit_ref",
+                "ref": "ax-9497404306291913401"
+              }
+            ],
+            "snapshot": true
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_3",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto_run",
+          "arguments": {
+            "steps": [
+              {
+                "action": "fill_ref",
+                "ref": "ax-915568084654096427",
+                "value": "Mango"
+              },
+              {
+                "action": "submit_ref",
+                "ref": "ax-9497404306291913401"
+              }
+            ],
+            "snapshot": true
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"completed\":2,\"elapsed_ms\":194,\"snapshot\":{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"navigationStarted\":true,\"next_offset\":null,\"offset\":0,\"order_changed\":false,\"revision\":\"ax-14549897443658771665:1\",\"text\":\"heading \\\"Saved Mango\\\"\",\"title\":\"Matched local fixture\",\"truncated\":false,\"url\":\"http://127.0.0.1:43379/saved?fruit=Mango\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\"]},\"trusted\":true}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_4",
+          "type": "agent_message",
+          "text": "{\"answer\":\"Saved Mango\"}"
+        }
+      },
+      {
+        "type": "turn.completed",
+        "usage": {
+          "input_tokens": 60922,
+          "cached_input_tokens": 47744,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 186,
+          "reasoning_output_tokens": 0
+        }
+      }
+    ],
+    "parse_errors": 0,
+    "diagnostic": null,
+    "configuration": {
+      "model": "gpt-6.1-sol",
+      "effort": "high",
+      "sandbox": "read-only",
+      "shell_tool": false,
+      "web_search": "disabled",
+      "user_config_loaded": false,
+      "project_instructions_loaded": false,
+      "skills_catalog_max_tokens": 1,
+      "automatic_skill_instructions": false,
+      "fixture_tool_approval": "explicit approve",
+      "auth": "existing signed-in Codex host",
+      "mcp_transport": "stdio → private Unix socket → native runtime MCP client"
+    }
+  },
+  "tools": [
+    {
+      "sequence": 1,
+      "name": "callisto_frames",
+      "arguments": {},
+      "started_at": "2026-11-15T15:56:44.856Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"frames\":[{\"frameId\":0,\"parentFrameId\":-1,\"tabId\":2,\"url\":\"http://127.0.0.1:43379/form\"}],\"selectedFrame\":0}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 3.8071039999995264,
+      "response_bytes": 162
+    },
+    {
+      "sequence": 2,
+      "name": "callisto_frame",
+      "arguments": {
+        "frame_id": 0
+      },
+      "started_at": "2026-11-15T15:56:46.956Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"frameId\":0,\"snapshot\":{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"next_offset\":null,\"offset\":0,\"order_changed\":false,\"revision\":\"ax-12870174090364233231:2\",\"text\":\"[ax-915568084654096427] textbox \\\"Fruit\\\"\\n[ax-9497404306291913401] button \\\"Save\\\"\",\"title\":\"Matched local fixture\",\"truncated\":false,\"url\":\"http://127.0.0.1:43379/form\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\"]}}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 9.319048000001203,
+      "response_bytes": 557
+    },
+    {
+      "sequence": 3,
+      "name": "callisto_run",
+      "arguments": {
+        "steps": [
+          {
+            "action": "fill_ref",
+            "ref": "ax-915568084654096427",
+            "value": "Mango"
+          },
+          {
+            "action": "submit_ref",
+            "ref": "ax-9497404306291913401"
+          }
+        ],
+        "snapshot": true
+      },
+      "started_at": "2026-11-15T15:56:50.801Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"completed\":2,\"elapsed_ms\":194,\"snapshot\":{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"navigationStarted\":true,\"next_offset\":null,\"offset\":0,\"order_changed\":false,\"revision\":\"ax-14549897443658771665:1\",\"text\":\"heading \\\"Saved Mango\\\"\",\"title\":\"Matched local fixture\",\"truncated\":false,\"url\":\"http://127.0.0.1:43379/saved?fruit=Mango\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\"]},\"trusted\":true}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 227.69937199999913,
+      "response_bytes": 570
+    }
+  ]
+}
