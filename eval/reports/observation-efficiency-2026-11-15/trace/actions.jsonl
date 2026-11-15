@@ -1,0 +1,10 @@
+{"arguments":{},"event":"start","schema":"callisto.action-log.v1","sequence":1,"time_ms":1794735526981,"tool":"callisto_snapshot"}
+{"elapsed_ms":50,"event":"end","measurement":{"elapsed_ms":50,"failed":false,"observation_chars":11992,"request_bytes":2,"response_bytes":13715,"snapshot_diff":false,"snapshot_truncated":true},"sequence":1,"success":true,"time_ms":1794735527033}
+{"arguments":{"max_chars":1000,"query":"[REDACTED]"},"event":"start","schema":"callisto.action-log.v1","sequence":2,"time_ms":1794735527044,"tool":"callisto_snapshot"}
+{"elapsed_ms":35,"event":"end","measurement":{"elapsed_ms":35,"failed":false,"observation_chars":32,"request_bytes":34,"response_bytes":391,"snapshot_diff":false,"snapshot_truncated":false},"sequence":2,"success":true,"time_ms":1794735527080}
+{"arguments":{"max_chars":30000},"event":"start","schema":"callisto.action-log.v1","sequence":3,"time_ms":1794735527085,"tool":"callisto_snapshot"}
+{"elapsed_ms":30,"event":"end","measurement":{"elapsed_ms":30,"failed":false,"observation_chars":27885,"request_bytes":19,"response_bytes":31242,"snapshot_diff":false,"snapshot_truncated":false},"sequence":3,"success":true,"time_ms":1794735527118}
+{"arguments":{"diff":true,"max_chars":1000},"event":"start","schema":"callisto.action-log.v1","sequence":4,"time_ms":1794735527150,"tool":"callisto_snapshot"}
+{"elapsed_ms":36,"event":"end","measurement":{"elapsed_ms":36,"failed":false,"observation_chars":68,"request_bytes":30,"response_bytes":453,"snapshot_diff":true,"snapshot_truncated":false},"sequence":4,"success":true,"time_ms":1794735527187}
+{"arguments":{"max_chars":30000},"event":"start","schema":"callisto.action-log.v1","sequence":5,"time_ms":1794735527193,"tool":"callisto_snapshot"}
+{"elapsed_ms":39,"event":"end","measurement":{"elapsed_ms":39,"failed":false,"observation_chars":27884,"request_bytes":19,"response_bytes":31240,"snapshot_diff":false,"snapshot_truncated":false},"sequence":5,"success":true,"time_ms":1794735527235}

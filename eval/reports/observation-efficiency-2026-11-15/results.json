@@ -1,0 +1,98 @@
+{
+  "schema": "callisto.observation-report.v1",
+  "created_at": "2026-11-15T09:38:47.263Z",
+  "source_revision": "80093a75410bf76559cc02747a6f674ab7e90f16",
+  "working_tree_dirty": true,
+  "browser": "1.14.9b",
+  "fixture_rows": 600,
+  "model_calls": 0,
+  "measured_model_tokens": null,
+  "scope": "Synthetic catalog observations only. Different queries can omit content. Timing is runtime work, not agent latency; byte reductions are not model-token or billed-cost measurements. No browse comparison.",
+  "rows": [
+    {
+      "name": "default_bounded",
+      "arguments": {},
+      "elapsed_ms": 62.90378800000053,
+      "response_bytes": 13715,
+      "observation_chars": 11992,
+      "task_relevant_content_present": false,
+      "truncated": true,
+      "capture_truncated": false,
+      "revision": "ax-16349291732574990888:1"
+    },
+    {
+      "name": "targeted_query",
+      "arguments": {
+        "query": "Aster",
+        "max_chars": 1000
+      },
+      "elapsed_ms": 41.851582999999664,
+      "response_bytes": 391,
+      "observation_chars": 32,
+      "task_relevant_content_present": true,
+      "truncated": false,
+      "capture_truncated": false,
+      "revision": "ax-16349291732574990888:2"
+    },
+    {
+      "name": "full_before",
+      "arguments": {
+        "max_chars": 30000
+      },
+      "elapsed_ms": 48.09003800000028,
+      "response_bytes": 31242,
+      "observation_chars": 27885,
+      "task_relevant_content_present": true,
+      "truncated": false,
+      "capture_truncated": false,
+      "revision": "ax-16349291732574990888:3"
+    },
+    {
+      "name": "change_diff",
+      "arguments": {
+        "max_chars": 1000,
+        "diff": true
+      },
+      "elapsed_ms": 42.86463999999978,
+      "response_bytes": 453,
+      "observation_chars": 68,
+      "task_relevant_content_present": true,
+      "truncated": false,
+      "capture_truncated": false,
+      "revision": "ax-16349291732574990888:4"
+    },
+    {
+      "name": "full_after",
+      "arguments": {
+        "max_chars": 30000
+      },
+      "elapsed_ms": 58.314440000000104,
+      "response_bytes": 31240,
+      "observation_chars": 27884,
+      "task_relevant_content_present": true,
+      "truncated": false,
+      "capture_truncated": false,
+      "revision": "ax-16349291732574990888:5"
+    }
+  ],
+  "trace_measurements": {
+    "by_tool": {
+      "callisto_snapshot": {
+        "calls": 5,
+        "elapsed_ms": 190,
+        "failures": 0,
+        "observation_chars": 67861,
+        "request_bytes": 104,
+        "response_bytes": 77041
+      }
+    },
+    "total": {
+      "calls": 5,
+      "elapsed_ms": 190,
+      "failures": 0,
+      "observation_chars": 67861,
+      "request_bytes": 104,
+      "response_bytes": 77041
+    }
+  }
+}

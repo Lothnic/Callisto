@@ -1,0 +1,51 @@
+{
+  "action_log": {
+    "format": "callisto-redacted-jsonl-v1",
+    "path": "actions.jsonl"
+  },
+  "actions": 5,
+  "capture_errors": 0,
+  "checkpoints": 0,
+  "compatibility": {
+    "benchmark_native_evaluation_executed": false,
+    "playwright_trace_viewer": false
+  },
+  "complete": true,
+  "ended_ms": 1794735527257,
+  "failed_actions": 0,
+  "files": [],
+  "interrupted_actions": 0,
+  "measurements": {
+    "by_tool": {
+      "callisto_snapshot": {
+        "calls": 5,
+        "elapsed_ms": 190,
+        "failures": 0,
+        "observation_chars": 67861,
+        "request_bytes": 104,
+        "response_bytes": 77041
+      }
+    },
+    "total": {
+      "calls": 5,
+      "elapsed_ms": 190,
+      "failures": 0,
+      "observation_chars": 67861,
+      "request_bytes": 104,
+      "response_bytes": 77041
+    }
+  },
+  "pending_actions": 0,
+  "redaction": {
+    "network": "see HAR capture metadata",
+    "screenshots_and_snapshots": "private page content; not guaranteed redacted",
+    "tool_arguments": "credential fields and fill values removed"
+  },
+  "requested_evidence": {
+    "screenshots": false,
+    "snapshots": false
+  },
+  "schema": "callisto.browser-evidence.v1",
+  "started_ms": 1794735526878,
+  "task_success": null
+}

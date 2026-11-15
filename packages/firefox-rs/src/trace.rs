@@ -96,6 +96,7 @@ fn redact(value: &Value, field: &str, depth: usize) -> Value {
 }
 
 pub struct Recorder {
+    pub metrics: crate::measurement::Metrics,
     directory: PathBuf,
     log: File,
     sequence: u64,
@@ -139,6 +140,7 @@ impl Recorder {
             .mode(0o600)
             .open(directory.join("actions.jsonl"))?;
         let recorder = Self {
+            metrics: Default::default(),
             directory,
             log,
             sequence: 0,
@@ -156,7 +158,7 @@ impl Recorder {
         Ok(recorder)
     }
     pub fn status(&self) -> Value {
-        json!({"active":true,"directory":self.directory,"actions":self.sequence,"checkpoints":self.checkpoints,"screenshots":self.screenshots,"snapshots":self.snapshots,"capture_errors":self.capture_errors})
+        json!({"active":true,"directory":self.directory,"actions":self.sequence,"checkpoints":self.checkpoints,"screenshots":self.screenshots,"snapshots":self.snapshots,"capture_errors":self.capture_errors,"measurements":self.metrics,"measurement_units":{"sizes":"Serialized argument/value UTF-8 bytes; excludes MCP framing","observations":"Unicode scalar values","elapsed":"runtime milliseconds; excludes model and checkpoint capture","model_tokens":"not measured by the runtime"}})
     }
     pub fn capture_failed(&mut self) {
         self.capture_errors += 1;
@@ -177,7 +179,17 @@ impl Recorder {
         self.manifest(false)?;
         Ok(self.sequence)
     }
+    #[cfg(test)]
     pub fn finish(&mut self, sequence: u64, success: bool, elapsed: u128) -> Result<()> {
+        self.finish_measured(sequence, success, elapsed, None)
+    }
+    pub fn finish_measured(
+        &mut self,
+        sequence: u64,
+        success: bool,
+        elapsed: u128,
+        measurement: Option<Value>,
+    ) -> Result<()> {
         if self.pending.remove(&sequence).is_none() {
             bail!("Action already ended or never started");
         }
@@ -187,7 +199,7 @@ impl Recorder {
         writeln!(
             self.log,
             "{}",
-            json!({"event":"end","sequence":sequence,"time_ms":now_ms(),"success":success,"elapsed_ms":elapsed})
+            json!({"event":"end","sequence":sequence,"time_ms":now_ms(),"success":success,"elapsed_ms":elapsed,"measurement":measurement})
         )?;
         self.log.flush()?;
         self.manifest(false)?;
@@ -248,7 +260,7 @@ impl Recorder {
         Ok(())
     }
     fn manifest(&self, complete: bool) -> Result<()> {
-        let value = json!({"schema":"callisto.browser-evidence.v1","started_ms":self.started,"ended_ms":if complete{Some(now_ms())}else{None},"complete":complete && self.pending.is_empty() && self.capture_errors==0,"pending_actions":self.pending.len(),"failed_actions":self.failed_actions,"interrupted_actions":self.interrupted_actions,"task_success":null,"requested_evidence":{"screenshots":self.screenshots,"snapshots":self.snapshots},"capture_errors":self.capture_errors,"actions":self.sequence,"checkpoints":self.checkpoints,"files":self.files,"action_log":{"path":"actions.jsonl","format":"callisto-redacted-jsonl-v1"},"redaction":{"tool_arguments":"credential fields and fill values removed","screenshots_and_snapshots":"private page content; not guaranteed redacted","network":"see HAR capture metadata"},"compatibility":{"playwright_trace_viewer":false,"benchmark_native_evaluation_executed":false}});
+        let value = json!({"schema":"callisto.browser-evidence.v1","started_ms":self.started,"ended_ms":if complete{Some(now_ms())}else{None},"complete":complete && self.pending.is_empty() && self.capture_errors==0,"pending_actions":self.pending.len(),"failed_actions":self.failed_actions,"measurements":self.metrics,"interrupted_actions":self.interrupted_actions,"task_success":null,"requested_evidence":{"screenshots":self.screenshots,"snapshots":self.snapshots},"capture_errors":self.capture_errors,"actions":self.sequence,"checkpoints":self.checkpoints,"files":self.files,"action_log":{"path":"actions.jsonl","format":"callisto-redacted-jsonl-v1"},"redaction":{"tool_arguments":"credential fields and fill values removed","screenshots_and_snapshots":"private page content; not guaranteed redacted","network":"see HAR capture metadata"},"compatibility":{"playwright_trace_viewer":false,"benchmark_native_evaluation_executed":false}});
         // Only overwrite the manifest created by this recorder, atomically.
         let temporary = self.directory.join("manifest.next.json");
         write_new(&temporary, &serde_json::to_vec_pretty(&value)?)?;

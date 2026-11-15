@@ -3,6 +3,7 @@
 #![recursion_limit = "512"]
 mod bidi;
 mod keys;
+mod measurement;
 mod session_recovery;
 mod tab_relay;
 mod trace;
@@ -288,7 +289,16 @@ async fn call_tool(bridge: &Bridge, session_id: u64, name: &str, args: &Value) -
     let result = call_tool_inner(bridge, session_id, name, args).await;
     if let Some(sequence) = sequence {
         if let Some(recorder) = bridge.traces.lock().await.get_mut(&session_id) {
-            recorder.finish(sequence, result.is_ok(), started.elapsed().as_millis())?;
+            let elapsed = started.elapsed().as_millis();
+            let measured = recorder
+                .metrics
+                .record(name, args, result.as_ref().ok(), elapsed);
+            recorder.finish_measured(
+                sequence,
+                result.is_ok(),
+                elapsed,
+                Some(serde_json::to_value(measured)?),
+            )?;
         }
         if [
             "callisto_navigate",
