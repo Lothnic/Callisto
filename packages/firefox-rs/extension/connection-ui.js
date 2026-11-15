@@ -22,7 +22,8 @@
    const title=document.createElement('h2');title.textContent=tasks.length===1?'Background task':`Background task ${index+1}`;row.append(title);
    const status=document.createElement('p');status.className='hint';status.textContent=task.reason==='starting'?'Preparing agent window…':task.paused?(task.reason==='ready'?'Ready. Return to your other window to start automatically.':task.reason==='viewing'?'Paused for viewing. Resume from your other window.':task.reason==='needs_attention'?'Paused. Check the agent window, then resume from your other window.':'Paused. Its tab remains reserved.'):'Agent control is active without raising its window. Keep it unminimized.';row.append(status);
    const actions=document.createElement('div');actions.className='actions';
-   for(const [action,label] of [['view','View'],[task.paused?'resume':'pause',task.paused?'Resume':'Pause'],['take-back','Take back']]){
+   const resume=task.paused&&task.reason!=='ready';
+   for(const [action,label] of [['view','View'],[resume?'resume':'pause',resume?'Resume':'Pause'],['take-back','Take back']]){
     const button=document.createElement('button');button.textContent=label;button.dataset.taskControl=task.tab_id+':'+action;
     button.disabled=task.reason==='starting';if(action==='take-back')button.className='danger';
     button.addEventListener('click',()=>{const work=()=>browser.runtime.sendMessage({type:'background-control',tab_id:task.tab_id,action});if(action==='resume')void perform(work);else void (async()=>{try{const result=await work();notice(result.message,result.message?.startsWith('Error:'));}catch(error){notice(error.message,true);}await refresh();})();});

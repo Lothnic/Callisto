@@ -19,7 +19,7 @@ try{
  await page.locator('#background-start').click();assert.match(await page.locator('#notice').textContent(),/not granted/);assert.equal(await page.evaluate(()=>messages.includes('background-share')),false);
  await page.evaluate(()=>{browser.permissions.request=async permission=>{grants.push(permission);return permission.permissions?.length===1&&permission.permissions[0]==='tabs';};});
  await page.locator('#background-start').click();await page.getByRole('heading',{name:'Background task',exact:true}).waitFor();
- await page.evaluate(()=>{state.background_tasks[0].paused=true;state.background_tasks[0].reason='ready';window.dispatchEvent(new Event('focus'));});await page.getByText('Ready. Return to your other window to start automatically.',{exact:true}).waitFor();
+ await page.evaluate(()=>{state.background_tasks[0].paused=true;state.background_tasks[0].reason='ready';window.dispatchEvent(new Event('focus'));});await page.getByText('Ready. Return to your other window to start automatically.',{exact:true}).waitFor();assert.equal(await page.getByRole('button',{name:'Pause',exact:true}).isEnabled(),true);
  await page.evaluate(()=>{state.background_tasks[0].paused=false;state.background_tasks[0].reason=null;window.dispatchEvent(new Event('focus'));});await page.getByRole('button',{name:'Pause',exact:true}).waitFor();
  await page.getByRole('button',{name:'Pause',exact:true}).click();await page.getByRole('button',{name:'Resume',exact:true}).waitFor();assert.equal(await page.locator('#stop').isEnabled(),true);
  await page.getByRole('button',{name:'Resume',exact:true}).click();await page.getByRole('button',{name:'Pause',exact:true}).waitFor();
