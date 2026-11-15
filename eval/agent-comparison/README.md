@@ -1,4 +1,23 @@
-# Local model-driven engine comparison
+# Host-agent evaluation
+
+Callisto supplies browser tools over MCP; the host agent supplies the model and
+conversation loop. The primary matched pilot now uses the installed, signed-in
+Codex host through `host-agent.mjs`, rather than a separate model API account.
+See [the host evaluation guide](../../docs/host-agent-evaluation.md) for setup,
+reproduction, measurement boundaries and limits.
+
+```sh
+BENCH_OUTPUT_DIR=/tmp/new-callisto-host-run xvfb-run -a node eval/agent-comparison/host-agent.mjs
+```
+
+The host selects observations and actions through unchanged native MCP tools.
+The harness owns disposable profiles and verifies task state. No `.env` or model
+API key is needed for this runner. Claude Code and other MCP hosts can use the
+same Callisto launcher; the automated adapter in this pilot currently runs Codex.
+
+## Earlier API-driven experiments
+
+### Local model-driven engine comparison
 
 The runner uses the same model, prompt, observations and action schema for Mini, Playwright and optionally browse on three resettable local fixtures. It records actions, success, elapsed time and token usage. It is a small exploratory test, not a live-site, security or representative production benchmark. The shared, scripted DOM observation bypasses each product's native snapshot format. It does not persist or print the API key. The prompt and fixture contain no personal data.
 
@@ -13,7 +32,7 @@ The `playwright-core` dev dependency is resolved from `packages/mini/node_module
 
 Set `BENCH_ENGINES=mini,playwright,browse` to include browse. It needs a paired and connected extension and runs in a temporary, origin-limited session, which is deleted at the end. Browse runs in the user's browser, not the same isolated browser binary, and CLI startup is included in timing.
 
-## Persistent Zen sessions and a matched native-tool pilot
+### Persistent Zen sessions and the optional API pilot
 
 - `session-recovery.mjs`: dedicated persistent Zen/Firefox profiles, explicit
   crash/restart tests, saved pairing and fail-closed input intent. Set
