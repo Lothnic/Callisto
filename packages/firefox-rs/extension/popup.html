@@ -4,7 +4,9 @@
 <header><h1>Callisto</h1><button id="settings" class="plain">Connection settings</button></header>
 <section id="connection" aria-labelledby="connection-title"><h2 id="connection-title">Checking connection…</h2><p id="connection-copy">Checking the local runtime and shared tabs.</p>
 <div class="actions"><button id="share" class="primary" disabled>Share this tab</button><button id="stop" class="danger" disabled>Stop sharing</button></div>
+<button id="background-start" class="background-start" disabled>Prepare background work</button><p class="hint">Moves this tab to an agent window, keeping its login and form state. Setup may bring it forward once. Return to your other window to start. Keep the agent window unminimized.</p>
 <p class="session-note">The agent can read and change shared pages. Stop sharing releases every agent tab; an action already sent may finish.</p></section>
+<section id="background-tasks" aria-label="Background tasks" hidden></section>
 <form id="pair-form"><label for="code">Pairing code</label><input id="code" autocomplete="off" spellcheck="false" maxlength="90" aria-describedby="code-hint" required><p class="hint" id="code-hint">Ask your agent for the Callisto pairing code. Paste it here; keep it out of screenshots and reports.</p><button id="pair" type="submit" class="primary">Connect runtime</button></form>
 <p id="notice" role="status" aria-live="polite"></p>
 <details id="optional"><summary>Optional access</summary><p class="hint">Sharing a page does not grant these permissions. Enable only what your task needs.</p>

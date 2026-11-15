@@ -6,8 +6,8 @@ const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||'
 try{
  const page=await browser.newPage({viewport:{width:380,height:800}});
  await page.addInitScript(()=>{
-  window.state={connected:false,paired:false,shared_tabs:0,permissions:{}};window.messages=[];window.grants=[];
-  window.browser={runtime:{sendMessage:async message=>{messages.push(message.type);if(message.type==='ui-status')return structuredClone(state);if(message.type==='pair'){state.connected=true;state.paired=true;return {message:'Connected.'};}if(message.type==='share'){state.shared_tabs=1;return {message:'This tab is shared.'};}if(message.type==='stop'){state.shared_tabs=0;return {message:'Sharing stopped.'};}if(message.type==='forget'){state.paired=false;state.connected=false;state.reconnecting=false;return {message:'Pairing forgotten.'};}return {message:'Done.'};},openOptionsPage:async()=>{}},permissions:{request:async permission=>{grants.push(permission);return false;}}};
+  window.state={connected:false,paired:false,shared_tabs:0,background_tasks:[],permissions:{}};window.messages=[];window.grants=[];
+  window.browser={runtime:{sendMessage:async message=>{messages.push(message.type);if(message.type==='ui-status')return structuredClone(state);if(message.type==='pair'){state.connected=true;state.paired=true;return {message:'Connected.'};}if(message.type==='share'){state.shared_tabs=1;return {message:'This tab is shared.'};}if(message.type==='background-share'){state.shared_tabs=1;state.background_tasks=[{tab_id:42,window_id:9,paused:false,reason:null}];return {message:'Background work started.'};}if(message.type==='background-control'){const t=state.background_tasks[0];if(message.action==='take-back'){state.background_tasks=[];state.shared_tabs=0;}else{t.paused=message.action!=='resume';t.reason=message.action==='view'?'viewing':t.paused?'paused':null;state.shared_tabs=t.paused?0:1;}return {message:'Updated task.'};}if(message.type==='stop'){state.shared_tabs=0;state.background_tasks=[];return {message:'Sharing stopped.'};}if(message.type==='forget'){state.paired=false;state.connected=false;state.reconnecting=false;return {message:'Pairing forgotten.'};}return {message:'Done.'};},openOptionsPage:async()=>{}},permissions:{request:async permission=>{grants.push(permission);return false;}}};
  });
  await page.goto(pathToFileURL(resolve('packages/firefox-rs/extension/popup.html')).href);
  await page.getByRole('heading',{name:'Runtime not connected'}).waitFor();assert.equal(await page.locator('#share').isDisabled(),true);assert.deepEqual(await page.evaluate(()=>grants),[]);
@@ -16,7 +16,17 @@ try{
  await page.locator('#share').click();await page.getByRole('heading',{name:'One tab shared'}).waitFor();assert.equal(await page.locator('#stop').isEnabled(),true);
  await page.screenshot({path:'/tmp/callisto-popup-shared.png',fullPage:true});
  await page.locator('#stop').click();await page.getByRole('heading',{name:'Connected · no tab shared'}).waitFor();
- await page.locator('#optional > summary').click();await page.locator('#network').click();assert.equal((await page.evaluate(()=>grants)).length,1);assert.match(await page.locator('#notice').textContent(),/not granted/);
+ await page.locator('#background-start').click();assert.match(await page.locator('#notice').textContent(),/not granted/);assert.equal(await page.evaluate(()=>messages.includes('background-share')),false);
+ await page.evaluate(()=>{browser.permissions.request=async permission=>{grants.push(permission);return permission.permissions?.length===1&&permission.permissions[0]==='tabs';};});
+ await page.locator('#background-start').click();await page.getByRole('heading',{name:'Background task',exact:true}).waitFor();
+ await page.evaluate(()=>{state.background_tasks[0].paused=true;state.background_tasks[0].reason='ready';window.dispatchEvent(new Event('focus'));});await page.getByText('Ready. Return to your other window to start automatically.',{exact:true}).waitFor();
+ await page.evaluate(()=>{state.background_tasks[0].paused=false;state.background_tasks[0].reason=null;window.dispatchEvent(new Event('focus'));});await page.getByRole('button',{name:'Pause',exact:true}).waitFor();
+ await page.getByRole('button',{name:'Pause',exact:true}).click();await page.getByRole('button',{name:'Resume',exact:true}).waitFor();assert.equal(await page.locator('#stop').isEnabled(),true);
+ await page.getByRole('button',{name:'Resume',exact:true}).click();await page.getByRole('button',{name:'Pause',exact:true}).waitFor();
+ await page.getByRole('button',{name:'View',exact:true}).click();await page.getByText('Paused for viewing. Resume from your other window.',{exact:true}).waitFor();
+ await page.screenshot({path:'/tmp/callisto-popup-background.png',fullPage:true});
+ await page.getByRole('button',{name:'Take back',exact:true}).click();assert.equal(await page.locator('#background-tasks').isHidden(),true);
+ await page.locator('#optional > summary').click();await page.locator('#network').click();assert.equal((await page.evaluate(()=>grants)).length,3);assert.match(await page.locator('#notice').textContent(),/not granted/);
  await page.evaluate(()=>{state.connected=false;state.reconnecting=true;window.dispatchEvent(new Event('focus'));});await page.getByRole('heading',{name:'Reconnecting to runtime'}).waitFor();
  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
  await page.screenshot({path:'/tmp/callisto-popup-recovery.png',fullPage:true});
