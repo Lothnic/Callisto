@@ -120,10 +120,13 @@ server does not supply an approval or security boundary.
 Disposable Firefox and headful Zen fixture workflows cover extension-owned native
 input, forms, frames, API replay, tab ownership, cancellation and relay restart.
 Captured Zen HAR passes the pinned Verified parser and explicit field/screenshot
-coverage checks. These are implementation checks; no new benchmark judge or
-controlled browse time/cost comparison has run. Persistent test-profile restart/crash recovery now has dedicated evidence, and
-Linux alpha archives have install/diagnostic checks. The matched Hy3 pilot is
-blocked by provider credit; signed extension distribution and production-profile
+coverage checks. Persistent test-profile restart/crash recovery has dedicated
+evidence, and Linux alpha archives have install/diagnostic checks. A
+[signed-in Codex-host pilot](docs/host-agent-evaluation.md) now drives both native
+MCP interfaces and records actual host usage and visible tool traces. The earlier
+Hy3 API preflight was credit-blocked; it is optional and does not affect normal
+host-agent use. Small local fixtures do not establish broad browse parity or
+billed-cost savings. Signed extension distribution and production-profile
 recovery certification remain open.
 
 Read the [runtime roadmap](roadmap.md), [benchmark index](BENCHMARKS.md), and

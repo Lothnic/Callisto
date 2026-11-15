@@ -33,9 +33,12 @@ still a separate release gate.
 - The popup/options UI separates connection, sharing, optional grants and recovery.
   Observation reports measure actual response bytes and retain task-content checks;
   token and invoice claims are kept separate.
-- A matched Hy3 pilot harness and private browse fixture are implemented. Both
-  configured provider accounts returned HTTP 402 before agent tool use; no valid
-  browse task-success or cost comparison can yet be concluded.
+- The matched pilot runs a signed-in Codex host over native Callisto/browse MCP
+  tools, with host token usage, visible events and task-state checks. Callisto
+  takes its model from the host; the earlier credit-blocked Hy3 API experiment is
+  optional. Tab activation is an explicit fixture precondition. Broader real-site
+  and repeated-trial validation remain open; no subscription dollar cost is inferred.
+  See [host-agent evaluation](docs/host-agent-evaluation.md).
 - Linux x64 alpha packaging includes a temporary unsigned extension, explicit
   prerelease installation and read-only diagnostics. Test reports and platform
   constraints are documented in the [alpha guide](docs/alpha-guide.md).

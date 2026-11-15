@@ -53,6 +53,11 @@ directory; results are not overwritten. The default model is `gpt-6.1-sol` at
 `BENCH_HOST_MODEL` and `BENCH_HOST_EFFORT` select explicit alternatives for both
 engines together.
 
+The [saved pilot report](../eval/reports/host-agent-2026-11-15/README.md)
+retains a complete one-trial run and its visible traces. The earlier run with a
+visibility refusal is preserved separately; the report explains the fixture
+activation correction and the limitations of interpreting one trial.
+
 ## What is measured
 
 Each task starts a fresh host conversation in an empty workspace, with unrelated
@@ -65,8 +70,9 @@ A private Unix-socket transport preserves the fixture's existing extension
 sharing lease while the host opens its MCP connection. Tool names, schemas,
 arguments and results pass through unchanged. The host sees eleven native
 Callisto tools or browse's native `execute` tool; those catalogs and the backend
-instructions are disclosed in the report. The harness explicitly reacquires the owned visible tab and native input lease
-before each task, then checks state afterward. It makes no model decisions or browser actions on the host's behalf
+instructions are disclosed in the report. The harness explicitly reacquires the
+owned visible tab and native input lease before each task, then checks state
+afterward. It makes no model decisions or browser actions on the host's behalf
 during a measured task.
 
 Elapsed time includes host startup and MCP initialization. Browser setup, initial

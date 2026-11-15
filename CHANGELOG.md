@@ -17,6 +17,17 @@
 - Validate disposable Firefox and Zen workflows and real HAR parsing. Extension
   distribution remains unsigned; matched model comparisons await provider credit.
 
+### Host-agent evaluation
+
+- Drive browser tasks through the installed, signed-in Codex host connected over
+  native MCP tools. The host owns the model and conversation loop; the runtime
+  needs no separate model API key.
+- Retain host-reported usage, visible tool events and task-state checks. Leave
+  subscription dollar charges unavailable when the host does not supply them.
+- Reacquire the exact fixture tab and native input lease after navigation;
+  WebDriver navigation alone does not establish the extension's active-tab lease.
+  Add a Zen/Firefox regression without weakening runtime visibility checks.
+
 ### Alpha preparation and diagnostics
 
 - Prepare a Linux x64 `v0.2.0-alpha.1` bundle with checksums, a local-directory

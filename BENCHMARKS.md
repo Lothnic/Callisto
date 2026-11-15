@@ -76,3 +76,18 @@ A [matched Hy3 pilot](eval/reports/matched-agent-2026-11-15/README.md) attempted
 both configured providers. HTTP 402 prevented agent execution, so no comparative
 score or latency/cost result is reported. The harness saves real provider usage
 when available and keeps infrastructure errors out of browser-task scores.
+
+## Codex host over native MCP tools
+
+The [host-agent pilot](eval/reports/host-agent-2026-11-15/README.md) runs the
+installed, signed-in Codex CLI with native Callisto or browse tools. All four
+local tasks passed on each runtime after explicitly reacquiring the owned test
+tab before each task. The [initial visibility refusal](eval/reports/host-agent-2026-11-15-initial/README.md)
+is retained separately, alongside the fixture correction and regression.
+
+This is one paired trial with fixed engine order, different browser engines and
+visible cache effects. The report records real host token usage and elapsed
+startup/task time; it does not establish a general speedup or billed-cost saving.
+Dollar charges remain unavailable. See [reproduction and measurement boundaries](docs/host-agent-evaluation.md).
+The runtime takes its model from the MCP host; no separate model API credential
+is required by this primary evaluation path.
