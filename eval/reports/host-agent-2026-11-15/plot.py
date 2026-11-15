@@ -18,7 +18,7 @@ for ax, title in zip(axes, ['Elapsed seconds — host startup included', 'Host i
     ax.invert_yaxis()
     ax.set_xlabel(title)
     ax.spines[['top', 'right']].set_visible(False)
-fig.subplots_adjust(top=.80, bottom=.20, left=.11, right=.98, wspace=.42)
+fig.subplots_adjust(top=.80, bottom=.20, left=.15, right=.98, wspace=.50)
 fig.legend(*axes[0].get_legend_handles_labels(), loc='upper center', bbox_to_anchor=(.5, .92), ncol=2)
 fig.suptitle('Codex host with native MCP tools • one paired trial • all tasks passed', fontsize=13)
 fig.supxlabel('Cached input is included. Zen ran first in each pair. No billed dollar cost was supplied.', fontsize=10)
