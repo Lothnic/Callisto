@@ -1,0 +1,25 @@
+{
+  "schema": "callisto.matched-trace.v1",
+  "engine": "zen",
+  "task": "form",
+  "iteration": 0,
+  "success": null,
+  "outcome": "infrastructure_error",
+  "served_by": [],
+  "provider_reported_cost_usd": null,
+  "answer": null,
+  "expected_answer": "Saved Mango",
+  "state_passed": false,
+  "error": "Provider HTTP 402: insufficient credit",
+  "elapsed_ms": 464.87962700000026,
+  "tool_calls": 0,
+  "tool_failures": 0,
+  "response_bytes": 0,
+  "usage": {
+    "prompt_tokens": 0,
+    "completion_tokens": 0
+  },
+  "estimated_uncached_cost_usd": 0,
+  "trace_file": "zen-form-0.json",
+  "trace": []
+}

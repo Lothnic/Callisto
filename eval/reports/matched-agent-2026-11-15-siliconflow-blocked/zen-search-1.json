@@ -1,0 +1,22 @@
+{
+  "schema": "callisto.matched-trace.v1",
+  "engine": "zen",
+  "task": "search",
+  "iteration": 1,
+  "success": false,
+  "answer": null,
+  "expected_answer": 17,
+  "state_passed": true,
+  "error": "Provider HTTP 402: insufficient credit",
+  "elapsed_ms": 282.27550600000177,
+  "tool_calls": 0,
+  "tool_failures": 0,
+  "response_bytes": 0,
+  "usage": {
+    "prompt_tokens": 0,
+    "completion_tokens": 0
+  },
+  "estimated_uncached_cost_usd": 0,
+  "trace_file": "zen-search-1.json",
+  "trace": []
+}

@@ -1,0 +1,22 @@
+{
+  "schema": "callisto.matched-trace.v1",
+  "engine": "browse",
+  "task": "form",
+  "iteration": 0,
+  "success": false,
+  "answer": null,
+  "expected_answer": "Saved Mango",
+  "state_passed": false,
+  "error": "Provider HTTP 402: insufficient credit",
+  "elapsed_ms": 310.53626299999996,
+  "tool_calls": 0,
+  "tool_failures": 0,
+  "response_bytes": 0,
+  "usage": {
+    "prompt_tokens": 0,
+    "completion_tokens": 0
+  },
+  "estimated_uncached_cost_usd": 0,
+  "trace_file": "browse-form-0.json",
+  "trace": []
+}

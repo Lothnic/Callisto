@@ -1,0 +1,512 @@
+{
+  "schema": "callisto.matched-agent-report.v1",
+  "created_at": "2026-11-15T09:26:58.109Z",
+  "source_revision": "80093a75410bf76559cc02747a6f674ab7e90f16",
+  "working_tree_dirty": true,
+  "model": "tencent/hy3",
+  "provider": "openrouter",
+  "browser_versions": {
+    "zen": "1.14.9b",
+    "browse_cli": "0.0.16"
+  },
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "repetitions": 2,
+  "tasks": [
+    {
+      "id": "form",
+      "instruction": "Enter Mango in Fruit and submit the form. Report the resulting heading.",
+      "answer": "Saved Mango",
+      "state": true
+    },
+    {
+      "id": "grid",
+      "instruction": "Find the total Amount of every order across both pages. Report a number.",
+      "answer": 210
+    },
+    {
+      "id": "frame",
+      "instruction": "Confirm the action inside the embedded frame, including its open shadow root. Report confirmed.",
+      "answer": "confirmed",
+      "state": true
+    },
+    {
+      "id": "search",
+      "instruction": "Find the stock quantity for Aster helmet. Report the integer quantity.",
+      "answer": 17
+    }
+  ],
+  "catalogs": {
+    "zen": [
+      {
+        "description": "Dispatch synthetic keydown/keyup on the focused control, including chords such as Control+A. For JavaScript keyboard handlers only: native editing, focus navigation, shortcuts and form submission defaults are not emulated. Use fill or submit for those operations.",
+        "inputSchema": {
+          "properties": {
+            "key": {
+              "maxLength": 40,
+              "minLength": 1,
+              "type": "string"
+            }
+          },
+          "required": [
+            "key"
+          ],
+          "type": "object"
+        },
+        "name": "callisto_press"
+      },
+      {
+        "description": "List frames in the controlled tab. Frame access depends on granted website permissions.",
+        "inputSchema": {
+          "properties": {},
+          "type": "object"
+        },
+        "name": "callisto_frames"
+      },
+      {
+        "description": "Select a frame by frame_id from callisto_frames, inject the bridge and return a fresh snapshot. Navigation resets selection. Cross-origin frame input fails closed because parent hit testing cannot be verified.",
+        "inputSchema": {
+          "properties": {
+            "frame_id": {
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          "required": [
+            "frame_id"
+          ],
+          "type": "object"
+        },
+        "name": "callisto_frame"
+      },
+      {
+        "description": "Additional DOM operations on the active controlled page. scroll uses viewport pixel deltas; hover dispatches synthetic pointer/mouse events; select chooses an option by value; check sets a checkbox; text returns bounded visible body text; find searches visible body text. Input uses the explicitly selected callisto_input mode.",
+        "inputSchema": {
+          "properties": {
+            "action": {
+              "enum": [
+                "scroll",
+                "hover",
+                "select",
+                "check",
+                "text",
+                "find"
+              ],
+              "type": "string"
+            },
+            "checked": {
+              "type": "boolean"
+            },
+            "delta_x": {
+              "type": "number"
+            },
+            "delta_y": {
+              "type": "number"
+            },
+            "query": {
+              "maxLength": 200,
+              "type": "string"
+            },
+            "ref": {
+              "pattern": "^ax-[0-9]+$",
+              "type": "string"
+            },
+            "value": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "action"
+          ],
+          "type": "object"
+        },
+        "name": "callisto_page"
+      },
+      {
+        "description": "Search visible page text and return bounded matching snippets. Unlike Chromium accessibility search, this uses rendered DOM text.",
+        "inputSchema": {
+          "properties": {
+            "max_matches": {
+              "default": 5,
+              "maximum": 10,
+              "minimum": 1,
+              "type": "integer"
+            },
+            "query": {
+              "maxLength": 200,
+              "minLength": 1,
+              "type": "string"
+            }
+          },
+          "required": [
+            "query"
+          ],
+          "type": "object"
+        },
+        "name": "callisto_find"
+      },
+      {
+        "description": "Submit the form associated with a snapshot ref, preserving browser validation and submit handlers. Use an input or submit-button ref. Submission may navigate; the next snapshot waits for the page.",
+        "inputSchema": {
+          "properties": {
+            "ref": {
+              "pattern": "^ax-[0-9]+$",
+              "type": "string"
+            }
+          },
+          "required": [
+            "ref"
+          ],
+          "type": "object"
+        },
+        "name": "callisto_submit"
+      },
+      {
+        "description": "Read structured rows from the shared page using CSS selectors: a row selector plus a field map. Optionally follow a next-page control and merge pages. Returns typed rows, not a snapshot, so counting and aggregation need one call.",
+        "inputSchema": {
+          "properties": {
+            "fields": {
+              "additionalProperties": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "properties": {
+                      "attribute": {
+                        "type": "string"
+                      },
+                      "selector": {
+                        "type": "string"
+                      },
+                      "type": {
+                        "enum": [
+                          "text",
+                          "number"
+                        ],
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  }
+                ]
+              },
+              "maxProperties": 20,
+              "minProperties": 1,
+              "type": "object"
+            },
+            "include_text": {
+              "type": "boolean"
+            },
+            "limit": {
+              "maximum": 1000,
+              "minimum": 1,
+              "type": "integer"
+            },
+            "paginate": {
+              "properties": {
+                "max_pages": {
+                  "maximum": 25,
+                  "minimum": 1,
+                  "type": "integer"
+                },
+                "next": {
+                  "maxLength": 500,
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "next"
+              ],
+              "type": "object"
+            },
+            "selector": {
+              "maxLength": 500,
+              "minLength": 1,
+              "type": "string"
+            }
+          },
+          "required": [
+            "selector",
+            "fields"
+          ],
+          "type": "object"
+        },
+        "name": "callisto_extract"
+      },
+      {
+        "description": "Run 1\u201340 dependent steps in one call: navigate; click/fill/submit/select/check/hover by ref or exact role; press; scroll; wait; wait_for text or CSS selector state; extract rows. Use submit instead of synthetic Enter for forms. Returns the last extraction and an optional final snapshot. Stops at the first failure within a 60-second budget; earlier steps are not rolled back. Input uses the explicitly selected callisto_input mode.",
+        "inputSchema": {
+          "properties": {
+            "snapshot": {
+              "type": "boolean"
+            },
+            "steps": {
+              "items": {
+                "properties": {
+                  "action": {
+                    "enum": [
+                      "navigate",
+                      "click_ref",
+                      "click_role",
+                      "fill_ref",
+                      "fill_role",
+                      "submit_ref",
+                      "submit_role",
+                      "select_ref",
+                      "select_role",
+                      "check_ref",
+                      "check_role",
+                      "hover_ref",
+                      "hover_role",
+                      "press",
+                      "scroll",
+                      "wait",
+                      "wait_for",
+                      "extract"
+                    ],
+                    "type": "string"
+                  },
+                  "checked": {
+                    "type": "boolean"
+                  },
+                  "delta_x": {
+                    "type": "number"
+                  },
+                  "delta_y": {
+                    "type": "number"
+                  },
+                  "key": {
+                    "type": "string"
+                  },
+                  "ms": {
+                    "maximum": 5000,
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "ref": {
+                    "type": "string"
+                  },
+                  "role": {
+                    "type": "string"
+                  },
+                  "selector": {
+                    "maxLength": 500,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "spec": {
+                    "type": "object"
+                  },
+                  "state": {
+                    "enum": [
+                      "visible",
+                      "hidden",
+                      "attached",
+                      "detached"
+                    ],
+                    "type": "string"
+                  },
+                  "text": {
+                    "maxLength": 500,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "timeout_ms": {
+                    "maximum": 20000,
+                    "minimum": 100,
+                    "type": "integer"
+                  },
+                  "url": {
+                    "type": "string"
+                  },
+                  "value": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "action"
+                ],
+                "type": "object"
+              },
+              "maxItems": 40,
+              "minItems": 1,
+              "type": "array"
+            }
+          },
+          "required": [
+            "steps"
+          ],
+          "type": "object"
+        },
+        "name": "callisto_run"
+      },
+      {
+        "description": "Inspect the explicitly shared active tab. Use max_chars to bound output and offset=next_offset to page through truncated controls. Refs belong to the latest snapshot. This experimental DOM-derived snapshot can omit content and frames.",
+        "inputSchema": {
+          "properties": {
+            "diff": {
+              "default": false,
+              "type": "boolean"
+            },
+            "include_text": {
+              "default": true,
+              "type": "boolean"
+            },
+            "max_chars": {
+              "maximum": 30000,
+              "minimum": 1000,
+              "type": "integer"
+            },
+            "offset": {
+              "maximum": 10000,
+              "minimum": 0,
+              "type": "integer"
+            },
+            "query": {
+              "maxLength": 200,
+              "minLength": 1,
+              "type": "string"
+            },
+            "revision": {
+              "type": "string"
+            },
+            "selector": {
+              "maxLength": 500,
+              "minLength": 1,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "name": "callisto_snapshot"
+      },
+      {
+        "description": "Click a ref from the latest snapshot in the shared tab using a synthetic DOM click. Some websites reject synthetic input.",
+        "inputSchema": {
+          "properties": {
+            "ref": {
+              "pattern": "^ax-[0-9]+$",
+              "type": "string"
+            }
+          },
+          "required": [
+            "ref"
+          ],
+          "type": "object"
+        },
+        "name": "callisto_click"
+      },
+      {
+        "description": "Fill a ref from the latest snapshot in the shared tab using synthetic input events. Some websites reject synthetic input.",
+        "inputSchema": {
+          "properties": {
+            "ref": {
+              "pattern": "^ax-[0-9]+$",
+              "type": "string"
+            },
+            "value": {
+              "maxLength": 100000,
+              "type": "string"
+            }
+          },
+          "required": [
+            "ref",
+            "value"
+          ],
+          "type": "object"
+        },
+        "name": "callisto_fill"
+      }
+    ],
+    "browse": [
+      {
+        "name": "execute",
+        "description": "Execute Playwright JavaScript against the browse session. Code runs in a restricted JavaScript realm on the relay without process, require, import(), fs, child_process, http/https or Node fetch; save and read files with the files helper inside the execute file roots, and cookie access is limited to the session's pages. Synchronous code stops after about 2 seconds. It is not a security boundary, so treat code as running as the user. The result includes console logs, warnings, a bounded execution-context diagnostic when relevant, and an aftermath summary (URL movement, navigations, error counts, handoffs, and a bot challenge or block page when one appears: hand interactive ones to the user with handoff(), never solve or retry-loop them).",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "description": "JavaScript code to execute. It receives browser, context, page, state, modules (path, url, util, crypto, buffer, zlib, events, stream), files (dir and roots properties; path(name), write(target, data), read(target, encoding?)), fillInput, fillInputs, snapshot(options?) for compact semantic outlines (options: find to search them, diff or delta for changes), persistent compatible ref(id) locators, webmcp (list/call), screenshotWithLabels(options?) and screenshotDiff(options) for screenshots, ariaSnapshot, ghostCursor, handoff, demonstrate, network (start/status/stop/cancel), pageConsole (start/stop capturing the page's own console messages and errors, off by default because pages can detect it), and secrets.type(locator, name) to type a stored site secret (see secrets_list) only on its allowed origins, without seeing it. There is no location, document or fetch global (they belong to the page: use page.url() or page.evaluate(...)), and no structuredClone."
+            },
+            "session": {
+              "type": "string",
+              "description": "Optional existing browse session id. Explicit ids must already exist; omit this field to use your current session (each agent has its own), which is created when needed."
+            },
+            "targetUrl": {
+              "type": "string",
+              "description": "Optional URL substring selecting an existing attached page. This does not navigate or open a URL; use page.goto() for that."
+            },
+            "targetIndex": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Optional zero-based attached page index selector."
+            },
+            "browser": {
+              "type": "string",
+              "description": "Optional browser id for a new session's tabs; omit for the default browser. A session stays in its browser. Call status to list the connected browsers."
+            },
+            "timeoutMs": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Optional overall script timeout in milliseconds (paused while handoff() waits on the user); defaults to 60000, 0 disables."
+            }
+          },
+          "required": [
+            "code"
+          ]
+        }
+      }
+    ]
+  },
+  "budget": {
+    "maxModelCalls": 100,
+    "maxTotalTokens": 250000,
+    "usedTokens": 0,
+    "calls": 1
+  },
+  "pricing": {
+    "basis": "Estimated uncached list price, not an invoice; caching discounts excluded",
+    "input_usd_per_million": 0.132,
+    "output_usd_per_million": 0.528,
+    "source": "https://www.siliconflow.com/models/tencent",
+    "checked_at": "2026-11-15"
+  },
+  "scope": "Local fixtures; independent persistent test profiles; setup, navigation and evaluator calls excluded from timing/tool totals. Different native tool schemas and observations; restricted task catalogs disclosed above. No production reliability claim.",
+  "results": [
+    {
+      "engine": "zen",
+      "task": "form",
+      "iteration": 0,
+      "success": null,
+      "outcome": "infrastructure_error",
+      "served_by": [],
+      "provider_reported_cost_usd": null,
+      "answer": null,
+      "expected_answer": "Saved Mango",
+      "state_passed": false,
+      "error": "Provider HTTP 402: insufficient credit",
+      "elapsed_ms": 464.87962700000026,
+      "tool_calls": 0,
+      "tool_failures": 0,
+      "response_bytes": 0,
+      "usage": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0
+      },
+      "estimated_uncached_cost_usd": 0,
+      "trace_file": "zen-form-0.json"
+    }
+  ],
+  "comparison_available": false,
+  "status": "provider-blocked",
+  "completed_agent_runs": 0,
+  "provider_error_details_omitted_for_privacy": true
+}

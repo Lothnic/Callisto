@@ -1,0 +1,22 @@
+{
+  "schema": "callisto.matched-trace.v1",
+  "engine": "browse",
+  "task": "grid",
+  "iteration": 1,
+  "success": false,
+  "answer": null,
+  "expected_answer": 210,
+  "state_passed": true,
+  "error": "Provider HTTP 402: insufficient credit",
+  "elapsed_ms": 262.69440699999905,
+  "tool_calls": 0,
+  "tool_failures": 0,
+  "response_bytes": 0,
+  "usage": {
+    "prompt_tokens": 0,
+    "completion_tokens": 0
+  },
+  "estimated_uncached_cost_usd": 0,
+  "trace_file": "browse-grid-1.json",
+  "trace": []
+}
