@@ -1,0 +1,45 @@
+{
+  "schema": "callisto.recovery-report.v1",
+  "created_at": "2026-11-15T09:56:24.561Z",
+  "source_revision": "4c4bb6096baa4ffbf3e17f05cda9d919df5057bf",
+  "working_tree_dirty": false,
+  "browser": "1.14.9b",
+  "kind": "zen",
+  "persistent_test_profile": true,
+  "real_user_profile": false,
+  "temporary_extension_reinstalled_after_browser_restart": true,
+  "write_count": 1,
+  "rows": [
+    {
+      "name": "cancelled-run-no-late-write",
+      "passed": true,
+      "elapsed_ms": 1304
+    },
+    {
+      "name": "relay-crash-no-trusted-downgrade",
+      "passed": true,
+      "elapsed_ms": 1270
+    },
+    {
+      "name": "extension-update-requires-reshare",
+      "passed": true,
+      "elapsed_ms": 463
+    },
+    {
+      "name": "browser-restart-retains-profile-and-pairing",
+      "passed": true,
+      "elapsed_ms": 2860
+    },
+    {
+      "name": "browser-crash-retains-profile-with-explicit-reacquisition",
+      "passed": true,
+      "elapsed_ms": 2689
+    },
+    {
+      "name": "tab-loss-cannot-retarget-input",
+      "passed": true,
+      "elapsed_ms": 39
+    }
+  ],
+  "passed": true
+}

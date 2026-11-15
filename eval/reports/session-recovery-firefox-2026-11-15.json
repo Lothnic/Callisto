@@ -1,0 +1,40 @@
+{
+  "schema": "callisto.recovery-report.v1",
+  "created_at": "2026-11-15T09:56:24.961Z",
+  "source_revision": "4c4bb6096baa4ffbf3e17f05cda9d919df5057bf",
+  "working_tree_dirty": false,
+  "browser": "157.0.1",
+  "kind": "firefox",
+  "persistent_test_profile": true,
+  "real_user_profile": false,
+  "temporary_extension_reinstalled_after_browser_restart": true,
+  "write_count": 1,
+  "rows": [
+    {
+      "name": "cancelled-run-no-late-write",
+      "passed": true,
+      "elapsed_ms": 1291
+    },
+    {
+      "name": "relay-crash-no-trusted-downgrade",
+      "passed": true,
+      "elapsed_ms": 1331
+    },
+    {
+      "name": "extension-update-requires-reshare",
+      "passed": true,
+      "elapsed_ms": 522
+    },
+    {
+      "name": "browser-restart-retains-profile-and-pairing",
+      "passed": true,
+      "elapsed_ms": 3726
+    },
+    {
+      "name": "tab-loss-cannot-retarget-input",
+      "passed": true,
+      "elapsed_ms": 28
+    }
+  ],
+  "passed": true
+}

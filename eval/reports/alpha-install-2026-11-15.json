@@ -1,0 +1,50 @@
+{
+  "schema": "callisto.alpha-install-check.v1",
+  "version": "v0.2.0-alpha.1",
+  "platform": "linux-x64",
+  "package_manifest": {
+    "schema": "callisto.alpha-package.v1",
+    "version": "v0.2.0-alpha.1",
+    "sourceRevision": "ebb300d16931a6cbbcba6a3bfe97db20d122ec00",
+    "sourceTreeDirty": false,
+    "platform": "linux-x64",
+    "libc": {
+      "family": "glibc",
+      "minimum": "2.39"
+    },
+    "extension": {
+      "signed": false,
+      "installation": "temporary; reload after browser exit"
+    },
+    "assets": [
+      {
+        "name": "callisto-mini.tar.gz",
+        "bytes": 122481,
+        "sha256": "aa4a72fb66a692518b3f425fafe85a0327fdddf8a305d49233244b442fe1c5ef"
+      },
+      {
+        "name": "callisto-bridge-linux-x64.tar.gz",
+        "bytes": 800171,
+        "sha256": "356aafe2ca9c8459e220b67ef035c856dace4c2044075aa63fb4bc4964dbb6a4"
+      },
+      {
+        "name": "callisto-extension-unsigned.zip",
+        "bytes": 35396,
+        "sha256": "5f34385a89874925b03e13cbc612197176f1915c1b90a407df3435b7e2bcffb0"
+      },
+      {
+        "name": "callisto-install.mjs",
+        "bytes": 9195,
+        "sha256": "03d887de0e175e69b462c6351d5dc8e30b4150e3abe081e15ffcd5e1478d4243"
+      }
+    ]
+  },
+  "installer_from_package": true,
+  "passed": true,
+  "real_archives": true,
+  "network_download": false,
+  "dependency_installation": true,
+  "doctor_ready": true,
+  "extension_version": "0.2.0",
+  "mcp_handshake": true
+}
