@@ -16,6 +16,12 @@ selects the backend and reports its capabilities. Direct attachment to an explic
 existing Chromium CDP target is also available when remote debugging is already
 enabled; see the [Mini attachment guide](packages/mini/README.md#attach-directly-to-an-existing-debug-enabled-chromium-tab).
 
+The Firefox/Zen bridge now offers optional trusted BiDi input under the same
+shared-tab lease, stable snapshot continuation and diffs, scoped API inspection
+and session-backed GET/HEAD replay, plus private failure/interruption evidence.
+Trusted input requires a deliberately debug-enabled browser; ordinary sharing
+still defaults to DOM input. See [Zen runtime usage](docs/zen-advanced-runtime.md).
+
 Callisto is experimental. Its Playwright-shaped API is a subset, not a drop-in
 replacement for Playwright. An experimental connection to an existing Chromium
 browser through browse's relay is available with significant limitations below.
@@ -109,6 +115,13 @@ and a basic human-handoff tool, but cross-origin frame coverage, toolbar
 take-back, full interruption and reconnect handling, and full Playwright
 compatibility remain open work. Browser actions can change websites; the MCP
 server does not supply an approval or security boundary.
+
+Disposable Firefox and headful Zen fixture workflows cover extension-owned native
+input, forms, frames, API replay, tab ownership, cancellation and relay restart.
+Captured Zen HAR passes the pinned Verified parser and explicit field/screenshot
+coverage checks. These are implementation checks; no new benchmark judge or
+controlled browse time/cost comparison has run. Signed extension distribution
+and production-profile recovery certification remain open.
 
 Read the [runtime roadmap](roadmap.md), [benchmark index](BENCHMARKS.md), and
 [research index](research/README.md) for current priorities and test caveats.

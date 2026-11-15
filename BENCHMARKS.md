@@ -13,6 +13,24 @@ with the associated notes.
 | [Local model-driven tests](research/2026-11-actionability-agent-comparison.md) | Three synthetic tasks under a shared action policy | Exploratory single trials |
 | [Live-site agent tests](research/2026-11-live-browser-comparison.md) | Native page observations and generated answers | Inconclusive: model/provider limits |
 
+## Zen workflow and evidence validation
+
+The 14 November 2026 source update was validated with disposable Firefox and
+headful Zen Flatpak fixture workflows: extension-owned trusted input, native form
+controls and pagination, frames, API replay, scoped interception, cancellation
+and relay restart. Rust, JavaScript and Python checks cover recovery without
+replaying uncertain writes, stable snapshot captures and failed/interrupted evidence.
+
+A real Zen fixture HAR was accepted by `webarena-verified==1.2.3`. An explicit
+task evidence contract also checked observed JSON fields and captured PNG counts.
+Parser acceptance and field coverage do not establish a task score. The exporter
+does not run benchmark judges or create genuine Playwright traces; original
+WebArena still needs its live evaluator. No new controlled browse latency,
+model-cost or task-success comparison accompanied this update.
+
+See [runtime reproduction and limits](docs/zen-advanced-runtime.md) and the
+[pinned benchmark trace requirements](research/2026-11-14-benchmark-trace-requirements.md).
+
 ## Reproduce the MCP comparison
 
 From the repository root, install and build `packages/mini`, set `CHROME_PATH`

@@ -26,3 +26,17 @@ already received or retained by a configured MCP host/model provider.
 See [Mozilla's data consent documentation](https://extensionworkshop.com/documentation/develop/firefox-builtin-data-consent/)
 for the manifest taxonomy, and [the runtime guide](../packages/firefox-rs/README.md)
 for permissions and local-state locations.
+
+The Firefox/Zen extension bridge can explicitly connect a loopback BiDi endpoint
+for trusted input. It matches a fresh nonce in the shared document rather than
+selecting a tab by URL. Stop sharing and cancellation invalidate that input lease;
+an already dispatched input may have completed. The standalone `zen-bidi` server
+has its own separate session and detach controls.
+
+Optional API replay uses the shared document's session for explicit same-origin
+GET/HEAD requests. It accepts no custom credential/header overrides, refuses
+redirects and returns bounded, heuristically redacted JSON. Cookies stay in the
+browser. Network capture and OpenAPI drafts can still contain private application
+field names and paths. Failed/interrupted trace inspection preserves real
+artifacts and explicitly reports missing evidence; it never fills gaps with
+invented screenshots or network events.

@@ -12,17 +12,22 @@ The current work prioritizes Zen input, useful observations, recovery and networ
 inspection. Extension shipping and a new controlled browse comparison are deferred
 by the current project direction.
 
-- Explicit BiDi input has passed disposable Firefox and headful Zen probes for
-  trusted fill, native form submission, open-shadow/same-origin frame input and
-  detach/reacquire. It remains a separate debug-enabled transport; integration with
-  the extension's ownership/Stop sharing contract is still open.
-- The extension now supports scoped text/control snapshots, shadow-aware selection
-  and extraction, subframe-navigation invalidation and revocation across frames.
-- Scoped network capture, block/redirect rules, endpoint summaries, redacted HAR
-  and private action/PNG/DOM evidence are implemented. Native Verified HAR parsing
-  is checked; benchmark judges and new comparative task runs have not been run.
-- Continue with production-profile recovery, unified transport ownership and
-  task-specific evidence coverage before widening the supported browser matrix.
+- Extension-owned trusted BiDi input now shares the observation/network/evidence
+  lease. Disposable Firefox and headful Zen integration covers native typing,
+  controls, runs, frames, explicit reacquisition and tab isolation.
+- Native disconnect, ambiguous context, lease change and cancellation tests reject
+  uncertain writes without replay or synthetic fallback. Relay restart retains
+  pairing while requiring explicit sharing and native enablement again.
+- Snapshots provide stable captured continuation, revisions, generic text, scoped
+  observations and compact diffs. Capture bounds and live changes are explicit.
+- API inspection compares captures, suggests pagination fields, emits draft
+  OpenAPI and supports explicit same-origin GET/HEAD replay with the page session.
+- Failed actions retain checkpoints; interrupted actions record unknown outcomes
+  and missing evidence. Export supports explicit task field/screenshot coverage
+  contracts alongside native Verified parser validation.
+- Next validate production-profile recovery across browser upgrades and longer
+  sessions, then use matched agent tasks to measure success, time and model cost.
+  Extension distribution and a new controlled comparison remain deferred.
 
 See [advanced runtime usage](docs/zen-advanced-runtime.md) and
 [benchmark artifact contracts](research/2026-11-14-benchmark-trace-requirements.md).

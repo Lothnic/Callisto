@@ -18,6 +18,30 @@ python -m venv .venv
 pip install -e .
 ```
 
+## Inspect and export browser evidence
+
+`callisto_trace` in the Firefox/Zen bridge records real action JSONL and optional
+PNG/DOM checkpoints. Failed tasks can have complete recordings. Cancellation
+records unknown outcomes and unavailable evidence separately from task success.
+
+Inspect an interrupted capture without exporting it:
+
+```sh
+python -m callisto_eval.evidence /absolute/path/capture --inspect
+```
+
+An optional `--requirements /absolute/path/task-requirements.json` checks an
+explicit `callisto.task-evidence.v1` contract: observed method/URL/status,
+non-redacted request/response JSON pointers and screenshot count/attribution.
+Derive that contract from the selected task's evaluator. Strict export refuses
+incomplete captures or unmet requirements. The full contract and commands are
+in the [advanced runtime guide](../docs/zen-advanced-runtime.md#task-evidence-coverage-and-interrupted-run-inspection).
+
+WebVoyager export prepares an instruction/final-answer envelope and captured
+PNGs. Verified export validates its typed response and HAR using version 1.2.3.
+Neither runs a benchmark judge. Original WebArena requires its live evaluator;
+Callisto action JSONL is not a genuine Playwright trace ZIP.
+
 ## Offline smoke run
 
 No browser, no model API key. Uses the fake agent to exercise dataset loading,

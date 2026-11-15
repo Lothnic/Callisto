@@ -13,8 +13,10 @@ API key. The runtimes and distribution are experimental.
 | Chromium via browse | Opens an agent-owned tab in a Chromium profile paired with browse | Mini plus browse CLI and its extension |
 | Chromium direct CDP | Adopts a specified existing tab in an already debug-enabled local browser | Mini plus an explicit CDP endpoint and target ID |
 
-The Firefox bridge uses synthetic input, and some sites reject it. The Chromium
-connected modes have different capabilities and setup. See the detailed
+The Firefox/Zen bridge defaults to synthetic DOM input. Optional trusted input
+uses an explicit BiDi endpoint in a deliberately debug-enabled browser and obeys
+the same extension sharing controls. The Chromium connected modes have different
+capabilities and setup. See the detailed
 [Firefox/Zen guide](../packages/firefox-rs/README.md) and [Mini guide](../packages/mini/README.md).
 The Firefox/Zen extension targets Firefox 140+ and compatible Zen builds. Its
 relay currently requires a Unix host; Windows is not supported.
@@ -127,6 +129,36 @@ must be loaded again after the browser exits. If the agent cannot connect,
 check `callisto_status`, confirm the extension is connected and the intended
 tab is shared, and consult the [Firefox/Zen guide](../packages/firefox-rs/README.md).
 
+## Optional Zen input and API inspection
+
+A normal shared tab works without a debugging endpoint. For native key defaults
+and trusted input events, use a browser deliberately started with remote debugging,
+then ask the same MCP client to call `callisto_input`:
+
+```json
+{"action":"enable","endpoint":"ws://127.0.0.1:9222/session"}
+```
+
+This binds input to the extension's shared document. Stop sharing revokes it;
+failed actions are never replayed or silently retried with DOM input. If the
+extension disconnects, share again and explicitly enable trusted input again.
+`callisto_input` with `action: "status"` reports the selected mode and connection.
+The standalone `zen-bidi` launcher has its own detach controls and is separate
+from this extension-owned mode. See the [advanced runtime guide](zen-advanced-runtime.md)
+for endpoint ownership, recovery, tests and limits.
+
+Choose **Enable network access** in the extension before using `callisto_network`.
+A capture requires explicit exact origins. Compare observed requests, inspect
+pagination hints and export an OpenAPI draft. Explicit replay allows GET/HEAD
+only to the shared page's same origin, using its existing session; redirects,
+request bodies and custom headers are refused.
+
+`callisto_trace` records actions and optional private screenshots/DOM snapshots.
+Failed actions retain available evidence. Cancelled actions report an unknown
+outcome and missing evidence. These artifacts are not Playwright trace ZIPs or
+benchmark scores. The [eval guide](../eval/README.md) explains export and explicit
+task-specific coverage checks.
+
 ## Give and take control
 
 Tell the agent which existing tab and task you intend, for example: “Use my open
@@ -169,9 +201,13 @@ that the intended action succeeded. See [browser data handling](browser-data.md)
 - For Firefox/Zen, check `callisto_status`, use `tabs_list` and `tab_select`
   only when browser access was granted, then snapshot the chosen tab. Respect
   ownership errors; do not close or take over another session's tab.
+- Firefox/Zen snapshots support `revision`, stable `next_offset` continuation and
+  `diff: true` against the previous same-scope capture. A new offset-zero capture
+  refreshes refs; `live_changed` and `capture_truncated` are explicit. Mini uses
+  `nextOffset`; do not interchange backend response fields.
 - Re-snapshot after navigation or stale-reference errors. List/select a frame
-  explicitly when needed; cross-origin frame input and trusted Firefox input
-  are unsupported. Use a screenshot or ask the user when a snapshot omits data.
+  explicitly when needed; cross-origin frame input remains unsupported. Trusted
+  Firefox/Zen input requires explicit `callisto_input` enablement. Use a screenshot or ask the user when a snapshot omits data.
 - A cancelled or interrupted action may already have completed. Inspect the
   page before retrying. Use `callisto_handoff` for a user-controlled step and
   release control when finished.

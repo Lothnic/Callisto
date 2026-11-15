@@ -10,13 +10,21 @@ for the shared launcher, packages, signing setup and current release gates.
 
 ## Existing tabs: extension bridge
 
+The bridge defaults to DOM input. `callisto_input` can explicitly enable trusted
+BiDi input for the same shared-tab lease, using a loopback debugging endpoint.
+Stop sharing then revokes both paths, with no silent fallback. This requires a
+debug-enabled browser; it cannot upgrade a normal process automatically. See
+[unified input, API inspection and evidence](../../docs/zen-advanced-runtime.md).
+
 `callisto-firefox-tab-mcp` is intended to work with a Firefox or Zen browser
 that is already running, using its current profile, tabs and logged-in sessions.
 It does not start, close or restart the browser. You choose the existing tab to
 share using a Firefox WebExtension; the agent can access that tab while it is
 active. The bridge exposes page actions, navigation and optional browser-wide controls,
 plus pairing, release and connection status. This path is a prototype. A disposable Firefox
-smoke test covers the bridge. A manual Zen Flatpak test confirmed pairing,
+smoke test covers the bridge. The same disposable suite now runs in headful Zen
+Flatpak, including extension-owned trusted input, scoped API replay, cancellation
+evidence and relay recovery. See the advanced runtime guide for its test setup. A manual Zen Flatpak test confirmed pairing,
 sharing a regular existing tab from the page context menu, snapshot and
 release. A subsequent manual Zen test clicked Reddit’s Share control and
 verified the resulting menu. A supervised Zen research task later verified
@@ -155,7 +163,7 @@ may have completed; inspect the page before retrying.
 
 ## Faster dependent actions and form submission
 
-`callisto_submit` submits the form associated with an input or submit-button
+In the default DOM mode, `callisto_submit` submits the form associated with an input or submit-button
 ref using `requestSubmit`, keeping browser validation and submit handlers. It
 provides a form path when a search icon is missing from the snapshot; it does
 not emulate a trusted Enter key.
@@ -177,7 +185,8 @@ typed rows rather than a snapshot, so counting and aggregation need one call.
 `press`, `scroll`, `wait`, `wait_for` and `extract`. Select uses `value`; check
 uses `checked`. Use submit for form submission: synthetic Enter does not invoke
 the browser's native form default. It returns the last extraction and, on request, a
-final snapshot. Both tools use the same declarative interface as the Chromium
+final snapshot. In trusted mode, native input and extraction pagination retain the same lease.
+Both tools use the same declarative interface as the Chromium
 backend and do not evaluate arbitrary page JavaScript. Steps stop at the first
 failure within a 60-second budget, and earlier steps are not rolled back.
 
@@ -198,11 +207,13 @@ center of the viewport. These checks do not make synthetic input trusted.
 `callisto_snapshot` accepts `max_chars` (1,000–30,000, default 12,000) and an
 element `offset`. If `truncated` is true, pass `next_offset` to read the next
 portion. Each portion contains complete lines with actionable refs; take refs
-from the latest snapshot. This pages the controls in the live DOM, so changes
-to the page between calls can shift the offsets. Paragraph, list and table-cell
-text now appears alongside controls. `include_text: false` produces a controls
-view; `selector` scopes to one element and `query` filters names/values, including
-open shadow roots. Some text in generic wrappers still needs full text/extraction.
+from the current capture. Continuation reads the same captured revision; live
+changes are flagged. Pass `revision` to reject a superseded capture. A new offset-zero
+snapshot refreshes the capture. Generic direct text, paragraphs, lists and table
+cells appear alongside controls. `include_text: false` produces a controls view;
+`selector` scopes to one element and `query` filters names/values, including open
+shadow roots. `diff: true` gives added/removed lines against the last same-scope
+capture and reports changed ordering. See the advanced guide for capture bounds.
 
 For example, a search and result read can use one tool call:
 
@@ -274,7 +285,9 @@ the add-on settings when needed.
 
 `callisto_page` adds viewport scrolling, synthetic hover, select by option
 value, checkbox state, bounded visible body text and text search. The page must
-be active. Input is synthetic; sites can reject it or behave differently.
+be active. In the default DOM mode, input is synthetic; sites can reject it or
+behave differently. Explicit `callisto_input` enablement uses browser-mediated
+input for hover, select and check as well as click, fill and press.
 
 `callisto_upload` accepts a visible file input ref and explicit local paths
 (1–10 regular files, 10 MiB total). It sets a synthetic FileList and emits input
@@ -290,10 +303,10 @@ Cross-origin frames may be readable with website permission, but input fails
 closed because parent hit testing cannot be verified. Snapshots do not inline
 all frames: select one explicitly and take fresh refs.
 
-`callisto_press` dispatches synthetic keydown and keyup events on the focused
+In the default DOM mode, `callisto_press` dispatches synthetic keydown and keyup events on the focused
 control. It supports JavaScript keyboard handlers and modifiers; browser default
 editing, shortcuts, Tab navigation and form submission are not emulated. Use
-fill or submit for those actions. It is not trusted keyboard input.
+fill or submit for those actions. Enable `callisto_input` for browser-mediated key defaults and trusted input.
 
 `callisto_handoff` shows a top-page banner and waits for the user's trusted click
 on Continue with agent, with a configurable 1–120 second timeout. Input is
@@ -311,7 +324,8 @@ retrying. Queued requests can also cancel before acquiring the operation lock.
 Transport tests cover queue cancellation, pending request cleanup and revocation.
 
 This is **not browse parity**. The extension transport has no arbitrary Playwright
-`execute`, trusted input, protected secret store or full Playwright execution.
+`execute`, protected secret store or full Playwright execution. Trusted input is
+opt-in through a debug-enabled BiDi endpoint under the same shared-tab lease.
 Optional network inspection and scoped blocking/redirects are available; see the
 [advanced runtime guide](../../docs/zen-advanced-runtime.md). The snapshot is a limited
 DOM view; it traverses open shadow roots but omits closed shadow roots and
@@ -360,7 +374,9 @@ untrusted network.
 The [advanced runtime guide](../../docs/zen-advanced-runtime.md) covers the explicit
 `zen-bidi`/`firefox-bidi` trusted-input experiment, targeted observations,
 `callisto_network`, `callisto_trace`, HAR/PNG exports and benchmark limitations.
-The BiDi path is separate: the extension's Stop sharing button does not revoke it.
+The standalone `zen-bidi` path is separate: the extension's Stop sharing button
+does not revoke that server. The extension bridge's `callisto_input` mode does
+honor Stop sharing.
 Network unit tests run with `node --test tests/extension-network.test.cjs`.
 
 `cargo test --locked` tests the transport and pairing. Run

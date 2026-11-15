@@ -1,10 +1,46 @@
 # Zen input, observations, network inspection and evidence
 
 These source features are experimental. Extension distribution and a controlled
-browse comparison remain deferred. The two Firefox/Zen transports are distinct:
-the existing-tab extension has sharing/ownership/network/evidence controls; the
-explicit BiDi path supplies browser-mediated input in a debug-enabled process.
-Neither silently falls back to the other.
+browse comparison remain deferred. The extension can now use trusted BiDi input
+under its shared-tab ownership contract. The standalone `zen-bidi` server remains
+a separate control path.
+
+## One lease for observations, input, network and evidence
+
+Use the normal `zen`/`firefox` extension bridge. Pair and explicitly share a tab,
+then enable native input on that same MCP client:
+
+```json
+{"action":"enable","endpoint":"ws://127.0.0.1:9222/session"}
+```
+
+This is `callisto_input`; `status` reports mode, transport and binding state, and
+`disable` explicitly returns to DOM input. The endpoint must belong to a browser
+you deliberately started with remote debugging. A Classic WebDriver session's
+`webSocketUrl` (`/session/<id>`) also works without creating or ending its session.
+Raw `/session` connections create a Callisto-owned BiDi session and end it on detach.
+
+The extension places a fresh document/target nonce in the shared frame. BiDi must
+find exactly one matching document, then validate the lease and actionability
+before every dispatch. Input uses that document's top-level context, including
+verified parent-frame offsets. URLs alone never choose an input target. Existing
+click/fill/press/submit, form controls, runs, batches and extraction pagination use
+the selected mode. Native select focuses the verified control and sends real keys
+without opening a platform popup. Upload remains an explicit synthetic FileList
+operation. Scrolling remains a DOM operation.
+
+Stop sharing, tab loss, permission removal, client cancellation and extension
+disconnect invalidate the binding. Held inputs are released best effort; an
+already-dispatched browser action can have completed. Failed input is never
+replayed. A closed native socket can reconnect for a new explicit request; a lost
+extension connection requires sharing again and explicit native enablement. The
+trusted preference survives failure so an error cannot silently switch to DOM
+input. Each run retains its original lease across steps and navigation.
+
+Disposable Firefox and headful Zen Flatpak integration tests cover native typing,
+checks/selects, form submission, frames, tab ownership, scoped API replay,
+interception, evidence, cancellation and relay restart. These are fixture tests,
+not comparative benchmark results or production-profile recovery certification.
 
 ## Trusted input through an explicit BiDi connection
 
@@ -31,7 +67,7 @@ Firefox and headful Zen under Xvfb. The Zen test profile needed first-run welcom
 suppression and an explicit window size. Tabs with no layout viewport fail; these
 results do not promise every Zen build or headless configuration works.
 
-This is a separate privileged control path. **The extension's Stop sharing button
+The standalone `zen-bidi` server is a separate privileged control path. **The extension's Stop sharing button
 does not revoke BiDi control.** Use `callisto_close` or disconnect its MCP client.
 Detaching ends its session without closing the person's tabs. Failed attachment
 ends the newly created BiDi session. A closed connection can be reacquired on the
@@ -57,9 +93,15 @@ Use `include_text: false` for controls, `selector` to scope to one element, and
 {"selector":"#orders","query":"total","max_chars":2000,"include_text":true}
 ```
 
-Output uses complete lines and `next_offset` for live-DOM pagination. DOM changes
-can shift offsets. Closed shadow roots and some text in generic wrappers remain
-omitted; full text/extraction are separate tools. Frames remain explicitly selected.
+Output uses complete lines, `next_offset` and a `revision`. Continuation reads the
+same bounded capture even if the live DOM changes; pass its revision to reject a
+superseded capture. `live_changed` is advisory. A new offset-zero capture refreshes
+refs. `diff: true` reports added/removed lines against the previous same-scope
+capture, including repeated lines, with `base_revision` and `order_changed`.
+Request a full snapshot to inspect a changed order. Direct text in generic wrappers
+is included. Capture limits (5,000 lines/500,000 characters) are distinct from page
+limits; use targeted selectors when `capture_truncated` is true. Closed shadow roots
+remain omitted; full text/extraction are separate tools. Frames remain explicitly selected.
 A selected subframe navigation invalidates input until it is selected again.
 Releasing a session revokes content scripts in every frame, not only the top page.
 
@@ -80,6 +122,17 @@ Call `callisto_network`:
   body capture was explicitly enabled at start.
 - `endpoints`: observed methods, paths, query names, status codes, MIME types and
   JSON field names, without returning payload values or inventing API guarantees.
+- `compare`: supply `left` and `right` capture IDs from `list` to compare method,
+  path, query changes, statuses and inferred request/response shapes.
+- `schema`: observed field types and pagination parameter hints, marked as inferred.
+- `openapi`: an OpenAPI 3.1 draft from observed samples, optionally written to a new
+  absolute `output_path`. Authorization, optionality and full contracts remain unknown.
+- `replay`: an explicit GET/HEAD to the shared document's same origin, also inside
+  the capture's allowed origins. It inherits the page/container session using
+  Firefox MV2 page-context fetch. Redirects, custom headers and request bodies are
+  refused. Results contain at most 64 KiB of redacted JSON; the request aborts on
+  sharing revocation or after five seconds. GET/HEAD describe allowed methods,
+  not a guarantee that a poorly designed server has no side effects.
 - `rules`: replace up to 20 `block`/`redirect` rules. Each has `url_prefix` and
   optional `method`; redirect targets must stay inside allowed origins. Pass an
   empty array to clear rules. This supports controlled website testing and API
@@ -117,14 +170,19 @@ private page data.
 ```
 
 Action start/end JSONL excludes recognized sensitive arguments and fill values.
-Automatic checkpoints follow successful input/navigation/run calls. `checkpoint`
+Automatic checkpoints follow successful and failed input/navigation/run calls. Available
+artifacts are saved even when another requested artifact fails. `checkpoint`
 captures enabled evidence explicitly without changing the agent's current refs.
 `status` reports collection state. Stop network capture, stop the trace, then
 release the tab. Trace stop adds HAR when a capture exists.
 
 Files include `actions.jsonl`, ordered `snapshot<N>.json`/`screenshot<N>.png`,
-optional `network.har` and a manifest of actual outputs. In-flight/cancelled actions
-and capture failures prevent a complete manifest. Directories use mode 0700 and
+optional `network.har` and a manifest of actual outputs. Artifacts include
+`after_sequence` and capture time. Cancellation writes a terminal action with an
+unknown outcome and records unavailable checkpoint evidence. Missing requested
+evidence prevents a complete manifest. A failed task can have a complete recording;
+`task_success` stays unknown, separate from recording completeness. Manifests are
+updated during capture so interrupted runs remain inspectable. Directories use mode 0700 and
 files 0600. Limits are 10,000 recorded calls and 1,000 checkpoints. Runtime tool
 times exclude model inference. No model reasoning transcript is reconstructed.
 
@@ -143,8 +201,8 @@ python -m callisto_eval.evidence /absolute/path/task-evidence /absolute/path/exp
 WebVoyager export uses ordered PNGs and a translated task/final-answer message
 envelope accepted by the inspected auto-evaluator. It is not a reconstruction of
 the original model's thoughts/actions. Verified export validates the typed response
-and captured HAR with its pinned native parser; task-specific network field
-coverage remains unchecked. Neither export runs a judge or produces a score.
+and captured HAR with its pinned native parser. Supply `--requirements` to enforce
+an explicit task evidence contract in addition to parser validation. Neither export runs a judge or produces a score.
 Original WebArena still needs its live environment/evaluator. The generic eval
 runner now retains only agent-supplied artifact links that actually exist inside
 the run, instead of publishing placeholder screenshot/trace paths.
@@ -153,6 +211,40 @@ See the [primary-source trace requirement research](../research/2026-11-14-bench
 for pinned evaluator revisions and the distinction between runner outputs and
 scoring inputs. The generated fixture HAR was accepted by Verified 1.2.3; this is
 a format check, not an official benchmark result.
+
+## Task evidence coverage and interrupted-run inspection
+
+Derive requirements from the actual task evaluator. The explicit contract checks
+observed method/URL/status, non-redacted request/response JSON pointers, screenshot
+counts and screenshot attribution to action sequences. It does not run the judge,
+validate expected field values or infer requirements from a task ID.
+
+```json
+{"schema":"callisto.task-evidence.v1","network":[{"method":"POST","url_glob":"https://your-site.example/api/orders*","status":200,"request_json_pointers":["/sku"],"response_json_pointers":["/id"],"min_count":1}],"screenshots":{"min_count":1,"after_each_action":true}}
+```
+
+```sh
+python -m callisto_eval.evidence /absolute/path/task-evidence --inspect --requirements /absolute/path/requirements.json
+python -m callisto_eval.evidence /absolute/path/task-evidence /absolute/path/export --benchmark webarena-verified --task-id 11 --response /absolute/path/agent_response.json --requirements /absolute/path/requirements.json
+```
+
+Inspection accepts incomplete captures while retaining path, size, PNG and action
+ordering validation. Export stays strict and refuses unmet requirements. A coverage
+report explicitly says no benchmark evaluation ran. Redaction can make a real task
+unscorable; missing data is never reconstructed.
+
+The unified smoke test needs a running disposable geckodriver. For Firefox:
+
+```sh
+GECKODRIVER_URL=http://127.0.0.1:4444 python3 packages/firefox-rs/tests/firefox-bridge-smoke.py
+```
+
+For Zen Flatpak, start a host geckodriver under Xvfb with `--profile-root` inside
+`~/.var/app/app.zen_browser.zen/cache`, then set `CALLISTO_TEST_BROWSER=zen` and
+`CALLISTO_TEST_HEADFUL=1` for the test. Its wrapper launches Flatpak and installs the
+test XPI from that same accessible cache. A host `/tmp` addon path caused invalid
+file-descriptor errors when content scripts loaded inside Flatpak. All profiles,
+permissions and automatic fixture sharing belong only to the disposable test.
 
 ## Activate source changes
 
