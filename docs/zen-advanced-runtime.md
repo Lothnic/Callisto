@@ -1,7 +1,8 @@
 # Zen input, observations, network inspection and evidence
 
-These source features are experimental. Extension distribution and a controlled
-browse comparison remain deferred. The extension can now use trusted BiDi input
+These source features are experimental. A Linux x64 alpha is described in the [alpha guide](alpha-guide.md).
+Permanent signed extension distribution is still pending. The matched pilot is
+infrastructure-blocked by model-provider credit, and makes no comparison claim. The extension can now use trusted BiDi input
 under its shared-tab ownership contract. The standalone `zen-bidi` server remains
 a separate control path.
 
@@ -252,4 +253,35 @@ Rebuild the binaries, reload the extension, close MCP clients, stop the previous
 relay with `packages/firefox-rs/target/release/callisto-firefox-tab-mcp --stop-relay`,
 and restart MCP connections to refresh tool schemas. The implementation tests did
 not restart or change the user's existing Zen profile. Permanent distribution and
-new controlled browse comparisons remain deferred.
+new matched agent results still require working model access.
+
+## Recovery and measurement validation — 15 November 2026
+
+The persistent-profile suite exercises cancellation, abrupt relay loss, extension
+replacement, clean browser restart and tab loss in Firefox and Zen. It also kills
+and restarts its own Zen Flatpak process after verifying profile ownership.
+Profile storage and persistent cookies survive restart/crash; saved pairing
+reconnects while tab access still requires explicit reacquisition. The surviving
+stdio proxy refuses writes until a prior trusted-input choice is re-established.
+Failed trusted enablement remains in trusted mode instead of allowing DOM input.
+
+The suite creates a genuine owned WebDriver tab. Zen's internal empty-workspace
+placeholder is not an ordinary extension-visible tab; navigating that placeholder
+was a test-fixture startup error. No personal browser or profile is used.
+
+Run `node eval/agent-comparison/session-recovery.mjs`, or set
+`CALLISTO_TEST_BROWSER=firefox` and a fresh `RECOVERY_OUTPUT`. Override
+`GECKODRIVER_BINARY` when needed. See the saved [Zen report](../eval/reports/session-recovery-2026-11-15.json)
+and [Firefox report](../eval/reports/session-recovery-firefox-2026-11-15.json).
+
+Trace end events now contain content-free measurement samples. Status/manifests
+aggregate calls, failures, serialized argument/value UTF-8 bytes, observation
+characters and runtime elapsed milliseconds. Sizes exclude MCP framing; elapsed
+time excludes model inference and checkpoint capture. Interrupted actions remain
+explicit and are not invented as completed measurement samples. These counters
+are not tokenizer counts or invoices.
+
+The [observation ablation](../eval/reports/observation-efficiency-2026-11-15/README.md)
+shows why output size must be reported together with task-content coverage. The
+[matched pilot attempt](../eval/reports/matched-agent-2026-11-15/README.md) saves
+provider failures separately from browser-task failures.

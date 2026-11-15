@@ -31,8 +31,9 @@ Performance and reliability claims are still being tested.
 
 For setup with Codex, Claude Code or OpenCode, including a safe first trial and
 existing Zen tabs, start with the [user and agent setup guide](docs/getting-started.md).
-Friends can try a source checkout today; published builds and signed Firefox/Zen
-extension distribution are not ready yet. See the [path to 1.0](roadmap.md#path-to-10).
+Linux x64 testers can use the [alpha guide](docs/alpha-guide.md); source setup
+remains available. The alpha extension is unsigned and temporary, and permanent
+signed Firefox/Zen distribution is not ready yet. See the [path to 1.0](roadmap.md#path-to-10).
 
 From the repository root, with Node.js 20+ and a Chromium/Chrome binary:
 
@@ -120,8 +121,10 @@ Disposable Firefox and headful Zen fixture workflows cover extension-owned nativ
 input, forms, frames, API replay, tab ownership, cancellation and relay restart.
 Captured Zen HAR passes the pinned Verified parser and explicit field/screenshot
 coverage checks. These are implementation checks; no new benchmark judge or
-controlled browse time/cost comparison has run. Signed extension distribution
-and production-profile recovery certification remain open.
+controlled browse time/cost comparison has run. Persistent test-profile restart/crash recovery now has dedicated evidence, and
+Linux alpha archives have install/diagnostic checks. The matched Hy3 pilot is
+blocked by provider credit; signed extension distribution and production-profile
+recovery certification remain open.
 
 Read the [runtime roadmap](roadmap.md), [benchmark index](BENCHMARKS.md), and
 [research index](research/README.md) for current priorities and test caveats.

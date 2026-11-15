@@ -6,11 +6,12 @@ develop and measure it. This is a working plan, not a claim of Playwright or
 browse parity. The [original phased roadmap](docs/history/roadmap-2026.md) is
 preserved for historical context.
 
-## Current focus — 14 November 2026
+## Current focus — 15 November 2026
 
 The current work prioritizes Zen input, useful observations, recovery and network
-inspection. Extension shipping and a new controlled browse comparison are deferred
-by the current project direction.
+inspection. The next milestone now includes a Linux alpha, persistent-profile
+recovery and a matched agent pilot. Permanent signed extension distribution is
+still a separate release gate.
 
 - Extension-owned trusted BiDi input now shares the observation/network/evidence
   lease. Disposable Firefox and headful Zen integration covers native typing,
@@ -25,9 +26,19 @@ by the current project direction.
 - Failed actions retain checkpoints; interrupted actions record unknown outcomes
   and missing evidence. Export supports explicit task field/screenshot coverage
   contracts alongside native Verified parser validation.
-- Next validate production-profile recovery across browser upgrades and longer
-  sessions, then use matched agent tasks to measure success, time and model cost.
-  Extension distribution and a new controlled comparison remain deferred.
+- Persistent test profiles now pass cancellation, relay crash, extension update,
+  browser restart and tab-loss scenarios in Firefox and Zen, plus a forced Zen
+  browser crash. The surviving proxy preserves trusted-input intent after relay
+  replacement. These are dedicated profiles, not production-profile certification.
+- The popup/options UI separates connection, sharing, optional grants and recovery.
+  Observation reports measure actual response bytes and retain task-content checks;
+  token and invoice claims are kept separate.
+- A matched Hy3 pilot harness and private browse fixture are implemented. Both
+  configured provider accounts returned HTTP 402 before agent tool use; no valid
+  browse task-success or cost comparison can yet be concluded.
+- Linux x64 alpha packaging includes a temporary unsigned extension, explicit
+  prerelease installation and read-only diagnostics. Test reports and platform
+  constraints are documented in the [alpha guide](docs/alpha-guide.md).
 
 See [advanced runtime usage](docs/zen-advanced-runtime.md) and
 [benchmark artifact contracts](research/2026-11-14-benchmark-trace-requirements.md).
@@ -79,7 +90,8 @@ notices; do not redistribute its outputs as if they were MIT-only.
 
 ## Path to 1.0
 
-Callisto is currently an experimental 0.1.0 source release. The isolated
+Callisto remains experimental. The 0.2.0 alpha packages the current runtime for
+Linux x64 testers; its extension is unsigned and temporary. The isolated
 Chromium MCP runtime works, and the Rust Firefox/Zen existing-tab bridge and
 separate BiDi runtime are implemented experiments. The bridge has pairing,
 tab ownership, handoff and explicit stop-sharing; those features still need

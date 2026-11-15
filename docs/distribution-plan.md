@@ -3,7 +3,9 @@
 This is the release plan. A shared launcher, source setup command, packaged
 installer with opt-in runtime updates, packaging workflow and signing workflow
 are implemented in the source tree. The installer has local transaction
-tests, but compatible packages and a signed extension have not been published.
+tests and a real local alpha archive installation check. Public runtime assets
+and a signed extension have not been published. A Linux x64 local alpha build
+is available through [the alpha guide](alpha-guide.md).
 See [the implementation guide](development-installation.md). Callisto has
 separate experimental Chromium and Firefox/Zen MCP backends; see the
 [main setup](../README.md#get-started) and [Firefox guide](../packages/firefox-rs/README.md).
@@ -26,7 +28,9 @@ browser. Chromium's current connected mode also depends on the installed browse
 CLI and extension, and opens an agent-owned tab rather than adopting an
 existing one. Firefox's temporary add-on is removed on browser exit. The
 current persistent Firefox relay pairing survives MCP and relay restarts, but
-permanent extension installation and browser-restart behavior need validation.
+permanent extension installation remains open. Disposable persistent Firefox/Zen
+profiles now cover browser restart and extension reload; Zen also covers a
+forced crash. This is not evidence from personal production profiles.
 
 ## Work required before release
 

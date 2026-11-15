@@ -62,3 +62,17 @@ A defensible comparison should identify browser and model versions, task set,
 state, settings, failures, sample size and per-task results. Report model turns,
 context cost and task success only when an actual agent was run. A scripted tool
 call is not an agent task.
+
+## Follow-up: persistent sessions and observations
+
+The [Zen](eval/reports/session-recovery-2026-11-15.json) and
+[Firefox](eval/reports/session-recovery-firefox-2026-11-15.json) recovery reports
+cover dedicated persistent test profiles. An
+[observation-size ablation](eval/reports/observation-efficiency-2026-11-15/README.md)
+records serialized response bytes and whether the requested item is present.
+These checks do not measure model-token savings or browse task performance.
+
+A [matched Hy3 pilot](eval/reports/matched-agent-2026-11-15/README.md) attempted
+both configured providers. HTTP 402 prevented agent execution, so no comparative
+score or latency/cost result is reported. The harness saves real provider usage
+when available and keeps infrastructure errors out of browser-task scores.
