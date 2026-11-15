@@ -97,7 +97,10 @@ impl Controller {
     pub fn status(&self, client: u64) -> Value {
         let state = self.state.lock().unwrap();
         let enabled = state.enabled.contains(&client);
-        let connected=state.transport.as_ref().is_some_and(|t|!t.bidi.is_closed());
+        let connected = state
+            .transport
+            .as_ref()
+            .is_some_and(|t| !t.bidi.is_closed());
         json!({"mode":if enabled{"trusted-bidi"}else{"synthetic-dom"},"transportConnected":connected,"leaseBound":connected && state.bindings.get(&client).is_some_and(|b|b.valid.load(Ordering::SeqCst)),"extensionSharingControls":true,"fallback":false})
     }
     async fn transport(&self, endpoint: Option<&str>) -> Result<Arc<Transport>> {
@@ -144,6 +147,8 @@ impl Controller {
         Ok(transport)
     }
     pub async fn enable(&self, bridge: &Bridge, client: u64, endpoint: &str) -> Result<Value> {
+        endpoint_uri(endpoint)?;
+        self.state.lock().unwrap().enabled.insert(client);
         let transport = self.transport(Some(endpoint)).await?;
         let result = self
             .prepare(bridge, client, &transport, &json!({"action":"bind"}))
@@ -399,10 +404,19 @@ impl Controller {
         prepared: &Value,
         mut actions: Value,
     ) -> Result<()> {
-        let mut validation_target=prepared.clone();
-        validation_target["keyboard"]=json!(actions.as_array().is_some_and(|sources|sources.iter().any(|source|source["type"]=="key")));
+        let mut validation_target = prepared.clone();
+        validation_target["keyboard"] = json!(actions
+            .as_array()
+            .is_some_and(|sources| sources.iter().any(|source| source["type"] == "key")));
         let validation = self
-            .validate(bridge, client, transport, binding, &validation_target, false)
+            .validate(
+                bridge,
+                client,
+                transport,
+                binding,
+                &validation_target,
+                false,
+            )
             .await?;
         // Refresh geometry only before dispatch, after actionability checks. The
         // document/target nonce stays fixed; an input is never replayed.
@@ -853,7 +867,7 @@ mod tests {
             .await
             .is_err());
         assert_eq!(f.writes.load(Ordering::SeqCst), 0);
-        assert!(!f.bridge.trusted.enabled(1));
+        assert!(f.bridge.trusted.enabled(1));
     }
     #[tokio::test]
     async fn stopped_lease_aborts_remaining_fill_without_fallback() {

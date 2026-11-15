@@ -3,6 +3,7 @@
 #![recursion_limit = "512"]
 mod bidi;
 mod keys;
+mod session_recovery;
 mod tab_relay;
 mod trace;
 mod trusted_input;
@@ -479,7 +480,12 @@ async fn call_tool_inner(
     name: &str,
     args: &Value,
 ) -> Result<Value> {
-    if name == "callisto_page" && !matches!(args["action"].as_str(),Some("scroll"|"hover"|"select"|"check"|"text"|"find")) {
+    if name == "callisto_page"
+        && !matches!(
+            args["action"].as_str(),
+            Some("scroll" | "hover" | "select" | "check" | "text" | "find")
+        )
+    {
         bail!("Unsupported public page action");
     }
     if name == "callisto_input" {
@@ -913,8 +919,12 @@ async fn call_tool_inner(
 }
 #[tokio::main]
 async fn main() -> Result<()> {
-    let root = tab_relay::root()?;
     let mode = std::env::args().nth(1);
+    if mode.as_deref() == Some("--version") {
+        println!("callisto-firefox-tab-mcp {}", env!("CARGO_PKG_VERSION"));
+        return Ok(());
+    }
+    let root = tab_relay::root()?;
     if mode.as_deref() == Some("--stop-relay") {
         let mut stream = tokio::net::UnixStream::connect(root.join("relay.sock")).await?;
         stream
@@ -988,28 +998,32 @@ async fn proxy<R: AsyncRead + Unpin, W: AsyncWrite + Unpin>(
     let (read, mut write) = stream.into_split();
     let mut replies = BufReader::new(read).lines();
     let mut pending = HashMap::<String, Value>::new();
+    let mut recovery = session_recovery::Policy::default();
     loop {
         let disconnected = tokio::select! {
             line=input.next_line()=>{
                 let Some(line)=line? else {return Ok(());};
                 if let Ok(message)=serde_json::from_str::<Value>(&line) {
-                    if let Some(id)=message.get("id"){pending.insert(id.to_string(),id.clone());}
+                    if let Some(reply)=recovery.request(&message) {output.write_all(format!("{reply}\n").as_bytes()).await?;output.flush().await?;continue;}
+                    if let Some(id)=message.get("id"){pending.insert(id.to_string(),message.clone());}
                 }
                 write.write_all(format!("{line}\n").as_bytes()).await.is_err()
             }
             line=replies.next_line()=>{
                 match line {
                     Ok(Some(line))=>{
-                        if let Ok(message)=serde_json::from_str::<Value>(&line){if let Some(id)=message.get("id"){pending.remove(&id.to_string());}}
-                        output.write_all(format!("{line}\n").as_bytes()).await?;output.flush().await?;false
+                        let mut reply=serde_json::from_str::<Value>(&line).unwrap_or(Value::Null);
+                        if let Some(id)=reply.get("id"){if let Some(request)=pending.remove(&id.to_string()){recovery.response(&request,&mut reply);}}
+                        output.write_all(format!("{reply}\n").as_bytes()).await?;output.flush().await?;false
                     }
                     _=>true,
                 }
             }
         };
         if disconnected {
-            for (_, id) in pending.drain() {
-                let reply = json!({"jsonrpc":"2.0","id":id,"error":{"code":-32000,"message":"Browser relay disconnected. The action may have completed; inspect before retrying. It was not replayed."}});
+            recovery.disconnected();
+            for (_, request) in pending.drain() {
+                let reply = json!({"jsonrpc":"2.0","id":request["id"],"error":{"code":-32000,"message":"Browser relay disconnected. The action may have completed; inspect before retrying. It was not replayed."}});
                 output.write_all(format!("{reply}\n").as_bytes()).await?;
             }
             output.flush().await?;
@@ -1430,9 +1444,11 @@ mod tests {
 
     #[tokio::test]
     async fn public_page_cannot_call_internal_input_or_replay_actions() {
-        let (bridge,_) = fixture().await;
-        for action in ["api_replay","click_next","input_prepare","fill","press"] {
-            let error=call_tool(&bridge,1,"callisto_page",&json!({"action":action})).await.unwrap_err();
+        let (bridge, _) = fixture().await;
+        for action in ["api_replay", "click_next", "input_prepare", "fill", "press"] {
+            let error = call_tool(&bridge, 1, "callisto_page", &json!({"action":action}))
+                .await
+                .unwrap_err();
             assert!(error.to_string().contains("Unsupported public page action"));
         }
         assert!(bridge.pending.lock().await.is_empty());
