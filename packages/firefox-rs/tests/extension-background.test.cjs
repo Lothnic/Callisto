@@ -452,8 +452,8 @@ test('agent requests cannot create a window; explicit preparation starts only af
 });
 
 test('Stop during initial revocation cancels a pending user preparation before it can share again',async()=>{
- const f=backgroundFixture();await pairFixture(f);const send=f.browser.tabs.sendMessage;let release,entered;
- const entry=new Promise(r=>entered=r);f.browser.tabs.sendMessage=async(id,message,...rest)=>{if(message.type==='revoke'){entered();await new Promise(r=>release=r);}return send(id,message,...rest);};
- const work=f.listener({type:'background-share'});await entry;await f.listener({type:'stop'});release();const result=await work;
+ const f=backgroundFixture();await pairFixture(f);const send=f.browser.tabs.sendMessage;let entered;const releases=[];
+ const entry=new Promise(r=>entered=r);f.browser.tabs.sendMessage=async(id,message,...rest)=>{if(message.type==='revoke'){entered();await new Promise(r=>releases.push(r));}return send(id,message,...rest);};
+ const work=f.listener({type:'background-share'});await entry;await f.listener({type:'stop'});for(const release of releases)release();const result=await work;
  assert.match(result.message,/stopped/);assert.equal(f.changes.length,0);assert.equal((await f.listener({type:'ui-status'})).shared_tabs,0);
 });
