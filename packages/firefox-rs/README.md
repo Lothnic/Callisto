@@ -16,6 +16,11 @@ Stop sharing then revokes both paths, with no silent fallback. This requires a
 debug-enabled browser; it cannot upgrade a normal process automatically. See
 [unified input, API inspection and evidence](../../docs/zen-advanced-runtime.md).
 
+Source also supports [background work in a user-prepared agent window](../../docs/background-work.md).
+Preparation may focus it once; return to another window to start. Pause, View and
+Take back retain control. Concurrent native work is currently verified on Zen X11
+only; same-window inactive tabs and minimized windows remain unsupported.
+
 `callisto-firefox-tab-mcp` is intended to work with a Firefox or Zen browser
 that is already running, using its current profile, tabs and logged-in sessions.
 It does not start, close or restart the browser. You choose the existing tab to

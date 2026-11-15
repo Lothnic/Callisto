@@ -22,6 +22,10 @@ and session-backed GET/HEAD replay, plus private failure/interruption evidence.
 Trusted input requires a deliberately debug-enabled browser; ordinary sharing
 still defaults to DOM input. See [Zen runtime usage](docs/zen-advanced-runtime.md).
 
+Zen source now supports a user-prepared agent window while you work in another
+window. Preparation may focus it once; background execution pauses if it comes
+forward. See [background work and verified limits](docs/background-work.md).
+
 Callisto is experimental. Its Playwright-shaped API is a subset, not a drop-in
 replacement for Playwright. An experimental connection to an existing Chromium
 browser through browse's relay is available with significant limitations below.

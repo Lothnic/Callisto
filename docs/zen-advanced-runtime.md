@@ -8,6 +8,14 @@ API preflight was credit-blocked and is kept as historical evidence. The extensi
 under its shared-tab ownership contract. The standalone `zen-bidi` server remains
 a separate control path.
 
+## Work alongside your agent
+
+[Prepare background work](background-work.md) moves the exact shared tab into
+a labelled agent window. User preparation may take focus once. Return to another
+window to start; execution then refuses focus-changing operations and pauses
+when brought forward. Headful concurrent typing/media is verified on Zen X11
+only. Inactive tabs and minimized windows remain separate work.
+
 ## One lease for observations, input, network and evidence
 
 Use the normal `zen`/`firefox` extension bridge. Pair and explicitly share a tab,

@@ -4,6 +4,13 @@
 
 ### Firefox and Zen runtime
 
+- Add explicit background-window preparation, start-on-return, Pause, View and
+  Take back under the shared-tab lease. Preserve the exact tab and document;
+  refuse focus-changing agent operations. Initial user preparation may take focus.
+- Verify a one-minute headful Zen X11 run alongside OS typing and media, with
+  saved action traces and a disclosed high-rate typing control failure. Other
+  desktops, inactive tabs and minimized windows remain unverified.
+
 - Add request comparison, observed pagination/schema hints, draft OpenAPI export
   and explicit same-origin GET/HEAD replay using the shared page's session.
 - Add optional trusted BiDi input under extension tab ownership and Stop sharing,
@@ -15,7 +22,7 @@
 - Retain failed-action checkpoints and interrupted outcomes; inspect incomplete
   captures and enforce explicit benchmark field/screenshot requirements.
 - Validate disposable Firefox and Zen workflows and real HAR parsing. Extension
-  distribution remains unsigned; matched model comparisons await provider credit.
+  distribution remains unsigned; a signed-in host now drives the local matched pilot.
 
 ### Host-agent evaluation
 

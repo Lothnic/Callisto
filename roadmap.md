@@ -8,11 +8,17 @@ preserved for historical context.
 
 ## Current focus — 15 November 2026
 
-The current work prioritizes Zen input, useful observations, recovery and network
-inspection. The next milestone now includes a Linux alpha, persistent-profile
+The current work prioritizes concurrent human/agent use in Zen, alongside input,
+useful observations, recovery and network inspection. The next milestone now includes a Linux alpha, persistent-profile
 recovery and a matched agent pilot. Permanent signed extension distribution is
 still a separate release gate.
 
+- The first [background agent-window slice](docs/background-work.md) is in source.
+  User preparation may focus it once; execution starts after returning to another
+  window. Pause/View/Take back retain explicit control. A one-minute headful Zen
+  X11 check passed concurrent typing and media; inactive tabs, minimized windows,
+  Wayland and persistent workers remain separate gates. The
+  [Zen-first plan](docs/background-agent-work-plan.md) also covers Chromium.
 - Extension-owned trusted BiDi input now shares the observation/network/evidence
   lease. Disposable Firefox and headful Zen integration covers native typing,
   controls, runs, frames, explicit reacquisition and tab isolation.

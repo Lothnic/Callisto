@@ -15,6 +15,14 @@ The harness owns disposable profiles and verifies task state. No `.env` or model
 API key is needed for this runner. Claude Code and other MCP hosts can use the
 same Callisto launcher; the automated adapter in this pilot currently runs Codex.
 
+## Concurrent human and agent use
+
+`background-window.mjs` tests the explicit preparation flow and native form work
+while OS-level typing and muted video continue in a focused human window. It
+uses an owned Xvfb/X11 display and Openbox, not a personal browser. No model is
+called. See [reproduction and limits](../../docs/background-work.md) and the
+[saved run with traces](../reports/background-window-2026-11-15.md).
+
 ## Earlier API-driven experiments
 
 ### Local model-driven engine comparison
