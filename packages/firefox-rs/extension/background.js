@@ -60,6 +60,14 @@ async function pair(code) {
 browser.runtime.onMessage.addListener(async message => {
   try {
     if (message.type === 'status') return {message:status()};
+    if (message.type === 'ui-status') {
+      const shared=[...new Set(sessions.values())].filter(session=>session.sharing);
+      const [navigation,full,network,settings]=await Promise.all([
+        browser.permissions.contains({origins:['<all_urls>']}),browser.permissions.contains(fullBrowserPermissions),
+        browser.permissions.contains({origins:['<all_urls>'],permissions:['webRequest','webRequestBlocking']}),browser.storage.local.get('callistoAgentContainersEnabled')]);
+      return {connected:paired && socket?.readyState===WebSocket.OPEN,paired:!!rememberedCode,reconnecting:!!rememberedCode && !paired,shared_tabs:shared.length,
+        permissions:{navigation,browser:full,network,containers:settings.callistoAgentContainersEnabled===true}};
+    }
     if (message.type === 'pair') { await pair(message.code); return {message:'Connected. Open the desired tab and click Share this tab.'}; }
     if (message.type === 'share') return {message:await share()};
     if (message.type === 'stop') { await stop(); return {message:'Sharing stopped. Browser pairing is still connected.'}; }
@@ -461,5 +469,6 @@ async function executeCommand(request, connection, deadline = Date.now()+10000) 
     domReady(id){void restorePage(id);}
   });
   Object.defineProperty(context,'target',{get:()=>selected??reserved});
+  Object.defineProperty(context,'sharing',{get:()=>selected!==null});
   return context;
 }

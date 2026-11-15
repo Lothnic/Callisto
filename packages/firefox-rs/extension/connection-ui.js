@@ -1,0 +1,29 @@
+'use strict';
+(() => {
+ const byId=id=>document.getElementById(id);let state=null,busy=false,revision=0;
+ function notice(text,error=false){byId('notice').textContent=text;byId('notice').dataset.error=String(error);}
+ function render(){
+  if(!state)return;
+  const count=state.shared_tabs||0;
+  byId('connection-title').textContent=state.connected?(count===1?'One tab shared':count?`${count} tabs shared`:'Connected · no tab shared'):state.reconnecting?'Reconnecting to runtime':'Runtime not connected';
+  byId('connection-copy').textContent=state.connected?(count?'Your agent can use shared tabs. Sharing this tab again replaces current shares. Keep the intended tab active.':document.body.dataset.surface==='popup'?'Open the intended page and choose Share this tab.':'Return to the intended page, right-click it and choose Share this tab with Callisto.'):state.paired?'Start the Callisto MCP server. Saved pairing will reconnect; tab access is never restored automatically.':'Start Callisto in your agent, then enter its pairing code below.';
+  byId('pair-form').hidden=!!state.paired;
+  if(byId('share'))byId('share').disabled=!state.connected||busy;
+  byId('stop').disabled=!count;byId('pair').disabled=busy;byId('forget').disabled=!state.paired||busy;
+  for(const key of ['navigation','browser','network','containers'])byId(key+'-state').textContent=state.permissions?.[key]?'Enabled':'Not granted';
+ }
+ async function refresh(){const stamp=++revision;try{const next=await browser.runtime.sendMessage({type:'ui-status'});if(stamp!==revision)return;if(typeof next?.connected!=='boolean')throw Error('Extension state unavailable. Reload the extension and try again.');state=next;render();}catch(error){if(stamp===revision)notice(error.message,true);}}
+ async function perform(work){if(busy)return;busy=true;render();try{const result=await work();if(result?.message?.startsWith('Error:'))throw Error(result.message.slice(7));notice(result?.message||'Updated.');}catch(error){notice(error.message,true);}finally{busy=false;await refresh();}}
+ byId('pair-form').addEventListener('submit',event=>{event.preventDefault();const code=byId('code').value.trim();if(!/^127\.0\.0\.1:\d{1,5}#[0-9a-f]{64}$/.test(code)){notice('Use the complete pairing code from Callisto, beginning with 127.0.0.1:',true);byId('code').focus();return;}void perform(()=>browser.runtime.sendMessage({type:'pair',code}));});
+ byId('share')?.addEventListener('click',()=>perform(()=>browser.runtime.sendMessage({type:'share'})));
+ // Revocation stays available even while another operation is pending.
+ byId('stop').addEventListener('click',async()=>{try{notice((await browser.runtime.sendMessage({type:'stop'})).message);}catch(error){notice(error.message,true);}await refresh();});
+ byId('forget').addEventListener('click',()=>perform(()=>browser.runtime.sendMessage({type:'forget'})));
+ byId('settings')?.addEventListener('click',()=>browser.runtime.openOptionsPage());
+ function permission(id,request,success){byId(id).addEventListener('click',()=>perform(async()=>{const granted=await browser.permissions.request(request);if(!granted)return {message:'Permission was not granted. Existing access is unchanged.'};return typeof success==='function'?success():{message:success};}));}
+ permission('allow',{origins:['<all_urls>']},'Navigation allowed. Share the tab again to use it.');
+ permission('full',{origins:['<all_urls>'],permissions:['tabs','cookies','bookmarks','history','downloads']},'Browser access enabled.');
+ permission('network',{origins:['<all_urls>'],permissions:['webRequest','webRequestBlocking']},'Network access enabled. The agent must start a capture with explicit origins.');
+ permission('containers',{permissions:['cookies']},()=>browser.runtime.sendMessage({type:'enable-containers'}));
+ window.addEventListener('focus',refresh);const timer=setInterval(()=>{if(!document.hidden)void refresh();},1500);window.addEventListener('pagehide',()=>clearInterval(timer),{once:true});void refresh();
+})();
