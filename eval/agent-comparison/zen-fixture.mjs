@@ -1,11 +1,12 @@
 // Dedicated persistent test profile. Never attaches to a person's browser.
 import {spawn,execFile} from 'node:child_process';
 import {promisify} from 'node:util';
-import {mkdtemp,mkdir,writeFile,readFile,copyFile,chmod,rm} from 'node:fs/promises';
+import {mkdtemp,mkdir,writeFile,readFile,copyFile,chmod,rm,access} from 'node:fs/promises';
 import {join,resolve} from 'node:path';
 import {homedir} from 'node:os';
 import {createServer} from 'node:net';
 const exec=promisify(execFile);
+const shellQuote=value=>"'"+value.replaceAll("'", "'\\''")+"'";
 const pause=ms=>new Promise(r=>setTimeout(r,ms));
 async function freePort(){const server=createServer();await new Promise(r=>server.listen(0,'127.0.0.1',r));const port=server.address().port;await new Promise(r=>server.close(r));return port;}
 export async function until(check,timeout=15000){const until=Date.now()+timeout;let last;while(Date.now()<until){try{const value=await check();if(value)return value;}catch(error){last=error;}await pause(100);}throw Error('Fixture deadline exceeded'+(last?': '+last.message:''));}
@@ -21,17 +22,24 @@ export class ZenFixture {
   this.directory=await mkdtemp(join(base,'callisto-persistent-'));await chmod(this.directory,0o700);
   this.profile=join(this.directory,'profile');await exec('mkdir',['-p',this.profile]);
   this.driverURL='http://127.0.0.1:'+await freePort();const bidiPort=await freePort();
-  this.driver=spawn('xvfb-run',['-a',process.env.GECKODRIVER_BINARY||'/snap/firefox/current/usr/lib/firefox/geckodriver','--host','127.0.0.1','--port',new URL(this.driverURL).port,'--websocket-port',String(bidiPort),'--profile-root',this.directory],{stdio:'ignore',detached:true});
+  this.driver=spawn('xvfb-run',['-a',process.env.GECKODRIVER_BINARY||'/snap/firefox/current/usr/lib/firefox/geckodriver','--host','127.0.0.1','--port',new URL(this.driverURL).port,'--websocket-port',String(bidiPort),'--profile-root',this.directory],{stdio:'ignore',detached:true,env:{...process.env,MOZ_ENABLE_WAYLAND:'0',GDK_BACKEND:'x11',WAYLAND_DISPLAY:''}});
   await until(()=>fetch(this.driverURL+'/status').then(r=>r.ok));
   if(this.kind==='zen'){
    const location=(await exec('flatpak',['info','--show-location','app.zen_browser.zen'])).stdout.trim();
-   this.binary=join(this.directory,'zen-wrapper');await writeFile(this.binary,'#!/bin/sh\nexec flatpak run app.zen_browser.zen "$@"\n',{mode:0o700});
+   this.binary=join(this.directory,'zen-wrapper');
+   const auth=join(this.directory,'fixture.Xauthority');
+   await writeFile(this.binary,'#!/bin/sh\ncp -- "$XAUTHORITY" '+shellQuote(auth)+'\nchmod 600 '+shellQuote(auth)+'\nexec flatpak run --socket=x11 --nosocket=wayland --env=DISPLAY="$DISPLAY" --env=XAUTHORITY='+shellQuote(auth)+' --env=MOZ_ENABLE_WAYLAND=0 --env=GDK_BACKEND=x11 app.zen_browser.zen "$@"\n',{mode:0o700});
    for(const name of ['application.ini','platform.ini'])await copyFile(join(location,'files/zen',name),join(this.directory,name));
+  }
+  if(this.kind==='firefox'&&!this.headless&&await access('/snap/firefox/current/usr/lib/firefox/application.ini').then(()=>true,()=>false)){
+   this.binary=join(this.directory,'firefox-wrapper');const auth=join(this.directory,'fixture.Xauthority');
+   await writeFile(this.binary,'#!/bin/sh\ncp -- "$XAUTHORITY" '+shellQuote(auth)+'\nchmod 600 '+shellQuote(auth)+'\nexport XAUTHORITY='+shellQuote(auth)+'\nexec /snap/bin/firefox "$@"\n',{mode:0o700});
+   for(const name of ['application.ini','platform.ini'])await copyFile(join('/snap/firefox/current/usr/lib/firefox',name),join(this.directory,name));
   }
   await this.openBrowser();await this.installExtension(true);await this.share();return this;
  }
  async openBrowser(){
-  const args=['-profile',this.profile];if(this.headless)args.push('-headless');
+  const args=['-no-remote','-profile',this.profile];if(this.headless)args.push('-headless');
   const options={args,prefs:{'zen.welcome-screen.seen':true,'browser.shell.checkDefaultBrowser':false,'privacy.userContext.enabled':true}};if(this.binary)options.binary=this.binary;
   const created=await this.request('/session',{capabilities:{alwaysMatch:{browserName:'firefox',webSocketUrl:true,'moz:firefoxOptions':options}}});this.session=created.sessionId;this.capabilities=created.capabilities;this.endpoint=created.capabilities.webSocketUrl;
   // Zen can expose an internal empty-workspace placeholder as the initial
@@ -52,7 +60,8 @@ with zipfile.ZipFile(sys.argv[2],'w',zipfile.ZIP_DEFLATED) as z:
   data=p.read_bytes()
   if p.name=='manifest.json':
    m=json.loads(data);m['version']='0.2.'+sys.argv[4];m['permissions']=list(dict.fromkeys(m['permissions']+m.pop('optional_permissions')));data=json.dumps(m).encode()
-  if p.name=='browser-control.js':data+=b'\\nconst fixtureBrowserControl=browserControl;browserControl=async(...args)=>{const result=await fixtureBrowserControl(...args);if(args[0].action==="tabs_list")result.fixture_diagnostics={version:browser.runtime.getManifest().version,windows:(await browser.windows.getAll({populate:true})).map(w=>({id:w.id,type:w.type,tabs:w.tabs?.map(t=>({id:t.id,active:t.active,url:t.url}))})),allTabs:(await browser.tabs.query({})).map(t=>({id:t.id,url:t.url}))};return result;};'
+  if p.name=='browser-control.js':data+=b'\\nglobalThis.fixtureFocusEvents=[];browser.windows.onFocusChanged.addListener(id=>globalThis.fixtureFocusEvents.push({id,at:Date.now()}));const fixtureBrowserControl=browserControl;browserControl=async(...args)=>{if(args[0].action==="fixture_background_prepare")return args[1].startBackground(args[2],{allowWindowSetup:true});const result=await fixtureBrowserControl(...args);if(args[0].action==="tabs_list")result.fixture_diagnostics={focusEvents:globalThis.fixtureFocusEvents,version:browser.runtime.getManifest().version,windows:(await browser.windows.getAll({populate:true})).map(w=>({id:w.id,focused:w.focused,state:w.state,type:w.type,tabs:w.tabs?.map(t=>({id:t.id,active:t.active,url:t.url}))})),allTabs:(await browser.tabs.query({})).map(t=>({id:t.id,url:t.url}))};return result;};'
+  if p.name=='background.js':data+=b'\\n browserActions.push("fixture_background_prepare");'
   if p.name=='background.js' and code:data+=('\\nsetTimeout(()=>pair('+json.dumps(code)+').catch(console.error),300);').encode()
   z.writestr(p.name,data)
 `,resolve('packages/firefox-rs/extension'),archive,JSON.stringify(code),String(this.extensionVersion)]).catch(error=>{throw Error('Fixture extension build failed: '+String(error.stderr||'archive creation failed').slice(0,300));});
