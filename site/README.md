@@ -56,5 +56,6 @@ The Chromium installer remains pinned to its existing revision and does not
 install the Zen bridge. Keep source availability, signed distribution and benchmark
 results distinct. The 15 November persistent-profile checks and observation byte measurements
 are not a browse time/cost comparison or a benchmark judge run. The matched
-model pilot is blocked by provider credit. The alpha guide describes a local
+pilot now runs a signed-in Codex host through native MCP tools; the credit-blocked
+Hy3 API preflight is historical and does not block host-agent use. The alpha guide describes a local
 Linux x64 build, not a published signed extension.
