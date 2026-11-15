@@ -17,6 +17,7 @@ A local alpha build is usable before public release assets are published. From
 this checkout, build to a fresh directory, verify and install it:
 
 ```sh
+npm --prefix packages/mini ci
 mkdir -p dist/alpha
 node scripts/package-alpha.mjs --version v0.2.0-alpha.1 --out dist/alpha/v0.2.0-alpha.1
 node scripts/install-release.mjs --from-dir dist/alpha/v0.2.0-alpha.1 --prefix "$HOME/.local/share/callisto-alpha"
@@ -26,7 +27,8 @@ node "$HOME/.local/share/callisto-alpha/bin/callisto.mjs" doctor zen
 The local installer checks the manifest platform/version and verifies the same
 archive checksums as the published-release installer. It installs Node
 dependencies, so npm registry access or a suitable local cache is still needed.
-Source builds require Node.js, npm, Rust/Cargo, tar, Python and binutils/objdump.
+Source builds require Node.js 20 or newer, npm, Rust/Cargo, tar, Python and
+binutils/objdump. The bundle does not include these build tools.
 
 ### Published-release installation
 
