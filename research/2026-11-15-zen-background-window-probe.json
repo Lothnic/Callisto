@@ -1,0 +1,156 @@
+{
+  "kind": "exploratory-owned-Zen-two-window-probe",
+  "browser": "1.14.9b",
+  "real_user_profile": false,
+  "schema": "callisto.background-window-probe.v1",
+  "created_at": "2026-11-15T16:17:06.580Z",
+  "source_revision": "14fb5dc7800bdd560dab359178567366715fb8ef",
+  "window_manager": "Xvfb test environment; not desktop-wide certification",
+  "scope": "One brief native fill/click sequence; a dedicated disposable profile and window. Human fixture typed before the action; no simultaneous physical typing or sustained media playback was tested.",
+  "actionStarted": 1794759426349,
+  "actionEnded": 1794759426559,
+  "before": {
+    "human": {
+      "visible": "visible",
+      "focused": true,
+      "value": "HUMAN"
+    },
+    "diagnostics": {
+      "allTabs": [
+        {
+          "id": 2,
+          "url": "http://127.0.0.1:45395/agent"
+        },
+        {
+          "id": 1,
+          "url": "about:blank"
+        },
+        {
+          "id": 3,
+          "url": "http://127.0.0.1:45395/human"
+        }
+      ],
+      "focusEvents": [
+        {
+          "at": 1794759426028,
+          "id": -1
+        },
+        {
+          "at": 1794759426030,
+          "id": 30
+        }
+      ],
+      "version": "0.2.1",
+      "windows": [
+        {
+          "focused": false,
+          "id": 1,
+          "tabs": [
+            {
+              "active": true,
+              "id": 2,
+              "url": "http://127.0.0.1:45395/agent"
+            },
+            {
+              "active": false,
+              "id": 1,
+              "url": "about:blank"
+            }
+          ],
+          "type": "normal"
+        },
+        {
+          "focused": true,
+          "id": 30,
+          "tabs": [
+            {
+              "active": true,
+              "id": 3,
+              "url": "http://127.0.0.1:45395/human"
+            }
+          ],
+          "type": "normal"
+        }
+      ]
+    }
+  },
+  "action": {
+    "content": [
+      {
+        "text": "{\"completed\":2,\"elapsed_ms\":197,\"snapshot\":{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"next_offset\":null,\"offset\":0,\"order_changed\":false,\"revision\":\"ax-4779505127417984143:1\",\"text\":\"[ax-6192103735150711316] textbox \\\"Agent\\\" =AGENT\\n[ax-13346764858805971011] button \\\"Save\\\"\",\"title\":\"Agent fixture\",\"truncated\":false,\"url\":\"http://127.0.0.1:45395/agent\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\"]},\"trusted\":true}",
+        "type": "text"
+      }
+    ]
+  },
+  "after": {
+    "human": {
+      "visible": "visible",
+      "focused": true,
+      "value": "HUMAN"
+    },
+    "diagnostics": {
+      "allTabs": [
+        {
+          "id": 2,
+          "url": "http://127.0.0.1:45395/agent"
+        },
+        {
+          "id": 1,
+          "url": "about:blank"
+        },
+        {
+          "id": 3,
+          "url": "http://127.0.0.1:45395/human"
+        }
+      ],
+      "focusEvents": [
+        {
+          "at": 1794759426028,
+          "id": -1
+        },
+        {
+          "at": 1794759426030,
+          "id": 30
+        }
+      ],
+      "version": "0.2.1",
+      "windows": [
+        {
+          "focused": false,
+          "id": 1,
+          "tabs": [
+            {
+              "active": true,
+              "id": 2,
+              "url": "http://127.0.0.1:45395/agent"
+            },
+            {
+              "active": false,
+              "id": 1,
+              "url": "about:blank"
+            }
+          ],
+          "type": "normal"
+        },
+        {
+          "focused": true,
+          "id": 30,
+          "tabs": [
+            {
+              "active": true,
+              "id": 3,
+              "url": "http://127.0.0.1:45395/human"
+            }
+          ],
+          "type": "normal"
+        }
+      ]
+    }
+  },
+  "agentState": {
+    "saved": "saved",
+    "value": "AGENT"
+  },
+  "focusEventsDuringAction": [],
+  "display_validation": "Historical exploratory result: geckodriver ran under Xvfb, but the browser display/backend was not independently verified. Do not use this as X11 isolation or concurrent-typing certification."
+}

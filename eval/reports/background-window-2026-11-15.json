@@ -1,0 +1,838 @@
+{
+  "schema": "callisto.background-window-check.v1",
+  "created_at": "2026-11-15T17:20:01.367Z",
+  "source_revision": "ff98a2d7e6448caa6417e3479fe6cf65e096e679",
+  "working_tree_dirty": false,
+  "browser": "1.14.9b",
+  "kind": "zen",
+  "real_user_profile": false,
+  "setup": "Explicit user preparation can focus the agent window once. The fixture then simulates returning to the human window; automatic resume happens before measured typing/work.",
+  "scope": "Owned headful browser under Xvfb/X11 with Openbox. Concurrent OS-level xdotool typing and muted canvas-stream video in the human tab. Not Wayland/macOS/Windows, covered/minimized or a real personal-media session.",
+  "window_manager": "Openbox",
+  "desktop": "private Xvfb / X11",
+  "headful": true,
+  "execution_started_at_ms": 1794763140467,
+  "execution_ended_at_ms": 1794763200843,
+  "os_keyboard_focus_before": "2097189",
+  "os_keyboard_focus_after": "2097189",
+  "expected_human_text": "human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. ",
+  "form_submissions": [
+    {
+      "value": "Agent 1",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 2",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 3",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 4",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 5",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 6",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 7",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 8",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 9",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 10",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 11",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 12",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 13",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 14",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 15",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 16",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 17",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 18",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 19",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 20",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 21",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 22",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 23",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 24",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 25",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 26",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 27",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 28",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 29",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 30",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 31",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 32",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 33",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 34",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 35",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 36",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 37",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 38",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 39",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 40",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 41",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 42",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 43",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 44",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 45",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 46",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 47",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 48",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 49",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 50",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 51",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 52",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 53",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 54",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 55",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 56",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 57",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 58",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 59",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 60",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 61",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 62",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 63",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 64",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 65",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 66",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 67",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 68",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 69",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 70",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 71",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 72",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 73",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 74",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 75",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 76",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 77",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 78",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 79",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 80",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 81",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 82",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 83",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 84",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 85",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 86",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 87",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 88",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 89",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 90",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 91",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Agent 92",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    },
+    {
+      "value": "Resumed",
+      "trusted": true,
+      "inputTrusted": true,
+      "checked": true,
+      "choice": "b"
+    }
+  ],
+  "focus_events_during_execution": [],
+  "trace_directory": "/home/lothnic/Desktop/Projects/callisto/eval/reports/background-window-2026-11-15-trace",
+  "human_typing_delay_ms": 100,
+  "human_only_control": false,
+  "duration_ms": 60000,
+  "rounds": 92,
+  "passed": true,
+  "rows": [
+    {
+      "name": "explicit-user-preparation-preserves-exact-tab-and-document",
+      "passed": true,
+      "elapsed_ms": 601.4688219999989
+    },
+    {
+      "name": "native-form-work-alongside-real-X11-typing-and-media",
+      "passed": true,
+      "elapsed_ms": 60373.366149
+    },
+    {
+      "name": "pause-resume-and-take-back-preserve-window",
+      "passed": true,
+      "elapsed_ms": 506.4847849999933
+    }
+  ],
+  "before": {
+    "human": {
+      "focused": true,
+      "value": "",
+      "mediaTime": 0.152,
+      "paused": false,
+      "mediaError": null,
+      "keys": "",
+      "modifierKeys": []
+    },
+    "diagnostics": {
+      "allTabs": [
+        {
+          "id": 3,
+          "url": "http://127.0.0.1:38545/human"
+        },
+        {
+          "id": 2,
+          "url": "http://127.0.0.1:38545/agent"
+        },
+        {
+          "id": 1,
+          "url": "about:blank"
+        }
+      ],
+      "focusEvents": [
+        {
+          "at": 1794763139519,
+          "id": 1
+        }
+      ],
+      "version": "0.2.1",
+      "windows": [
+        {
+          "focused": true,
+          "id": 1,
+          "state": "maximized",
+          "tabs": [
+            {
+              "active": true,
+              "id": 3,
+              "url": "http://127.0.0.1:38545/human"
+            },
+            {
+              "active": false,
+              "id": 2,
+              "url": "http://127.0.0.1:38545/agent"
+            },
+            {
+              "active": false,
+              "id": 1,
+              "url": "about:blank"
+            }
+          ],
+          "type": "normal"
+        }
+      ]
+    }
+  },
+  "after": {
+    "human": {
+      "focused": true,
+      "value": "human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. ",
+      "mediaTime": 61.066666,
+      "paused": false,
+      "mediaError": null,
+      "keys": "human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. ",
+      "modifierKeys": []
+    },
+    "diagnostics": {
+      "allTabs": [
+        {
+          "id": 3,
+          "url": "http://127.0.0.1:38545/human"
+        },
+        {
+          "id": 1,
+          "url": "about:blank"
+        },
+        {
+          "id": 2,
+          "url": "http://127.0.0.1:38545/agent"
+        }
+      ],
+      "focusEvents": [
+        {
+          "at": 1794763139519,
+          "id": 1
+        },
+        {
+          "at": 1794763140031,
+          "id": -1
+        },
+        {
+          "at": 1794763140048,
+          "id": 34
+        },
+        {
+          "at": 1794763140358,
+          "id": -1
+        },
+        {
+          "at": 1794763140360,
+          "id": 1
+        }
+      ],
+      "version": "0.2.1",
+      "windows": [
+        {
+          "focused": true,
+          "id": 1,
+          "state": "maximized",
+          "tabs": [
+            {
+              "active": true,
+              "id": 3,
+              "url": "http://127.0.0.1:38545/human"
+            },
+            {
+              "active": false,
+              "id": 1,
+              "url": "about:blank"
+            }
+          ],
+          "type": "normal"
+        },
+        {
+          "focused": false,
+          "id": 34,
+          "state": "maximized",
+          "tabs": [
+            {
+              "active": true,
+              "id": 2,
+              "url": "http://127.0.0.1:38545/agent"
+            }
+          ],
+          "type": "normal"
+        }
+      ]
+    }
+  }
+}

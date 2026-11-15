@@ -1,0 +1,23 @@
+{
+  "schema": "callisto.background-window-check.v1",
+  "created_at": "2026-11-15T17:06:59.657Z",
+  "source_revision": "14fb5dc7800bdd560dab359178567366715fb8ef",
+  "working_tree_dirty": true,
+  "kind": "firefox",
+  "real_user_profile": false,
+  "setup": "Explicit user preparation can focus the agent window once. The fixture then simulates returning to the human window; automatic resume happens before measured typing/work.",
+  "scope": "Owned headful browser under Xvfb/X11 with Openbox. Concurrent OS-level xdotool typing and muted canvas-stream video in the human tab. Not Wayland/macOS/Windows, covered/minimized or a real personal-media session.",
+  "window_manager": "Openbox",
+  "desktop": "private Xvfb / X11",
+  "headful": false,
+  "duration_ms": 10000,
+  "rounds": 0,
+  "passed": false,
+  "rows": [
+    {
+      "name": "setup",
+      "passed": false,
+      "error": "browser start: Process (pid=147706) unexpectedly closed with status 1"
+    }
+  ]
+}

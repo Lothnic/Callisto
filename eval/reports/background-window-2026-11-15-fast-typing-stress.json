@@ -1,0 +1,167 @@
+{
+  "schema": "callisto.background-window-check.v1",
+  "created_at": "2026-11-15T17:08:09.788Z",
+  "source_revision": "14fb5dc7800bdd560dab359178567366715fb8ef",
+  "working_tree_dirty": true,
+  "browser": "1.14.9b",
+  "kind": "zen",
+  "real_user_profile": false,
+  "setup": "Explicit user preparation can focus the agent window once. The fixture then simulates returning to the human window; automatic resume happens before measured typing/work.",
+  "scope": "Owned headful browser under Xvfb/X11 with Openbox. Concurrent OS-level xdotool typing and muted canvas-stream video in the human tab. Not Wayland/macOS/Windows, covered/minimized or a real personal-media session.",
+  "window_manager": "Openbox",
+  "desktop": "private Xvfb / X11",
+  "headful": true,
+  "duration_ms": 60000,
+  "rounds": 98,
+  "passed": false,
+  "rows": [
+    {
+      "name": "explicit-user-preparation-preserves-exact-tab-and-document",
+      "passed": true,
+      "elapsed_ms": 484.4727640000001
+    },
+    {
+      "name": "native-form-work-alongside-real-X11-typing-and-media",
+      "passed": false,
+      "error": "Expected values to be strictly equal:\n+ actual - expected\n\n+ 'human types while aget works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. huamn types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. '\n- 'human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. '\n"
+    }
+  ],
+  "before": {
+    "human": {
+      "focused": true,
+      "value": "",
+      "mediaTime": 0.141333,
+      "paused": false,
+      "mediaError": null
+    },
+    "diagnostics": {
+      "allTabs": [
+        {
+          "id": 3,
+          "url": "http://127.0.0.1:37307/human"
+        },
+        {
+          "id": 2,
+          "url": "http://127.0.0.1:37307/agent"
+        },
+        {
+          "id": 1,
+          "url": "about:blank"
+        }
+      ],
+      "focusEvents": [
+        {
+          "at": 1794762428888,
+          "id": 1
+        }
+      ],
+      "version": "0.2.1",
+      "windows": [
+        {
+          "focused": true,
+          "id": 1,
+          "state": "maximized",
+          "tabs": [
+            {
+              "active": true,
+              "id": 3,
+              "url": "http://127.0.0.1:37307/human"
+            },
+            {
+              "active": false,
+              "id": 2,
+              "url": "http://127.0.0.1:37307/agent"
+            },
+            {
+              "active": false,
+              "id": 1,
+              "url": "about:blank"
+            }
+          ],
+          "type": "normal"
+        }
+      ]
+    }
+  },
+  "after": {
+    "human": {
+      "focused": true,
+      "value": "human types while aget works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. huamn types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. human types while agent works. ",
+      "mediaTime": 60.605333,
+      "paused": false,
+      "mediaError": null
+    },
+    "diagnostics": {
+      "allTabs": [
+        {
+          "id": 3,
+          "url": "http://127.0.0.1:37307/human"
+        },
+        {
+          "id": 1,
+          "url": "about:blank"
+        },
+        {
+          "id": 2,
+          "url": "http://127.0.0.1:37307/agent"
+        }
+      ],
+      "focusEvents": [
+        {
+          "at": 1794762428888,
+          "id": 1
+        },
+        {
+          "at": 1794762429441,
+          "id": -1
+        },
+        {
+          "at": 1794762429442,
+          "id": 34
+        },
+        {
+          "at": 1794762429553,
+          "id": -1
+        },
+        {
+          "at": 1794762429554,
+          "id": 1
+        }
+      ],
+      "version": "0.2.1",
+      "windows": [
+        {
+          "focused": true,
+          "id": 1,
+          "state": "maximized",
+          "tabs": [
+            {
+              "active": true,
+              "id": 3,
+              "url": "http://127.0.0.1:37307/human"
+            },
+            {
+              "active": false,
+              "id": 1,
+              "url": "about:blank"
+            }
+          ],
+          "type": "normal"
+        },
+        {
+          "focused": false,
+          "id": 34,
+          "state": "maximized",
+          "tabs": [
+            {
+              "active": true,
+              "id": 2,
+              "url": "http://127.0.0.1:37307/agent"
+            }
+          ],
+          "type": "normal"
+        }
+      ]
+    }
+  }
+}

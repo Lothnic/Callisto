@@ -1,0 +1,75 @@
+{
+  "action_log": {
+    "format": "callisto-redacted-jsonl-v1",
+    "path": "actions.jsonl"
+  },
+  "actions": 107,
+  "capture_errors": 0,
+  "checkpoints": 95,
+  "compatibility": {
+    "benchmark_native_evaluation_executed": false,
+    "playwright_trace_viewer": false
+  },
+  "complete": true,
+  "ended_ms": 1794763201361,
+  "failed_actions": 1,
+  "files": [],
+  "interrupted_actions": 0,
+  "measurements": {
+    "by_tool": {
+      "callisto_browser": {
+        "calls": 9,
+        "elapsed_ms": 348,
+        "failures": 0,
+        "observation_chars": 0,
+        "request_bytes": 278,
+        "response_bytes": 5669
+      },
+      "callisto_run": {
+        "calls": 95,
+        "elapsed_ms": 56483,
+        "failures": 1,
+        "observation_chars": 0,
+        "request_bytes": 26876,
+        "response_bytes": 4418
+      },
+      "callisto_snapshot": {
+        "calls": 1,
+        "elapsed_ms": 8,
+        "failures": 0,
+        "observation_chars": 218,
+        "request_bytes": 18,
+        "response_bytes": 582
+      },
+      "callisto_status": {
+        "calls": 2,
+        "elapsed_ms": 16,
+        "failures": 0,
+        "observation_chars": 0,
+        "request_bytes": 4,
+        "response_bytes": 1217
+      }
+    },
+    "total": {
+      "calls": 107,
+      "elapsed_ms": 56855,
+      "failures": 1,
+      "observation_chars": 218,
+      "request_bytes": 27176,
+      "response_bytes": 11886
+    }
+  },
+  "pending_actions": 0,
+  "redaction": {
+    "network": "see HAR capture metadata",
+    "screenshots_and_snapshots": "private page content; not guaranteed redacted",
+    "tool_arguments": "credential fields and fill values removed"
+  },
+  "requested_evidence": {
+    "screenshots": false,
+    "snapshots": false
+  },
+  "schema": "callisto.browser-evidence.v1",
+  "started_ms": 1794763138913,
+  "task_success": null
+}
