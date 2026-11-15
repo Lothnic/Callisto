@@ -54,5 +54,7 @@ The Zen/Firefox section describes extension-owned optional trusted input, stable
 snapshot captures, scoped network/API inspection and explicit failure evidence.
 The Chromium installer remains pinned to its existing revision and does not
 install the Zen bridge. Keep source availability, signed distribution and benchmark
-results distinct. The 14 November fixture validation is not a browse time/cost
-comparison or a benchmark judge run.
+results distinct. The 15 November persistent-profile checks and observation byte measurements
+are not a browse time/cost comparison or a benchmark judge run. The matched
+model pilot is blocked by provider credit. The alpha guide describes a local
+Linux x64 build, not a published signed extension.

@@ -475,7 +475,7 @@
       <div class="zen-intro">
         <h2 id="zen-title" class="display">Work In Your<br>Zen Or Firefox Tab.</h2>
         <p>Keep the tab, profile and login you already use. Pair the local bridge and explicitly share a tab with your agent.</p>
-        <p>Available from source, with a temporary extension. Trusted input needs a deliberately debug-enabled browser. Signed extension distribution is still ahead.</p>
+        <p>Available from source or a local Linux x64 alpha bundle, with a temporary extension. Trusted input needs a deliberately debug-enabled browser. Signed extension distribution is still ahead.</p>
         <a class="zen-guide" href="https://github.com/Lothnic/callisto/blob/main/docs/getting-started.md">Set up Zen or Firefox <span aria-hidden="true">↗</span></a>
       </div>
       <div>
@@ -486,8 +486,9 @@
           <div><dt>Explicit recovery</dt><dd>Uncertain writes are never replayed. Lost sharing requires reacquisition; trusted mode never silently switches to synthetic input.</dd></div>
           <div><dt>Failure evidence</dt><dd>Keep private action logs, HAR, screenshots and DOM checkpoints. Interrupted actions report unknown outcomes and missing evidence.</dd></div>
         </dl>
-        <p class="zen-validation">Validated on disposable Firefox and Zen fixtures. Evidence export checks artifact formats and optional task requirements; it does not run benchmark judges. No new browse time or cost comparison has run.</p>
+        <p class="zen-validation">Persistent test profiles cover cancellation, relay loss, extension reload, browser restart and lost tabs; Zen also covers a forced crash. Observation bytes are measured separately from model usage. A matched browse comparison remains blocked by provider credit.</p>
         <a class="zen-guide" href="https://github.com/Lothnic/callisto/blob/main/docs/zen-advanced-runtime.md">Read capabilities and limits <span aria-hidden="true">↗</span></a>
+        <p><a class="zen-guide" href="https://github.com/Lothnic/callisto/blob/main/docs/alpha-guide.md">Build and install the Linux alpha <span aria-hidden="true">↗</span></a></p>
       </div>
     </div>
   </section>
@@ -715,7 +716,7 @@ the top three Show HN posts.</code></pre>
             <span class="faq-question-text">What is actually shipped today?</span>
             <svg class="faq-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 6l5 5 5-5" stroke="currentColor" stroke-width="1.5"/></svg>
           </summary>
-          <div class="faq-answer-wrap"><div class="faq-answer"><p>Source includes Chromium Mini and the Firefox/Zen bridge, structured actions, bounded snapshots, batches and evidence tooling. The Zen bridge adds optional trusted input and scoped API inspection. Signed extension distribution, production-profile recovery hardening and full Playwright compatibility remain open. <a href="https://github.com/Lothnic/callisto/blob/main/roadmap.md">Read the roadmap</a>.</p></div></div>
+          <div class="faq-answer-wrap"><div class="faq-answer"><p>Source includes Chromium Mini and the Firefox/Zen bridge, structured actions, bounded snapshots, batches and evidence tooling. The Zen bridge adds optional trusted input and scoped API inspection. Local Linux alpha packaging and persistent-profile recovery checks are available. Signed extension distribution, production-profile validation and full Playwright compatibility remain open. <a href="https://github.com/Lothnic/callisto/blob/main/roadmap.md">Read the roadmap</a>.</p></div></div>
         </details>
       </div>
     </div>
