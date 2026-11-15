@@ -10,6 +10,7 @@ function fixture(allowed=true){
   for(const name of ['onBeforeRequest','onBeforeSendHeaders','onHeadersReceived','onBeforeRedirect','onCompleted','onErrorOccurred'])api.webRequest[name]=event();
   api.webRequest.filterResponseData=()=>{const filter={written:[],write(data){this.written.push(data);},close(){this.closed=true;},disconnect(){this.disconnected=true;}};filters.push(filter);return filter;};
   const context=vm.createContext({URL,TextEncoder,TextDecoder,structuredClone});
+  vm.runInContext(fs.readFileSync(path.join(__dirname,'../extension/api-analysis.js'),'utf8'),context);
   vm.runInContext(fs.readFileSync(path.join(__dirname,'../extension/network.js'),'utf8'),context);
   const inspector=context.createNetworkInspector(api);
   const emit=(name,details)=>api.webRequest[name].listener(details);
@@ -92,4 +93,35 @@ test('request JSON preserves UTF-8 split across upload chunks',async()=>{
   emit('onBeforeRequest',request({method:'POST',requestBody:{raw:[{bytes:bytes.slice(0,index).buffer},{bytes:bytes.slice(index).buffer}]}}));
   const body=inspector.list(owner,{include_bodies:true}).entries[0].request.postData.text;
   assert.equal(JSON.parse(body).label,'\u20ac');
+});
+
+test('API analysis compares observations and exports drafts without credential fields',async()=>{
+  const {inspector,emit,request,filters}=fixture();const owner={};await inspector.start(owner,42,{origins:['https://fixture.test'],capture_bodies:true});
+  for(let page=1;page<=2;page++){
+    const details=request({requestId:String(page),url:`https://fixture.test/items?page=${page}&token=hidden`});emit('onBeforeRequest',details);
+    emit('onHeadersReceived',{...details,statusCode:200,responseHeaders:[{name:'Content-Type',value:'application/json'}]});
+    filters.at(-1).ondata({data:new TextEncoder().encode(JSON.stringify({items:[{id:page,name:'private value'}],token:'hidden'})).buffer});filters.at(-1).onstop();emit('onCompleted',{...details,statusCode:200});
+  }
+  const comparison=inspector.analyze(owner,{action:'compare',left:'net-1',right:'net-2'});assert.deepEqual(plain(comparison.query_changes),['page']);
+  const draft=inspector.analyze(owner,{action:'openapi'});assert.equal(draft.openapi,'3.1.0');assert(draft.paths['/items'].get['x-pagination-hints'].length);
+  assert(!JSON.stringify(draft).includes('private value'));assert(!JSON.stringify(draft).includes('token'));
+  assert.throws(()=>inspector.replayScope(owner,{method:'POST',url:'https://fixture.test/items'}),/GET\/HEAD/);
+  assert.throws(()=>inspector.replayScope(owner,{url:'https://other.test/items'}),/capture origins/);
+  assert.throws(()=>inspector.replayScope(owner,{url:'https://fixture.test/items',headers:{Authorization:'secret'}}),/overrides/);
+  assert.equal(inspector.replayScope(owner,{url:'https://fixture.test/items'}).method,'GET');
+});
+
+test('response streams finishing before header delivery retain bounded JSON',async()=>{
+  const {inspector,emit,request,filters}=fixture();const owner={};
+  await inspector.start(owner,42,{origins:['https://fixture.test'],capture_bodies:true});
+  const details=request();emit('onBeforeRequest',details);
+  const bytes=new TextEncoder().encode('{"items":[1],"token":"private"}');
+  filters[0].ondata({data:bytes.buffer});filters[0].onstop();
+  assert.equal(filters[0].closed,true);
+  assert.equal(inspector.export(owner).log._capture.complete,false);
+  emit('onHeadersReceived',{...details,statusCode:200,responseHeaders:[{name:'Content-Type',value:'application/json'}]});
+  emit('onCompleted',{...details,statusCode:200});
+  const har=inspector.export(owner);
+  assert.deepEqual(JSON.parse(har.log.entries[0].response.content.text),{items:[1],token:'[REDACTED]'});
+  assert.equal(har.log._capture.complete,true);
 });

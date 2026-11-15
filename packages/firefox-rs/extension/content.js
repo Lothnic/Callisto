@@ -9,6 +9,7 @@
   let lease = 0;
   let handoff = null;
   const pendingWaits = new Set();
+  const pendingRequests = new Set();
   function finishHandoff(error) {
     if (!handoff) return;
     const pending=handoff; handoff=null;
@@ -290,7 +291,7 @@
   }
   browser.runtime.onMessage.addListener(async function handle(message) {
     if (message.type === 'ping') { enabled = true; mark(); return {value:true}; }
-    if (message.type === 'revoke') { enabled = false; lease++; for (const finish of pendingWaits) finish('Sharing stopped.'); finishHandoff('Sharing stopped during human handoff.'); current.clear(); unmark(); return {value:true}; }
+    if (message.type === 'revoke') { enabled = false; lease++; for(const request of pendingRequests)request.abort();pendingRequests.clear();for (const finish of pendingWaits) finish('Sharing stopped.'); finishHandoff('Sharing stopped during human handoff.'); current.clear(); unmark(); return {value:true}; }
     if (message.type === 'handoff') {
       if (!enabled || handoff) return {error:'Sharing stopped or a handoff is already pending.'};
       if (typeof message.prompt!=='string' || !message.prompt.trim() || message.prompt.length>1000 || !Number.isInteger(message.timeout_ms) || message.timeout_ms<1000 || message.timeout_ms>120000) return {error:'Invalid handoff prompt or timeout.'};
@@ -316,6 +317,25 @@
       if (message.method === 'snapshot') return {value:snapshot(message.value ? JSON.parse(message.value) : {})};
       if (message.method === 'page') {
         const args = JSON.parse(message.value);
+        if(args.action==='api_replay'){
+          const url=new URL(args.url),method=args.method ?? 'GET',expectedLease=lease;
+          if(!['GET','HEAD'].includes(method) || url.origin!==location.origin || !args.origins?.includes(url.origin) || url.username || url.password)throw new Error('Replay requires GET/HEAD to the shared page origin.');
+          const controller=new AbortController();pendingRequests.add(controller);
+          const timer=setTimeout(()=>controller.abort(),Math.max(1,Math.min(5000,deadline-Date.now())));
+          try{
+            const pageFetch=typeof globalThis.content?.fetch==='function'?globalThis.content.fetch.bind(globalThis.content):window.fetch.bind(window);
+            const response=await pageFetch(url.href,{method,credentials:'include',mode:'same-origin',redirect:'error',cache:'no-store',signal:controller.signal});
+            const result={url:response.url,status:response.status,method};
+            if(method!=='HEAD' && /(?:application|text)\/(?:[\w.+-]*\+)?json/i.test(response.headers.get('content-type') || '')){
+              const reader=response.body.getReader(),chunks=[];let size=0;
+              for(;;){const part=await reader.read();if(part.done)break;size+=part.value.length;if(size>65536){await reader.cancel();throw new Error('Replay JSON response exceeds 64 KiB.');}chunks.push(part.value);}
+              const bytes=new Uint8Array(size);let offset=0;for(const chunk of chunks){bytes.set(chunk,offset);offset+=chunk.length;}
+              try{result.json=JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(bytes));}catch{throw new Error('Replay response is not valid UTF-8 JSON.');}
+            } else {await response.body?.cancel();result.body_omitted=true;}
+            if(!enabled || expectedLease!==lease || handoff)throw new Error('Sharing changed during API replay.');
+            return {value:result};
+          }finally{clearTimeout(timer);pendingRequests.delete(controller);}
+        }
         if (args.action === 'wait_for') return {value:await waitFor(args,deadline)};
         if (args.action === 'press') {
           if(typeof args.key!=='string' || args.key.length>40)throw new Error('Invalid key.');

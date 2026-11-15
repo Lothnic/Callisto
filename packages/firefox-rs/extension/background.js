@@ -261,6 +261,12 @@ async function executeCommand(request, connection, deadline = Date.now()+10000) 
     }
     if(args.action==='list')return networkInspector.list(context,args);
     if(args.action==='endpoints')return networkInspector.endpoints(context);
+    if(['compare','schema','openapi'].includes(args.action))return networkInspector.analyze(context,args);
+    if(args.action==='replay'){
+      const spec=networkInspector.replayScope(context,args);
+      const result=await executeCommand({method:'page',value:JSON.stringify({action:'api_replay',...spec})},connection,deadline);
+      return networkInspector.replayResult(context,result);
+    }
     if(args.action==='rules')return networkInspector.rules(context,args.rules);
     if(args.action==='stop')return networkInspector.stop(context);
     if(args.action==='export')return networkInspector.export(context);
@@ -445,7 +451,7 @@ async function executeCommand(request, connection, deadline = Date.now()+10000) 
     removed(id){if(selected===id)void stop();},
     updated(id,change){if(selected!==id)return;if(change.status==='loading'){selectedFrame=0;frameStale=false;ready=false;generation++;if(!continuous)void stop();}if(change.status==='complete')void restorePage(id);},
     frameNavigated(id,frame){if(selected===id && selectedFrame===frame)frameStale=true;},
-    permissionsRemoved(permissions){if(continuous&&permissions.origins?.includes('<all_urls>'))void stop();},
+    permissionsRemoved(permissions){if(permissions.permissions?.some(p=>['webRequest','webRequestBlocking'].includes(p)) || permissions.origins?.includes('<all_urls>'))void stop();},
     domReady(id){void restorePage(id);}
   });
   Object.defineProperty(context,'target',{get:()=>selected??reserved});

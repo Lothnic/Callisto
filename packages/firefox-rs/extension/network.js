@@ -44,7 +44,7 @@ function createNetworkInspector(api) {
       request:{method:details.method,url:cleanURL(details.url),httpVersion:'',headers:[],queryString:[...new URL(cleanURL(details.url)).searchParams].map(([name,value])=>({name,value})),cookies:[],headersSize:-1,bodySize:-1},
       response:{status:0,statusText:'',httpVersion:'',headers:[],cookies:[],content:{size:0,mimeType:''},redirectURL:'',headersSize:-1,bodySize:-1},
       cache:{},timings:{send:0,wait:0,receive:0},
-      _requestId:details.requestId,_resourceType:details.type,_frameId:details.frameId,_complete:false,
+      _captureId:`net-${capture.entries.length+1}`,_requestId:details.requestId,_resourceType:details.type,_frameId:details.frameId,_complete:false,
     };
     capture.entries.push(entry); capture.requests.set(details.requestId,entry);
     if (capture.bodies && details.requestBody) {
@@ -74,14 +74,16 @@ function createNetworkInspector(api) {
     if (capture.bodies && entry && ['xmlhttprequest','fetch'].includes(details.type) && api.webRequest.filterResponseData) {
       try {
         const filter = api.webRequest.filterResponseData(details.requestId);
-        const chunks=[]; let bytes=0, omitted=false;
+        const chunks=[]; let bytes=0, omitted=false,stopped=false,headersReady=false;
         capture.filters.set(filter,()=>{chunks.length=0;});
         filter.ondata=event=>{
           filter.write(event.data); // Always forward unchanged; capture cannot hold a response open.
           bytes+=event.data.byteLength;
           if (bytes<=65536) chunks.push(new Uint8Array(event.data)); else { omitted=true; chunks.length=0; }
         };
-        filter.onstop=()=>{
+        const finishBody=(ready=false)=>{
+          headersReady ||= ready;
+          if(!stopped || !headersReady)return;
           try {
             entry.response.content.size=bytes;
             if (capture.active && !omitted && capture.bodyBytes+bytes<=1048576 && /(?:application|text)\/(?:[\w.+-]*\+)?json/i.test(entry.response.content.mimeType)) {
@@ -89,9 +91,13 @@ function createNetworkInspector(api) {
               try { entry.response.content.text=JSON.stringify(redact(JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(all)))); capture.bodyBytes+=bytes; }
               catch { entry.response.content._bodyOmitted='Invalid JSON.'; }
             } else entry.response.content._bodyOmitted='Not JSON, capture stopped, or body limit reached.';
-          } finally { chunks.length=0;capture.filters.delete(filter);filter.close(); }
+          } finally { chunks.length=0;capture.filters.delete(filter);capture.bodyFinalizers.delete(entry); }
         };
-        filter.onerror=()=>{chunks.length=0;capture.filters.delete(filter);try{filter.disconnect();}catch{}};
+        capture.bodyFinalizers.set(entry,finishBody);
+        // Stream callbacks can precede the queued onHeadersReceived listener.
+        // Close forwarding immediately; parse only once MIME metadata arrives.
+        filter.onstop=()=>{stopped=true;filter.close();finishBody();};
+        filter.onerror=()=>{chunks.length=0;capture.filters.delete(filter);capture.bodyFinalizers.delete(entry);entry.response.content._bodyOmitted='Response stream failed.';try{filter.disconnect();}catch{}};
       } catch { entry.response.content._bodyOmitted='Response stream unavailable.'; }
     }
     return {};
@@ -105,6 +111,7 @@ function createNetworkInspector(api) {
     if(!entry)return;
     entry.response.status=details.statusCode;entry.response.headers=headers(details.responseHeaders);
     entry.response.content.mimeType=details.responseHeaders?.find(h=>h.name.toLowerCase()==='content-type')?.value || '';
+    capture.bodyFinalizers.get(entry)?.(true);
   }
   function complete(details) {
     const capture=scope(details), entry=capture?.requests.get(details.requestId);
@@ -140,10 +147,24 @@ function createNetworkInspector(api) {
     if(!capture)return;
     capture.active=false;capture.rules=[];
     for(const [filter,clear] of capture.filters){clear();try{filter.disconnect();}catch{}}
-    capture.filters.clear();capture.requests.clear();
+    capture.filters.clear();capture.bodyFinalizers.clear();capture.requests.clear();
   }
   function get(owner) { const capture=captures.get(owner);if(!capture)throw new Error('No network capture for this session.');return capture; }
   return {
+    replayScope(owner,args) {
+      const capture=get(owner),method=args.method ?? 'GET';
+      if(!capture.active)throw new Error('Start a scoped capture before replay.');
+      if(!['GET','HEAD'].includes(method))throw new Error('API replay supports explicit GET/HEAD only.');
+      if(typeof args.url!=='string' || args.url.length>2000 || !capture.origins.has(origin(args.url)))throw new Error('Replay URL must stay inside capture origins.');
+      if(args.body!==undefined || args.headers!==undefined)throw new Error('Replay does not accept bodies or credential/header overrides.');
+      return {url:args.url,method,origins:[...capture.origins],timeout_ms:5000};
+    },
+    analyze(owner,args) {
+      const capture=get(owner);
+      if(typeof analyzeCapturedAPI!=='function')throw new Error('Reload the extension to enable API analysis.');
+      return analyzeCapturedAPI(capture.entries,args.action,args);
+    },
+    replayResult(owner,result){get(owner);return redact(result);},
     async start(owner,tabId,args) {
       if(!api.webRequest || !(await api.permissions.contains({permissions:['webRequest','webRequestBlocking'],origins:['<all_urls>']})))throw new Error('Enable network access in the extension first.');
       if(!Array.isArray(args.origins) || !args.origins.length || args.origins.length>10)throw new Error('Provide 1-10 explicit network origins.');
@@ -152,7 +173,7 @@ function createNetworkInspector(api) {
       if(!Number.isInteger(limit) || limit<1 || limit>500)throw new Error('Network limit must be 1-500.');
       if(args.capture_bodies!==undefined && typeof args.capture_bodies!=='boolean')throw new Error('capture_bodies must be boolean.');
       install();deactivate(captures.get(owner));
-      captures.set(owner,{tabId,origins,limit,bodies:args.capture_bodies===true,active:true,entries:[],requests:new Map(),filters:new Map(),rules:[],dropped:0,bodyBytes:0});
+      captures.set(owner,{tabId,origins,limit,bodies:args.capture_bodies===true,active:true,entries:[],requests:new Map(),filters:new Map(),bodyFinalizers:new Map(),rules:[],dropped:0,bodyBytes:0});
       return {active:true,tab_id:tabId,origins:[...origins],capture_bodies:args.capture_bodies===true,redaction:'credentials-and-sensitive-keys-v1'};
     },
     rules(owner,rules) {

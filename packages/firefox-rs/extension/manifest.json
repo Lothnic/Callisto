@@ -39,6 +39,7 @@
   "background": {
     "scripts": [
       "browser-control.js",
+      "api-analysis.js",
       "network.js",
       "background.js"
     ]

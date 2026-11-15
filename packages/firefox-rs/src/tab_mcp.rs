@@ -192,7 +192,7 @@ fn tools() -> Value {
         {"name":"callisto_batch","description":"Execute 1–10 dependent actions in the controlled tab and return a final snapshot in one tool call. Batches stop if tab ownership changes. Earlier actions are not rolled back on failure. Ten-second deadline; input remains synthetic.","inputSchema":{"type":"object","properties":{"actions":{"type":"array","minItems":1,"maxItems":10,"items":{"type":"object","properties":{"action":{"type":"string","enum":["navigate","click_ref","fill_ref","submit_ref","click_role","fill_role","submit_role","scroll"]},"url":{"type":"string"},"ref":{"type":"string"},"role":{"type":"string"},"name":{"type":"string"},"value":{"type":"string"},"delta_x":{"type":"number"},"delta_y":{"type":"number"}},"required":["action"]}}},"required":["actions"]}},
         {"name":"callisto_extract","description":"Read structured rows from the shared page using CSS selectors: a row selector plus a field map. Optionally follow a next-page control and merge pages. Returns typed rows, not a snapshot, so counting and aggregation need one call.","inputSchema":{"type":"object","properties":{"selector":{"type":"string","minLength":1,"maxLength":500},"fields":{"type":"object","minProperties":1,"maxProperties":20,"additionalProperties":{"anyOf":[{"type":"string"},{"type":"object","properties":{"selector":{"type":"string"},"attribute":{"type":"string"},"type":{"type":"string","enum":["text","number"]}}}]}},"limit":{"type":"integer","minimum":1,"maximum":1000},"include_text":{"type":"boolean"},"paginate":{"type":"object","properties":{"next":{"type":"string","minLength":1,"maxLength":500},"max_pages":{"type":"integer","minimum":1,"maximum":25}},"required":["next"]}},"required":["selector","fields"]}},
         {"name":"callisto_run","description":"Run 1–40 dependent steps in one call: navigate; click/fill/submit/select/check/hover by ref or exact role; press; scroll; wait; wait_for text or CSS selector state; extract rows. Use submit instead of synthetic Enter for forms. Returns the last extraction and an optional final snapshot. Stops at the first failure within a 60-second budget; earlier steps are not rolled back. Input remains synthetic.","inputSchema":{"type":"object","properties":{"steps":{"type":"array","minItems":1,"maxItems":40,"items":{"type":"object","properties":{"action":{"type":"string","enum":["navigate","click_ref","click_role","fill_ref","fill_role","submit_ref","submit_role","select_ref","select_role","check_ref","check_role","hover_ref","hover_role","press","scroll","wait","wait_for","extract"]},"url":{"type":"string"},"ref":{"type":"string"},"role":{"type":"string"},"name":{"type":"string"},"value":{"type":"string"},"key":{"type":"string"},"delta_x":{"type":"number"},"delta_y":{"type":"number"},"ms":{"type":"integer","minimum":1,"maximum":5000},"text":{"type":"string","minLength":1,"maxLength":500},"timeout_ms":{"type":"integer","minimum":100,"maximum":20000},"selector":{"type":"string","minLength":1,"maxLength":500},"state":{"type":"string","enum":["visible","hidden","attached","detached"]},"checked":{"type":"boolean"},"spec":{"type":"object"}},"required":["action"]}},"snapshot":{"type":"boolean"}},"required":["steps"]}},
-        {"name":"callisto_network","description":"Inspect traffic in the explicitly shared tab with optional network permission. Start with 1-10 exact origins; list bounded redacted metadata; endpoints summarizes observed paths and field names; optional JSON/form bodies; rules block or redirect within scope. Stop removes rules. Export HAR to a new absolute output_path or return JSON. Capture never supplies credentials or bypasses site authorization.","inputSchema":{"type":"object","properties":{"action":{"type":"string","enum":["start","list","endpoints","rules","stop","export"]},"origins":{"type":"array","minItems":1,"maxItems":10,"items":{"type":"string"}},"capture_bodies":{"type":"boolean","default":false},"limit":{"type":"integer","minimum":1,"maximum":500},"offset":{"type":"integer","minimum":0},"include_bodies":{"type":"boolean"},"rules":{"type":"array","maxItems":20,"items":{"type":"object","properties":{"action":{"type":"string","enum":["block","redirect"]},"url_prefix":{"type":"string"},"method":{"type":"string"},"redirect_url":{"type":"string"}},"required":["action","url_prefix"]}},"output_path":{"type":"string"}},"required":["action"]}},
+        {"name":"callisto_network","description":"Inspect traffic in the explicitly shared tab with optional network permission. Start with 1-10 exact origins; list bounded redacted metadata; endpoints summarizes observed paths and field names; optional JSON/form bodies; rules block or redirect within scope. Stop removes rules. Export HAR to a new absolute output_path or return JSON. Capture never supplies credentials or bypasses site authorization.","inputSchema":{"type":"object","properties":{"action":{"type":"string","enum":["start","list","endpoints","compare","schema","openapi","replay","rules","stop","export"]},"origins":{"type":"array","minItems":1,"maxItems":10,"items":{"type":"string"}},"capture_bodies":{"type":"boolean","default":false},"limit":{"type":"integer","minimum":1,"maximum":500},"offset":{"type":"integer","minimum":0},"include_bodies":{"type":"boolean"},"left":{"type":"string"},"right":{"type":"string"},"url":{"type":"string"},"method":{"type":"string","enum":["GET","HEAD"]},"rules":{"type":"array","maxItems":20,"items":{"type":"object","properties":{"action":{"type":"string","enum":["block","redirect"]},"url_prefix":{"type":"string"},"method":{"type":"string"},"redirect_url":{"type":"string"}},"required":["action","url_prefix"]}},"output_path":{"type":"string"}},"required":["action"]}},
         {"name":"callisto_trace","description":"Record private per-client action JSONL and optional DOM snapshots/screenshots. Start requires a new absolute directory. Checkpoint captures enabled evidence; stop writes a manifest and HAR if a network capture exists. This is not a Playwright trace; screenshots and snapshots can expose private page content.","inputSchema":{"type":"object","properties":{"action":{"type":"string","enum":["start","status","checkpoint","stop"]},"directory":{"type":"string"},"screenshots":{"type":"boolean","default":false},"snapshots":{"type":"boolean","default":false}},"required":["action"]}},
         {"name":"callisto_snapshot","description":"Inspect the explicitly shared active tab. Use max_chars to bound output and offset=next_offset to page through truncated controls. Refs belong to the latest snapshot. This experimental DOM-derived snapshot can omit content and frames.","inputSchema":{"type":"object","properties":{"offset":{"type":"integer","minimum":0,"maximum":10000},"max_chars":{"type":"integer","minimum":1000,"maximum":30000},"selector":{"type":"string","minLength":1,"maxLength":500},"query":{"type":"string","minLength":1,"maxLength":200},"include_text":{"type":"boolean","default":true}}}},
         {"name":"callisto_navigate","description":"Navigate the shared active tab to an HTTP(S) URL. Requires the user to grant optional access to all websites and re-share the tab. Poll callisto_status until ready, then take a fresh snapshot.","inputSchema":{"type":"object","properties":{"url":{"type":"string","maxLength":8192}},"required":["url"]}},
@@ -215,6 +215,7 @@ fn failure(error: impl std::fmt::Display) -> Value {
     json!({"isError":true,"content":[{"type":"text","text":error.to_string()}]})
 }
 async fn call_tool(bridge: &Bridge, session_id: u64, name: &str, args: &Value) -> Result<Value> {
+    if !args.is_object() {bail!("Tool arguments must be an object");}
     if name == "callisto_trace" {
         return match args["action"].as_str().unwrap_or("") {
             "start" => {
@@ -257,6 +258,9 @@ async fn trace_checkpoint(bridge:&Bridge,session_id:u64)->Result<Value>{
 }
 
 async fn call_tool_inner(bridge: &Bridge, session_id: u64, name: &str, args: &Value) -> Result<Value> {
+    if name == "callisto_page" && !matches!(args["action"].as_str(),Some("scroll"|"hover"|"select"|"check"|"text"|"find")) {
+        bail!("Unsupported public page action");
+    }
     match name {
         "callisto_press" => {
             let key = args["key"]
@@ -390,15 +394,29 @@ async fn call_tool_inner(bridge: &Bridge, session_id: u64, name: &str, args: &Va
                 .await
         }
         "callisto_network" => {
-            if args.to_string().len()>200_000{bail!("Network arguments are too large");}
-            let mut arguments=args.clone();
-            let output=arguments.as_object_mut().and_then(|m|m.remove("output_path"));
-            if output.is_some() && args["action"]!="export"{bail!("output_path is supported only for HAR export");}
-            let result=bridge.call_session(session_id,"network",None,Some(&arguments.to_string())).await?;
-            if let Some(output)=output {
-                let path=std::path::Path::new(output.as_str().ok_or_else(||anyhow!("output_path must be a string"))?);
-                if !path.is_absolute(){bail!("output_path must be absolute");}
-                return trace::save_json(path,&result);
+            if args.to_string().len() > 200_000 {
+                bail!("Network arguments are too large");
+            }
+            let mut arguments = args.clone();
+            let output = arguments
+                .as_object_mut()
+                .and_then(|m| m.remove("output_path"));
+            if output.is_some() && !matches!(args["action"].as_str(), Some("export" | "openapi")) {
+                bail!("output_path is supported only for HAR/OpenAPI export");
+            }
+            let result = bridge
+                .call_session(session_id, "network", None, Some(&arguments.to_string()))
+                .await?;
+            if let Some(output) = output {
+                let path = std::path::Path::new(
+                    output
+                        .as_str()
+                        .ok_or_else(|| anyhow!("output_path must be a string"))?,
+                );
+                if !path.is_absolute() {
+                    bail!("output_path must be absolute");
+                }
+                return trace::save_json(path, &result);
             }
             Ok(result)
         }
