@@ -87,45 +87,69 @@
     for(const el of root.querySelectorAll('*'))if(el.shadowRoot)matches.push(...queryDeep(el.shadowRoot,selector));
     return matches;
   }
+  let snapshotCache=null,diffBaseline=null,snapshotRevision=0,domVersion=0;
+  const documentRevision=newRef();
+  new MutationObserver(records=>{if(records.some(record=>record.type!=='attributes' || !record.attributeName?.startsWith('data-callisto-')))domVersion++;}).observe(document.body,{subtree:true,childList:true,characterData:true,attributes:true});
   function snapshot(options = {}) {
-    if(options.preserve_refs){const previous=current;try{return snapshot({...options,preserve_refs:false});}finally{current=previous;}}
-    const offset = options.offset ?? 0, maxChars = options.max_chars ?? 12000;
-    if (!Number.isInteger(offset) || offset < 0 || offset > 10000 || !Number.isInteger(maxChars) || maxChars < 1000 || maxChars > 30000) throw new Error('Invalid snapshot offset or max_chars.');
-    if(options.query!==undefined && (typeof options.query!=='string' || !options.query || options.query.length>200))throw new Error('Snapshot query must be 1-200 characters.');
-    let root=document;
-    if(options.selector!==undefined){
-      if(typeof options.selector!=='string' || !options.selector || options.selector.length>500)throw new Error('Invalid observation selector.');
-      let matches;try{matches=queryDeep(document,options.selector);}catch{throw new Error('Invalid observation selector.');}
-      if(matches.length!==1)throw new Error('Observation selector must match exactly one element, including open shadow roots.');
-      root=matches[0];
-    }
-    current = new Map();
-    const lines = [];
-    let skipped = 0, chars = 0, truncated = false;
-    const controls='button,a[href],input,textarea,select,[role],h1,h2,h3,h4,h5,h6';
-    const selector=options.include_text===false ? controls : controls+',p,li,td,th,dt,dd,pre,blockquote';
-    const candidates=function*(){if(root!==document && root.matches(selector))yield root;if(root.shadowRoot)yield* elements(root.shadowRoot,selector);yield* elements(root,selector);};
-    for (const el of candidates()) {
-      const r = role(el);
-      if (!r || !visible(el)) continue;
-      const fullName=name(el),label = fullName.slice(0,200);
-      if(options.query && !`${r} ${fullName} ${el.type==='password'?'':el.value || ''}`.toLowerCase().includes(options.query.toLowerCase()))continue;
-      if (skipped < offset) { skipped++; continue; }
-      const interactive = !['heading','none','presentation','paragraph','listitem','cell','columnheader','term','definition','code','blockquote','group','row','table','region'].includes(r);
-      let line = `${interactive ? `[${reference(el)}] ` : ''}${r} ${JSON.stringify(label)}`;
-      if (el.disabled || el.getAttribute('aria-disabled') === 'true') line += ' {disabled}';
-      if (r === 'textbox' || r === 'searchbox' || (r === 'combobox' && el.matches('input,textarea'))) {
-        const value = el.type === 'password' ? '[REDACTED]' : clean(el.value).slice(0,200);
-        if (value) line += ` =${value}`;
+    if(options.preserve_refs){const previous={current,snapshotCache,diffBaseline};try{return snapshot({...options,preserve_refs:false});}finally{current=previous.current;snapshotCache=previous.snapshotCache;diffBaseline=previous.diffBaseline;}}
+    const offset=options.offset ?? 0,maxChars=options.max_chars ?? 12000;
+    if(!Number.isInteger(offset) || offset<0 || offset>10000 || !Number.isInteger(maxChars) || maxChars<1000 || maxChars>30000)throw new Error('Invalid snapshot offset or max_chars.');
+    if(options.diff!==undefined && typeof options.diff!=='boolean')throw new Error('diff must be boolean.');
+    if(offset===0){
+      if(options.query!==undefined && (typeof options.query!=='string' || !options.query || options.query.length>200))throw new Error('Snapshot query must be 1-200 characters.');
+      let root=document;
+      if(options.selector!==undefined){
+        if(typeof options.selector!=='string' || !options.selector || options.selector.length>500)throw new Error('Invalid observation selector.');
+        let matches;try{matches=queryDeep(document,options.selector);}catch{throw new Error('Invalid observation selector.');}
+        if(matches.length!==1)throw new Error('Observation selector must match exactly one element, including open shadow roots.');
+        root=matches[0];
       }
-      if (lines.length >= 400 || chars + line.length + (lines.length ? 1 : 0) > maxChars) { truncated = true; break; }
-      chars += line.length + (lines.length ? 1 : 0);
-      lines.push(line);
+      const scope={selector:options.selector ?? null,query:options.query ?? null,include_text:options.include_text!==false};
+      current=new Map();const lines=[];let total=0,captureTruncated=false;
+      const controls='button,a[href],input,textarea,select,[role],h1,h2,h3,h4,h5,h6';
+      const selector=scope.include_text?controls+',p,li,td,th,dt,dd,pre,blockquote,div,span,label,summary,figcaption':controls;
+      const candidates=function*(){if(root!==document && root.matches(selector))yield root;if(root.shadowRoot)yield* elements(root.shadowRoot,selector);yield* elements(root,selector);};
+      for(const el of candidates()){
+        if(!visible(el))continue;
+        let r=role(el),fullName;
+        if(!r && scope.include_text && !composedClosest(el.parentElement,'button,a[href],[role],p,li,td,th,dt,dd,pre,blockquote') && !(el.tagName==='LABEL' && el.control)){
+          fullName=clean([...el.childNodes].filter(node=>node.nodeType===Node.TEXT_NODE).map(node=>node.textContent).join(' '));if(fullName)r='text';
+        }
+        if(!r)continue;fullName ??=name(el);
+        if(scope.query && !`${r} ${fullName} ${el.type==='password'?'':el.value || ''}`.toLowerCase().includes(scope.query.toLowerCase()))continue;
+        const interactive=!['heading','none','presentation','paragraph','listitem','cell','columnheader','term','definition','code','blockquote','group','row','table','region','text'].includes(r);
+        let line=`${interactive?`[${reference(el)}] `:''}${r} ${JSON.stringify(fullName.slice(0,200))}`;
+        if(el.disabled || el.getAttribute('aria-disabled')==='true')line+=' {disabled}';
+        if(r==='textbox' || r==='searchbox' || r==='combobox' && el.matches('input,textarea')){const value=el.type==='password'?'[REDACTED]':clean(el.value).slice(0,200);if(value)line+=` =${value}`;}
+        if(lines.length>=5000 || total+line.length>500000){captureTruncated=true;break;}
+        lines.push(line);total+=line.length+1;
+      }
+      let output=lines,orderChanged=false,baseRevision=null;
+      if(options.diff){
+        const previous=diffBaseline && JSON.stringify(diffBaseline.scope)===JSON.stringify(scope)?diffBaseline:null,before=previous?.lines || [];
+        baseRevision=previous?.revision ?? null;
+        const subtract=(source,other)=>{const counts=new Map();for(const line of other)counts.set(line,(counts.get(line)||0)+1);return source.filter(line=>{const count=counts.get(line)||0;if(count){counts.set(line,count-1);return false;}return true;});};
+        output=[...subtract(lines,before).map(line=>'+ '+line),...subtract(before,lines).map(line=>'- '+line)];
+        const old=new Set(before),now=new Set(lines);
+        orderChanged=JSON.stringify(before.filter(line=>now.has(line)))!==JSON.stringify(lines.filter(line=>old.has(line)));
+      }
+      const revision=`${documentRevision}:${++snapshotRevision}`;
+      diffBaseline={scope,lines,revision};
+      snapshotCache={scope,lines:output,refs:current,revision,baseRevision,orderChanged,version:domVersion,captureTruncated,diff:options.diff===true,url:location.href,title:withoutTitleMarker(document.title)};
+    }else{
+      if(!snapshotCache)throw new Error('No captured snapshot; request offset 0 first.');
+      for(const key of ['selector','query','include_text'])if(options[key]!==undefined && options[key]!==snapshotCache.scope[key])throw new Error('Snapshot continuation scope changed; request offset 0.');
+      if(options.revision!==undefined && options.revision!==snapshotCache.revision)throw new Error('Snapshot revision changed; request offset 0.');
+      if(options.diff!==undefined && options.diff!==snapshotCache.diff)throw new Error('Snapshot continuation diff mode changed.');
+      current=snapshotCache.refs;
     }
-    const warnings = ['DOM-derived snapshot; closed shadow roots, unselected frames and some text may be omitted.'];
-    if (document.querySelector('iframe,frame')) warnings.push('Iframe contents are not included.');
-    if (truncated) warnings.push('Snapshot truncated; request next_offset to inspect more controls.');
-    return {url:location.href,title:withoutTitleMarker(document.title),text:lines.join('\n'),offset,next_offset:truncated ? offset + lines.length : null,truncated,warnings};
+    const cache=snapshotCache,lines=[];let chars=0,cursor=offset;
+    while(cursor<cache.lines.length){const line=cache.lines[cursor];if(chars+line.length+(lines.length?1:0)>maxChars)break;lines.push(line);chars+=line.length+(lines.length>1?1:0);cursor++;}
+    const truncated=cursor<cache.lines.length,warnings=['DOM-derived snapshot; closed shadow roots and unselected frames are omitted.'];
+    if(document.querySelector('iframe,frame'))warnings.push('Select a frame explicitly to inspect its contents.');
+    if(cache.captureTruncated)warnings.push('Capture limit reached; use a targeted selector or query for additional content.');
+    if(truncated)warnings.push('Continue with next_offset and revision to read this captured snapshot.');
+    return {url:cache.url,title:cache.title,text:lines.join('\n'),offset,next_offset:truncated?cursor:null,truncated,revision:cache.revision,base_revision:cache.baseRevision,order_changed:cache.orderChanged,diff:cache.diff,live_changed:cache.version!==domVersion,capture_truncated:cache.captureTruncated,warnings};
   }
   async function actionable(ref, action, deadline = Date.now() + 2000) {
     deadline = Math.min(deadline, Date.now() + 2000);
@@ -291,7 +315,7 @@
   }
   browser.runtime.onMessage.addListener(async function handle(message) {
     if (message.type === 'ping') { enabled = true; mark(); return {value:true}; }
-    if (message.type === 'revoke') { enabled = false; lease++; for(const request of pendingRequests)request.abort();pendingRequests.clear();for (const finish of pendingWaits) finish('Sharing stopped.'); finishHandoff('Sharing stopped during human handoff.'); current.clear(); unmark(); return {value:true}; }
+    if (message.type === 'revoke') { enabled = false; lease++;snapshotCache=null;diffBaseline=null; for(const request of pendingRequests)request.abort();pendingRequests.clear();for (const finish of pendingWaits) finish('Sharing stopped.'); finishHandoff('Sharing stopped during human handoff.'); current.clear(); unmark(); return {value:true}; }
     if (message.type === 'handoff') {
       if (!enabled || handoff) return {error:'Sharing stopped or a handoff is already pending.'};
       if (typeof message.prompt!=='string' || !message.prompt.trim() || message.prompt.length>1000 || !Number.isInteger(message.timeout_ms) || message.timeout_ms<1000 || message.timeout_ms>120000) return {error:'Invalid handoff prompt or timeout.'};
