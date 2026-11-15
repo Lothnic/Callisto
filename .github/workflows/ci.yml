@@ -22,7 +22,9 @@ jobs:
       - run: cargo build --locked --release --manifest-path packages/firefox-rs/Cargo.toml --bin callisto-firefox-tab-mcp
       - run: npm --prefix packages/mini ci
       - run: npm --prefix packages/mini run build
-      - run: node --test packages/firefox-rs/tests/extension-background.test.cjs packages/firefox-rs/tests/extension-network.test.cjs scripts/launcher.test.mjs scripts/install-release.test.mjs scripts/doctor.test.mjs eval/agent-comparison/host-session.test.mjs
+      - name: Browser and installer contracts
+        timeout-minutes: 3
+        run: node --test packages/firefox-rs/tests/extension-background.test.cjs packages/firefox-rs/tests/extension-network.test.cjs scripts/launcher.test.mjs scripts/install-release.test.mjs scripts/doctor.test.mjs eval/agent-comparison/host-session.test.mjs
       - name: DOM bridge tests in runner Chrome
         run: |
           export CHROMIUM_PATH="$(command -v google-chrome)"
