@@ -1,12 +1,22 @@
 'use strict';
 const fullBrowserPermissions = {origins:['<all_urls>'],permissions:['tabs','cookies','bookmarks','history','downloads']};
-const browserActions = ['tabs_list','tab_select','tab_create','window_create','window_close','agent_container','tab_close','back','forward','reload','screenshot','cookies_list','cookie_set','cookie_remove','bookmarks_search','history_search','downloads_search','download'];
+const browserActions = ['background','tabs_list','tab_select','tab_create','window_create','window_close','agent_container','tab_close','back','forward','reload','screenshot','cookies_list','cookie_set','cookie_remove','bookmarks_search','history_search','downloads_search','download'];
 function webUrl(value) {
   const url = new URL(value);
   if (!['http:','https:'].includes(url.protocol) || url.username || url.password) throw new Error('Expected an HTTP(S) URL without credentials.');
   return url.href;
 }
 async function browserControl(args, session, owner) {
+  if(args.action==='background'){
+    if(!['start','pause','resume','stop'].includes(args.operation))throw new Error('Choose background operation start, pause, resume or stop.');
+    session.guard(owner);
+    if(args.operation==='start')return session.startBackground(owner);
+    if(args.operation==='pause')return session.pauseBackground('paused');
+    if(args.operation==='resume')return session.resumeBackground(owner);
+    await session.stop();return {released:true,windowPreserved:true};
+  }
+  if(session.background && ['tab_select','tab_create','window_create','window_close','tab_close','download'].includes(args.action))throw new Error('needs_attention: This background task cannot select, create, close or raise other tabs/windows or open a save dialog. Take back the task first.');
+  if(session.background&&!['tabs_list','cookies_list','bookmarks_search','history_search','downloads_search'].includes(args.action))await session.checkBackground(owner);
   if (!(await browser.permissions.contains(fullBrowserPermissions))) throw new Error('Choose Enable browser access in the extension and approve its permissions first.');
   session.guard(owner);
   const id = () => { if (!Number.isSafeInteger(args.tab_id) || args.tab_id < 0) throw new Error('tab_id is required.'); return args.tab_id; };

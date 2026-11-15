@@ -5,7 +5,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 
 function fixture(executeScript = async () => {}, siteAccess = false, saved = {}, clock = Date) {
-  let listener, menuListener, updateListener, domListener, commitListener;
+  let listener, menuListener, updateListener, domListener, commitListener, focusListener;
   const messages = [];
   class Socket {
     static OPEN = 1;
@@ -18,6 +18,7 @@ function fixture(executeScript = async () => {}, siteAccess = false, saved = {},
   const browser = {
     storage:{local:{get:async () => ({...saved}),set:async values => {Object.assign(saved,values);},remove:async key => {delete saved[key];}}},
     webNavigation:{getAllFrames:async()=>[{frameId:0,parentFrameId:-1},{frameId:7,parentFrameId:0}],onDOMContentLoaded:{addListener(fn){domListener=fn;}},onCommitted:{addListener(fn){commitListener=fn;}}},
+    windows:{onFocusChanged:{addListener(fn){focusListener=fn;}}},
     runtime:{onMessage:{addListener(fn) { listener = fn; }}},
     menus:{create(){},onClicked:{addListener(fn){ menuListener = fn; }}},
     browserAction:{setBadgeText:async () => {}},
@@ -34,7 +35,7 @@ function fixture(executeScript = async () => {}, siteAccess = false, saved = {},
   const context = vm.createContext({browser,WebSocket:Socket,setTimeout,clearTimeout,URL,Date:clock});
   vm.runInContext(fs.readFileSync(path.join(__dirname,'../extension/browser-control.js'),'utf8'), context);
   vm.runInContext(fs.readFileSync(path.join(__dirname,'../extension/background.js'),'utf8'), context);
-  return {listener,menuListener,updateListener,domListener,commitListener,Socket,messages,browser};
+  return {listener,menuListener,updateListener,domListener,commitListener,Socket,messages,browser,focusChanged:id=>focusListener?.(id)};
 }
 const code = `127.0.0.1:1234#${'a'.repeat(64)}`;
 
@@ -86,7 +87,7 @@ test('pairing requires server confirmation and stop prevents further sharing', a
   assert.match((await connecting).message,/Connected/);
   assert.match((await listener({type:'share'})).message,/shared/);
   await ws.receive({id:1,method:'status'});
-  assert.deepEqual(messages.at(-1).result,{connected:true,sharing:true,active:true,ready:true,continuous:false,browserAccess:false,capabilities:{trustedInput:false,trustedBinding:true,frames:'same-origin',playwrightExecution:false,run:true,extract:true,snapshotPagination:true,runFormControls:true,selectorWait:true,targetedObservation:true,networkInspection:false}});
+  assert.deepEqual(messages.at(-1).result,{connected:true,execution:{mode:'shared-tab',focusPolicy:'user-controlled',paused:false},sharing:true,active:true,ready:true,continuous:false,browserAccess:false,capabilities:{trustedInput:false,trustedBinding:true,frames:'same-origin',playwrightExecution:false,run:true,extract:true,snapshotPagination:true,runFormControls:true,selectorWait:true,targetedObservation:true,networkInspection:false,backgroundWindow:true}});
   await listener({type:'stop'});
   assert.match((await listener({type:'status'})).message,/Connected/);
 });
@@ -357,4 +358,102 @@ test('release revokes all frames and frame navigation requires explicit reselect
  await Socket.last.receive({id:403,method:'frame',value:JSON.stringify({frame_id:7})});assert.equal(messages.at(-1).error,undefined);
  const revoked=[];browser.tabs.sendMessage=async(id,message,options)=>{if(message.type==='revoke')revoked.push(options.frameId);return {value:true};};
  await listener({type:'stop'});assert.deepEqual(revoked.sort(),[0,7]);
+});
+
+function backgroundFixture(){
+ const f=fixture(async()=>{},true);
+ const tabs=new Map([[42,{id:42,windowId:1,index:0,active:true,pinned:false,cookieStoreId:'firefox-container-5',url:'https://example.test/form'}],[99,{id:99,windowId:1,index:1,active:false,pinned:false}]]);
+ const windows=new Map([[1,{id:1,focused:true,state:'normal'}]]),changes=[];
+ f.browser.permissions.contains=async request=>!request.permissions?.some(p=>['cookies','history','bookmarks','downloads'].includes(p));
+ f.browser.tabs.get=async id=>{if(!tabs.has(id))throw Error('Tab gone');return {...tabs.get(id)};};
+ f.browser.tabs.query=async q=>[...tabs.values()].filter(t=>(q?.windowId===undefined||t.windowId===q.windowId)&&(!q?.active||t.active)).map(t=>({...t}));
+ f.browser.tabs.update=async(id,opts)=>{changes.push({type:'tab',id,...opts});const t=tabs.get(id);if(opts.active)for(const other of tabs.values())if(other.windowId===t.windowId)other.active=false;Object.assign(t,opts);return {...t};};
+ f.browser.tabs.move=async(id,opts)=>{changes.push({type:'move',id,...opts});const t=tabs.get(id);t.windowId=opts.windowId;t.active=true;if(tabs.has(99))tabs.get(99).active=true;return {...t};};
+ f.browser.tabs.create=async opts=>{changes.push({type:'create-tab',...opts});const t={id:100,windowId:opts.windowId,active:opts.active,pinned:false};tabs.set(100,t);return t;};
+ f.browser.windows={
+  get:async id=>({...windows.get(id)}),
+  create:async opts=>{changes.push({type:'create-window',...opts});const t=tabs.get(opts.tabId);t.windowId=9;t.active=true;if(tabs.has(99))tabs.get(99).active=true;const win={id:9,focused:false,state:'normal'};windows.set(9,win);return {...win,tabs:[{...t}]};},
+  update:async(id,opts)=>{changes.push({type:'window',id,...opts});if(opts.focused){for(const w of windows.values())w.focused=false;windows.get(id).focused=true;f.focusChanged(id);}return {...windows.get(id)};},
+ };
+ const sent=[];f.browser.tabs.sendMessage=async(id,m)=>{sent.push({id,...m});return m.type==='action'?{value:{tab:id}}:{value:true};};
+ return {...f,tabs,windows,changes,sent};
+}
+async function pairFixture(f){const pairing=f.listener({type:'pair',code});await new Promise(setImmediate);const ws=f.Socket.last;ws.open();await ws.receive({type:'paired',protocol:2});await pairing;await f.listener({type:'share'});return ws;}
+
+test('prepared background task preserves the exact tab without requiring cookie/history grants',async()=>{
+ const f=backgroundFixture(),ws=await pairFixture(f);
+ await f.listener({type:'background-share'});
+ await ws.receive({id:40,session:101,method:'browser',value:JSON.stringify({action:'background',operation:'start'})});
+ assert.equal(f.messages.at(-1).error,undefined);assert.equal(f.tabs.get(42).windowId,9);
+ assert.equal(f.tabs.get(42).cookieStoreId,'firefox-container-5');
+ assert.deepEqual(f.changes.filter(c=>c.type==='create-window').map(c=>({tabId:c.tabId,focused:c.focused})),[{tabId:42,focused:false}]);
+ assert(!f.changes.some(c=>c.type==='window'&&c.focused));
+ await ws.receive({id:41,session:101,method:'status'});assert.equal(f.messages.at(-1).result.execution.mode,'background-window');
+ await ws.receive({id:42,session:101,method:'snapshot'});assert.equal(f.messages.at(-1).result.tab,42);
+ await ws.receive({id:43,session:101,method:'browser',value:JSON.stringify({action:'tab_select',tab_id:99})});assert.match(f.messages.at(-1).error,/needs_attention/);
+});
+
+test('pause reserves the exact task tab, resume requires an unfocused window, and take back leaves it open',async()=>{
+ const f=backgroundFixture(),ws=await pairFixture(f);
+ await f.listener({type:'background-share'});
+ await ws.receive({id:50,session:101,method:'browser',value:JSON.stringify({action:'background',operation:'start'})});
+ await f.listener({type:'background-control',tab_id:42,action:'pause'});
+ await ws.receive({id:51,session:101,method:'click',ref:'ax-1'});assert.match(f.messages.at(-1).error,/paused/);
+ f.browser.permissions.contains=async()=>true;
+ await ws.receive({id:52,session:202,method:'browser',value:JSON.stringify({action:'tab_select',tab_id:42})});assert.match(f.messages.at(-1).error,/owned by another/);
+ f.windows.get(9).focused=true;
+ await ws.receive({id:53,session:101,method:'browser',value:JSON.stringify({action:'background',operation:'resume'})});assert.match(f.messages.at(-1).error,/needs_attention/);
+ f.windows.get(9).focused=false;
+ await ws.receive({id:54,session:101,method:'browser',value:JSON.stringify({action:'background',operation:'resume'})});assert.equal(f.messages.at(-1).error,undefined);
+ await f.listener({type:'background-control',tab_id:42,action:'take-back'});
+ await ws.receive({id:55,session:101,method:'status'});assert.equal(f.messages.at(-1).result.sharing,false);assert(f.tabs.has(42));assert(f.windows.has(9));
+});
+
+test('stopping during background-window creation cannot regrant sharing',async()=>{
+ const f=backgroundFixture(),ws=await pairFixture(f);const create=f.browser.windows.create;let release,entered;
+ const entry=new Promise(r=>entered=r);f.browser.windows.create=async opts=>{entered();await new Promise(r=>release=r);return create(opts);};
+ const work=f.listener({type:'background-share'});
+ await entry;await f.listener({type:'stop'});release();const result=await work;
+ assert.match(result.message,/changed|stopped/);
+ const ui=await f.listener({type:'ui-status'});assert.equal(ui.shared_tabs,0);assert.equal(ui.background_tasks.length,0);
+});
+
+test('View pauses before focusing; foregrounding a running agent window pauses it',async()=>{
+ const f=backgroundFixture(),ws=await pairFixture(f);
+ await f.listener({type:'background-share'});
+ await ws.receive({id:70,session:101,method:'browser',value:JSON.stringify({action:'background',operation:'start'})});
+ await f.listener({type:'background-control',tab_id:42,action:'view'});
+ assert.equal(f.windows.get(9).focused,true);
+ await ws.receive({id:71,session:101,method:'status'});assert.equal(f.messages.at(-1).result.execution.paused,true);assert.equal(f.messages.at(-1).result.sharing,false);
+ f.windows.get(9).focused=false;
+ await ws.receive({id:72,session:101,method:'browser',value:JSON.stringify({action:'background',operation:'resume'})});
+ f.windows.get(9).focused=true;await f.focusChanged(9);
+ await ws.receive({id:73,session:101,method:'status'});assert.equal(f.messages.at(-1).result.execution.paused,true);
+ const sends=f.sent.filter(m=>m.type==='action').length;
+ await ws.receive({id:74,session:101,method:'click',ref:'ax-1'});assert.match(f.messages.at(-1).error,/paused/);assert.equal(f.sent.filter(m=>m.type==='action').length,sends);
+});
+
+test('background setup refuses pinned tabs and preserves the source window when moving its sole tab',async()=>{
+ const f=backgroundFixture(),ws=await pairFixture(f);f.tabs.get(42).pinned=true;
+ const rejected=await f.listener({type:'background-share'});assert.match(rejected.message,/Unpin/);assert.equal(f.changes.length,0);
+ f.tabs.get(42).pinned=false;f.tabs.delete(99);
+ await f.listener({type:'background-share'});
+ await ws.receive({id:81,session:101,method:'browser',value:JSON.stringify({action:'background',operation:'start'})});assert.equal(f.messages.at(-1).error,undefined);
+ assert(f.changes.some(c=>c.type==='create-tab'&&c.windowId===1&&c.active===false));
+});
+
+test('agent requests cannot create a window; explicit preparation starts only after focus returns',async()=>{
+ const f=backgroundFixture(),ws=await pairFixture(f);
+ await ws.receive({id:90,session:101,method:'browser',value:JSON.stringify({action:'background',operation:'start'})});assert.match(f.messages.at(-1).error,/Prepare background work/);assert.equal(f.changes.length,0);
+ const create=f.browser.windows.create;f.browser.windows.create=async opts=>{const result=await create(opts);f.windows.get(1).focused=false;f.windows.get(9).focused=true;return {...result,focused:true};};
+ const prepared=await f.listener({type:'background-share'});assert.equal(prepared.task.reason,'ready');assert.equal(prepared.task.paused,true);
+ f.windows.get(9).focused=false;f.windows.get(1).focused=true;await f.focusChanged(1);await new Promise(setImmediate);
+ await ws.receive({id:91,session:101,method:'status'});assert.equal(f.messages.at(-1).result.execution.paused,false);assert.equal(f.messages.at(-1).result.sharing,true);
+});
+
+test('Stop during initial revocation cancels a pending user preparation before it can share again',async()=>{
+ const f=backgroundFixture();await pairFixture(f);const send=f.browser.tabs.sendMessage;let release,entered;
+ const entry=new Promise(r=>entered=r);f.browser.tabs.sendMessage=async(id,message,...rest)=>{if(message.type==='revoke'){entered();await new Promise(r=>release=r);}return send(id,message,...rest);};
+ const work=f.listener({type:'background-share'});await entry;await f.listener({type:'stop'});release();const result=await work;
+ assert.match(result.message,/stopped/);assert.equal(f.changes.length,0);assert.equal((await f.listener({type:'ui-status'})).shared_tabs,0);
 });

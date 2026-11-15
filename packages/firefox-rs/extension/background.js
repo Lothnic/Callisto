@@ -7,6 +7,7 @@ let retryDelay = 1000;
 let pairAttempt = 0;
 let storageWrites = Promise.resolve();
 let nextLease = 0;
+let sharingIntent = 0;
 const networkInspector = typeof createNetworkInspector === 'function' ? createNetworkInspector(browser) : null;
 function savePairing(code) {
   const write = storageWrites.then(() => code === null ? browser.storage.local.remove('callistoPairing') : browser.storage.local.set({callistoPairing:code}));
@@ -62,14 +63,29 @@ browser.runtime.onMessage.addListener(async message => {
     if (message.type === 'status') return {message:status()};
     if (message.type === 'ui-status') {
       const shared=[...new Set(sessions.values())].filter(session=>session.sharing);
-      const [navigation,full,network,settings]=await Promise.all([
+      const [navigation,full,network,settings,background]=await Promise.all([
         browser.permissions.contains({origins:['<all_urls>']}),browser.permissions.contains(fullBrowserPermissions),
-        browser.permissions.contains({origins:['<all_urls>'],permissions:['webRequest','webRequestBlocking']}),browser.storage.local.get('callistoAgentContainersEnabled')]);
+        browser.permissions.contains({origins:['<all_urls>'],permissions:['webRequest','webRequestBlocking']}),browser.storage.local.get('callistoAgentContainersEnabled'),browser.permissions.contains({permissions:['tabs']})]);
       return {connected:paired && socket?.readyState===WebSocket.OPEN,paired:!!rememberedCode,reconnecting:!!rememberedCode && !paired,shared_tabs:shared.length,
-        permissions:{navigation,browser:full,network,containers:settings.callistoAgentContainersEnabled===true}};
+        background_tasks:[...new Set(sessions.values())].map(s=>s.background).filter(Boolean),
+        permissions:{navigation,browser:full,network,background,containers:settings.callistoAgentContainersEnabled===true}};
     }
     if (message.type === 'pair') { await pair(message.code); return {message:'Connected. Open the desired tab and click Share this tab.'}; }
     if (message.type === 'share') return {message:await share()};
+    if(message.type==='background-share'){
+      if(!(await browser.permissions.contains({permissions:['tabs']})))throw new Error('Allow background tab management first.');
+      const work=share(),intent=sharingIntent;await work;if(intent!==sharingIntent)throw new Error('Sharing stopped during background setup.');const result=await sessions.get(0).startBackground(undefined,{allowWindowSetup:true});
+      return {message:result.paused?'Agent window prepared. Return to your other window to start.':'Working in the background. Keep the agent window unminimized.',task:result};
+    }
+    if(message.type==='background-control'){
+      const task=[...new Set(sessions.values())].find(s=>s.background?.tab_id===message.tab_id);
+      if(!task)throw new Error('That background task is no longer available.');
+      if(message.action==='pause'){await task.pauseBackground('paused');return {message:'Task paused. Its tab remains reserved.'};}
+      if(message.action==='resume'){await task.resumeBackground();return {message:'Task resumed in the background.'};}
+      if(message.action==='view'){await task.viewBackground();return {message:'Task paused for viewing. Resume from your other window.'};}
+      if(message.action==='take-back'){await task.stop();return {message:'Automation stopped. Your tab and window remain open.'};}
+      throw new Error('Unsupported background control.');
+    }
     if (message.type === 'stop') { await stop(); return {message:'Sharing stopped. Browser pairing is still connected.'}; }
     if (message.type === 'enable-containers') {
       if(!(await browser.permissions.contains({permissions:['cookies']})))throw new Error('Cookie permission is needed for agent containers.');
@@ -86,6 +102,7 @@ browser.runtime.onMessage.addListener(async message => {
     return {message:'Unknown request.'};
   } catch (error) { return {message:`Error: ${error.message}`}; }
 });
+browser.windows?.onFocusChanged?.addListener(id=>{for(const session of new Set(sessions.values()))void session.focusChanged(id).catch(()=>{});});
 browser.tabs.onRemoved.addListener(id=>{for(const session of sessions.values())session.removed(id);});
 browser.tabs.onUpdated.addListener((id,change)=>{for(const session of sessions.values())session.updated(id,change);});
 browser.permissions.onRemoved.addListener(permissions=>{if(permissions.permissions?.some(p=>['webRequest','webRequestBlocking'].includes(p)) || permissions.origins?.includes('<all_urls>'))networkInspector?.revoke();for(const session of sessions.values())session.permissionsRemoved(permissions);});
@@ -118,12 +135,13 @@ function status(){
   const count=[...sessions.values()].filter(session=>session.target!==null).length;
   return count ? `Connected. ${count} tab(s) shared across agent sessions. Stop sharing releases all of them.` : sessions.get(0).status();
 }
-async function stop(reset=false){
+async function stop(reset=false,invalidate=true){
+  if(invalidate)sharingIntent++;
   const work=Promise.all([...sessions.values()].map(session=>session.stop()));
   if(reset){sessions.clear();newManual();}
   await work;
 }
-async function share(id){await stop();return sessions.get(0).share(id);}
+async function share(id){const intent=++sharingIntent;await stop(false,false);if(intent!==sharingIntent)throw new Error('Sharing stopped before setup.');return sessions.get(0).share(id);}
 browser.webNavigation.onDOMContentLoaded.addListener(event=>{if(event.frameId===0)for(const session of sessions.values())session.domReady(event.tabId);});
 browser.webNavigation.onCommitted?.addListener(event=>{if(event.frameId!==0)for(const session of sessions.values())session.frameNavigated(event.tabId,event.frameId);});
 async function executeCommand(request,connection){
@@ -136,6 +154,7 @@ async function executeCommand(request,connection){
     return {released:true};
   }
   const manual=sessions.get(0);
+  if(id!==0&&request.method==='status'&&(!session||session.target===null)&&manual.target!==null)return manual.executeCommand(request,connection);
   if(id!==0 && request.method!=='status' && (!session || session.target===null) && manual.target!==null){
     if(session)await session.stop();
     session=manual;sessions.set(id,session);newManual();
@@ -158,6 +177,7 @@ let selectedFrame = 0;
 let frameStale = false;
 let leaseKey=String(++nextLease);
 let reserved=null;
+let backgroundTask=null;
   const context={get selected(){return selected;},share,assertAvailable,guard(expected){if(expected!==ownership)throw new Error('Tab ownership changed before the browser operation.');}};
   function assertAvailable(tabId){
     for(const other of sessions.values())if(other!==context && other.target===tabId)throw new Error('Tab is owned by another agent session. Release it before taking control.');
@@ -166,8 +186,9 @@ function status() {
   if (!socket || socket.readyState !== WebSocket.OPEN || !paired) return 'Not connected.';
   return selected === null ? 'Connected. Select a tab and click Share this tab.' : ready ? 'Connected. The selected tab is shared.' : 'Connected. Waiting for the shared page to load.';
 }
-async function stop() {
+async function stop(keepBackground=false) {
   const previous = selected;
+  if(!keepBackground)backgroundTask=null;
   const revoked=leaseKey;leaseKey=String(++nextLease);
   if(socket?.readyState===WebSocket.OPEN && previous!==null)socket.send(JSON.stringify({type:'lease_revoked',lease_id:revoked}));
   selected = null; reserved = null; selectedFrame = 0; frameStale = false; ready = false; continuous = false; generation++; ownership++;
@@ -178,7 +199,7 @@ async function stop() {
     await Promise.all((frames || [{frameId:0}]).map(frame=>browser.tabs.sendMessage(previous,{type:'revoke'},{frameId:frame.frameId}).catch(()=>{})));
   }
 }
-async function share(tabId,expectedOwner) {
+async function share(tabId,expectedOwner,{keepBackground=false}={}) {
   if(expectedOwner!==undefined)context.guard(expectedOwner);
   if (!socket || socket.readyState !== WebSocket.OPEN || !paired) throw new Error('Connect first.');
   const tab = tabId === undefined ? (await browser.tabs.query({active:true,currentWindow:true}))[0] : await browser.tabs.get(tabId);
@@ -186,7 +207,7 @@ async function share(tabId,expectedOwner) {
   if(expectedOwner!==undefined)context.guard(expectedOwner);
   assertAvailable(tab.id);
   const beforeStop=ownership;
-  await stop();
+  await stop(keepBackground);
   if(ownership!==beforeStop+1)throw new Error('Sharing stopped before the tab was prepared.');
   assertAvailable(tab.id);
   reserved = tab.id;
@@ -223,6 +244,72 @@ async function share(tabId,expectedOwner) {
   }
 }
 
+
+function taskStatus(){return backgroundTask?{mode:'background-window',focusPolicy:'never',tab_id:backgroundTask.tabId,window_id:backgroundTask.windowId,paused:backgroundTask.paused,reason:backgroundTask.reason}:null;}
+function taskGuard(task,epoch){if(backgroundTask!==task||ownership!==epoch)throw new Error('Background task changed or stopped during setup.');}
+async function startBackground(expectedOwner=ownership,{allowWindowSetup=false}={}){
+  context.guard(expectedOwner);
+  if(backgroundTask)return taskStatus();
+  if(!allowWindowSetup)throw new Error('needs_attention: Prepare background work in the extension first. Firefox/Zen window creation can take focus and requires an explicit user action.');
+  if(selected===null)throw new Error('Share the intended tab before starting background work.');
+  if(!(await browser.permissions.contains({permissions:['tabs']})))throw new Error('Background work needs the optional tabs permission.');
+  context.guard(expectedOwner);
+  const tab=await browser.tabs.get(selected);context.guard(expectedOwner);
+  if(tab.pinned)throw new Error('Unpin this tab before moving it to an agent window.');
+  const task={tabId:tab.id,windowId:null,paused:true,reason:'starting',startOnReturn:false};backgroundTask=task;
+  await stop(true);const epoch=ownership;
+  try{
+    taskGuard(task,epoch);
+    const siblings=await browser.tabs.query({windowId:tab.windowId});taskGuard(task,epoch);
+    // Keep the person's window alive even when its only tab is moved.
+    if(siblings.length===1){await browser.tabs.create({windowId:tab.windowId,url:'about:blank',active:false});taskGuard(task,epoch);}
+    // Firefox ignores focused:false on creation. This path is user-initiated;
+    // agents can only operate an already prepared task, never create it silently.
+    const window=await browser.windows.create({tabId:tab.id,focused:false,incognito:!!tab.incognito,titlePreface:'[Callisto] '});
+    taskGuard(task,epoch);task.windowId=window.id;
+    const moved=await browser.tabs.get(tab.id);taskGuard(task,epoch);
+    if(moved.windowId!==window.id||moved.cookieStoreId!==tab.cookieStoreId)throw new Error('Moved tab identity or cookie session changed. Inspect the page before continuing.');
+    task.reason='ready';task.startOnReturn=true;
+    const current=await browser.windows.get(window.id);taskGuard(task,epoch);
+    if(!current.focused&&current.state!=='minimized')return await resumeBackground(epoch);
+    return taskStatus();
+  }catch(error){if(backgroundTask===task)await stop();throw error;}
+}
+async function pauseBackground(reason='paused'){
+  if(!backgroundTask)throw new Error('No background task.');
+  backgroundTask.paused=true;backgroundTask.reason=reason;backgroundTask.startOnReturn=false;await stop(true);
+  return taskStatus();
+}
+async function resumeBackground(expectedOwner=ownership){
+  context.guard(expectedOwner);const task=backgroundTask;
+  if(!task)throw new Error('No background task.');
+  if(!task.paused)return taskStatus();
+  const tab=await browser.tabs.get(task.tabId);taskGuard(task,expectedOwner);
+  if(tab.windowId!==task.windowId)throw new Error('needs_attention: The agent tab moved to another window. Take it back before sharing again.');
+  const window=await browser.windows.get(task.windowId);taskGuard(task,expectedOwner);
+  if(window.focused||window.state==='minimized')throw new Error('needs_attention: Keep the agent window unminimized and switch to your other window before resuming.');
+  await browser.tabs.update(task.tabId,{active:true});taskGuard(task,expectedOwner);
+  await share(task.tabId,expectedOwner,{keepBackground:true});const epoch=ownership;taskGuard(task,epoch);
+  const checked=await browser.windows.get(task.windowId);taskGuard(task,epoch);
+  if(checked.focused||checked.state==='minimized'){await stop(true);throw new Error('needs_attention: The agent window cannot run in its current state.');}
+  task.paused=false;task.reason=null;task.startOnReturn=false;return taskStatus();
+}
+async function viewBackground(){
+  if(!backgroundTask)throw new Error('No background task.');
+  const task=backgroundTask;await pauseBackground('viewing');const epoch=ownership;taskGuard(task,epoch);
+  await browser.tabs.update(task.tabId,{active:true});taskGuard(task,epoch);
+  await browser.windows.update(task.windowId,{focused:true});
+}
+async function checkBackground(owner){
+  if(!backgroundTask)return;
+  if(backgroundTask.paused)throw new Error('background_paused: Resume the task explicitly from your other window.');
+  const task=backgroundTask,tab=await browser.tabs.get(task.tabId);context.guard(owner);
+  const window=await browser.windows.get(task.windowId);context.guard(owner);
+  if(tab.windowId!==task.windowId||!tab.active||window.focused||window.state==='minimized'){
+    await pauseBackground('needs_attention');throw new Error('needs_attention: Background task paused because its window or active tab changed.');
+  }
+}
+
 async function waitReady(tabId, owner, connection, commandDeadline=Date.now()+8000) {
   const deadline = Math.min(Date.now()+8000,commandDeadline);
   while (!ready) {
@@ -254,7 +341,7 @@ async function executeCommand(request, connection, deadline = Date.now()+10000) 
   if (request.method === 'status') {
     const target = chosen === null ? null : await browser.tabs.get(chosen);
     const [active] = target ? await browser.tabs.query({active:true,windowId:target.windowId}) : [];
-    return {connected:true,sharing:chosen !== null,active:chosen !== null && active?.id === chosen,ready,continuous,browserAccess:await browser.permissions.contains(fullBrowserPermissions),capabilities:{trustedInput:false,trustedBinding:true,frames:'same-origin',playwrightExecution:false,run:true,extract:true,snapshotPagination:true,runFormControls:true,selectorWait:true,targetedObservation:true,networkInspection:!!networkInspector}};
+    return {connected:true,execution:taskStatus()??{mode:'shared-tab',focusPolicy:'user-controlled',paused:false},sharing:chosen !== null,active:chosen !== null && active?.id === chosen,ready,continuous,browserAccess:await browser.permissions.contains(fullBrowserPermissions),capabilities:{trustedInput:false,trustedBinding:true,frames:'same-origin',playwrightExecution:false,run:true,extract:true,snapshotPagination:true,runFormControls:true,selectorWait:true,targetedObservation:true,networkInspection:!!networkInspector,backgroundWindow:true}};
   }
   if (Date.now() >= deadline) throw new Error('Command deadline exceeded; inspect before retrying.');
   if (request.method === 'browser') {
@@ -262,6 +349,7 @@ async function executeCommand(request, connection, deadline = Date.now()+10000) 
     if (!browserActions.includes(args.action)) throw new Error('Unsupported browser action.');
     return browserControl(args, context, owner);
   }
+  await checkBackground(owner);
   if (chosen === null) throw new Error('No tab shared. Open the desired tab and click Share this tab in the Callisto extension.');
   if (request.method === 'network') {
     if(!networkInspector)throw new Error('Network inspection is unavailable; reload the extension.');
@@ -297,6 +385,7 @@ async function executeCommand(request, connection, deadline = Date.now()+10000) 
     return {frameId:id,snapshot:await executeCommand({method:'snapshot'},connection,deadline)};
   }
   if (request.method === 'handoff') {
+    if(backgroundTask){await pauseBackground('needs_attention');throw new Error('needs_attention: View the paused agent window to complete the human step.');}
     await waitReady(chosen,owner,connection);
     const args=JSON.parse(request.value);
     const result=await browser.tabs.sendMessage(chosen,{type:'handoff',prompt:args.prompt,timeout_ms:args.timeout_ms},{frameId:0});
@@ -455,20 +544,36 @@ async function executeCommand(request, connection, deadline = Date.now()+10000) 
     throw new Error(`Page message interrupted; action outcome is unknown. Inspect before retrying: ${error.message}`);
   }
   if (owner !== ownership || chosen !== selected || socket !== connection) throw new Error('Tab sharing changed during the action; inspect the page before retrying.');
-  if (!result || result.error) throw new Error(result?.error || 'The selected page did not respond.');
+  if (!result || result.error) {
+    const reason=result?.error || 'The selected page did not respond.';
+    if(backgroundTask&&reason==='The shared tab is not visible.'){
+      await pauseBackground('needs_attention');throw new Error('needs_attention: The agent document is hidden. Use View to inspect it, then resume from your other window.');
+    }
+    throw new Error(reason);
+  }
   const value=request.method==='input_prepare'?{...result.value,lease_id:leaseKey,tab_id:chosen,frame_id:selectedFrame}:result.value;
   return stamp !== generation ? {...value,navigationStarted:true} : value;
 }
 
   Object.assign(context,{
-    status,stop,share,executeCommand,
-    removed(id){if(selected===id)void stop();},
+    status,stop,share,executeCommand,startBackground,pauseBackground,resumeBackground,viewBackground,checkBackground,
+    async focusChanged(id){
+      if(!backgroundTask)return;
+      if(!backgroundTask.paused&&backgroundTask.windowId===id)await pauseBackground('viewing');
+      else if(backgroundTask.startOnReturn&&id!==backgroundTask.windowId){
+        const task=backgroundTask,window=await browser.windows.get(task.windowId);
+        if(backgroundTask!==task||!task.startOnReturn||window.focused||window.state==='minimized')return;
+        try{await resumeBackground();}catch{if(backgroundTask===task&&task.startOnReturn){task.startOnReturn=false;task.reason='needs_attention';}}
+      }
+    },
+    removed(id){if(selected===id||backgroundTask?.tabId===id)void stop();},
     updated(id,change){if(selected!==id)return;if(change.status==='loading'){selectedFrame=0;frameStale=false;ready=false;generation++;if(!continuous)void stop();}if(change.status==='complete')void restorePage(id);},
     frameNavigated(id,frame){if(selected===id && selectedFrame===frame)frameStale=true;},
-    permissionsRemoved(permissions){if(permissions.permissions?.some(p=>['webRequest','webRequestBlocking'].includes(p)) || permissions.origins?.includes('<all_urls>'))void stop();},
+    permissionsRemoved(permissions){if(backgroundTask&&permissions.permissions?.includes('tabs')){void stop();return;}if(permissions.permissions?.some(p=>['webRequest','webRequestBlocking'].includes(p)) || permissions.origins?.includes('<all_urls>'))void stop();},
     domReady(id){void restorePage(id);}
   });
-  Object.defineProperty(context,'target',{get:()=>selected??reserved});
+  Object.defineProperty(context,'target',{get:()=>selected??reserved??backgroundTask?.tabId??null});
+  Object.defineProperty(context,'background',{get:taskStatus});
   Object.defineProperty(context,'sharing',{get:()=>selected!==null});
   return context;
 }

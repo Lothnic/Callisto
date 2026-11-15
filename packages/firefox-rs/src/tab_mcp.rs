@@ -192,7 +192,7 @@ fn tools() -> Value {
         {"name":"callisto_upload","description":"Set files on a visible file input in the controlled page. Reads explicit local file paths, at most 10 files and 10 MiB total. Page input/change handlers may upload immediately. Does not submit the form.","inputSchema":{"type":"object","properties":{"ref":{"type":"string","pattern":"^ax-[0-9]+$"},"paths":{"type":"array","minItems":1,"maxItems":10,"items":{"type":"string"}}},"required":["ref","paths"]}},
         {"name":"callisto_pair","description":"Get the persistent local browser pairing code (only needed for initial setup) for the Firefox/Zen tab bridge. Enter it in the extension, then explicitly share the desired existing tab.","inputSchema":{"type":"object","properties":{}}},
         {"name":"callisto_status","description":"Check whether the extension is connected and a tab is shared and active, without reading page content.","inputSchema":{"type":"object","properties":{}}},
-        {"name":"callisto_browser","description":"Manage the user's browser after they grant Enable browser access in the extension. Supports tabs, screenshots, cookies, bookmarks, history and downloads. tab_select also shares that existing tab. window_close closes the specified whole window, including its tabs; use the id returned by window_create for agent-window cleanup. Cookie values are sensitive. Downloads prompt for a save location. Zen may omit inactive workspaces.","inputSchema":{"type":"object","properties":{"action":{"type":"string","enum":["tabs_list","tab_select","tab_create","window_create","window_close","agent_container","tab_close","back","forward","reload","screenshot","cookies_list","cookie_set","cookie_remove","bookmarks_search","history_search","downloads_search","download"]},"window_id":{"type":"integer","minimum":0},"tab_id":{"type":"integer","minimum":0},"url":{"type":"string"},"query":{"type":"string","maxLength":200},"agent_container":{"type":"boolean","description":"Create a new tab or window in the opt-in isolated Callisto cookie container; existing logins will not be available there."},"cookie_store_id":{"type":"string"},"name":{"type":"string"},"value":{"type":"string"}},"required":["action"]}},
+        {"name":"callisto_browser","description":"Manage the user's browser after they grant Enable browser access in the extension. background start/pause/resume/stop controls only the already shared tab and needs the optional tabs grant; the user must prepare the window in the extension first because Firefox/Zen may focus it on creation. Execution then preserves the tab and login in an unfocused agent window. View is a user control. Other actions support tabs, screenshots, cookies, bookmarks, history and downloads. tab_select also shares that existing tab. window_close closes the specified whole window, including its tabs; use the id returned by window_create for agent-window cleanup. Cookie values are sensitive. Downloads prompt for a save location. Zen may omit inactive workspaces.","inputSchema":{"type":"object","properties":{"action":{"type":"string","enum":["background","tabs_list","tab_select","tab_create","window_create","window_close","agent_container","tab_close","back","forward","reload","screenshot","cookies_list","cookie_set","cookie_remove","bookmarks_search","history_search","downloads_search","download"]},"operation":{"type":"string","enum":["start","pause","resume","stop"],"description":"Required for background. The agent window must remain unfocused and unminimized; unsupported conditions pause instead of raising it."},"window_id":{"type":"integer","minimum":0},"tab_id":{"type":"integer","minimum":0},"url":{"type":"string"},"query":{"type":"string","maxLength":200},"agent_container":{"type":"boolean","description":"Create a new tab or window in the opt-in isolated Callisto cookie container; existing logins will not be available there."},"cookie_store_id":{"type":"string"},"name":{"type":"string"},"value":{"type":"string"}},"required":["action"]}},
         {"name":"callisto_page","description":"Additional DOM operations on the active controlled page. scroll uses viewport pixel deltas; hover dispatches synthetic pointer/mouse events; select chooses an option by value; check sets a checkbox; text returns bounded visible body text; find searches visible body text. Input uses the explicitly selected callisto_input mode.","inputSchema":{"type":"object","properties":{"action":{"type":"string","enum":["scroll","hover","select","check","text","find"]},"ref":{"type":"string","pattern":"^ax-[0-9]+$"},"value":{"type":"string"},"checked":{"type":"boolean"},"delta_x":{"type":"number"},"delta_y":{"type":"number"},"query":{"type":"string","maxLength":200}},"required":["action"]}},
         {"name":"callisto_scroll","description":"Scroll the controlled page by viewport pixel deltas. Returns the action result; take a fresh snapshot afterward.","inputSchema":{"type":"object","properties":{"delta_x":{"type":"number","default":0},"delta_y":{"type":"number"}},"required":["delta_y"]}},
         {"name":"callisto_screenshot","description":"Capture the active controlled tab as a JPEG image. Requires Enable browser access in the extension.","inputSchema":{"type":"object","properties":{}}},
@@ -636,6 +636,7 @@ async fn call_tool_inner(
                 "selectorWait",
                 "targetedObservation",
                 "networkInspection",
+                "backgroundWindow",
             ] {
                 // An older extension may not recognize a newer action even
                 // though the compiled MCP facade exposes its schema.
@@ -1227,7 +1228,7 @@ mod tests {
         *bridge.connection.lock().await = Some(send);
         for advertised in [
             json!({"trustedInput":false}),
-            json!({"run":true,"extract":true,"selectorWait":true}),
+            json!({"run":true,"extract":true,"selectorWait":true,"backgroundWindow":true}),
         ] {
             let cloned = bridge.clone();
             let task = tokio::spawn(async move {
@@ -1253,6 +1254,7 @@ mod tests {
                 "selectorWait",
                 "targetedObservation",
                 "networkInspection",
+                "backgroundWindow",
             ] {
                 assert_eq!(
                     result["capabilities"][feature],
