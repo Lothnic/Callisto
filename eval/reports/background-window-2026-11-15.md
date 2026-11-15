@@ -10,7 +10,9 @@ or a claim about browse parity, cost or general website compatibility.
 ## Evidence
 
 - [Successful raw report](background-window-2026-11-15.json): source
-  `ff98a2d7e6448caa6417e3479fe6cf65e096e679`, tracked working tree clean when recorded.
+  `ff98a2d7e6448caa6417e3479fe6cf65e096e679`, runtime/evaluation paths clean when recorded. The provenance helper scopes
+  its dirty check to `packages/firefox-rs`, `packages/mini`, `scripts` and
+  `eval/agent-comparison`; it does not claim the entire checkout was clean.
 - [Callisto trace manifest](background-window-2026-11-15-trace/manifest.json) and
   [redacted action log](background-window-2026-11-15-trace/actions.jsonl).
   The single failed action is the intentional write rejection while paused.
@@ -20,7 +22,7 @@ or a claim about browse parity, cost or general website compatibility.
 - [Persistent Zen recovery recheck](background-window-2026-11-15-recovery.json):
   all six cases passed, including relay loss, extension reload, browser restart,
   forced crash, cancellation and lost-tab isolation. This report records a dirty
-  tracked tree while final UI/docs edits were in progress; no clean-source claim
+  runtime/evaluation tree while final UI edits were in progress; no clean-source claim
   is made for that recheck.
 
 ## Setup and scope
