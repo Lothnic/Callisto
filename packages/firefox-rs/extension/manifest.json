@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Callisto Tab Bridge (Experimental)",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Share the current Firefox or Zen tab with a local Callisto session.",
   "browser_specific_settings": {
     "gecko": {

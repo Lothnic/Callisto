@@ -4,13 +4,16 @@ import { spawn } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { resolve } from 'node:path';
 import { existsSync } from 'node:fs';
-if(process.env.CALLISTO_INSTALL_ROOT){
+if(process.env.CALLISTO_INSTALL_ROOT && process.argv[2]!=='doctor'){
   const checker=spawn(process.execPath,[fileURLToPath(new URL('./install-release.mjs',import.meta.url)),'--check','--prefix',process.env.CALLISTO_INSTALL_ROOT],{stdio:'ignore',detached:true});
   checker.on('error',()=>{});checker.unref();
 }
 const root = fileURLToPath(new URL('../', import.meta.url));
 const args = process.argv.slice(2);
-if(args[0]==='setup') {
+if(args[0]==='doctor') {
+  const {diagnose}=await import('./doctor.mjs');
+  const report=await diagnose(root,{backend:args[1]||'zen'});console.log(JSON.stringify(report,null,2));process.exitCode=report.ready?0:1;
+} else if(args[0]==='setup') {
   const backend=args[1],host=args[2];
   if(!['zen','firefox','chromium'].includes(backend)||!['codex','claude'].includes(host)||args.length!==3){console.error('Usage: callisto setup <chromium|firefox|zen> <codex|claude>');process.exit(2);}
   const name='callisto-'+backend;

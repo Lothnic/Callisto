@@ -22,12 +22,13 @@ jobs:
       - run: cargo build --locked --release --manifest-path packages/firefox-rs/Cargo.toml --bin callisto-firefox-tab-mcp
       - run: npm --prefix packages/mini ci
       - run: npm --prefix packages/mini run build
-      - run: node --test packages/firefox-rs/tests/extension-background.test.cjs scripts/launcher.test.mjs scripts/install-release.test.mjs
+      - run: node --test packages/firefox-rs/tests/extension-background.test.cjs packages/firefox-rs/tests/extension-network.test.cjs scripts/launcher.test.mjs scripts/install-release.test.mjs scripts/doctor.test.mjs
       - name: DOM bridge tests in runner Chrome
         run: |
           export CHROMIUM_PATH="$(command -v google-chrome)"
           test -n "$CHROMIUM_PATH"
           node packages/firefox-rs/tests/extension-content.mjs
+          node packages/firefox-rs/tests/extension-ui.mjs
       - name: Firefox extension bridge end-to-end
         timeout-minutes: 5
         run: |
@@ -42,6 +43,20 @@ jobs:
           done
           curl -fsS http://127.0.0.1:4444/status >/dev/null
           python3 packages/firefox-rs/tests/firefox-bridge-smoke.py
+      - name: Persistent Firefox recovery
+        timeout-minutes: 5
+        env:
+          CALLISTO_TEST_BROWSER: firefox
+          RECOVERY_OUTPUT: /tmp/callisto-recovery.json
+        run: |
+          export GECKODRIVER_BINARY="$(command -v geckodriver)"
+          node eval/agent-comparison/session-recovery.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: firefox-recovery-report
+          path: /tmp/callisto-recovery.json
+          if-no-files-found: ignore
   mini:
     name: packages/mini (typecheck + test)
     runs-on: ubuntu-latest

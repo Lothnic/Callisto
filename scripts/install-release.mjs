@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Versioned Unix installs. Only the current symlink changes after a successful build.
-import {mkdir,mkdtemp,readFile,writeFile,rename,symlink,rm,open} from 'node:fs/promises';
+import {mkdir,mkdtemp,readFile,writeFile,rename,symlink,rm,open,lstat} from 'node:fs/promises';
 import {join,resolve} from 'node:path';
 import {homedir} from 'node:os';
 import {createHash} from 'node:crypto';
@@ -9,7 +9,8 @@ import {promisify} from 'node:util';
 import {fileURLToPath} from 'node:url';
 const exec=promisify(execFile),repository='Lothnic/Callisto';
 const readJSON=async path=>{try{return JSON.parse(await readFile(path,'utf8'));}catch{return null;}};
-const newer=(a,b)=>{const left=a.slice(1).split('.').map(Number),right=b.slice(1).split('.').map(Number);for(let i=0;i<3;i++){if(left[i]!==right[i])return left[i]>right[i];}return false;};
+const tagPattern=/^v(\d+)\.(\d+)\.(\d+)(?:-(alpha|beta|rc)\.(\d+))?$/;
+const newer=(a,b)=>{const left=tagPattern.exec(a),right=tagPattern.exec(b);if(!left||!right)return false;for(let i=1;i<=3;i++){if(+left[i]!==+right[i])return +left[i]>+right[i];}if(!left[4]||!right[4])return !left[4]&&!!right[4];const rank={alpha:0,beta:1,rc:2};return rank[left[4]]===rank[right[4]]?+left[5]>+right[5]:rank[left[4]]>rank[right[4]];};
 async function bytes(fetcher,url){
   const response=await fetcher(url,{signal:AbortSignal.timeout(30000),headers:{Accept:'application/vnd.github+json'}});
   if(!response.ok)throw Error(`Release download failed (${response.status}): ${url}`);
@@ -27,11 +28,11 @@ async function installUnlocked({prefix,version,autoUpdate=false,fetcher=fetch,pl
   prefix=resolve(prefix);
   const supported={'linux:x64':'linux-x64','darwin:arm64':'macos-arm64'};
   const target=supported[platform+':'+arch];if(!target)throw Error('Packaged install currently supports Linux x64 and macOS ARM64 only');
-  if(version&&!/^v\d+\.\d+\.\d+$/.test(version))throw Error('Use a release tag such as v0.2.0');
+  if(version&&!tagPattern.test(version))throw Error('Use a release tag such as v0.2.0 or v0.2.0-alpha.1');
   const current=await readJSON(join(prefix,'current/release.json'));
   const metadata=JSON.parse(await bytes(fetcher,`https://api.github.com/repos/${repository}/releases${version?'/tags/'+version:'?per_page=20'}`));
   const names=['callisto-mini.tar.gz',`callisto-bridge-${target}.tar.gz`];
-  const available=release=>!release.draft&&/^v\d+\.\d+\.\d+$/.test(release.tag_name)&&names.every(name=>release.assets?.some(asset=>asset.name===name)&&release.assets.some(asset=>asset.name===name+'.sha256'));
+  const available=release=>!release.draft&&tagPattern.test(release.tag_name)&&names.every(name=>release.assets?.some(asset=>asset.name===name)&&release.assets.some(asset=>asset.name===name+'.sha256'));
   const release=version?metadata:metadata.find(release=>!release.prerelease&&available(release));
   if(!release||!available(release))throw Error('No compatible packaged release found. v0.1.0 is source-only; use the checkout setup guide.');
   const tag=release.tag_name;
@@ -52,7 +53,7 @@ async function installUnlocked({prefix,version,autoUpdate=false,fetcher=fetch,pl
       await exec('tar',['-xzf',file,'--no-same-owner','-C',destination]);
     }
     await exec('npm',['--prefix',join(bundle,'packages/mini'),'ci','--omit=dev','--no-audit','--no-fund'],{maxBuffer:2000000});
-    await writeFile(join(bundle,'release.json'),JSON.stringify({version:tag}));
+    await writeFile(join(bundle,'release.json'),JSON.stringify({version:tag,platform:target}));
     const destination=join(prefix,'releases',tag);
     // A version is immutable once installed. Never mutate an active runtime.
     try{await rename(bundle,destination);}catch(error){if(error.code!=='EEXIST'&&error.code!=='ENOTEMPTY')throw error;}
@@ -64,6 +65,27 @@ async function installUnlocked({prefix,version,autoUpdate=false,fetcher=fetch,pl
     return {version:tag,changed:true,launcher:shim};
   }finally{await rm(stage,{recursive:true,force:true});}
 }
+export async function installLocalRelease({prefix,directory,version,autoUpdate=false}){
+  directory=resolve(directory);
+  const manifest=JSON.parse(await readFile(join(directory,'alpha-manifest.json'),'utf8'));
+  if(manifest.schema!=='callisto.alpha-package.v1'||!tagPattern.test(manifest.version)||!manifest.version.includes('-alpha.'))throw Error('Invalid local alpha manifest');
+  if(version&&version!==manifest.version)throw Error('Local alpha version does not match the requested version');
+  const target={'linux:x64':'linux-x64','darwin:arm64':'macos-arm64'}[process.platform+':'+process.arch];
+  if(manifest.platform!==target)throw Error('Local alpha does not match this platform');
+  const names=['callisto-mini.tar.gz',`callisto-bridge-${target}.tar.gz`];
+  if(!names.every(name=>manifest.assets?.some(a=>a.name===name)))throw Error('Local alpha runtime assets missing');
+  const allowed=new Set(names.flatMap(name=>[name,name+'.sha256']));
+  const metadata={tag_name:manifest.version,draft:false,prerelease:true,assets:[...allowed].map(name=>({name}))};
+  const fetcher=async url=>{
+    if(url.startsWith('https://api.github.com/'))return new Response(JSON.stringify(metadata));
+    const name=new URL(url).pathname.split('/').at(-1);if(!allowed.has(name))throw Error('Unexpected local release asset');
+    const path=join(directory,name),info=await lstat(path);if(!info.isFile()||info.isSymbolicLink())throw Error('Local release assets must be regular files');
+    const data=await readFile(path);
+    if(!name.endsWith('.sha256')){const asset=manifest.assets.find(a=>a.name===name);if(asset.bytes!==data.length||asset.sha256!==createHash('sha256').update(data).digest('hex'))throw Error(`Local manifest checksum mismatch: ${name}`);}
+    return new Response(data);
+  };
+  return installRelease({prefix,version:manifest.version,autoUpdate,fetcher});
+}
 export async function maybeUpdate(prefix){
   const settings=await readJSON(join(prefix,'settings.json'));
   if(process.env.CALLISTO_AUTO_UPDATE==='0'||!(process.env.CALLISTO_AUTO_UPDATE==='1'||settings?.autoUpdate)||Date.now()-(settings?.checkedAt||0)<86400000)return;
@@ -74,8 +96,9 @@ export async function maybeUpdate(prefix){
   }catch(error){console.error('Callisto update deferred: '+error.message);}
 }
 if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)){
-  const args=process.argv.slice(2);let version,prefix=join(homedir(),'.local/share/callisto-runtime'),autoUpdate=false,check=false;
-  while(args.length){const key=args.shift();if(key==='--version')version=args.shift();else if(key==='--prefix')prefix=args.shift();else if(key==='--auto-update')autoUpdate=true;else if(key==='--check')check=true;else throw Error('Usage: install-release.mjs [--version vX.Y.Z] [--prefix path] [--auto-update]');}
+  const args=process.argv.slice(2);let version,directory,prefix=join(homedir(),'.local/share/callisto-runtime'),autoUpdate=false,check=false;
+  while(args.length){const key=args.shift();const value=()=>{if(!args[0]||args[0].startsWith('--'))throw Error('Missing value for '+key);return args.shift();};if(key==='--version')version=value();else if(key==='--from-dir')directory=value();else if(key==='--prefix')prefix=value();else if(key==='--auto-update')autoUpdate=true;else if(key==='--check')check=true;else throw Error('Usage: install-release.mjs [--version vX.Y.Z] [--from-dir alpha-directory] [--prefix path] [--auto-update]');}
   if(!prefix)throw Error('Install prefix required');
-  if(check)await maybeUpdate(prefix);else console.log(JSON.stringify(await installRelease({prefix,version,autoUpdate}),null,2));
+  if(check&&directory)throw Error('--check cannot be combined with --from-dir');
+  if(check)await maybeUpdate(prefix);else console.log(JSON.stringify(await (directory?installLocalRelease({prefix,directory,version,autoUpdate}):installRelease({prefix,version,autoUpdate})),null,2));
 }
