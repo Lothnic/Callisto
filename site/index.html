@@ -15,7 +15,8 @@
 <meta name="twitter:description" content="Give your agent browser tools over MCP, with experimental Chromium and Firefox/Zen runtimes.">
 <link rel="canonical" href="https://callisto.lothnic.dev/">
 <meta name="theme-color" content="#0a0a0a">
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230a0a0a'/%3E%3Ccircle cx='32' cy='32' r='11' fill='none' stroke='%233b82f6' stroke-width='3'/%3E%3Cellipse cx='32' cy='32' rx='24' ry='9' fill='none' stroke='%23f0ede6' stroke-width='1.5' transform='rotate(-24 32 32)'/%3E%3Ccircle cx='49' cy='21' r='3' fill='%23f0ede6'/%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Chivo+Mono:wght@400;700&family=Instrument+Sans:wght@400;500;600;700&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
@@ -70,7 +71,7 @@
   </svg>
 
   <div class="hero-content">
-    <div class="hero-eyebrow"><span class="blink-dot"></span> extension v0.2.0 · experimental local MCP runtime</div>
+    <div class="hero-eyebrow"><span class="blink-dot"></span> extension v0.3.0 · experimental local MCP runtime</div>
     <h1>A Browser Runtime<br>For Your Agent</h1>
     <p class="hero-sub">
       Give your existing agent a way to navigate, read, and act on the web.
@@ -475,9 +476,9 @@
       <div class="zen-intro">
         <h2 id="zen-title" class="display">Work In Your<br>Zen Or Firefox Tab.</h2>
         <p>Keep the tab, profile and login you already use. Pair the local bridge and explicitly share a tab with your agent.</p>
-        <p><a href="https://addons.mozilla.org/en-US/firefox/addon/callisto/">Install extension 0.2.0 from Mozilla Add-ons ↗</a>, then install the local bridge below. Trusted input needs a deliberately debug-enabled browser.</p>
+        <p><a href="https://addons.mozilla.org/en-US/firefox/addon/callisto/">Install extension 0.3.0 from Mozilla Add-ons ↗</a>, then install the local bridge below. Trusted input needs a deliberately debug-enabled browser.</p>
         <a class="zen-guide" href="https://github.com/Lothnic/callisto/blob/main/docs/getting-started.md">Set up Zen or Firefox <span aria-hidden="true">↗</span></a>
-        <p>Development build 0.3.0 adds <a href="https://github.com/Lothnic/Callisto/blob/main/docs/full-browser-control.md">Full browser control</a> for automatic tab selection, activation and creation. It requires the new extension build; the Mozilla listing remains 0.2.0.</p>
+        <p>Extension 0.3.0 adds <a href="https://github.com/Lothnic/Callisto/blob/main/docs/full-browser-control.md">Full browser control</a> for automatic tab selection, activation and creation. Install it from Mozilla Add-ons and use the updated local runtime.</p>
       </div>
       <div>
         <dl class="zen-features">
@@ -687,7 +688,7 @@ so I can connect my extension.</code></pre>
             <span class="faq-question-text">Does it use my browser or my logins?</span>
             <svg class="faq-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 6l5 5 5-5" stroke="currentColor" stroke-width="1.5"/></svg>
           </summary>
-          <div class="faq-answer-wrap"><div class="faq-answer"><p>The installer defaults to the Firefox/Zen bridge, which shares an existing tab and its login after pairing and permission. <a href="https://addons.mozilla.org/en-US/firefox/addon/callisto/">Mozilla Add-ons offers extension 0.2.0</a>; the local runtime is installed separately. Optional trusted input follows the same sharing controls and requires a debugging endpoint. Choose <code>--backend chromium</code> for isolated Chromium Mini; that backend does not pair with this extension. <a href="https://github.com/Lothnic/Callisto/blob/main/packages/firefox-rs/README.md">Read Firefox and Zen setup ↗</a></p></div></div>
+          <div class="faq-answer-wrap"><div class="faq-answer"><p>The installer defaults to the Firefox/Zen bridge, which shares an existing tab and its login after pairing and permission. <a href="https://addons.mozilla.org/en-US/firefox/addon/callisto/">Mozilla Add-ons offers extension 0.3.0</a>; the local runtime is installed separately. Optional trusted input follows the same sharing controls and requires a debugging endpoint. Choose <code>--backend chromium</code> for isolated Chromium Mini; that backend does not pair with this extension. <a href="https://github.com/Lothnic/Callisto/blob/main/packages/firefox-rs/README.md">Read Firefox and Zen setup ↗</a></p></div></div>
         </details>
         <details class="faq-item">
           <summary class="faq-question">
@@ -719,7 +720,7 @@ so I can connect my extension.</code></pre>
             <span class="faq-question-text">What is actually shipped today?</span>
             <svg class="faq-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 6l5 5 5-5" stroke="currentColor" stroke-width="1.5"/></svg>
           </summary>
-          <div class="faq-answer-wrap"><div class="faq-answer"><p>Source includes Chromium Mini and the Firefox/Zen bridge, structured actions, bounded snapshots, batches and evidence tooling. The Zen bridge adds optional trusted input and scoped API inspection. Mozilla Add-ons publishes extension 0.2.0, and the source installer builds its local bridge. Local Linux alpha packaging and persistent-profile recovery checks are available. Validating store upgrades and production profiles, Windows support, and full Playwright compatibility remain open. <a href="https://github.com/Lothnic/callisto/blob/main/roadmap.md">Read the roadmap</a>.</p></div></div>
+          <div class="faq-answer-wrap"><div class="faq-answer"><p>Source includes Chromium Mini and the Firefox/Zen bridge, structured actions, bounded snapshots, batches and evidence tooling. The Zen bridge adds optional trusted input and scoped API inspection. Mozilla Add-ons publishes extension 0.3.0, and the source installer builds its local bridge. Local Linux alpha packaging and persistent-profile recovery checks are available. Validating store upgrades and production profiles, Windows support, and full Playwright compatibility remain open. <a href="https://github.com/Lothnic/callisto/blob/main/roadmap.md">Read the roadmap</a>.</p></div></div>
         </details>
       </div>
     </div>

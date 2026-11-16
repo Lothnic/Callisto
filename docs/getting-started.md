@@ -8,7 +8,7 @@ API key. The runtimes and distribution are experimental.
 
 | Path | Browser and session | Setup |
 | --- | --- | --- |
-| Firefox or Zen bridge | Connects to an already open profile and can select an existing tab and its login | Rust bridge plus published extension 0.2.0 |
+| Firefox or Zen bridge | Connects to an already open profile and can select an existing tab and its login | Rust bridge plus published extension 0.3.0 |
 | Chromium Mini | Starts a fresh isolated Chromium session by default | Node.js and Chrome/Chromium |
 | Chromium via browse | Opens an agent-owned tab in a Chromium profile paired with browse | Mini plus browse CLI and its extension |
 | Chromium direct CDP | Adopts a specified existing tab in an already debug-enabled local browser | Mini plus an explicit CDP endpoint and target ID |
@@ -58,8 +58,7 @@ use `--backend chromium`; it requires npm and a separate Chrome/Chromium browser
 
 For automatic tab attachment and control across website tabs, use the new
 [Full browser control mode](full-browser-control.md). It requires both the
-0.3.0 extension and the updated runtime. The AMO listing is still 0.2.0, so load
-the 0.3.0 temporary build until that update is published. Enable the mode in the
+0.3.0 or later extension from Mozilla Add-ons and the updated runtime. Enable the mode in the
 extension popup and approve hidden-tab management when requested.
 
 To install the updated runtime alongside an existing source installation:
@@ -134,7 +133,7 @@ for reporting security problems privately.
 
 ## Pair Firefox or Zen
 
-[Mozilla Add-ons offers extension 0.2.0](https://addons.mozilla.org/en-US/firefox/addon/callisto/).
+[Mozilla Add-ons offers extension 0.3.0](https://addons.mozilla.org/en-US/firefox/addon/callisto/).
 Install it for normal use; the temporary source build is useful for development.
 See [published add-on details](published-extension.md). Installing the add-on
 alone does not install the Rust runtime.
@@ -158,7 +157,7 @@ alone does not install the Rust runtime.
 For navigation in a shared tab, grant **Allow navigation**; it requests access
 to all websites. Built-in browser pages cannot be shared. A temporary add-on is
 removed when the browser exits. Pairing is saved across MCP sessions. The
-permanent AMO add-on is now 0.2.0; broad store-install and upgrade checks remain open.
+permanent AMO add-on is now 0.3.0; broad store-install and upgrade checks remain open.
 With sandboxed Zen Flatpak, copy the **entire** extension directory to Downloads
 and load that copy's manifest if the popup is blank.
 

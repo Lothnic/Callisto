@@ -26,10 +26,10 @@ Zen source now supports a user-prepared agent window while you work in another
 window. Preparation may focus it once; background execution pauses if it comes
 forward. See [background work and verified limits](docs/background-work.md).
 
-Source extension 0.3.0 adds [Full browser control](docs/full-browser-control.md):
+Extension 0.3.0, available on Mozilla Add-ons, adds [Full browser control](docs/full-browser-control.md):
 opt in once to let agents select, activate, create and attach to website tabs
-without sharing each one manually. The AMO listing remains 0.2.0 until the new
-version is submitted; use the temporary 0.3.0 build to try this mode.
+without sharing each one manually. Source version 0.3.1 adds the
+[Callisto orbital icons](assets/brand/README.md).
 
 Callisto is experimental. Its Playwright-shaped API is a subset, not a drop-in
 replacement for Playwright. An experimental connection to an existing Chromium
@@ -41,7 +41,7 @@ Performance and reliability claims are still being tested.
 For setup with Codex, Claude Code or OpenCode, including a safe first trial and
 existing Zen tabs, start with the [user and agent setup guide](docs/getting-started.md).
 Linux x64 testers can use the [alpha guide](docs/alpha-guide.md); source setup
-remains available. [Mozilla Add-ons publishes extension 0.2.0](https://addons.mozilla.org/en-US/firefox/addon/callisto/).
+remains available. [Mozilla Add-ons publishes extension 0.3.0](https://addons.mozilla.org/en-US/firefox/addon/callisto/).
 The website installer now defaults to building the Firefox/Zen bridge; add
 `--host opencode`, `--host codex` or `--host claude` to register with that host.
 See [setup and migration from the older Chromium installer](docs/getting-started.md#install-the-firefoxzen-bridge),

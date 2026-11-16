@@ -1,10 +1,10 @@
 # Published Firefox and Zen add-on
 
 [Callisto Bridge (Experimental) is available on Mozilla Add-ons](https://addons.mozilla.org/en-US/firefox/addon/callisto/).
-On 16 November 2026, Mozilla's public API reports version **0.2.0** as public,
+On 16 November 2026, Mozilla's public API reports version **0.3.0** as public,
 with Firefox 140+ compatibility. The downloaded XPI matches Mozilla's SHA-256
 and contains Mozilla signature files. Its scripts and other assets matched
-source revision `ee7bd992172bbea6a0cac4bf9e86ffda458f7ed2`; its manifest
+source revision `70f3eef9f20198ec0e14f5432c06b6757b1d284a`; its manifest
 matched after parsing JSON. The add-on ID
 remains `callisto-tab-bridge@lothnic.dev`.
 
@@ -14,10 +14,13 @@ with 0.1.0. Check `callisto_capabilities` against the connected extension before
 using new tools. Background concurrency remains experimentally verified only
 on Zen with Linux X11.
 
-Source extension **0.3.0** adds [Full browser control](full-browser-control.md),
+Published extension **0.3.0** adds [Full browser control](full-browser-control.md),
 automatic page attachment, hidden-tab activation and blank-tab navigation.
-That update has not been submitted to AMO by this change. Use the temporary
-0.3.0 build and updated runtime to try it; 0.2.0 does not expose the new mode.
+Use the updated runtime to enable this mode; 0.2.0 does not expose it.
+
+Source extension **0.3.1** adds the Callisto orbital icons for the toolbar and
+add-on manager. This branding patch has not been submitted to AMO by this change.
+The same icons are available in `assets/brand/` for the store listing.
 
 ## Install and connect
 
@@ -51,5 +54,5 @@ capability negotiation in disposable Firefox/Zen profiles. Publication does
 not itself establish that those checks pass on every supported platform.
 
 Public metadata: [Mozilla add-on API](https://addons.mozilla.org/api/v5/addons/addon/callisto/).
-Verified 0.2.0 archive SHA-256:
-`27777e6c0e706f3fd57f53fcd01482ee9f00112c9b60a8bba87aaade1de83742`.
+Verified 0.3.0 archive SHA-256:
+`a1f5eab7a7e141eafcd2384a1824e8133981c9c0e4e0a5f1485a097bb3633fde`.

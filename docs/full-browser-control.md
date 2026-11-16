@@ -1,9 +1,8 @@
 # Full browser control
 
 Extension **0.3.0** adds an opt-in mode for agents that need to switch between
-website tabs without asking you to share each one. The current Mozilla listing
-is 0.2.0; install the new temporary development build or upload the 0.3.0 ZIP
-as an update to that listing. Use the matching updated local runtime and restart
+website tabs without asking you to share each one. Install version 0.3.0 or
+later from Mozilla Add-ons. Use the matching updated local runtime and restart
 the agent's MCP connection so it loads the new browser-tool schema.
 
 ## Enable

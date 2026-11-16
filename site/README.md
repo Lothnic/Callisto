@@ -70,7 +70,7 @@ are not a browse time/cost comparison or a benchmark judge run. The matched
 pilot now runs a signed-in Codex host through native MCP tools; the credit-blocked
 Hy3 API preflight is historical and does not block host-agent use. The alpha guide describes a local
 Linux x64 build, not a published signed extension.
-Mozilla Add-ons now publishes extension 0.2.0 at
+Mozilla Add-ons now publishes extension 0.3.0 at
 <https://addons.mozilla.org/en-US/firefox/addon/callisto/>. Keep that link visible
 while explaining that the extension needs the separately built runtime.
 Publication does not validate all store upgrades or permanent-install behavior
@@ -78,6 +78,6 @@ in Zen. See
 `docs/published-extension.md`.
 
 The installer now pins the 0.3.0 runtime source. Its Full browser control mode
-needs extension 0.3.0, currently a temporary development build. Keep this distinct
-from the AMO 0.2.0 link. The runtime continues negotiating capabilities with
+needs extension 0.3.0 or later, available on AMO. Source 0.3.1 adds branded icons.
+The runtime continues negotiating capabilities with
 older extensions. See `docs/full-browser-control.md`.
