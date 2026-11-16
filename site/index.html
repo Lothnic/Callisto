@@ -55,7 +55,7 @@
         <a href="#zen" class="site-nav-link">Zen &amp; Firefox</a>
         <a href="#evidence" class="site-nav-link">Evidence</a>
         <a href="https://github.com/Lothnic/callisto" class="site-nav-link" rel="noreferrer">GitHub</a>
-        <a href="https://addons.mozilla.org/en-US/firefox/addon/callisto/" class="btn-chamfer btn-dark site-nav-cta">Get the add-on</a>
+        <a href="#install" class="btn-chamfer btn-dark site-nav-cta">Install</a>
       </div>
     </nav>
   </header>
@@ -79,10 +79,10 @@
     </p>
     <div class="hero-actions">
       <div class="hero-cta-buttons">
-        <a href="https://addons.mozilla.org/en-US/firefox/addon/callisto/" class="btn-chamfer btn-dark">Get the add-on <span aria-hidden="true">↗</span></a>
-        <a href="#install" class="hero-docs-btn">Set up the bridge</a>
+        <a href="#install" class="btn-chamfer btn-dark">Install Callisto <span aria-hidden="true">→</span></a>
+        <a href="https://github.com/Lothnic/Callisto/blob/main/docs/getting-started.md" class="hero-docs-btn">Read setup guide</a>
       </div>
-      <p class="hero-install-note">Firefox 140+ and compatible Zen builds. Pair with a local bridge to use your agent.</p>
+      <p class="hero-install-note">Guided setup for Firefox and Zen: add-on, local bridge, pairing and your first page.</p>
     </div>
   </div>
 
@@ -604,57 +604,86 @@
   <section class="setup-section" id="install" aria-labelledby="setup-title">
     <div class="container">
       <div class="setup-heading">
-        <div class="badge">Get started</div>
-        <h2 id="setup-title" class="display">Your Browser.<br>Your Agent.</h2>
+        <h2 id="setup-title" class="display">Install Callisto.</h2>
+        <p class="setup-intro">Connect your browser to the agent you already use. Follow these five steps, from installing the add-on to reading your first page.</p>
       </div>
 
-      <ol class="setup-steps">
-        <li>
-          <div class="step-number">01 / ADD-ON</div>
-          <h3>Install Callisto Bridge.</h3>
-          <p>Open Mozilla Add-ons in Firefox 140+ or a compatible Zen build and install Callisto Bridge. Pin it to your toolbar so you can pair and share tabs.</p>
-          <a href="https://addons.mozilla.org/en-US/firefox/addon/callisto/" class="btn-chamfer btn-primary">Get the add-on <span aria-hidden="true">↗</span></a>
-          <p class="setup-addon-note">The add-on connects your browser to the local bridge in step 2. Your existing agent supplies the model.</p>
-        </li>
-        <li>
-          <div class="step-number">02 / BRIDGE</div>
-          <h3>Connect your agent.</h3>
-          <p>On Linux or macOS, install Git, Node.js 20+ and Rust/Cargo with a native linker. This command builds the local Firefox/Zen bridge and registers it with Codex.</p>
-          <div class="code-block">
-            <button type="button" class="copy-btn" data-copy="curl -fsSL https://callisto.lothnic.dev/install.sh | bash -s -- --backend zen --host codex">Copy</button>
-            <pre><code>curl -fsSL https://callisto.lothnic.dev/install.sh | bash -s -- --backend zen --host codex</code></pre>
-          </div>
-          <p>Use <code>--host claude</code> for Claude Code or <code>--host opencode</code> from your OpenCode project. Omit <code>--host</code> to print manual configuration. Compilation can take several minutes.</p>
-          <a class="zen-guide" href="https://github.com/Lothnic/Callisto/blob/main/docs/getting-started.md">Requirements, manual setup and Chromium ↗</a>
-        </li>
-        <li>
-          <div class="step-number">03 / PAIR</div>
-          <h3>Choose what to share.</h3>
-          <p>Restart your agent’s MCP connection and ask for <code>callisto_pair</code>. Enter the code in Callisto’s popup and choose Connect runtime.</p>
-          <p>Open a regular website and choose <strong>Share this tab</strong>. For automatic selection, activation and creation across website tabs, choose <strong>Enable full browser control</strong> and approve its permissions. Stop sharing releases agent control.</p>
-          <div class="code-block">
-            <button type="button" class="copy-btn" data-copy="Use Callisto Zen to call callisto_pair&#10;so I can connect my extension.">Copy</button>
-            <pre><code>Use Callisto Zen to call callisto_pair
-so I can connect my extension.</code></pre>
-          </div>
-          <a class="zen-guide" href="https://github.com/Lothnic/Callisto/blob/main/docs/getting-started.md#troubleshooting">Connection help and protected-page limits ↗</a>
-        </li>
-      </ol>
+      <div class="setup-guide" data-setup-guide>
+        <nav aria-label="Installation steps">
+          <ol class="setup-nav">
+            <li><a href="#setup-addon" data-setup-go="0"><span>01</span> Install the add-on</a></li>
+            <li><a href="#setup-bridge" data-setup-go="1"><span>02</span> Install the bridge</a></li>
+            <li><a href="#setup-agent" data-setup-go="2"><span>03</span> Restart your agent</a></li>
+            <li><a href="#setup-pair" data-setup-go="3"><span>04</span> Pair and share</a></li>
+            <li><a href="#setup-verify" data-setup-go="4"><span>05</span> Read your first page</a></li>
+          </ol>
+          <p class="setup-progress" role="status" aria-live="polite" hidden></p>
+        </nav>
 
-      <div class="cli-note">
-        <span>⌘</span>
-        <p>Prefer a CLI? <code>callisto-sidecar</code> speaks the same engine over JSON-RPC on stdio.</p>
-      </div>
+        <div class="setup-panels">
+          <section class="setup-panel" id="setup-addon" aria-labelledby="setup-addon-title">
+            <h3 id="setup-addon-title" tabindex="-1">Start with your browser.</h3>
+            <p>In Firefox 140+ or a compatible Zen build, open Mozilla Add-ons and install <strong>Callisto Bridge</strong>. Pin it to your toolbar so you can find its popup.</p>
+            <a href="https://addons.mozilla.org/en-US/firefox/addon/callisto/" target="_blank" rel="noopener noreferrer" aria-label="Install the add-on (opens in a new tab)" class="btn-chamfer btn-primary">Install the add-on <span aria-hidden="true">↗</span></a>
+            <p class="setup-addon-note">Return here after installing. Next, you’ll install the local bridge that connects the add-on to your agent. Both are required.</p>
+            <div class="setup-step-actions"><a href="#setup-bridge" class="setup-next" data-setup-go="1">Next: install the bridge <span aria-hidden="true">→</span></a></div>
+          </section>
 
-      <div class="stack-strip">
-        <h3>Works with stdio MCP hosts</h3>
-        <div class="stack-grid">
-          <div class="stack-group"><h4>Hosts</h4><div class="stack-items"><span class="stack-item">OpenCode</span><span class="stack-item">Claude Code</span><span class="stack-item">Codex</span><span class="stack-item">Cursor</span></div></div>
-          <div class="stack-group"><h4>Protocol</h4><div class="stack-items"><span class="stack-item">MCP stdio</span><span class="stack-item">JSON-RPC</span></div></div>
-          <div class="stack-group"><h4>Engine</h4><div class="stack-items"><span class="stack-item">CDP</span><span class="stack-item">Chrome</span><span class="stack-item">Chromium</span></div></div>
-          <div class="stack-group"><h4>License</h4><div class="stack-items"><span class="stack-item">MIT engine</span><span class="stack-item">Local only</span></div></div>
+          <section class="setup-panel" id="setup-bridge" aria-labelledby="setup-bridge-title">
+            <h3 id="setup-bridge-title" tabindex="-1">Install and register the bridge.</h3>
+            <p>Choose your browser and agent to get the right command. On Linux or macOS, you’ll need Git, Node.js 20+, Rust/Cargo with a native linker, and your agent’s CLI installed. This installer does not support Windows yet.</p>
+            <div class="setup-choices">
+              <label for="setup-browser">Browser<select id="setup-browser"><option value="zen">Zen</option><option value="firefox">Firefox</option></select></label>
+              <label for="setup-host">Agent<select id="setup-host"><option value="codex">Codex</option><option value="claude">Claude Code</option><option value="opencode">OpenCode</option><option value="manual">Other / manual setup</option></select></label>
+            </div>
+            <p id="setup-host-help">Run this in your terminal. The installer builds the Zen bridge and registers it with Codex.</p>
+            <div class="code-block">
+              <button type="button" class="copy-btn" id="setup-command-copy" data-copy="curl -fsSL https://callisto.lothnic.dev/install.sh | bash -s -- --backend zen --host codex">Copy</button>
+              <pre><code id="setup-command">curl -fsSL https://callisto.lothnic.dev/install.sh | bash -s -- --backend zen --host codex</code></pre>
+            </div>
+            <p>Compilation can take several minutes. Wait for the installer to finish and print your MCP configuration. Existing installation folders are preserved; <a href="https://github.com/Lothnic/Callisto/blob/main/docs/getting-started.md#troubleshooting">use a new installation path when upgrading</a>.</p>
+            <noscript><p>The command above is for Zen and Codex. For another browser or agent, follow the <a href="https://github.com/Lothnic/Callisto/blob/main/docs/getting-started.md">manual setup guide</a>.</p></noscript>
+            <div class="setup-step-actions"><a href="#setup-addon" data-setup-go="0">Back</a><a href="#setup-agent" class="setup-next" data-setup-go="2">Next: restart your agent <span aria-hidden="true">→</span></a></div>
+          </section>
+
+          <section class="setup-panel" id="setup-agent" aria-labelledby="setup-agent-title">
+            <h3 id="setup-agent-title" tabindex="-1">Load Callisto in your agent.</h3>
+            <p id="setup-restart-help">Restart Codex or reconnect its MCP servers so it loads the new Callisto Zen entry.</p>
+            <p>Then send this to your agent. It should confirm the Firefox extension backend and return a pairing code.</p>
+            <div class="code-block">
+              <button type="button" class="copy-btn" id="setup-pair-copy" data-copy="Use Callisto Zen. Check callisto_capabilities and confirm the backend is firefox-extension, then call callisto_pair so I can connect my extension.">Copy</button>
+              <pre><code id="setup-pair-prompt">Use Callisto Zen. Check callisto_capabilities and confirm the backend is firefox-extension, then call callisto_pair so I can connect my extension.</code></pre>
+            </div>
+            <p>If the backend is <code>chromium-cdp</code>, select the <code id="setup-entry-name">callisto-zen</code> MCP entry. Isolated Chromium does not pair with this add-on. If the pairing tool is missing, check the installer’s registration output and restart the MCP connection.</p>
+            <div class="setup-step-actions"><a href="#setup-bridge" data-setup-go="1">Back</a><a href="#setup-pair" class="setup-next" data-setup-go="3">Next: pair the add-on <span aria-hidden="true">→</span></a></div>
+          </section>
+
+          <section class="setup-panel" id="setup-pair" aria-labelledby="setup-pair-title">
+            <h3 id="setup-pair-title" tabindex="-1">Connect, then choose access.</h3>
+            <p>Open Callisto’s toolbar popup. Paste the pairing code into <strong>Pairing code</strong> and choose <strong>Connect runtime</strong>. Enter the code only in the add-on.</p>
+            <p>Open a regular website you want your agent to use, then choose one of these options in Callisto:</p>
+            <dl class="setup-access">
+              <div><dt>Share this tab</dt><dd>Let the agent work with this page. Enable Allow navigation if the task needs to follow links or load another page.</dd></div>
+              <div><dt>Enable full browser control</dt><dd>Approve the browser permissions to let agents select, activate and create website tabs without sharing each tab separately. The badge shows ALL while active.</dd></div>
+            </dl>
+            <p><strong>Stop sharing</strong> releases agent control and turns off full control. Browser-protected pages, including Mozilla Add-ons and <code>about:</code> pages, remain unavailable.</p>
+            <div class="setup-step-actions"><a href="#setup-agent" data-setup-go="2">Back</a><a href="#setup-verify" class="setup-next" data-setup-go="4">Next: check the connection <span aria-hidden="true">→</span></a></div>
+          </section>
+
+          <section class="setup-panel" id="setup-verify" aria-labelledby="setup-verify-title">
+            <h3 id="setup-verify-title" tabindex="-1">Read your first page.</h3>
+            <p>Keep the shared website tab active and send this to your agent:</p>
+            <div class="code-block">
+              <button type="button" class="copy-btn" id="setup-verify-copy" data-copy="Use Callisto Zen. Check callisto_status, then take a fresh callisto_snapshot of the shared page. Tell me the page title and one thing you can see. If it is not ready, report what is missing.">Copy</button>
+              <pre><code id="setup-verify-prompt">Use Callisto Zen. Check callisto_status, then take a fresh callisto_snapshot of the shared page. Tell me the page title and one thing you can see. If it is not ready, report what is missing.</code></pre>
+            </div>
+            <p>You’re connected when the agent reports <code>connected: true</code>, <code>sharing: true</code> and <code>ready: true</code>, and describes the page you shared. This website cannot check your local connection itself.</p>
+            <p>If something is missing, <a href="https://github.com/Lothnic/Callisto/blob/main/docs/getting-started.md#troubleshooting">follow the connection troubleshooting guide</a>. Once it works, ask your agent to do your task.</p>
+            <div class="setup-step-actions"><a href="#setup-pair" data-setup-go="3">Back</a><a class="setup-next" href="https://github.com/Lothnic/Callisto/blob/main/docs/README.md">Explore the docs <span aria-hidden="true">↗</span></a></div>
+          </section>
         </div>
       </div>
+      <p class="setup-alternatives">Want isolated Chromium instead? <a href="https://github.com/Lothnic/Callisto/blob/main/docs/getting-started.md#choose-a-browser-path">Choose another browser path</a>. <a href="https://github.com/Lothnic/Callisto/blob/main/docs/getting-started.md">Read the complete setup guide</a>.</p>
     </div>
   </section>
 

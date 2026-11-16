@@ -277,6 +277,72 @@
   /* ----------------------------------------------------------
      Copy buttons — clipboard with a legacy fallback.
      ---------------------------------------------------------- */
+  function initSetupGuide() {
+    const root = document.querySelector('[data-setup-guide]');
+    if (!root) return;
+    const panels = Array.from(root.querySelectorAll('.setup-panel'));
+    const links = Array.from(root.querySelectorAll('.setup-nav [data-setup-go]'));
+    const progress = root.querySelector('.setup-progress');
+    const browserSelect = root.querySelector('#setup-browser');
+    const hostSelect = root.querySelector('#setup-host');
+    const browsers = {zen: 'Zen', firefox: 'Firefox'};
+    const hosts = {codex: 'Codex', claude: 'Claude Code', opencode: 'OpenCode', manual: 'your agent'};
+
+    function setCopy(codeId, buttonId, text) {
+      root.querySelector(codeId).textContent = text;
+      root.querySelector(buttonId).dataset.copy = text;
+    }
+
+    function updateInstructions() {
+      const backend = browserSelect.value, host = hostSelect.value;
+      if (!browsers[backend] || !hosts[host]) return;
+      const browser = browsers[backend], agent = hosts[host];
+      const command = `curl -fsSL https://callisto.lothnic.dev/install.sh | bash -s -- --backend ${backend}${host === 'manual' ? '' : ` --host ${host}`}`;
+      setCopy('#setup-command', '#setup-command-copy', command);
+      root.querySelector('#setup-host-help').textContent = host === 'manual'
+        ? `Run this in your terminal. The installer builds the ${browser} bridge and prints its MCP configuration. Add that configuration to your agent before continuing.`
+        : host === 'opencode'
+          ? `Run this from the OpenCode project that should use Callisto. The installer builds the ${browser} bridge and registers it for that project.`
+          : `Run this in your terminal. The installer builds the ${browser} bridge and registers it with ${agent}.`;
+      root.querySelector('#setup-restart-help').textContent = `Restart ${agent} or reconnect its MCP servers so it loads the new Callisto ${browser} entry.`;
+      root.querySelector('#setup-entry-name').textContent = `callisto-${backend}`;
+      setCopy('#setup-pair-prompt', '#setup-pair-copy', `Use Callisto ${browser}. Check callisto_capabilities and confirm the backend is firefox-extension, then call callisto_pair so I can connect my extension.`);
+      setCopy('#setup-verify-prompt', '#setup-verify-copy', `Use Callisto ${browser}. Check callisto_status, then take a fresh callisto_snapshot of the shared page. Tell me the page title and one thing you can see. If it is not ready, report what is missing.`);
+    }
+
+    function showStep(index, focus = false) {
+      if (!Number.isInteger(index) || index < 0 || index >= panels.length) return;
+      panels.forEach((panel, i) => { panel.hidden = i !== index; });
+      links.forEach((link, i) => {
+        if (i === index) link.setAttribute('aria-current', 'step');
+        else link.removeAttribute('aria-current');
+      });
+      progress.hidden = false;
+      progress.textContent = `Step ${index + 1} of ${panels.length}`;
+      if (focus) {
+        panels[index].querySelector('h3').focus({preventScroll: true});
+        panels[index].scrollIntoView({block: 'start', behavior: 'auto'});
+      }
+    }
+
+    root.addEventListener('click', event => {
+      const link = event.target.closest('[data-setup-go]');
+      if (!link || !root.contains(link)) return;
+      event.preventDefault();
+      showStep(Number(link.dataset.setupGo), true);
+    });
+    browserSelect.addEventListener('change', updateInstructions);
+    hostSelect.addEventListener('change', updateInstructions);
+    window.addEventListener('hashchange', () => {
+      const index = panels.findIndex(panel => `#${panel.id}` === window.location.hash);
+      if (index >= 0) showStep(index, true);
+    });
+    root.dataset.enhanced = 'true';
+    updateInstructions();
+    const initial = panels.findIndex(panel => `#${panel.id}` === window.location.hash);
+    showStep(initial >= 0 ? initial : 0);
+  }
+
   function initCopyButtons() {
     const buttons = Array.from(document.querySelectorAll('.copy-btn[data-copy]'));
     if (!buttons.length) return;
@@ -422,6 +488,7 @@
     paceTicker();
     initWalkthrough();
     initStepper();
+    initSetupGuide();
     initCopyButtons();
     initCtaWave();
   }

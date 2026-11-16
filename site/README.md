@@ -86,10 +86,20 @@ older extensions. See `docs/full-browser-control.md`.
 
 ## Add-on installation flow
 
-The navigation and hero link directly to the public Mozilla listing:
-<https://addons.mozilla.org/en-US/firefox/addon/callisto/>. The setup section
-walks through the add-on, the local bridge and pairing, with links to the
-[documentation index](../docs/README.md) and troubleshooting. Keep the store
-version separate from the repository manifest: check Mozilla's public API
-before changing published-version copy. Full control requires the 0.3.0 or
-later add-on and an updated runtime; protected Firefox pages remain unavailable.
+The navigation **Install** and hero **Install Callisto** buttons open the five-step guide
+at `#install`: add-on, local bridge, agent restart, pairing and page verification.
+The Mozilla listing opens in a separate tab from step 1 so visitors can return
+to setup. Step 2 selects Zen or Firefox and Codex, Claude Code, OpenCode or manual
+registration; the command, copy value and agent prompts update together.
+
+The guide uses `main.js` to show one step at a time, with Back/Next links,
+keyboard focus and direct step links. Without JavaScript, all five steps remain
+readable. It never claims to detect a local runtime: the last step asks the
+agent to check status and read the shared page. The add-on link remains
+<https://addons.mozilla.org/en-US/firefox/addon/callisto/>.
+
+Keep the store version separate from the repository manifest: check Mozilla's
+public API before changing published-version copy. Full control requires the
+0.3.0 or later add-on and an updated runtime; protected Firefox pages remain
+unavailable. Setup and troubleshooting are documented in
+[the documentation index](../docs/README.md).
