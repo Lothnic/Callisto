@@ -19,7 +19,7 @@ jobs:
           cache-dependency-path: packages/mini/package-lock.json
       - run: cargo test --locked --manifest-path packages/firefox-rs/Cargo.toml
       - run: cargo build --locked --manifest-path packages/firefox-rs/Cargo.toml --bin callisto-firefox-tab-mcp
-      - run: cargo build --locked --release --manifest-path packages/firefox-rs/Cargo.toml --bin callisto-firefox-tab-mcp
+      - run: cargo build --locked --release --manifest-path packages/firefox-rs/Cargo.toml --bins
       - run: npm --prefix packages/mini ci
       - run: npm --prefix packages/mini run build
       - name: Browser and installer contracts

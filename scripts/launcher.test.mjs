@@ -6,12 +6,25 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 const launcher=fileURLToPath(new URL('./callisto.mjs',import.meta.url));
+async function stopChild(child) {
+  if (child.exitCode !== null || child.signalCode !== null) return;
+  const exited = new Promise(resolve => child.once('exit', resolve));
+  const timer = setTimeout(() => child.kill('SIGKILL'), 2000);
+  try { child.kill('SIGTERM'); await exited; } finally { clearTimeout(timer); }
+}
+function rejectOnExit(child, reject, timer, errors) {
+  child.once('exit', (code, signal) => {
+    clearTimeout(timer);
+    reject(new Error(`Launcher exited before an MCP response (${signal ?? code}): ${errors()}`));
+  });
+}
 for(const backend of ['firefox-bidi','zen-bidi']) test(`launcher selects explicit ${backend} input without opening a browser`,async()=>{
   const child=spawn(process.execPath,[launcher,backend],{stdio:['pipe','pipe','pipe']});
   let output='',errors='';child.stderr.on('data',b=>errors+=b);
   try{
     const result=await new Promise((resolve,reject)=>{
       const timer=setTimeout(()=>reject(new Error(`MCP timeout: ${errors}`)),10000);
+      rejectOnExit(child,reject,timer,()=>errors);
       child.on('error',error=>{clearTimeout(timer);reject(error);});
       child.stdout.on('data',bytes=>{output+=bytes;if(output.includes('\n')){clearTimeout(timer);resolve(JSON.parse(output.split('\n')[0]));}});
       child.stdin.write(JSON.stringify({id:1,method:'tools/call',params:{name:'callisto_capabilities',arguments:{}}})+'\n');
@@ -19,7 +32,7 @@ for(const backend of ['firefox-bidi','zen-bidi']) test(`launcher selects explici
     const caps=JSON.parse(result.result.content[0].text);
     assert.equal(caps.backend,'firefox-bidi');assert.equal(caps.mode,'connected');assert.equal(caps.connected,false);
     assert.equal(caps.capabilities.trustedInput,true);assert.equal(caps.capabilities.extensionSharingControls,false);
-  }finally{child.stdin.end();await new Promise(resolve=>child.once('exit',resolve));}
+  }finally{await stopChild(child);}
 });
 for(const backend of ['chromium','zen']) test(`launcher forwards ${backend} MCP capabilities`,async()=>{
   const state=mkdtempSync(join(tmpdir(),'callisto-launcher-'));
@@ -29,6 +42,7 @@ for(const backend of ['chromium','zen']) test(`launcher forwards ${backend} MCP 
   try {
     const result=await new Promise((resolve,reject)=>{
       const timer=setTimeout(()=>reject(new Error(`MCP timeout: ${errors}`)),10000);
+      rejectOnExit(child,reject,timer,()=>errors);
       child.on('error',e=>{clearTimeout(timer);reject(e)});
       child.stdout.on('data',b=>{
         output+=b;
@@ -55,8 +69,7 @@ for(const backend of ['chromium','zen']) test(`launcher forwards ${backend} MCP 
       assert.equal(capabilities.input.keyboard,'synthetic-dom');
     }
   } finally {
-    child.kill('SIGTERM');
-    await new Promise(resolve=>child.once('exit',resolve));
+    await stopChild(child);
     if(backend==='zen') spawnSync(fileURLToPath(new URL('../packages/firefox-rs/target/release/callisto-firefox-tab-mcp',import.meta.url)),['--stop-relay'],{env,timeout:5000});
     rmSync(state,{recursive:true,force:true});
   }
@@ -71,6 +84,7 @@ for (const backend of ['chromium', 'zen']) test(`${backend} exposes the common a
   try {
     const result = await new Promise((resolve, reject) => {
       const timer = setTimeout(() => reject(new Error(`MCP timeout: ${errors}`)), 10000);
+      rejectOnExit(child,reject,timer,()=>errors);
       child.on('error', e => {clearTimeout(timer); reject(e)});
       child.stdout.on('data', b => {
         output += b;
@@ -91,8 +105,7 @@ for (const backend of ['chromium', 'zen']) test(`${backend} exposes the common a
       for (const property of properties) assert.ok(tool.inputSchema.properties?.[property], `${backend} ${name} lacks ${property}`);
     }
   } finally {
-    child.kill('SIGTERM');
-    await new Promise(resolve => child.once('exit', resolve));
+    await stopChild(child);
     if (backend === 'zen') spawnSync(fileURLToPath(new URL('../packages/firefox-rs/target/release/callisto-firefox-tab-mcp', import.meta.url)), ['--stop-relay'], {env, timeout:5000});
     rmSync(state, {recursive:true, force:true});
   }
