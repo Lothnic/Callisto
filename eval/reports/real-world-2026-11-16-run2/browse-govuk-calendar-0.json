@@ -1,0 +1,325 @@
+{
+  "schema": "callisto.real-world-trace.v1",
+  "engine": "browse",
+  "task": "govuk-calendar",
+  "round": 0,
+  "success": false,
+  "outcome": "agent_failure",
+  "answer": {
+    "answer": "In Scotland in 2027, the summer bank holiday is Monday 2 August, and St Andrew’s Day is Tuesday 30 November.",
+    "evidence": [
+      {
+        "url": "https://www.gov.uk/bank-holidays#scotland",
+        "quote": "2 August\tMonday\tSummer bank holiday\n30 November\tTuesday\tSt Andrew’s Day"
+      }
+    ]
+  },
+  "expected": [
+    {
+      "title": "Summer bank holiday",
+      "date": "2027-08-02",
+      "notes": "",
+      "bunting": true
+    },
+    {
+      "title": "St Andrew’s Day",
+      "date": "2027-11-30",
+      "notes": "",
+      "bunting": true
+    }
+  ],
+  "evaluation": {
+    "passed": false,
+    "facts": [
+      {
+        "pattern": "2(?:st|nd|rd|th)?\\s+August\\s+2027|August\\s+2(?:st|nd|rd|th)?,?\\s+2027|2027-08-02",
+        "passed": false
+      },
+      {
+        "pattern": "30(?:st|nd|rd|th)?\\s+November\\s+2027|November\\s+30(?:st|nd|rd|th)?,?\\s+2027|2027-11-30",
+        "passed": false
+      }
+    ],
+    "evidence": [
+      {
+        "url": "https://www.gov.uk/bank-holidays#scotland",
+        "quote": "2 August\tMonday\tSummer bank holiday\n30 November\tTuesday\tSt Andrew’s Day",
+        "source_matches": true,
+        "quote_observed": true
+      }
+    ],
+    "forbidden_network_or_file_calls": 0
+  },
+  "preparation_ms": 59.63354100007564,
+  "host_elapsed_ms": 24489.187627000036,
+  "verification_ms": 1.1207580000627786,
+  "task_elapsed_ms": 24494.496533000027,
+  "usage": {
+    "input_tokens": 100602,
+    "cached_input_tokens": 84352,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 339,
+    "reasoning_output_tokens": 0
+  },
+  "tool_calls": 3,
+  "tool_failures": 0,
+  "tool_elapsed_ms": 5803.021755000111,
+  "response_bytes": 14282,
+  "response_characters": 14206,
+  "forbidden_host_calls": 0,
+  "cost_usd": null,
+  "timed_out": false,
+  "trace_file": "browse-govuk-calendar-0.json",
+  "prompt": "Complete this read-only public website task using ONLY the browser MCP tools. You must inspect the live page; do not answer from memory. You choose your own observations, selectors and actions. Do not use HTTP/API clients, fetch, network replay, files, shell, other agents, or non-browser tools. Browser DOM evaluation is allowed for text extraction, but must not make network requests. Do not visit API endpoints. Do not sign in, create accounts, post messages, buy, or change account settings. Do not solve CAPTCHAs or bypass access challenges; report them. You may follow links, use site search and recover from errors. Stay on the task site. Maximum 30 browser calls. Verify all requested facts and finish with JSON {\"answer\":\"concise answer covering every requested fact\",\"evidence\":[{\"url\":\"source page URL\",\"quote\":\"a short exact supporting quote you observed in browser output\"}]}. Evidence quotes must be copied exactly from an observation. Do not claim success when blocked.\nUse browse session callisto-matched-1794845744000. Its execute tool runs Playwright with page. Choose what text to return to yourself, and verify it.\nStart URL: https://www.gov.uk/bank-holidays\nTask: Use the GOV.UK bank holiday calendar for Scotland in 2027. Report the dates of the summer bank holiday and St Andrew’s Day. Cite the calendar page and a short supporting quote.",
+  "host": {
+    "code": 0,
+    "signal": null,
+    "error": null,
+    "timed_out": false,
+    "elapsed_ms": 24489.187627000036,
+    "usage": {
+      "input_tokens": 100602,
+      "cached_input_tokens": 84352,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 339,
+      "reasoning_output_tokens": 0
+    },
+    "final": "{\"answer\":\"In Scotland in 2027, the summer bank holiday is Monday 2 August, and St Andrew’s Day is Tuesday 30 November.\",\"evidence\":[{\"url\":\"https://www.gov.uk/bank-holidays#scotland\",\"quote\":\"2 August\\tMonday\\tSummer bank holiday\\n30 November\\tTuesday\\tSt Andrew’s Day\"}]}",
+    "events": [
+      {
+        "type": "thread.started",
+        "thread_id": "01a1e52c-ed43-7b21-b9a1-8f03fd4ca602"
+      },
+      {
+        "type": "turn.started"
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_0",
+          "type": "agent_message",
+          "text": "I’ll check the live GOV.UK calendar for Scotland’s 2027 dates."
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_1",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "session": "callisto-matched-1794845744000",
+            "code": "await page.goto('https://www.gov.uk/bank-holidays'); console.log(await page.locator('body').innerText());"
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_1",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "session": "callisto-matched-1794845744000",
+            "code": "await page.goto('https://www.gov.uk/bank-holidays'); console.log(await page.locator('body').innerText());"
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "undefined"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_2",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "session": "callisto-matched-1794845744000",
+            "code": "return {url: page.url(), text: await page.locator('body').innerText()};"
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_2",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "session": "callisto-matched-1794845744000",
+            "code": "return {url: page.url(), text: await page.locator('body').innerText()};"
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"url\":\"https://www.gov.uk/bank-holidays\",\"text\":\"Cookies on GOV.UK\\n\\nWe use some essential cookies to make this website work.\\n\\nWe’d like to set additional cookies to understand how you use GOV.UK, remember your settings and improve government services.\\n\\nWe also use cookies set by other sites to help us deliver content from their services.\\n\\nAccept additional cookies\\nReject additional cookies\\nView cookies\\nSkip to main content\\n Navigation menu \\nMenu\\n Search GOV.UK \\nHome\\nWorking, jobs and pensions\\nHolidays, time off, sick leave, maternity and paternity leave\\nUK bank holidays\\nEngland and Wales\\nScotland\\nNorthern Ireland\\nThe next bank holiday in England and Wales is\\n25 December\\nChristmas Day\\nUpcoming bank holidays in England and Wales\\nUpcoming bank holidays in England and Wales\\n2026\\nDate\\tDay of the week\\tBank holiday\\n25 December\\tFriday\\tChristmas Day\\n28 December\\tMonday\\tBoxing Day (substitute day)\\nUpcoming bank holidays in England and Wales\\n2027\\nDate\\tDay of the week\\tBank holiday\\n1 January\\tFriday\\tNew Year’s Day\\n26 March\\tFriday\\tGood Friday\\n29 March\\tMonday\\tEaster Monday\\n3 May\\tMonday\\tEarly May bank holiday\\n31 May\\tMonday\\tSpring bank holiday\\n30 August\\tMonday\\tSummer bank holiday\\n27 December\\tMonday\\tChristmas Day (substitute day)\\n28 December\\tTuesday\\tBoxing Day (substitute day)\\nUpcoming bank holidays in England and Wales\\n2028\\nDate\\tDay of the week\\tBank holiday\\n3 January\\tMonday\\tNew Year’s Day (substitute day)\\n14 April\\tFriday\\tGood Friday\\n17 April\\tMonday\\tEaster Monday\\n1 May\\tMonday\\tEarly May bank holiday\\n29 May\\tMonday\\tSpring bank holiday\\n28 August\\tMonday\\tSummer bank holiday\\n25 December\\tMonday\\tChristmas Day\\n26 December\\tTuesday\\tBoxing Day\\n\\nIf a bank holiday is on a weekend, a ‘substitute’ weekday becomes a bank holiday, normally the following Monday.\\n\\nYour employer does not have to give you paid leave on bank or public holidays.\\n\\nBank holidays might affect how and when your benefits are paid.\\n\\nThis guide is also available in Welsh (Cymraeg).\\nAdd bank holidays for England and Wales to your calendar (ICS, 14KB)\\nPast bank holidays in England and Wales\\nPast bank holidays in England and Wales\\n2026\\nDate\\tDay of the week\\tBank holiday\\n31 August\\tMonday\\tSummer bank holiday\\n25 May\\tMonday\\tSpring bank holiday\\n4 May\\tMonday\\tEarly May bank holiday\\n6 April\\tMonday\\tEaster Monday\\n3 April\\tFriday\\tGood Friday\\n1 January\\tThursday\\tNew Year’s Day\\nPast bank holidays in England and Wales\\n2025\\nDate\\tDay of the week\\tBank holiday\\n26 December\\tFriday\\tBoxing Day\\n25 December\\tThursday\\tChristmas Day\\n25 August\\tMonday\\tSummer bank holiday\\n26 May\\tMonday\\tSpring bank holiday\\n5 May\\tMonday\\tEarly May bank holiday\\n21 April\\tMonday\\tEaster Monday\\n18 April\\tFriday\\tGood Friday\\n1 January\\tWednesday\\tNew Year’s Day\\nPast bank holidays in England and Wales\\n2024\\nDate\\tDay of the week\\tBank holiday\\n26 December\\tThursday\\tBoxing Day\\n25 December\\tWednesday\\tChristmas Day\\n26 August\\tMonday\\tSummer bank holiday\\n27 May\\tMonday\\tSpring bank holiday\\n6 May\\tMonday\\tEarly May bank holiday\\n1 April\\tMonday\\tEaster Monday\\n29 March\\tFriday\\tGood Friday\\n1 January\\tMonday\\tNew Year’s Day\\nPast bank holidays in England and Wales\\n2023\\nDate\\tDay of the week\\tBank holiday\\n26 December\\tTuesday\\tBoxing Day\\n25 December\\tMonday\\tChristmas Day\\n28 August\\tMonday\\tSummer bank holiday\\n29 May\\tMonday\\tSpring bank holiday\\n8 May\\tMonday\\tBank holiday for the coronation of King Charles III\\n1 May\\tMonday\\tEarly May bank holiday\\n10 April\\tMonday\\tEaster Monday\\n7 April\\tFriday\\tGood Friday\\n2 January\\tMonday\\tNew Year’s Day (substitute day)\\nPast bank holidays in England and Wales\\n2022\\nDate\\tDay of the week\\tBank holiday\\n27 December\\tTuesday\\tChristmas Day (substitute day)\\n26 December\\tMonday\\tBoxing Day\\n19 September\\tMonday\\tBank Holiday for the State Funeral of Queen Elizabeth II\\n29 August\\tMonday\\tSummer bank holiday\\n3 June\\tFriday\\tPlatinum Jubilee bank holiday\\n2 June\\tThursday\\tSpring bank holiday\\n2 May\\tMonday\\tEarly May bank holiday\\n18 April\\tMonday\\tEaster Monday\\n15 April\\tFriday\\tGood Friday\\n3 January\\tMonday\\tNew Year’s Day (substitute day)\\nPast bank holidays in England and Wales\\n2021\\nDate\\tDay of the week\\tBank holiday\\n28 December\\tTuesday\\tBoxing Day (substitute day)\\n27 December\\tMonday\\tChristmas Day (substitute day)\\n30 August\\tMonday\\tSummer bank holiday\\n31 May\\tMonday\\tSpring bank holiday\\n3 May\\tMonday\\tEarly May bank holiday\\n5 April\\tMonday\\tEaster Monday\\n2 April\\tFriday\\tGood Friday\\n1 January\\tFriday\\tNew Year’s Day\\nPast bank holidays in England and Wales\\n2020\\nDate\\tDay of the week\\tBank holiday\\n28 December\\tMonday\\tBoxing Day (substitute day)\\n25 December\\tFriday\\tChristmas Day\\n31 August\\tMonday\\tSummer bank holiday\\n25 May\\tMonday\\tSpring bank holiday\\n8 May\\tFriday\\tEarly May bank holiday (VE day)\\n13 April\\tMonday\\tEaster Monday\\n10 April\\tFriday\\tGood Friday\\n1 January\\tWednesday\\tNew Year’s Day\\nPast bank holidays in England and Wales\\n2019\\nDate\\tDay of the week\\tBank holiday\\n26 December\\tThursday\\tBoxing Day\\n25 December\\tWednesday\\tChristmas Day\\n26 August\\tMonday\\tSummer bank holiday\\n27 May\\tMonday\\tSpring bank holiday\\n6 May\\tMonday\\tEarly May bank holiday\\n22 April\\tMonday\\tEaster Monday\\n19 April\\tFriday\\tGood Friday\\n1 January\\tTuesday\\tNew Year’s Day\\nLast updated:\\n24 November 2025\\nRelated content\\nHoliday entitlement\\nSchool term and holiday dates\\nIs this page useful?\\nYes\\nthis page is useful\\nNo\\nthis page is not useful\\nReport a problem with this page\\nServices and information\\nBenefits Births, death, marriages and care Business and self-employed Childcare and parenting Citizenship and living in the UK Crime, justice and the law Disabled people Driving and transport Education and learning Employing people Environment and countryside Housing and local services Money and tax Passports, travel and living abroad Visas and immigration Working, jobs and pensions\\nGovernment activity\\nDepartments News Guidance and regulation Research and statistics Policy papers and consultations Transparency How government works Get involved\\nSupport links\\nHelp Privacy Cookies Accessibility statement Contact Terms and conditions Rhestr o Wasanaethau Cymraeg Government Digital Service\\n All content is available under the Open Government Licence v3.0, except where otherwise stated\\n© Crown copyright\"}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_3",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "session": "callisto-matched-1794845744000",
+            "code": "await page.getByRole('tab', {name:'Scotland', exact:true}).click(); return {url:page.url(), text:await page.locator('body').innerText()};"
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_3",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "session": "callisto-matched-1794845744000",
+            "code": "await page.getByRole('tab', {name:'Scotland', exact:true}).click(); return {url:page.url(), text:await page.locator('body').innerText()};"
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"url\":\"https://www.gov.uk/bank-holidays#scotland\",\"text\":\"Cookies on GOV.UK\\n\\nWe use some essential cookies to make this website work.\\n\\nWe’d like to set additional cookies to understand how you use GOV.UK, remember your settings and improve government services.\\n\\nWe also use cookies set by other sites to help us deliver content from their services.\\n\\nAccept additional cookies\\nReject additional cookies\\nView cookies\\nSkip to main content\\n Navigation menu \\nMenu\\n Search GOV.UK \\nHome\\nWorking, jobs and pensions\\nHolidays, time off, sick leave, maternity and paternity leave\\nUK bank holidays\\nEngland and Wales\\nScotland\\nNorthern Ireland\\nThe next bank holiday in Scotland is\\n30 November\\nSt Andrew’s Day\\nUpcoming bank holidays in Scotland\\nUpcoming bank holidays in Scotland\\n2026\\nDate\\tDay of the week\\tBank holiday\\n30 November\\tMonday\\tSt Andrew’s Day\\n25 December\\tFriday\\tChristmas Day\\n28 December\\tMonday\\tBoxing Day (substitute day)\\nUpcoming bank holidays in Scotland\\n2027\\nDate\\tDay of the week\\tBank holiday\\n1 January\\tFriday\\tNew Year’s Day\\n4 January\\tMonday\\t2nd January (substitute day)\\n26 March\\tFriday\\tGood Friday\\n3 May\\tMonday\\tEarly May bank holiday\\n31 May\\tMonday\\tSpring bank holiday\\n2 August\\tMonday\\tSummer bank holiday\\n30 November\\tTuesday\\tSt Andrew’s Day\\n27 December\\tMonday\\tChristmas Day (substitute day)\\n28 December\\tTuesday\\tBoxing Day (substitute day)\\nUpcoming bank holidays in Scotland\\n2028\\nDate\\tDay of the week\\tBank holiday\\n3 January\\tMonday\\tNew Year’s Day (substitute day)\\n4 January\\tTuesday\\t2nd January (substitute day)\\n14 April\\tFriday\\tGood Friday\\n1 May\\tMonday\\tEarly May bank holiday\\n29 May\\tMonday\\tSpring bank holiday\\n7 August\\tMonday\\tSummer bank holiday\\n30 November\\tThursday\\tSt Andrew’s Day\\n25 December\\tMonday\\tChristmas Day\\n26 December\\tTuesday\\tBoxing Day\\n\\nIf a bank holiday is on a weekend, a ‘substitute’ weekday becomes a bank holiday, normally the following Monday.\\n\\nYour employer does not have to give you paid leave on bank or public holidays.\\n\\nBank holidays might affect how and when your benefits are paid.\\n\\nThis guide is also available in Welsh (Cymraeg).\\nAdd bank holidays for Scotland to your calendar (ICS, 14KB)\\nPast bank holidays in Scotland\\nPast bank holidays in Scotland\\n2026\\nDate\\tDay of the week\\tBank holiday\\n3 August\\tMonday\\tSummer bank holiday\\n15 June\\tMonday\\tWorld Cup bank holiday\\n25 May\\tMonday\\tSpring bank holiday\\n4 May\\tMonday\\tEarly May bank holiday\\n3 April\\tFriday\\tGood Friday\\n2 January\\tFriday\\t2nd January\\n1 January\\tThursday\\tNew Year’s Day\\nPast bank holidays in Scotland\\n2025\\nDate\\tDay of the week\\tBank holiday\\n26 December\\tFriday\\tBoxing Day\\n25 December\\tThursday\\tChristmas Day\\n1 December\\tMonday\\tSt Andrew’s Day (substitute day)\\n4 August\\tMonday\\tSummer bank holiday\\n26 May\\tMonday\\tSpring bank holiday\\n5 May\\tMonday\\tEarly May bank holiday\\n18 April\\tFriday\\tGood Friday\\n2 January\\tThursday\\t2nd January\\n1 January\\tWednesday\\tNew Year’s Day\\nPast bank holidays in Scotland\\n2024\\nDate\\tDay of the week\\tBank holiday\\n26 December\\tThursday\\tBoxing Day\\n25 December\\tWednesday\\tChristmas Day\\n2 December\\tMonday\\tSt Andrew’s Day (substitute day)\\n5 August\\tMonday\\tSummer bank holiday\\n27 May\\tMonday\\tSpring bank holiday\\n6 May\\tMonday\\tEarly May bank holiday\\n29 March\\tFriday\\tGood Friday\\n2 January\\tTuesday\\t2nd January\\n1 January\\tMonday\\tNew Year’s Day\\nPast bank holidays in Scotland\\n2023\\nDate\\tDay of the week\\tBank holiday\\n26 December\\tTuesday\\tBoxing Day\\n25 December\\tMonday\\tChristmas Day\\n30 November\\tThursday\\tSt Andrew’s Day\\n7 August\\tMonday\\tSummer bank holiday\\n29 May\\tMonday\\tSpring bank holiday\\n8 May\\tMonday\\tBank holiday for the coronation of King Charles III\\n1 May\\tMonday\\tEarly May bank holiday\\n7 April\\tFriday\\tGood Friday\\n3 January\\tTuesday\\t2nd January (substitute day)\\n2 January\\tMonday\\tNew Year’s Day (substitute day)\\nPast bank holidays in Scotland\\n2022\\nDate\\tDay of the week\\tBank holiday\\n27 December\\tTuesday\\tChristmas Day (substitute day)\\n26 December\\tMonday\\tBoxing Day\\n30 November\\tWednesday\\tSt Andrew’s Day\\n19 September\\tMonday\\tBank Holiday for the State Funeral of Queen Elizabeth II\\n1 August\\tMonday\\tSummer bank holiday\\n3 June\\tFriday\\tPlatinum Jubilee bank holiday\\n2 June\\tThursday\\tSpring bank holiday\\n2 May\\tMonday\\tEarly May bank holiday\\n15 April\\tFriday\\tGood Friday\\n4 January\\tTuesday\\t2nd January (substitute day)\\n3 January\\tMonday\\tNew Year’s Day (substitute day)\\nPast bank holidays in Scotland\\n2021\\nDate\\tDay of the week\\tBank holiday\\n28 December\\tTuesday\\tBoxing Day (substitute day)\\n27 December\\tMonday\\tChristmas Day (substitute day)\\n30 November\\tTuesday\\tSt Andrew’s Day\\n2 August\\tMonday\\tSummer bank holiday\\n31 May\\tMonday\\tSpring bank holiday\\n3 May\\tMonday\\tEarly May bank holiday\\n2 April\\tFriday\\tGood Friday\\n4 January\\tMonday\\t2nd January (substitute day)\\n1 January\\tFriday\\tNew Year’s Day\\nPast bank holidays in Scotland\\n2020\\nDate\\tDay of the week\\tBank holiday\\n28 December\\tMonday\\tBoxing Day (substitute day)\\n25 December\\tFriday\\tChristmas Day\\n30 November\\tMonday\\tSt Andrew’s Day\\n3 August\\tMonday\\tSummer bank holiday\\n25 May\\tMonday\\tSpring bank holiday\\n8 May\\tFriday\\tEarly May bank holiday (VE day)\\n10 April\\tFriday\\tGood Friday\\n2 January\\tThursday\\t2nd January\\n1 January\\tWednesday\\tNew Year’s Day\\nPast bank holidays in Scotland\\n2019\\nDate\\tDay of the week\\tBank holiday\\n26 December\\tThursday\\tBoxing Day\\n25 December\\tWednesday\\tChristmas Day\\n2 December\\tMonday\\tSt Andrew’s Day (substitute day)\\n5 August\\tMonday\\tSummer bank holiday\\n27 May\\tMonday\\tSpring bank holiday\\n6 May\\tMonday\\tEarly May bank holiday\\n19 April\\tFriday\\tGood Friday\\n2 January\\tWednesday\\t2nd January\\n1 January\\tTuesday\\tNew Year’s Day\\nLast updated:\\n24 November 2025\\nRelated content\\nHoliday entitlement\\nSchool term and holiday dates\\nIs this page useful?\\nYes\\nthis page is useful\\nNo\\nthis page is not useful\\nReport a problem with this page\\nServices and information\\nBenefits Births, death, marriages and care Business and self-employed Childcare and parenting Citizenship and living in the UK Crime, justice and the law Disabled people Driving and transport Education and learning Employing people Environment and countryside Housing and local services Money and tax Passports, travel and living abroad Visas and immigration Working, jobs and pensions\\nGovernment activity\\nDepartments News Guidance and regulation Research and statistics Policy papers and consultations Transparency How government works Get involved\\nSupport links\\nHelp Privacy Cookies Accessibility statement Contact Terms and conditions Rhestr o Wasanaethau Cymraeg Government Digital Service\\n All content is available under the Open Government Licence v3.0, except where otherwise stated\\n© Crown copyright\"}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_4",
+          "type": "agent_message",
+          "text": "{\"answer\":\"In Scotland in 2027, the summer bank holiday is Monday 2 August, and St Andrew’s Day is Tuesday 30 November.\",\"evidence\":[{\"url\":\"https://www.gov.uk/bank-holidays#scotland\",\"quote\":\"2 August\\tMonday\\tSummer bank holiday\\n30 November\\tTuesday\\tSt Andrew’s Day\"}]}"
+        }
+      },
+      {
+        "type": "turn.completed",
+        "usage": {
+          "input_tokens": 100602,
+          "cached_input_tokens": 84352,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 339,
+          "reasoning_output_tokens": 0
+        }
+      }
+    ],
+    "parse_errors": 0,
+    "diagnostic": null,
+    "configuration": {
+      "model": "gpt-6.1-sol",
+      "effort": "high",
+      "sandbox": "read-only",
+      "shell_tool": false,
+      "web_search": "disabled",
+      "user_config_loaded": false,
+      "project_instructions_loaded": false,
+      "skills_catalog_max_tokens": 1,
+      "automatic_skill_instructions": false,
+      "fixture_tool_approval": "explicit approve",
+      "auth": "existing signed-in Codex host",
+      "mcp_transport": "stdio → private Unix socket → native runtime MCP client"
+    }
+  },
+  "tools": [
+    {
+      "sequence": 1,
+      "name": "execute",
+      "arguments": {
+        "session": "callisto-matched-1794845744000",
+        "code": "await page.goto('https://www.gov.uk/bank-holidays'); console.log(await page.locator('body').innerText());"
+      },
+      "started_at": "2026-11-16T16:24:56.848Z",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "undefined"
+          }
+        ],
+        "isError": false
+      },
+      "failed": false,
+      "elapsed_ms": 2757.1931500000646,
+      "response_bytes": 64
+    },
+    {
+      "sequence": 2,
+      "name": "execute",
+      "arguments": {
+        "session": "callisto-matched-1794845744000",
+        "code": "return {url: page.url(), text: await page.locator('body').innerText()};"
+      },
+      "started_at": "2026-11-16T16:25:02.060Z",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"url\":\"https://www.gov.uk/bank-holidays\",\"text\":\"Cookies on GOV.UK\\n\\nWe use some essential cookies to make this website work.\\n\\nWe’d like to set additional cookies to understand how you use GOV.UK, remember your settings and improve government services.\\n\\nWe also use cookies set by other sites to help us deliver content from their services.\\n\\nAccept additional cookies\\nReject additional cookies\\nView cookies\\nSkip to main content\\n Navigation menu \\nMenu\\n Search GOV.UK \\nHome\\nWorking, jobs and pensions\\nHolidays, time off, sick leave, maternity and paternity leave\\nUK bank holidays\\nEngland and Wales\\nScotland\\nNorthern Ireland\\nThe next bank holiday in England and Wales is\\n25 December\\nChristmas Day\\nUpcoming bank holidays in England and Wales\\nUpcoming bank holidays in England and Wales\\n2026\\nDate\\tDay of the week\\tBank holiday\\n25 December\\tFriday\\tChristmas Day\\n28 December\\tMonday\\tBoxing Day (substitute day)\\nUpcoming bank holidays in England and Wales\\n2027\\nDate\\tDay of the week\\tBank holiday\\n1 January\\tFriday\\tNew Year’s Day\\n26 March\\tFriday\\tGood Friday\\n29 March\\tMonday\\tEaster Monday\\n3 May\\tMonday\\tEarly May bank holiday\\n31 May\\tMonday\\tSpring bank holiday\\n30 August\\tMonday\\tSummer bank holiday\\n27 December\\tMonday\\tChristmas Day (substitute day)\\n28 December\\tTuesday\\tBoxing Day (substitute day)\\nUpcoming bank holidays in England and Wales\\n2028\\nDate\\tDay of the week\\tBank holiday\\n3 January\\tMonday\\tNew Year’s Day (substitute day)\\n14 April\\tFriday\\tGood Friday\\n17 April\\tMonday\\tEaster Monday\\n1 May\\tMonday\\tEarly May bank holiday\\n29 May\\tMonday\\tSpring bank holiday\\n28 August\\tMonday\\tSummer bank holiday\\n25 December\\tMonday\\tChristmas Day\\n26 December\\tTuesday\\tBoxing Day\\n\\nIf a bank holiday is on a weekend, a ‘substitute’ weekday becomes a bank holiday, normally the following Monday.\\n\\nYour employer does not have to give you paid leave on bank or public holidays.\\n\\nBank holidays might affect how and when your benefits are paid.\\n\\nThis guide is also available in Welsh (Cymraeg).\\nAdd bank holidays for England and Wales to your calendar (ICS, 14KB)\\nPast bank holidays in England and Wales\\nPast bank holidays in England and Wales\\n2026\\nDate\\tDay of the week\\tBank holiday\\n31 August\\tMonday\\tSummer bank holiday\\n25 May\\tMonday\\tSpring bank holiday\\n4 May\\tMonday\\tEarly May bank holiday\\n6 April\\tMonday\\tEaster Monday\\n3 April\\tFriday\\tGood Friday\\n1 January\\tThursday\\tNew Year’s Day\\nPast bank holidays in England and Wales\\n2025\\nDate\\tDay of the week\\tBank holiday\\n26 December\\tFriday\\tBoxing Day\\n25 December\\tThursday\\tChristmas Day\\n25 August\\tMonday\\tSummer bank holiday\\n26 May\\tMonday\\tSpring bank holiday\\n5 May\\tMonday\\tEarly May bank holiday\\n21 April\\tMonday\\tEaster Monday\\n18 April\\tFriday\\tGood Friday\\n1 January\\tWednesday\\tNew Year’s Day\\nPast bank holidays in England and Wales\\n2024\\nDate\\tDay of the week\\tBank holiday\\n26 December\\tThursday\\tBoxing Day\\n25 December\\tWednesday\\tChristmas Day\\n26 August\\tMonday\\tSummer bank holiday\\n27 May\\tMonday\\tSpring bank holiday\\n6 May\\tMonday\\tEarly May bank holiday\\n1 April\\tMonday\\tEaster Monday\\n29 March\\tFriday\\tGood Friday\\n1 January\\tMonday\\tNew Year’s Day\\nPast bank holidays in England and Wales\\n2023\\nDate\\tDay of the week\\tBank holiday\\n26 December\\tTuesday\\tBoxing Day\\n25 December\\tMonday\\tChristmas Day\\n28 August\\tMonday\\tSummer bank holiday\\n29 May\\tMonday\\tSpring bank holiday\\n8 May\\tMonday\\tBank holiday for the coronation of King Charles III\\n1 May\\tMonday\\tEarly May bank holiday\\n10 April\\tMonday\\tEaster Monday\\n7 April\\tFriday\\tGood Friday\\n2 January\\tMonday\\tNew Year’s Day (substitute day)\\nPast bank holidays in England and Wales\\n2022\\nDate\\tDay of the week\\tBank holiday\\n27 December\\tTuesday\\tChristmas Day (substitute day)\\n26 December\\tMonday\\tBoxing Day\\n19 September\\tMonday\\tBank Holiday for the State Funeral of Queen Elizabeth II\\n29 August\\tMonday\\tSummer bank holiday\\n3 June\\tFriday\\tPlatinum Jubilee bank holiday\\n2 June\\tThursday\\tSpring bank holiday\\n2 May\\tMonday\\tEarly May bank holiday\\n18 April\\tMonday\\tEaster Monday\\n15 April\\tFriday\\tGood Friday\\n3 January\\tMonday\\tNew Year’s Day (substitute day)\\nPast bank holidays in England and Wales\\n2021\\nDate\\tDay of the week\\tBank holiday\\n28 December\\tTuesday\\tBoxing Day (substitute day)\\n27 December\\tMonday\\tChristmas Day (substitute day)\\n30 August\\tMonday\\tSummer bank holiday\\n31 May\\tMonday\\tSpring bank holiday\\n3 May\\tMonday\\tEarly May bank holiday\\n5 April\\tMonday\\tEaster Monday\\n2 April\\tFriday\\tGood Friday\\n1 January\\tFriday\\tNew Year’s Day\\nPast bank holidays in England and Wales\\n2020\\nDate\\tDay of the week\\tBank holiday\\n28 December\\tMonday\\tBoxing Day (substitute day)\\n25 December\\tFriday\\tChristmas Day\\n31 August\\tMonday\\tSummer bank holiday\\n25 May\\tMonday\\tSpring bank holiday\\n8 May\\tFriday\\tEarly May bank holiday (VE day)\\n13 April\\tMonday\\tEaster Monday\\n10 April\\tFriday\\tGood Friday\\n1 January\\tWednesday\\tNew Year’s Day\\nPast bank holidays in England and Wales\\n2019\\nDate\\tDay of the week\\tBank holiday\\n26 December\\tThursday\\tBoxing Day\\n25 December\\tWednesday\\tChristmas Day\\n26 August\\tMonday\\tSummer bank holiday\\n27 May\\tMonday\\tSpring bank holiday\\n6 May\\tMonday\\tEarly May bank holiday\\n22 April\\tMonday\\tEaster Monday\\n19 April\\tFriday\\tGood Friday\\n1 January\\tTuesday\\tNew Year’s Day\\nLast updated:\\n24 November 2025\\nRelated content\\nHoliday entitlement\\nSchool term and holiday dates\\nIs this page useful?\\nYes\\nthis page is useful\\nNo\\nthis page is not useful\\nReport a problem with this page\\nServices and information\\nBenefits Births, death, marriages and care Business and self-employed Childcare and parenting Citizenship and living in the UK Crime, justice and the law Disabled people Driving and transport Education and learning Employing people Environment and countryside Housing and local services Money and tax Passports, travel and living abroad Visas and immigration Working, jobs and pensions\\nGovernment activity\\nDepartments News Guidance and regulation Research and statistics Policy papers and consultations Transparency How government works Get involved\\nSupport links\\nHelp Privacy Cookies Accessibility statement Contact Terms and conditions Rhestr o Wasanaethau Cymraeg Government Digital Service\\n All content is available under the Open Government Licence v3.0, except where otherwise stated\\n© Crown copyright\"}"
+          }
+        ],
+        "isError": false
+      },
+      "failed": false,
+      "elapsed_ms": 33.34686299995519,
+      "response_bytes": 6865
+    },
+    {
+      "sequence": 3,
+      "name": "execute",
+      "arguments": {
+        "session": "callisto-matched-1794845744000",
+        "code": "await page.getByRole('tab', {name:'Scotland', exact:true}).click(); return {url:page.url(), text:await page.locator('body').innerText()};"
+      },
+      "started_at": "2026-11-16T16:25:05.763Z",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"url\":\"https://www.gov.uk/bank-holidays#scotland\",\"text\":\"Cookies on GOV.UK\\n\\nWe use some essential cookies to make this website work.\\n\\nWe’d like to set additional cookies to understand how you use GOV.UK, remember your settings and improve government services.\\n\\nWe also use cookies set by other sites to help us deliver content from their services.\\n\\nAccept additional cookies\\nReject additional cookies\\nView cookies\\nSkip to main content\\n Navigation menu \\nMenu\\n Search GOV.UK \\nHome\\nWorking, jobs and pensions\\nHolidays, time off, sick leave, maternity and paternity leave\\nUK bank holidays\\nEngland and Wales\\nScotland\\nNorthern Ireland\\nThe next bank holiday in Scotland is\\n30 November\\nSt Andrew’s Day\\nUpcoming bank holidays in Scotland\\nUpcoming bank holidays in Scotland\\n2026\\nDate\\tDay of the week\\tBank holiday\\n30 November\\tMonday\\tSt Andrew’s Day\\n25 December\\tFriday\\tChristmas Day\\n28 December\\tMonday\\tBoxing Day (substitute day)\\nUpcoming bank holidays in Scotland\\n2027\\nDate\\tDay of the week\\tBank holiday\\n1 January\\tFriday\\tNew Year’s Day\\n4 January\\tMonday\\t2nd January (substitute day)\\n26 March\\tFriday\\tGood Friday\\n3 May\\tMonday\\tEarly May bank holiday\\n31 May\\tMonday\\tSpring bank holiday\\n2 August\\tMonday\\tSummer bank holiday\\n30 November\\tTuesday\\tSt Andrew’s Day\\n27 December\\tMonday\\tChristmas Day (substitute day)\\n28 December\\tTuesday\\tBoxing Day (substitute day)\\nUpcoming bank holidays in Scotland\\n2028\\nDate\\tDay of the week\\tBank holiday\\n3 January\\tMonday\\tNew Year’s Day (substitute day)\\n4 January\\tTuesday\\t2nd January (substitute day)\\n14 April\\tFriday\\tGood Friday\\n1 May\\tMonday\\tEarly May bank holiday\\n29 May\\tMonday\\tSpring bank holiday\\n7 August\\tMonday\\tSummer bank holiday\\n30 November\\tThursday\\tSt Andrew’s Day\\n25 December\\tMonday\\tChristmas Day\\n26 December\\tTuesday\\tBoxing Day\\n\\nIf a bank holiday is on a weekend, a ‘substitute’ weekday becomes a bank holiday, normally the following Monday.\\n\\nYour employer does not have to give you paid leave on bank or public holidays.\\n\\nBank holidays might affect how and when your benefits are paid.\\n\\nThis guide is also available in Welsh (Cymraeg).\\nAdd bank holidays for Scotland to your calendar (ICS, 14KB)\\nPast bank holidays in Scotland\\nPast bank holidays in Scotland\\n2026\\nDate\\tDay of the week\\tBank holiday\\n3 August\\tMonday\\tSummer bank holiday\\n15 June\\tMonday\\tWorld Cup bank holiday\\n25 May\\tMonday\\tSpring bank holiday\\n4 May\\tMonday\\tEarly May bank holiday\\n3 April\\tFriday\\tGood Friday\\n2 January\\tFriday\\t2nd January\\n1 January\\tThursday\\tNew Year’s Day\\nPast bank holidays in Scotland\\n2025\\nDate\\tDay of the week\\tBank holiday\\n26 December\\tFriday\\tBoxing Day\\n25 December\\tThursday\\tChristmas Day\\n1 December\\tMonday\\tSt Andrew’s Day (substitute day)\\n4 August\\tMonday\\tSummer bank holiday\\n26 May\\tMonday\\tSpring bank holiday\\n5 May\\tMonday\\tEarly May bank holiday\\n18 April\\tFriday\\tGood Friday\\n2 January\\tThursday\\t2nd January\\n1 January\\tWednesday\\tNew Year’s Day\\nPast bank holidays in Scotland\\n2024\\nDate\\tDay of the week\\tBank holiday\\n26 December\\tThursday\\tBoxing Day\\n25 December\\tWednesday\\tChristmas Day\\n2 December\\tMonday\\tSt Andrew’s Day (substitute day)\\n5 August\\tMonday\\tSummer bank holiday\\n27 May\\tMonday\\tSpring bank holiday\\n6 May\\tMonday\\tEarly May bank holiday\\n29 March\\tFriday\\tGood Friday\\n2 January\\tTuesday\\t2nd January\\n1 January\\tMonday\\tNew Year’s Day\\nPast bank holidays in Scotland\\n2023\\nDate\\tDay of the week\\tBank holiday\\n26 December\\tTuesday\\tBoxing Day\\n25 December\\tMonday\\tChristmas Day\\n30 November\\tThursday\\tSt Andrew’s Day\\n7 August\\tMonday\\tSummer bank holiday\\n29 May\\tMonday\\tSpring bank holiday\\n8 May\\tMonday\\tBank holiday for the coronation of King Charles III\\n1 May\\tMonday\\tEarly May bank holiday\\n7 April\\tFriday\\tGood Friday\\n3 January\\tTuesday\\t2nd January (substitute day)\\n2 January\\tMonday\\tNew Year’s Day (substitute day)\\nPast bank holidays in Scotland\\n2022\\nDate\\tDay of the week\\tBank holiday\\n27 December\\tTuesday\\tChristmas Day (substitute day)\\n26 December\\tMonday\\tBoxing Day\\n30 November\\tWednesday\\tSt Andrew’s Day\\n19 September\\tMonday\\tBank Holiday for the State Funeral of Queen Elizabeth II\\n1 August\\tMonday\\tSummer bank holiday\\n3 June\\tFriday\\tPlatinum Jubilee bank holiday\\n2 June\\tThursday\\tSpring bank holiday\\n2 May\\tMonday\\tEarly May bank holiday\\n15 April\\tFriday\\tGood Friday\\n4 January\\tTuesday\\t2nd January (substitute day)\\n3 January\\tMonday\\tNew Year’s Day (substitute day)\\nPast bank holidays in Scotland\\n2021\\nDate\\tDay of the week\\tBank holiday\\n28 December\\tTuesday\\tBoxing Day (substitute day)\\n27 December\\tMonday\\tChristmas Day (substitute day)\\n30 November\\tTuesday\\tSt Andrew’s Day\\n2 August\\tMonday\\tSummer bank holiday\\n31 May\\tMonday\\tSpring bank holiday\\n3 May\\tMonday\\tEarly May bank holiday\\n2 April\\tFriday\\tGood Friday\\n4 January\\tMonday\\t2nd January (substitute day)\\n1 January\\tFriday\\tNew Year’s Day\\nPast bank holidays in Scotland\\n2020\\nDate\\tDay of the week\\tBank holiday\\n28 December\\tMonday\\tBoxing Day (substitute day)\\n25 December\\tFriday\\tChristmas Day\\n30 November\\tMonday\\tSt Andrew’s Day\\n3 August\\tMonday\\tSummer bank holiday\\n25 May\\tMonday\\tSpring bank holiday\\n8 May\\tFriday\\tEarly May bank holiday (VE day)\\n10 April\\tFriday\\tGood Friday\\n2 January\\tThursday\\t2nd January\\n1 January\\tWednesday\\tNew Year’s Day\\nPast bank holidays in Scotland\\n2019\\nDate\\tDay of the week\\tBank holiday\\n26 December\\tThursday\\tBoxing Day\\n25 December\\tWednesday\\tChristmas Day\\n2 December\\tMonday\\tSt Andrew’s Day (substitute day)\\n5 August\\tMonday\\tSummer bank holiday\\n27 May\\tMonday\\tSpring bank holiday\\n6 May\\tMonday\\tEarly May bank holiday\\n19 April\\tFriday\\tGood Friday\\n2 January\\tWednesday\\t2nd January\\n1 January\\tTuesday\\tNew Year’s Day\\nLast updated:\\n24 November 2025\\nRelated content\\nHoliday entitlement\\nSchool term and holiday dates\\nIs this page useful?\\nYes\\nthis page is useful\\nNo\\nthis page is not useful\\nReport a problem with this page\\nServices and information\\nBenefits Births, death, marriages and care Business and self-employed Childcare and parenting Citizenship and living in the UK Crime, justice and the law Disabled people Driving and transport Education and learning Employing people Environment and countryside Housing and local services Money and tax Passports, travel and living abroad Visas and immigration Working, jobs and pensions\\nGovernment activity\\nDepartments News Guidance and regulation Research and statistics Policy papers and consultations Transparency How government works Get involved\\nSupport links\\nHelp Privacy Cookies Accessibility statement Contact Terms and conditions Rhestr o Wasanaethau Cymraeg Government Digital Service\\n All content is available under the Open Government Licence v3.0, except where otherwise stated\\n© Crown copyright\"}"
+          }
+        ],
+        "isError": false
+      },
+      "failed": false,
+      "elapsed_ms": 3012.481742000091,
+      "response_bytes": 7353
+    }
+  ]
+}

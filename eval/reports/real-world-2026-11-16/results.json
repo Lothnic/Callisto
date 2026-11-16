@@ -1,0 +1,192 @@
+{
+  "schema": "callisto.real-world-agent.v1",
+  "updated_at": "2026-11-16T16:14:59.995Z",
+  "model": "gpt-6.1-sol",
+  "reasoning_effort": "high",
+  "input_mode": "synthetic-dom",
+  "repetitions": 2,
+  "planned_runs": 24,
+  "completed_runs": 0,
+  "oracles": {
+    "captured_at": "2026-11-16T16:14:36.499Z",
+    "pypi": {
+      "version": "0.28.1",
+      "requires_python": ">=3.8"
+    },
+    "github": {
+      "title": "Suggestion: 'protected' modifier",
+      "state": "closed",
+      "author": "RyanCavanaugh",
+      "url": "https://github.com/microsoft/TypeScript/issues/1"
+    },
+    "holidays": [
+      {
+        "title": "Summer bank holiday",
+        "date": "2027-08-02",
+        "notes": "",
+        "bunting": true
+      },
+      {
+        "title": "St Andrew’s Day",
+        "date": "2027-11-30",
+        "notes": "",
+        "bunting": true
+      }
+    ],
+    "sources": [
+      "https://pypi.org/pypi/httpx/json",
+      "https://api.github.com/repos/microsoft/TypeScript/issues/1",
+      "https://www.gov.uk/bank-holidays.json"
+    ]
+  },
+  "tasks": [
+    {
+      "id": "wikipedia-biography",
+      "name": "Wikipedia biography",
+      "start": "https://en.wikipedia.org/wiki/Main_Page",
+      "origins": [
+        "https://en.wikipedia.org"
+      ],
+      "instruction": "Find Ada Lovelace on Wikipedia. Report her full birth date, birthplace and mother’s name. Cite the biography page and a short supporting quote.",
+      "expected": {
+        "date": "10 December 1815",
+        "place": "London",
+        "mother": "Anne Isabella Milbanke"
+      },
+      "answer_patterns": [
+        "10\\s+December\\s+1815|December\\s+10,?\\s+1815|1815-12-10",
+        "London",
+        "(?:Annabella|Anne?\\s+Isabella)(?:\\s+Noel)?\\s+(?:Milbanke|Byron)"
+      ],
+      "source_pattern": "en\\.wikipedia\\.org\\/wiki\\/Ada_Lovelace"
+    },
+    {
+      "id": "arxiv-paper",
+      "name": "arXiv paper lookup",
+      "start": "https://arxiv.org/",
+      "origins": [
+        "https://arxiv.org"
+      ],
+      "instruction": "Find the paper titled exactly “Attention Is All You Need” on arXiv. Report its arXiv identifier, first two authors and original submission date. Cite the abstract page and a short supporting quote.",
+      "expected": {
+        "id": "1706.03762",
+        "authors": [
+          "Ashish Vaswani",
+          "Noam Shazeer"
+        ],
+        "date": "12 June 2017"
+      },
+      "answer_patterns": [
+        "1706\\.03762",
+        "Ashish\\s+Vaswani",
+        "Noam\\s+Shazeer",
+        "12\\s+Jun(?:e)?\\s+2017|Jun(?:e)?\\s+12,?\\s+2017|2017-06-12"
+      ],
+      "source_pattern": "arxiv\\.org\\/abs\\/1706\\.03762"
+    },
+    {
+      "id": "github-issue",
+      "name": "GitHub issue lookup",
+      "start": "https://github.com/microsoft/TypeScript",
+      "origins": [
+        "https://github.com"
+      ],
+      "instruction": "Find issue #1 in microsoft/TypeScript on GitHub. Report its title, whether it is open or closed, and the username of the person who opened it. Cite the issue page and a short supporting quote.",
+      "oracle": "github",
+      "expected": {
+        "title": "Suggestion: 'protected' modifier",
+        "state": "closed",
+        "author": "RyanCavanaugh",
+        "url": "https://github.com/microsoft/TypeScript/issues/1"
+      },
+      "answer_patterns": [
+        "Suggestion.{0,10}protected.{0,10}modifier",
+        "closed",
+        "RyanCavanaugh"
+      ],
+      "source_pattern": "github\\.com\\/microsoft\\/TypeScript\\/issues\\/1(?:\\b|#)"
+    },
+    {
+      "id": "pypi-metadata",
+      "name": "PyPI package metadata",
+      "start": "https://pypi.org/project/httpx/",
+      "origins": [
+        "https://pypi.org"
+      ],
+      "instruction": "On PyPI, inspect the httpx project and its release history. Report the latest stable release version and its minimum required Python version. Cite the project page and a short supporting quote.",
+      "oracle": "pypi",
+      "expected": {
+        "version": "0.28.1",
+        "requires_python": ">=3.8"
+      },
+      "answer_patterns": [
+        "0\\.28\\.1",
+        "3\\.8"
+      ],
+      "source_pattern": "pypi\\.org\\/project\\/httpx\\/"
+    },
+    {
+      "id": "python-json",
+      "name": "Python documentation",
+      "start": "https://docs.python.org/3/",
+      "origins": [
+        "https://docs.python.org"
+      ],
+      "instruction": "Find the Python documentation for json.loads. Report the exception raised for invalid JSON and the supported types of its input argument s. Cite the relevant documentation page and a short supporting quote.",
+      "expected": {
+        "error": "JSONDecodeError",
+        "inputs": [
+          "str",
+          "bytes",
+          "bytearray"
+        ]
+      },
+      "answer_patterns": [
+        "JSONDecodeError",
+        "\\bstr\\b|string",
+        "\\bbytes\\b",
+        "\\bbytearray\\b"
+      ],
+      "source_pattern": "docs\\.python\\.org\\/3(?:\\.\\d+)?\\/library\\/json\\.html"
+    },
+    {
+      "id": "govuk-calendar",
+      "name": "GOV.UK holiday calendar",
+      "start": "https://www.gov.uk/bank-holidays",
+      "origins": [
+        "https://www.gov.uk"
+      ],
+      "instruction": "Use the GOV.UK bank holiday calendar for Scotland in 2027. Report the dates of the summer bank holiday and St Andrew’s Day. Cite the calendar page and a short supporting quote.",
+      "oracle": "holidays",
+      "expected": [
+        {
+          "title": "Summer bank holiday",
+          "date": "2027-08-02",
+          "notes": "",
+          "bunting": true
+        },
+        {
+          "title": "St Andrew’s Day",
+          "date": "2027-11-30",
+          "notes": "",
+          "bunting": true
+        }
+      ],
+      "answer_patterns": [
+        "2(?:st|nd|rd|th)?\\s+August\\s+2027|August\\s+2(?:st|nd|rd|th)?,?\\s+2027|2027-08-02",
+        "30(?:st|nd|rd|th)?\\s+November\\s+2027|November\\s+30(?:st|nd|rd|th)?,?\\s+2027|2027-11-30"
+      ],
+      "source_pattern": "gov\\.uk\\/bank-holidays"
+    }
+  ],
+  "cost_usd": null,
+  "cost_note": "Actual CLI usage is retained. Signed-in subscription does not provide per-trial dollar charges.",
+  "measurement": "Fresh host conversation per run. Host elapsed includes startup, model turns, navigation, waits, failures and retries. Task elapsed additionally includes independent answer/evidence validation. Profile setup and neutral-tab reacquisition are separate. Verification is not cut off the timer. Browser output UTF-8 bytes and characters are separate from model input/output/cached tokens.",
+  "scope": "Six public informational workflows, two repetitions. Anonymous owned browser profiles, first round cold per site and second round warm. Fixed gold facts for stable pages; time-stamped official JSON/API oracles for mutable metadata. Native task-tool catalogs differ and are saved. Not a store-install, authenticated-account or production reliability test.",
+  "budget": {
+    "max_browser_calls": 35,
+    "host_timeout_ms": 180000,
+    "stop_before_next_session_at_reported_tokens": 3000000
+  },
+  "results": []
+}

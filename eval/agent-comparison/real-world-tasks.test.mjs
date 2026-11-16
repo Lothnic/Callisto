@@ -1,0 +1,41 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {tasks,applyOracles,evaluate} from './real-world-tasks.mjs';
+
+applyOracles({
+ github:{title:"Suggestion: 'protected' modifier",state:'closed',author:'RyanCavanaugh'},
+ pypi:{version:'0.28.1',requires_python:'>=3.8'},
+ holidays:[{title:'Summer bank holiday',date:'2027-08-02'},{title:'St Andrew’s Day',date:'2027-11-30'}],
+});
+const cases=[
+ ['wikipedia-biography','10 December 1815, London; mother Anne Isabella Milbanke.','https://en.wikipedia.org/wiki/Ada_Lovelace'],
+ ['arxiv-paper','1706.03762; Ashish Vaswani and Noam Shazeer; 12 June 2017.','https://arxiv.org/abs/1706.03762'],
+ ['github-issue',"Suggestion: 'protected' modifier; closed; RyanCavanaugh.",'https://github.com/microsoft/TypeScript/issues/1'],
+ ['pypi-metadata','0.28.1; Python >=3.8.','https://pypi.org/project/httpx/'],
+ ['python-json','JSONDecodeError; str, bytes, bytearray.','https://docs.python.org/3/library/json.html#json.loads'],
+ ['govuk-calendar','Summer bank holiday: 2 August 2027. St Andrew’s Day: 30 November 2027.','https://www.gov.uk/bank-holidays'],
+];
+function sample(id,answer,url){return {task:tasks.find(t=>t.id===id),final:{answer,evidence:[{url,quote:answer}]},events:[{name:'callisto_snapshot',result:{content:[{type:'text',text:JSON.stringify({text:answer})}]}}]};}
+for(const [id,answer,url] of cases){
+ test(id+': facts, canonical source and a quote decoded from an MCP observation',()=>{
+  const s=sample(id,answer,url);assert.equal(evaluate(s.task,s.final,s.events).passed,true);
+  assert.equal(evaluate(s.task,{...s.final,answer:'Unknown'},s.events).passed,false);
+  assert.equal(evaluate(s.task,{...s.final,evidence:[{url:'https://unrelated.example/',quote:answer}]},s.events).passed,false);
+  assert.equal(evaluate(s.task,{...s.final,evidence:[{url,quote:'An invented quote never observed'}]},s.events).passed,false);
+ });
+}
+test('known correct facts cannot bypass the browser with a direct request',()=>{
+ const s=sample(...cases[0]);
+ for(const code of ['return await fetch("https://example.com")','return await page.request.get("https://example.com")','return await files.read("answers.json")'])
+  assert.equal(evaluate(s.task,s.final,[...s.events,{name:'execute',arguments:{code}}]).passed,false);
+ assert.equal(evaluate(s.task,s.final,[...s.events,{name:'execute',arguments:{code:'return await page.locator("body").innerText()'}}]).passed,true);
+});
+test('calendar rejects the wrong date even with an observed source quote',()=>{
+ const s=sample(...cases[5]);s.final.answer=s.final.answer.replace('2 August','3 August');assert.equal(evaluate(s.task,s.final,s.events).passed,false);
+});
+
+test('calendar accepts one explicit year shared by both dates and rejects the wrong year',()=>{
+ const s=sample(...cases[5]);s.final.answer='In Scotland in 2027, summer bank holiday is Monday 2 August and St Andrew’s Day is Tuesday 30 November.';
+ assert.equal(evaluate(s.task,s.final,s.events).passed,true);
+ s.final.answer=s.final.answer.replace('2027','2026');assert.equal(evaluate(s.task,s.final,s.events).passed,false);
+});

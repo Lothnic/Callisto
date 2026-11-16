@@ -1,0 +1,1465 @@
+{
+  "complete": true,
+  "planned_runs": 24,
+  "completed_runs": 24,
+  "all_attempts": {
+    "zen": {
+      "runs": 12,
+      "passed": 12,
+      "site_blocked": 0,
+      "infrastructure": 0,
+      "timeouts": 0,
+      "elapsed_ms": 356505.4417440001,
+      "mean_ms": 29708.78681200001,
+      "median_ms": 24393.0365715,
+      "input_tokens": 1652120,
+      "cached_input_tokens": 1314944,
+      "uncached_input_tokens": 337176,
+      "output_tokens": 4716,
+      "usage_runs": 12,
+      "browser_calls": 66,
+      "tool_failures": 1,
+      "response_bytes": 385314,
+      "response_characters": 384758
+    },
+    "browse": {
+      "runs": 12,
+      "passed": 12,
+      "site_blocked": 0,
+      "infrastructure": 0,
+      "timeouts": 0,
+      "elapsed_ms": 639222.47055,
+      "mean_ms": 53268.5392125,
+      "median_ms": 36969.12390449998,
+      "input_tokens": 1752540,
+      "cached_input_tokens": 1454208,
+      "uncached_input_tokens": 298332,
+      "output_tokens": 7320,
+      "usage_runs": 12,
+      "browser_calls": 64,
+      "tool_failures": 7,
+      "response_bytes": 221999,
+      "response_characters": 220020
+    }
+  },
+  "all_successful_pairs": 12,
+  "matched_successful_pairs": 11,
+  "cross_phase_pairs_excluded": [
+    {
+      "task": "python-json",
+      "round": 1
+    }
+  ],
+  "matched": {
+    "zen": {
+      "runs": 11,
+      "passed": 11,
+      "site_blocked": 0,
+      "infrastructure": 0,
+      "timeouts": 0,
+      "elapsed_ms": 330590.15306700015,
+      "mean_ms": 30053.650278818197,
+      "median_ms": 24198.590648999998,
+      "input_tokens": 1528415,
+      "cached_input_tokens": 1214720,
+      "uncached_input_tokens": 313695,
+      "output_tokens": 4284,
+      "usage_runs": 11,
+      "browser_calls": 60,
+      "tool_failures": 1,
+      "response_bytes": 362435,
+      "response_characters": 362003
+    },
+    "browse": {
+      "runs": 11,
+      "passed": 11,
+      "site_blocked": 0,
+      "infrastructure": 0,
+      "timeouts": 0,
+      "elapsed_ms": 596128.707379,
+      "mean_ms": 54193.51885263636,
+      "median_ms": 30844.484638000024,
+      "input_tokens": 1627025,
+      "cached_input_tokens": 1345024,
+      "uncached_input_tokens": 282001,
+      "output_tokens": 6497,
+      "usage_runs": 11,
+      "browser_calls": 57,
+      "tool_failures": 7,
+      "response_bytes": 217017,
+      "response_characters": 215076
+    }
+  },
+  "tasks": [
+    {
+      "id": "wikipedia-biography",
+      "name": "Wikipedia biography",
+      "results": {
+        "zen": [
+          {
+            "round": 0,
+            "outcome": "passed",
+            "seconds": 24.198590648999996,
+            "calls": 3,
+            "answer": {
+              "answer": "Ada Lovelace was born on 10 December 1815 in London, England. Her mother was Anne Isabella Milbanke.",
+              "evidence": [
+                {
+                  "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+                  "quote": "Augusta Ada Byron 10 December 1815 London, England"
+                },
+                {
+                  "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+                  "quote": "Anne Isabella Milbanke (mother)"
+                }
+              ]
+            },
+            "evaluation": {
+              "passed": true,
+              "facts": [
+                {
+                  "pattern": "10\\s+December\\s+1815|December\\s+10,?\\s+1815|1815-12-10",
+                  "passed": true
+                },
+                {
+                  "pattern": "London",
+                  "passed": true
+                },
+                {
+                  "pattern": "(?:Annabella|Anne?\\s+Isabella)(?:\\s+Noel)?\\s+(?:Milbanke|Byron)",
+                  "passed": true
+                }
+              ],
+              "evidence": [
+                {
+                  "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+                  "quote": "Augusta Ada Byron 10 December 1815 London, England",
+                  "source_matches": true,
+                  "quote_observed": true
+                },
+                {
+                  "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+                  "quote": "Anne Isabella Milbanke (mother)",
+                  "source_matches": true,
+                  "quote_observed": true
+                }
+              ],
+              "forbidden_network_or_file_calls": 0
+            }
+          },
+          {
+            "round": 1,
+            "outcome": "passed",
+            "seconds": 17.72601638699998,
+            "calls": 3,
+            "answer": {
+              "answer": "Ada Lovelace was born on 10 December 1815 in London, England. Her mother was Anne Isabella Milbanke.",
+              "evidence": [
+                {
+                  "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+                  "quote": "Augusta Ada Byron 10 December 1815 London, England"
+                },
+                {
+                  "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+                  "quote": "Anne Isabella Milbanke (mother)"
+                }
+              ]
+            },
+            "evaluation": {
+              "passed": true,
+              "facts": [
+                {
+                  "pattern": "10\\s+December\\s+1815|December\\s+10,?\\s+1815|1815-12-10",
+                  "passed": true
+                },
+                {
+                  "pattern": "London",
+                  "passed": true
+                },
+                {
+                  "pattern": "(?:Annabella|Anne?\\s+Isabella)(?:\\s+Noel)?\\s+(?:Milbanke|Byron)",
+                  "passed": true
+                }
+              ],
+              "evidence": [
+                {
+                  "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+                  "quote": "Augusta Ada Byron 10 December 1815 London, England",
+                  "source_matches": true,
+                  "quote_observed": true
+                },
+                {
+                  "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+                  "quote": "Anne Isabella Milbanke (mother)",
+                  "source_matches": true,
+                  "quote_observed": true
+                }
+              ],
+              "forbidden_network_or_file_calls": 0
+            }
+          }
+        ],
+        "browse": [
+          {
+            "round": 0,
+            "outcome": "passed",
+            "seconds": 28.320465784,
+            "calls": 4,
+            "answer": {
+              "answer": "Ada Lovelace was born on 10 December 1815 in London, England. Her mother was Anne Isabella Milbanke.",
+              "evidence": [
+                {
+                  "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+                  "quote": "Born\tAugusta Ada Byron\n10 December 1815\nLondon, England"
+                },
+                {
+                  "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+                  "quote": "Anne Isabella Milbanke (mother)"
+                }
+              ]
+            },
+            "evaluation": {
+              "passed": true,
+              "facts": [
+                {
+                  "pattern": "10\\s+December\\s+1815|December\\s+10,?\\s+1815|1815-12-10",
+                  "passed": true
+                },
+                {
+                  "pattern": "London",
+                  "passed": true
+                },
+                {
+                  "pattern": "(?:Annabella|Anne?\\s+Isabella)(?:\\s+Noel)?\\s+(?:Milbanke|Byron)",
+                  "passed": true
+                }
+              ],
+              "evidence": [
+                {
+                  "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+                  "quote": "Born\tAugusta Ada Byron\n10 December 1815\nLondon, England",
+                  "source_matches": true,
+                  "quote_observed": true
+                },
+                {
+                  "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+                  "quote": "Anne Isabella Milbanke (mother)",
+                  "source_matches": true,
+                  "quote_observed": true
+                }
+              ],
+              "forbidden_network_or_file_calls": 0
+            }
+          },
+          {
+            "round": 1,
+            "outcome": "passed",
+            "seconds": 30.844484638000022,
+            "calls": 3,
+            "answer": {
+              "answer": "Ada Lovelace was born on 10 December 1815 in London, England. Her mother was Anne Isabella Milbanke.",
+              "evidence": [
+                {
+                  "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+                  "quote": "Born\tAugusta Ada Byron\n10 December 1815\nLondon, England"
+                },
+                {
+                  "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+                  "quote": "Anne Isabella Milbanke (mother)"
+                }
+              ]
+            },
+            "evaluation": {
+              "passed": true,
+              "facts": [
+                {
+                  "pattern": "10\\s+December\\s+1815|December\\s+10,?\\s+1815|1815-12-10",
+                  "passed": true
+                },
+                {
+                  "pattern": "London",
+                  "passed": true
+                },
+                {
+                  "pattern": "(?:Annabella|Anne?\\s+Isabella)(?:\\s+Noel)?\\s+(?:Milbanke|Byron)",
+                  "passed": true
+                }
+              ],
+              "evidence": [
+                {
+                  "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+                  "quote": "Born\tAugusta Ada Byron\n10 December 1815\nLondon, England",
+                  "source_matches": true,
+                  "quote_observed": false
+                },
+                {
+                  "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+                  "quote": "Anne Isabella Milbanke (mother)",
+                  "source_matches": true,
+                  "quote_observed": true
+                }
+              ],
+              "forbidden_network_or_file_calls": 0
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "arxiv-paper",
+      "name": "arXiv paper lookup",
+      "results": {
+        "zen": [
+          {
+            "round": 0,
+            "outcome": "passed",
+            "seconds": 54.567102776999995,
+            "calls": 12,
+            "answer": {
+              "answer": "“Attention Is All You Need” is arXiv:1706.03762. Its first two authors are Ashish Vaswani and Noam Shazeer. It was originally submitted on 12 June 2017.",
+              "evidence": [
+                {
+                  "url": "https://arxiv.org/abs/1706.03762",
+                  "quote": "arXiv:1706.03762 [cs.CL]"
+                },
+                {
+                  "url": "https://arxiv.org/abs/1706.03762",
+                  "quote": "Attention Is All You Need\nAshish Vaswani, Noam Shazeer"
+                },
+                {
+                  "url": "https://arxiv.org/abs/1706.03762",
+                  "quote": "[v1] Mon, 12 Jun 2017 17:57:34 UTC (1,102 KB)"
+                }
+              ]
+            },
+            "evaluation": {
+              "passed": true,
+              "facts": [
+                {
+                  "pattern": "1706\\.03762",
+                  "passed": true
+                },
+                {
+                  "pattern": "Ashish\\s+Vaswani",
+                  "passed": true
+                },
+                {
+                  "pattern": "Noam\\s+Shazeer",
+                  "passed": true
+                },
+                {
+                  "pattern": "12\\s+Jun(?:e)?\\s+2017|Jun(?:e)?\\s+12,?\\s+2017|2017-06-12",
+                  "passed": true
+                }
+              ],
+              "evidence": [
+                {
+                  "url": "https://arxiv.org/abs/1706.03762",
+                  "quote": "arXiv:1706.03762 [cs.CL]",
+                  "source_matches": true,
+                  "quote_observed": true
+                },
+                {
+                  "url": "https://arxiv.org/abs/1706.03762",
+                  "quote": "Attention Is All You Need\nAshish Vaswani, Noam Shazeer",
+                  "source_matches": true,
+                  "quote_observed": true
+                },
+                {
+                  "url": "https://arxiv.org/abs/1706.03762",
+                  "quote": "[v1] Mon, 12 Jun 2017 17:57:34 UTC (1,102 KB)",
+                  "source_matches": true,
+                  "quote_observed": true
+                }
+              ],
+              "forbidden_network_or_file_calls": 0
+            }
+          },
+          {
+            "round": 1,
+            "outcome": "passed",
+            "seconds": 35.98299602100008,
+            "calls": 10,
+            "answer": {
+              "answer": "“Attention Is All You Need” — arXiv:1706.03762. First two authors: Ashish Vaswani and Noam Shazeer. Original submission date: 12 June 2017.",
+              "evidence": [
+                {
+                  "url": "https://arxiv.org/abs/1706.03762",
+                  "quote": "Title:Attention Is All You Need"
+                },
+                {
+                  "url": "https://arxiv.org/abs/1706.03762",
+                  "quote": "arXiv:1706.03762 [cs.CL]"
+                },
+                {
+                  "url": "https://arxiv.org/abs/1706.03762",
+                  "quote": "Authors:Ashish Vaswani, Noam Shazeer"
+                },
+                {
+                  "url": "https://arxiv.org/abs/1706.03762",
+                  "quote": "[Submitted on 12 Jun 2017 (v1), last revised 2 Aug 2023 (this version, v7)]"
+                }
+              ]
+            },
+            "evaluation": {
+              "passed": true,
+              "facts": [
+                {
+                  "pattern": "1706\\.03762",
+                  "passed": true
+                },
+                {
+                  "pattern": "Ashish\\s+Vaswani",
+                  "passed": true
+                },
+                {
+                  "pattern": "Noam\\s+Shazeer",
+                  "passed": true
+                },
+                {
+                  "pattern": "12\\s+Jun(?:e)?\\s+2017|Jun(?:e)?\\s+12,?\\s+2017|2017-06-12",
+                  "passed": true
+                }
+              ],
+              "evidence": [
+                {
+                  "url": "https://arxiv.org/abs/1706.03762",
+                  "quote": "Title:Attention Is All You Need",
+                  "source_matches": true,
+                  "quote_observed": true
+                },
+                {
+                  "url": "https://arxiv.org/abs/1706.03762",
+                  "quote": "arXiv:1706.03762 [cs.CL]",
+                  "source_matches": true,
+                  "quote_observed": true
+                },
+                {
+                  "url": "https://arxiv.org/abs/1706.03762",
+                  "quote": "Authors:Ashish Vaswani, Noam Shazeer",
+                  "source_matches": true,
+                  "quote_observed": true
+                },
+                {
+                  "url": "https://arxiv.org/abs/1706.03762",
+                  "quote": "[Submitted on 12 Jun 2017 (v1), last revised 2 Aug 2023 (this version, v7)]",
+                  "source_matches": true,
+                  "quote_observed": true
+                }
+              ],
+              "forbidden_network_or_file_calls": 0
+            }
+          }
+        ],
+        "browse": [
+          {
+            "round": 0,
+            "outcome": "passed",
+            "seconds": 121.00002102,
+            "calls": 11,
+            "answer": {
+              "answer": "“Attention Is All You Need” has arXiv identifier 1706.03762. Its first two authors are Ashish Vaswani and Noam Shazeer. It was originally submitted on 12 June 2017.",
+              "evidence": [
+                {
+                  "url": "https://arxiv.org/abs/1706.03762",
+                  "quote": "arXiv:1706.03762 [cs.CL]"
+                },
+                {
+                  "url": "https://arxiv.org/abs/1706.03762",
+                  "quote": "Ashish Vaswani, Noam Shazeer"
+                },
+                {
+                  "url": "https://arxiv.org/abs/1706.03762",
+                  "quote": "Submitted on 12 Jun 2017 (v1)"
+                }
+              ]
+            },
+            "evaluation": {
+              "passed": true,
+              "facts": [
+                {
+                  "pattern": "1706\\.03762",
+                  "passed": true
+                },
+                {
+                  "pattern": "Ashish\\s+Vaswani",
+                  "passed": true
+                },
+                {
+                  "pattern": "Noam\\s+Shazeer",
+                  "passed": true
+                },
+                {
+                  "pattern": "12\\s+Jun(?:e)?\\s+2017|Jun(?:e)?\\s+12,?\\s+2017|2017-06-12",
+                  "passed": true
+                }
+              ],
+              "evidence": [
+                {
+                  "url": "https://arxiv.org/abs/1706.03762",
+                  "quote": "arXiv:1706.03762 [cs.CL]",
+                  "source_matches": true,
+                  "quote_observed": true
+                },
+                {
+                  "url": "https://arxiv.org/abs/1706.03762",
+                  "quote": "Ashish Vaswani, Noam Shazeer",
+                  "source_matches": true,
+                  "quote_observed": true
+                },
+                {
+                  "url": "https://arxiv.org/abs/1706.03762",
+                  "quote": "Submitted on 12 Jun 2017 (v1)",
+                  "source_matches": true,
+                  "quote_observed": true
+                }
+              ],
+              "forbidden_network_or_file_calls": 0
+            }
+          },
+          {
+            "round": 1,
+            "outcome": "passed",
+            "seconds": 83.22189200300002,
+            "calls": 9,
+            "answer": {
+              "answer": "“Attention Is All You Need” has arXiv identifier 1706.03762. Its first two authors are Ashish Vaswani and Noam Shazeer. The original submission date was 12 June 2017.",
+              "evidence": [
+                {
+                  "url": "https://arxiv.org/abs/1706.03762",
+                  "quote": "Attention Is All You Need"
+                },
+                {
+                  "url": "https://arxiv.org/abs/1706.03762",
+                  "quote": "arXiv:1706.03762 [cs.CL]"
+                },
+                {
+                  "url": "https://arxiv.org/abs/1706.03762",
+                  "quote": "Ashish Vaswani, Noam Shazeer"
+                },
+                {
+                  "url": "https://arxiv.org/abs/1706.03762",
+                  "quote": "[v1] Mon, 12 Jun 2017 17:57:34 UTC (1,102 KB)"
+                }
+              ]
+            },
+            "evaluation": {
+              "passed": true,
+              "facts": [
+                {
+                  "pattern": "1706\\.03762",
+                  "passed": true
+                },
+                {
+                  "pattern": "Ashish\\s+Vaswani",
+                  "passed": true
+                },
+                {
+                  "pattern": "Noam\\s+Shazeer",
+                  "passed": true
+                },
+                {
+                  "pattern": "12\\s+Jun(?:e)?\\s+2017|Jun(?:e)?\\s+12,?\\s+2017|2017-06-12",
+                  "passed": true
+                }
+              ],
+              "evidence": [
+                {
+                  "url": "https://arxiv.org/abs/1706.03762",
+                  "quote": "Attention Is All You Need",
+                  "source_matches": true,
+                  "quote_observed": true
+                },
+                {
+                  "url": "https://arxiv.org/abs/1706.03762",
+                  "quote": "arXiv:1706.03762 [cs.CL]",
+                  "source_matches": true,
+                  "quote_observed": true
+                },
+                {
+                  "url": "https://arxiv.org/abs/1706.03762",
+                  "quote": "Ashish Vaswani, Noam Shazeer",
+                  "source_matches": true,
+                  "quote_observed": true
+                },
+                {
+                  "url": "https://arxiv.org/abs/1706.03762",
+                  "quote": "[v1] Mon, 12 Jun 2017 17:57:34 UTC (1,102 KB)",
+                  "source_matches": true,
+                  "quote_observed": true
+                }
+              ],
+              "forbidden_network_or_file_calls": 0
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "github-issue",
+      "name": "GitHub issue lookup",
+      "results": {
+        "zen": [
+          {
+            "round": 0,
+            "outcome": "passed",
+            "seconds": 28.414888546000032,
+            "calls": 3,
+            "answer": {
+              "answer": "Issue #1 is titled “Suggestion: 'protected' modifier”. It is closed and was opened by RyanCavanaugh.",
+              "evidence": [
+                {
+                  "url": "https://github.com/microsoft/TypeScript/issues/1",
+                  "quote": "Suggestion: 'protected' modifier #1"
+                },
+                {
+                  "url": "https://github.com/microsoft/TypeScript/issues/1",
+                  "quote": "Closed"
+                },
+                {
+                  "url": "https://github.com/microsoft/TypeScript/issues/1",
+                  "quote": "Ryan Cavanaugh (RyanCavanaugh)"
+                }
+              ]
+            },
+            "evaluation": {
+              "passed": true,
+              "facts": [
+                {
+                  "pattern": "Suggestion.{0,10}protected.{0,10}modifier",
+                  "passed": true
+                },
+                {
+                  "pattern": "closed",
+                  "passed": true
+                },
+                {
+                  "pattern": "RyanCavanaugh",
+                  "passed": true
+                }
+              ],
+              "evidence": [
+                {
+                  "url": "https://github.com/microsoft/TypeScript/issues/1",
+                  "quote": "Suggestion: 'protected' modifier #1",
+                  "source_matches": true,
+                  "quote_observed": true
+                },
+                {
+                  "url": "https://github.com/microsoft/TypeScript/issues/1",
+                  "quote": "Closed",
+                  "source_matches": true,
+                  "quote_observed": false
+                },
+                {
+                  "url": "https://github.com/microsoft/TypeScript/issues/1",
+                  "quote": "Ryan Cavanaugh (RyanCavanaugh)",
+                  "source_matches": true,
+                  "quote_observed": true
+                }
+              ],
+              "forbidden_network_or_file_calls": 0
+            }
+          },
+          {
+            "round": 1,
+            "outcome": "passed",
+            "seconds": 18.87268763499998,
+            "calls": 2,
+            "answer": {
+              "answer": "Issue #1 is titled “Suggestion: 'protected' modifier”. It is closed and was opened by RyanCavanaugh.",
+              "evidence": [
+                {
+                  "url": "https://github.com/microsoft/TypeScript/issues/1",
+                  "quote": "Suggestion: 'protected' modifier #1"
+                },
+                {
+                  "url": "https://github.com/microsoft/TypeScript/issues/1",
+                  "quote": "Closed"
+                },
+                {
+                  "url": "https://github.com/microsoft/TypeScript/issues/1",
+                  "quote": "Ryan Cavanaugh (RyanCavanaugh)"
+                }
+              ]
+            },
+            "evaluation": {
+              "passed": true,
+              "facts": [
+                {
+                  "pattern": "Suggestion.{0,10}protected.{0,10}modifier",
+                  "passed": true
+                },
+                {
+                  "pattern": "closed",
+                  "passed": true
+                },
+                {
+                  "pattern": "RyanCavanaugh",
+                  "passed": true
+                }
+              ],
+              "evidence": [
+                {
+                  "url": "https://github.com/microsoft/TypeScript/issues/1",
+                  "quote": "Suggestion: 'protected' modifier #1",
+                  "source_matches": true,
+                  "quote_observed": true
+                },
+                {
+                  "url": "https://github.com/microsoft/TypeScript/issues/1",
+                  "quote": "Closed",
+                  "source_matches": true,
+                  "quote_observed": false
+                },
+                {
+                  "url": "https://github.com/microsoft/TypeScript/issues/1",
+                  "quote": "Ryan Cavanaugh (RyanCavanaugh)",
+                  "source_matches": true,
+                  "quote_observed": true
+                }
+              ],
+              "forbidden_network_or_file_calls": 0
+            }
+          }
+        ],
+        "browse": [
+          {
+            "round": 0,
+            "outcome": "passed",
+            "seconds": 25.484039141000014,
+            "calls": 3,
+            "answer": {
+              "answer": "Issue #1 is titled “Suggestion: 'protected' modifier”. It is closed and was opened by RyanCavanaugh.",
+              "evidence": [
+                {
+                  "url": "https://github.com/microsoft/TypeScript/issues/1",
+                  "quote": "Suggestion: 'protected' modifier\n #1\nNew issue\nClosed\nDescription\nRyan Cavanaugh (RyanCavanaugh)\nopened "
+                }
+              ]
+            },
+            "evaluation": {
+              "passed": true,
+              "facts": [
+                {
+                  "pattern": "Suggestion.{0,10}protected.{0,10}modifier",
+                  "passed": true
+                },
+                {
+                  "pattern": "closed",
+                  "passed": true
+                },
+                {
+                  "pattern": "RyanCavanaugh",
+                  "passed": true
+                }
+              ],
+              "evidence": [
+                {
+                  "url": "https://github.com/microsoft/TypeScript/issues/1",
+                  "quote": "Suggestion: 'protected' modifier\n #1\nNew issue\nClosed\nDescription\nRyan Cavanaugh (RyanCavanaugh)\nopened ",
+                  "source_matches": true,
+                  "quote_observed": true
+                }
+              ],
+              "forbidden_network_or_file_calls": 0
+            }
+          },
+          {
+            "round": 1,
+            "outcome": "passed",
+            "seconds": 23.580716847999952,
+            "calls": 2,
+            "answer": {
+              "answer": "Issue #1 is titled “Suggestion: 'protected' modifier”. It is closed and was opened by RyanCavanaugh.",
+              "evidence": [
+                {
+                  "url": "https://github.com/microsoft/TypeScript/issues/1",
+                  "quote": "Suggestion: 'protected' modifier\n #1\nNew issue\nClosed\nDescription\nRyan Cavanaugh (RyanCavanaugh)\nopened "
+                }
+              ]
+            },
+            "evaluation": {
+              "passed": true,
+              "facts": [
+                {
+                  "pattern": "Suggestion.{0,10}protected.{0,10}modifier",
+                  "passed": true
+                },
+                {
+                  "pattern": "closed",
+                  "passed": true
+                },
+                {
+                  "pattern": "RyanCavanaugh",
+                  "passed": true
+                }
+              ],
+              "evidence": [
+                {
+                  "url": "https://github.com/microsoft/TypeScript/issues/1",
+                  "quote": "Suggestion: 'protected' modifier\n #1\nNew issue\nClosed\nDescription\nRyan Cavanaugh (RyanCavanaugh)\nopened ",
+                  "source_matches": true,
+                  "quote_observed": true
+                }
+              ],
+              "forbidden_network_or_file_calls": 0
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "pypi-metadata",
+      "name": "PyPI package metadata",
+      "results": {
+        "zen": [
+          {
+            "round": 0,
+            "outcome": "passed",
+            "seconds": 22.930950927999977,
+            "calls": 5,
+            "answer": {
+              "answer": "The latest stable httpx release is 0.28.1. It requires Python 3.8 or newer (>=3.8). Release history lists newer 1.0.dev versions as pre-releases.",
+              "evidence": [
+                {
+                  "url": "https://pypi.org/project/httpx/",
+                  "quote": "httpx 0.28.1"
+                },
+                {
+                  "url": "https://pypi.org/project/httpx/",
+                  "quote": "Python >=3.8"
+                },
+                {
+                  "url": "https://pypi.org/project/httpx/#history",
+                  "quote": "PRE-RELEASE"
+                }
+              ]
+            },
+            "evaluation": {
+              "passed": true,
+              "facts": [
+                {
+                  "pattern": "0\\.28\\.1",
+                  "passed": true
+                },
+                {
+                  "pattern": "3\\.8",
+                  "passed": true
+                }
+              ],
+              "evidence": [
+                {
+                  "url": "https://pypi.org/project/httpx/",
+                  "quote": "httpx 0.28.1",
+                  "source_matches": true,
+                  "quote_observed": true
+                },
+                {
+                  "url": "https://pypi.org/project/httpx/",
+                  "quote": "Python >=3.8",
+                  "source_matches": true,
+                  "quote_observed": true
+                },
+                {
+                  "url": "https://pypi.org/project/httpx/#history",
+                  "quote": "PRE-RELEASE",
+                  "source_matches": true,
+                  "quote_observed": false
+                }
+              ],
+              "forbidden_network_or_file_calls": 0
+            }
+          },
+          {
+            "round": 1,
+            "outcome": "passed",
+            "seconds": 19.779505194000084,
+            "calls": 5,
+            "answer": {
+              "answer": "The latest stable httpx release is 0.28.1. It requires Python 3.8 or newer (>=3.8). The release history lists newer 1.0.dev versions as pre-releases.",
+              "evidence": [
+                {
+                  "url": "https://pypi.org/project/httpx/",
+                  "quote": "httpx 0.28.1"
+                },
+                {
+                  "url": "https://pypi.org/project/httpx/",
+                  "quote": "Python >=3.8"
+                },
+                {
+                  "url": "https://pypi.org/project/httpx/#history",
+                  "quote": "0.28.1"
+                }
+              ]
+            },
+            "evaluation": {
+              "passed": true,
+              "facts": [
+                {
+                  "pattern": "0\\.28\\.1",
+                  "passed": true
+                },
+                {
+                  "pattern": "3\\.8",
+                  "passed": true
+                }
+              ],
+              "evidence": [
+                {
+                  "url": "https://pypi.org/project/httpx/",
+                  "quote": "httpx 0.28.1",
+                  "source_matches": true,
+                  "quote_observed": true
+                },
+                {
+                  "url": "https://pypi.org/project/httpx/",
+                  "quote": "Python >=3.8",
+                  "source_matches": true,
+                  "quote_observed": true
+                },
+                {
+                  "url": "https://pypi.org/project/httpx/#history",
+                  "quote": "0.28.1",
+                  "source_matches": true,
+                  "quote_observed": false
+                }
+              ],
+              "forbidden_network_or_file_calls": 0
+            }
+          }
+        ],
+        "browse": [
+          {
+            "round": 0,
+            "outcome": "passed",
+            "seconds": 65.69923729299998,
+            "calls": 5,
+            "answer": {
+              "answer": "The latest stable httpx release is 0.28.1 and requires Python 3.8 or newer (>=3.8). The release history lists newer 1.0 development versions as pre-releases.",
+              "evidence": [
+                {
+                  "url": "https://pypi.org/project/httpx/",
+                  "quote": "httpx 0.28.1"
+                },
+                {
+                  "url": "https://pypi.org/project/httpx/",
+                  "quote": "Python >=3.8"
+                },
+                {
+                  "url": "https://pypi.org/project/httpx/#history",
+                  "quote": "PRE-RELEASE\n1.0.dev6"
+                }
+              ]
+            },
+            "evaluation": {
+              "passed": true,
+              "facts": [
+                {
+                  "pattern": "0\\.28\\.1",
+                  "passed": true
+                },
+                {
+                  "pattern": "3\\.8",
+                  "passed": true
+                }
+              ],
+              "evidence": [
+                {
+                  "url": "https://pypi.org/project/httpx/",
+                  "quote": "httpx 0.28.1",
+                  "source_matches": true,
+                  "quote_observed": true
+                },
+                {
+                  "url": "https://pypi.org/project/httpx/",
+                  "quote": "Python >=3.8",
+                  "source_matches": true,
+                  "quote_observed": true
+                },
+                {
+                  "url": "https://pypi.org/project/httpx/#history",
+                  "quote": "PRE-RELEASE\n1.0.dev6",
+                  "source_matches": true,
+                  "quote_observed": true
+                }
+              ],
+              "forbidden_network_or_file_calls": 0
+            }
+          },
+          {
+            "round": 1,
+            "outcome": "passed",
+            "seconds": 64.41865663900005,
+            "calls": 6,
+            "answer": {
+              "answer": "The latest stable httpx release is 0.28.1, requiring Python 3.8 or newer (>=3.8). The release history marks newer 1.0.dev versions as pre-releases.",
+              "evidence": [
+                {
+                  "url": "https://pypi.org/project/httpx/",
+                  "quote": "httpx 0.28.1"
+                },
+                {
+                  "url": "https://pypi.org/project/httpx/",
+                  "quote": "Python >=3.8"
+                },
+                {
+                  "url": "https://pypi.org/project/httpx/#history",
+                  "quote": "PRE-RELEASE\n1.0.dev6"
+                }
+              ]
+            },
+            "evaluation": {
+              "passed": true,
+              "facts": [
+                {
+                  "pattern": "0\\.28\\.1",
+                  "passed": true
+                },
+                {
+                  "pattern": "3\\.8",
+                  "passed": true
+                }
+              ],
+              "evidence": [
+                {
+                  "url": "https://pypi.org/project/httpx/",
+                  "quote": "httpx 0.28.1",
+                  "source_matches": true,
+                  "quote_observed": true
+                },
+                {
+                  "url": "https://pypi.org/project/httpx/",
+                  "quote": "Python >=3.8",
+                  "source_matches": true,
+                  "quote_observed": true
+                },
+                {
+                  "url": "https://pypi.org/project/httpx/#history",
+                  "quote": "PRE-RELEASE\n1.0.dev6",
+                  "source_matches": true,
+                  "quote_observed": true
+                }
+              ],
+              "forbidden_network_or_file_calls": 0
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "python-json",
+      "name": "Python documentation",
+      "results": {
+        "zen": [
+          {
+            "round": 0,
+            "outcome": "passed",
+            "seconds": 65.40876612700004,
+            "calls": 7,
+            "answer": {
+              "answer": "json.loads(s) raises json.JSONDecodeError for invalid JSON. Its input s supports str, bytes, and bytearray.",
+              "evidence": [
+                {
+                  "url": "https://docs.python.org/3/library/json.html#json.loads",
+                  "quote": "Identical to load(), but instead of a file-like object, deserialize s (a str, bytes or bytearray instance containing a JSON document) to a Python object using this conversion table."
+                },
+                {
+                  "url": "https://docs.python.org/3/library/json.html#json.load",
+                  "quote": "JSONDecodeError – When the data being deserialized is not a valid JSON document."
+                }
+              ]
+            },
+            "evaluation": {
+              "passed": true,
+              "facts": [
+                {
+                  "pattern": "JSONDecodeError",
+                  "passed": true
+                },
+                {
+                  "pattern": "\\bstr\\b|string",
+                  "passed": true
+                },
+                {
+                  "pattern": "\\bbytes\\b",
+                  "passed": true
+                },
+                {
+                  "pattern": "\\bbytearray\\b",
+                  "passed": true
+                }
+              ],
+              "evidence": [
+                {
+                  "url": "https://docs.python.org/3/library/json.html#json.loads",
+                  "quote": "Identical to load(), but instead of a file-like object, deserialize s (a str, bytes or bytearray instance containing a JSON document) to a Python object using this conversion table.",
+                  "source_matches": true,
+                  "quote_observed": true
+                },
+                {
+                  "url": "https://docs.python.org/3/library/json.html#json.load",
+                  "quote": "JSONDecodeError – When the data being deserialized is not a valid JSON document.",
+                  "source_matches": true,
+                  "quote_observed": true
+                }
+              ],
+              "forbidden_network_or_file_calls": 0
+            }
+          },
+          {
+            "round": 1,
+            "outcome": "passed",
+            "seconds": 25.915288676999996,
+            "calls": 6,
+            "answer": {
+              "answer": "json.loads(s) raises json.JSONDecodeError for invalid JSON. Its input s supports str, bytes, or bytearray containing a JSON document.",
+              "evidence": [
+                {
+                  "url": "https://docs.python.org/3/library/json.html#json.loads",
+                  "quote": "deserialize s (a str, bytes or bytearray instance containing a JSON document)"
+                },
+                {
+                  "url": "https://docs.python.org/3/library/json.html#json.load",
+                  "quote": "JSONDecodeError – When the data being deserialized is not a valid JSON document."
+                }
+              ]
+            },
+            "evaluation": {
+              "passed": true,
+              "facts": [
+                {
+                  "pattern": "JSONDecodeError",
+                  "passed": true
+                },
+                {
+                  "pattern": "\\bstr\\b|string",
+                  "passed": true
+                },
+                {
+                  "pattern": "\\bbytes\\b",
+                  "passed": true
+                },
+                {
+                  "pattern": "\\bbytearray\\b",
+                  "passed": true
+                }
+              ],
+              "evidence": [
+                {
+                  "url": "https://docs.python.org/3/library/json.html#json.loads",
+                  "quote": "deserialize s (a str, bytes or bytearray instance containing a JSON document)",
+                  "source_matches": true,
+                  "quote_observed": true
+                },
+                {
+                  "url": "https://docs.python.org/3/library/json.html#json.load",
+                  "quote": "JSONDecodeError – When the data being deserialized is not a valid JSON document.",
+                  "source_matches": true,
+                  "quote_observed": true
+                }
+              ],
+              "forbidden_network_or_file_calls": 0
+            }
+          }
+        ],
+        "browse": [
+          {
+            "round": 0,
+            "outcome": "passed",
+            "seconds": 107.99565793,
+            "calls": 8,
+            "answer": {
+              "answer": "json.loads(s) raises json.JSONDecodeError for invalid JSON. The input s supports str, bytes, and bytearray containing a JSON document.",
+              "evidence": [
+                {
+                  "url": "https://docs.python.org/3/library/json.html#json.loads",
+                  "quote": "deserialize s (a str, bytes or bytearray instance containing a JSON document)"
+                },
+                {
+                  "url": "https://docs.python.org/3/library/json.html#json.loads",
+                  "quote": "Identical to load(), but instead of a file-like object"
+                },
+                {
+                  "url": "https://docs.python.org/3/library/json.html#json.load",
+                  "quote": "JSONDecodeError – When the data being deserialized is not a valid JSON document."
+                }
+              ]
+            },
+            "evaluation": {
+              "passed": true,
+              "facts": [
+                {
+                  "pattern": "JSONDecodeError",
+                  "passed": true
+                },
+                {
+                  "pattern": "\\bstr\\b|string",
+                  "passed": true
+                },
+                {
+                  "pattern": "\\bbytes\\b",
+                  "passed": true
+                },
+                {
+                  "pattern": "\\bbytearray\\b",
+                  "passed": true
+                }
+              ],
+              "evidence": [
+                {
+                  "url": "https://docs.python.org/3/library/json.html#json.loads",
+                  "quote": "deserialize s (a str, bytes or bytearray instance containing a JSON document)",
+                  "source_matches": true,
+                  "quote_observed": true
+                },
+                {
+                  "url": "https://docs.python.org/3/library/json.html#json.loads",
+                  "quote": "Identical to load(), but instead of a file-like object",
+                  "source_matches": true,
+                  "quote_observed": true
+                },
+                {
+                  "url": "https://docs.python.org/3/library/json.html#json.load",
+                  "quote": "JSONDecodeError – When the data being deserialized is not a valid JSON document.",
+                  "source_matches": true,
+                  "quote_observed": true
+                }
+              ],
+              "forbidden_network_or_file_calls": 0
+            }
+          },
+          {
+            "round": 1,
+            "outcome": "passed",
+            "seconds": 43.09376317099994,
+            "calls": 7,
+            "answer": {
+              "answer": "json.loads(s) accepts str, bytes, or bytearray containing a JSON document. Invalid JSON raises json.JSONDecodeError.",
+              "evidence": [
+                {
+                  "url": "https://docs.python.org/3/library/json.html#json.loads",
+                  "quote": "Identical to load(), but instead of a file-like object, deserialize s (a str, bytes or bytearray instance containing a JSON document) to a Python object using this conversion table."
+                },
+                {
+                  "url": "https://docs.python.org/3/library/json.html#json.load",
+                  "quote": "JSONDecodeError – When the data being deserialized is not a valid JSON document."
+                }
+              ]
+            },
+            "evaluation": {
+              "passed": true,
+              "facts": [
+                {
+                  "pattern": "JSONDecodeError",
+                  "passed": true
+                },
+                {
+                  "pattern": "\\bstr\\b|string",
+                  "passed": true
+                },
+                {
+                  "pattern": "\\bbytes\\b",
+                  "passed": true
+                },
+                {
+                  "pattern": "\\bbytearray\\b",
+                  "passed": true
+                }
+              ],
+              "evidence": [
+                {
+                  "url": "https://docs.python.org/3/library/json.html#json.loads",
+                  "quote": "Identical to load(), but instead of a file-like object, deserialize s (a str, bytes or bytearray instance containing a JSON document) to a Python object using this conversion table.",
+                  "source_matches": true,
+                  "quote_observed": true
+                },
+                {
+                  "url": "https://docs.python.org/3/library/json.html#json.load",
+                  "quote": "JSONDecodeError – When the data being deserialized is not a valid JSON document.",
+                  "source_matches": true,
+                  "quote_observed": true
+                }
+              ],
+              "forbidden_network_or_file_calls": 0
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "govuk-calendar",
+      "name": "GOV.UK holiday calendar",
+      "results": {
+        "zen": [
+          {
+            "round": 0,
+            "outcome": "passed",
+            "seconds": 18.121166308999992,
+            "calls": 5,
+            "answer": {
+              "answer": "In Scotland in 2027, the summer bank holiday is Monday 2 August, and St Andrew’s Day is Tuesday 30 November.",
+              "evidence": [
+                {
+                  "url": "https://www.gov.uk/bank-holidays",
+                  "quote": "2 August\tMonday\tSummer bank holiday\n30 November\tTuesday\tSt Andrew’s Day"
+                }
+              ]
+            },
+            "evaluation": {
+              "passed": true,
+              "facts": [
+                {
+                  "pattern": "\\b2027\\b",
+                  "passed": true
+                },
+                {
+                  "pattern": "\\b2(?:st|nd|rd|th)?\\b\\s+August\\b(?:\\s+2027\\b)?|\\bAugust\\s+\\b2(?:st|nd|rd|th)?\\b(?:,?\\s+2027\\b)?|\\b2027-08-02\\b",
+                  "passed": true
+                },
+                {
+                  "pattern": "\\b30(?:st|nd|rd|th)?\\b\\s+November\\b(?:\\s+2027\\b)?|\\bNovember\\s+\\b30(?:st|nd|rd|th)?\\b(?:,?\\s+2027\\b)?|\\b2027-11-30\\b",
+                  "passed": true
+                }
+              ],
+              "evidence": [
+                {
+                  "url": "https://www.gov.uk/bank-holidays",
+                  "quote": "2 August\tMonday\tSummer bank holiday\n30 November\tTuesday\tSt Andrew’s Day",
+                  "source_matches": true,
+                  "quote_observed": true
+                }
+              ],
+              "forbidden_network_or_file_calls": 0
+            }
+          },
+          {
+            "round": 1,
+            "outcome": "passed",
+            "seconds": 24.587482494000003,
+            "calls": 5,
+            "answer": {
+              "answer": "In Scotland in 2027, the summer bank holiday is Monday 2 August, and St Andrew’s Day is Tuesday 30 November.",
+              "evidence": [
+                {
+                  "url": "https://www.gov.uk/bank-holidays",
+                  "quote": "2 August\tMonday\tSummer bank holiday\n30 November\tTuesday\tSt Andrew’s Day"
+                }
+              ]
+            },
+            "evaluation": {
+              "passed": true,
+              "facts": [
+                {
+                  "pattern": "\\b2027\\b",
+                  "passed": true
+                },
+                {
+                  "pattern": "\\b2(?:st|nd|rd|th)?\\b\\s+August\\b(?:\\s+2027\\b)?|\\bAugust\\s+\\b2(?:st|nd|rd|th)?\\b(?:,?\\s+2027\\b)?|\\b2027-08-02\\b",
+                  "passed": true
+                },
+                {
+                  "pattern": "\\b30(?:st|nd|rd|th)?\\b\\s+November\\b(?:\\s+2027\\b)?|\\bNovember\\s+\\b30(?:st|nd|rd|th)?\\b(?:,?\\s+2027\\b)?|\\b2027-11-30\\b",
+                  "passed": true
+                }
+              ],
+              "evidence": [
+                {
+                  "url": "https://www.gov.uk/bank-holidays",
+                  "quote": "2 August\tMonday\tSummer bank holiday\n30 November\tTuesday\tSt Andrew’s Day",
+                  "source_matches": true,
+                  "quote_observed": true
+                }
+              ],
+              "forbidden_network_or_file_calls": 0
+            }
+          }
+        ],
+        "browse": [
+          {
+            "round": 0,
+            "outcome": "passed",
+            "seconds": 24.494496533000028,
+            "calls": 3,
+            "answer": {
+              "answer": "In Scotland in 2027, the summer bank holiday is Monday 2 August, and St Andrew’s Day is Tuesday 30 November.",
+              "evidence": [
+                {
+                  "url": "https://www.gov.uk/bank-holidays#scotland",
+                  "quote": "2 August\tMonday\tSummer bank holiday\n30 November\tTuesday\tSt Andrew’s Day"
+                }
+              ]
+            },
+            "evaluation": {
+              "passed": true,
+              "facts": [
+                {
+                  "pattern": "\\b2027\\b",
+                  "passed": true
+                },
+                {
+                  "pattern": "\\b2(?:st|nd|rd|th)?\\b\\s+August\\b(?:\\s+2027\\b)?|\\bAugust\\s+\\b2(?:st|nd|rd|th)?\\b(?:,?\\s+2027\\b)?|\\b2027-08-02\\b",
+                  "passed": true
+                },
+                {
+                  "pattern": "\\b30(?:st|nd|rd|th)?\\b\\s+November\\b(?:\\s+2027\\b)?|\\bNovember\\s+\\b30(?:st|nd|rd|th)?\\b(?:,?\\s+2027\\b)?|\\b2027-11-30\\b",
+                  "passed": true
+                }
+              ],
+              "evidence": [
+                {
+                  "url": "https://www.gov.uk/bank-holidays#scotland",
+                  "quote": "2 August\tMonday\tSummer bank holiday\n30 November\tTuesday\tSt Andrew’s Day",
+                  "source_matches": true,
+                  "quote_observed": true
+                }
+              ],
+              "forbidden_network_or_file_calls": 0
+            }
+          },
+          {
+            "round": 1,
+            "outcome": "passed",
+            "seconds": 21.069039550000003,
+            "calls": 3,
+            "answer": {
+              "answer": "In Scotland in 2027, the summer bank holiday is Monday 2 August, and St Andrew’s Day is Tuesday 30 November.",
+              "evidence": [
+                {
+                  "url": "https://www.gov.uk/bank-holidays#scotland",
+                  "quote": "2 August\tMonday\tSummer bank holiday\n30 November\tTuesday\tSt Andrew’s Day"
+                }
+              ]
+            },
+            "evaluation": {
+              "passed": true,
+              "facts": [
+                {
+                  "pattern": "\\b2027\\b",
+                  "passed": true
+                },
+                {
+                  "pattern": "\\b2(?:st|nd|rd|th)?\\b\\s+August\\b(?:\\s+2027\\b)?|\\bAugust\\s+\\b2(?:st|nd|rd|th)?\\b(?:,?\\s+2027\\b)?|\\b2027-08-02\\b",
+                  "passed": true
+                },
+                {
+                  "pattern": "\\b30(?:st|nd|rd|th)?\\b\\s+November\\b(?:\\s+2027\\b)?|\\bNovember\\s+\\b30(?:st|nd|rd|th)?\\b(?:,?\\s+2027\\b)?|\\b2027-11-30\\b",
+                  "passed": true
+                }
+              ],
+              "evidence": [
+                {
+                  "url": "https://www.gov.uk/bank-holidays#scotland",
+                  "quote": "2 August\tMonday\tSummer bank holiday\n30 November\tTuesday\tSt Andrew’s Day",
+                  "source_matches": true,
+                  "quote_observed": true
+                }
+              ],
+              "forbidden_network_or_file_calls": 0
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

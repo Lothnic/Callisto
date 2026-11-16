@@ -1,0 +1,437 @@
+{
+  "schema": "callisto.real-world-trace.v1",
+  "engine": "zen",
+  "task": "pypi-metadata",
+  "round": 1,
+  "success": true,
+  "outcome": "passed",
+  "answer": {
+    "answer": "The latest stable httpx release is 0.28.1. It requires Python 3.8 or newer (>=3.8). The release history lists newer 1.0.dev versions as pre-releases.",
+    "evidence": [
+      {
+        "url": "https://pypi.org/project/httpx/",
+        "quote": "httpx 0.28.1"
+      },
+      {
+        "url": "https://pypi.org/project/httpx/",
+        "quote": "Python >=3.8"
+      },
+      {
+        "url": "https://pypi.org/project/httpx/#history",
+        "quote": "0.28.1"
+      }
+    ]
+  },
+  "expected": {
+    "version": "0.28.1",
+    "requires_python": ">=3.8"
+  },
+  "evaluation": {
+    "passed": true,
+    "facts": [
+      {
+        "pattern": "0\\.28\\.1",
+        "passed": true
+      },
+      {
+        "pattern": "3\\.8",
+        "passed": true
+      }
+    ],
+    "evidence": [
+      {
+        "url": "https://pypi.org/project/httpx/",
+        "quote": "httpx 0.28.1",
+        "source_matches": true,
+        "quote_observed": true
+      },
+      {
+        "url": "https://pypi.org/project/httpx/",
+        "quote": "Python >=3.8",
+        "source_matches": true,
+        "quote_observed": true
+      },
+      {
+        "url": "https://pypi.org/project/httpx/#history",
+        "quote": "0.28.1",
+        "source_matches": true,
+        "quote_observed": false
+      }
+    ],
+    "forbidden_network_or_file_calls": 0
+  },
+  "preparation_ms": 55.74599700002,
+  "host_elapsed_ms": 19773.67455700005,
+  "verification_ms": 1.2518209998961538,
+  "task_elapsed_ms": 19779.505194000085,
+  "usage": {
+    "input_tokens": 88354,
+    "cached_input_tokens": 61312,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 329,
+    "reasoning_output_tokens": 0
+  },
+  "tool_calls": 5,
+  "tool_failures": 0,
+  "tool_elapsed_ms": 399.7905099999625,
+  "response_bytes": 31447,
+  "response_characters": 31438,
+  "forbidden_host_calls": 0,
+  "cost_usd": null,
+  "timed_out": false,
+  "trace_file": "zen-pypi-metadata-1.json",
+  "prompt": "Complete this read-only public website task using ONLY the browser MCP tools. You must inspect the live page; do not answer from memory. You choose your own observations, selectors and actions. Do not use HTTP/API clients, fetch, network replay, files, shell, other agents, or non-browser tools. Browser DOM evaluation is allowed for text extraction, but must not make network requests. Do not visit API endpoints. Do not sign in, create accounts, post messages, buy, or change account settings. Do not solve CAPTCHAs or bypass access challenges; report them. You may follow links, use site search and recover from errors. Stay on the task site. Maximum 30 browser calls. Verify all requested facts and finish with JSON {\"answer\":\"concise answer covering every requested fact\",\"evidence\":[{\"url\":\"source page URL\",\"quote\":\"a short exact supporting quote you observed in browser output\"}]}. Evidence quotes must be copied exactly from an observation. Do not claim success when blocked.\nYou control the owned Zen tab using Callisto in synthetic-dom input mode. Navigation starts loading; read a fresh snapshot before using refs. You may use run, batches, targeted observations, extraction and supported explicit waits. Do not enable or change input mode.\nStart URL: https://pypi.org/project/httpx/\nTask: On PyPI, inspect the httpx project and its release history. Report the latest stable release version and its minimum required Python version. Cite the project page and a short supporting quote.",
+  "host": {
+    "code": 0,
+    "signal": null,
+    "error": null,
+    "timed_out": false,
+    "elapsed_ms": 19773.67455700005,
+    "usage": {
+      "input_tokens": 88354,
+      "cached_input_tokens": 61312,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 329,
+      "reasoning_output_tokens": 0
+    },
+    "final": "{\"answer\":\"The latest stable httpx release is 0.28.1. It requires Python 3.8 or newer (>=3.8). The release history lists newer 1.0.dev versions as pre-releases.\",\"evidence\":[{\"url\":\"https://pypi.org/project/httpx/\",\"quote\":\"httpx 0.28.1\"},{\"url\":\"https://pypi.org/project/httpx/\",\"quote\":\"Python >=3.8\"},{\"url\":\"https://pypi.org/project/httpx/#history\",\"quote\":\"0.28.1\"}]}",
+    "events": [
+      {
+        "type": "thread.started",
+        "thread_id": "01a1e530-cb3a-7393-b132-b502e80af678"
+      },
+      {
+        "type": "turn.started"
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_0",
+          "type": "agent_message",
+          "text": "I’ll check the live project page and release history for the latest stable version and its Python requirement."
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_1",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto_snapshot",
+          "arguments": {
+            "max_chars": 18000
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_1",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto_snapshot",
+          "arguments": {
+            "max_chars": 18000
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"next_offset\":null,\"offset\":0,\"order_changed\":false,\"revision\":\"ax-586122787590419400:2\",\"text\":\"heading \\\"Ready for a public-site task\\\"\",\"title\":\"Browser benchmark start\",\"truncated\":false,\"url\":\"http://127.0.0.1:41079/\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\"]}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_2",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto_navigate",
+          "arguments": {
+            "url": "https://pypi.org/project/httpx/"
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_2",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto_navigate",
+          "arguments": {
+            "url": "https://pypi.org/project/httpx/"
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"navigationStarted\":true}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_3",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto_snapshot",
+          "arguments": {
+            "max_chars": 22000
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_3",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto_snapshot",
+          "arguments": {
+            "max_chars": 22000
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"navigationStarted\":true,\"next_offset\":null,\"offset\":0,\"order_changed\":false,\"revision\":\"ax-15775652565187018830:1\",\"text\":\"[ax-5635086520204543756] link \\\"Skip to main content\\\"\\n[ax-7371680505946427440] link \\\"\\\"\\n[ax-15743244288207788316] search \\\"Search PyPI Search\\\"\\n[ax-7186822807779188531] textbox \\\"Search PyPI\\\"\\n[ax-14540348099282801439] button \\\"Search\\\"\\nlistitem \\\"Blog\\\"\\n[ax-4414244014944786194] link \\\"Blog\\\"\\nlistitem \\\"Docs\\\"\\n[ax-3734873418203142518] link \\\"Docs\\\"\\nlistitem \\\"Log in\\\"\\n[ax-6397087503449669957] link \\\"Log in\\\"\\nlistitem \\\"Register\\\"\\n[ax-5714525366197327108] link \\\"Register\\\"\\n[ax-13665777685280472283] button \\\"Change language\\\"\\nheading \\\"httpx 0.28.1\\\"\\nparagraph \\\"The next generation HTTP client.\\\"\\nparagraph \\\"pip install httpx Copy PIP instructions\\\"\\n[ax-9385473838030218439] button \\\"Copy PIP instructions\\\"\\npresentation \\\"Description\\\"\\n[ax-12258640091278906905] tab \\\"Project description. Focus will be moved to the description.\\\"\\npresentation \\\"Release files\\\"\\n[ax-8150580686253210808] tab \\\"Release files. Focus will be moved to the release files panel.\\\"\\npresentation \\\"Security\\\"\\n[ax-4029412375876281357] tab \\\"Release security. Focus will be moved to the security panel.\\\"\\npresentation \\\"Release history\\\"\\n[ax-15548361690450133983] tab \\\"Release history. Focus will be moved to the release history panel.\\\"\\n[ax-6384572254294467153] tabpanel \\\"Description\\\"\\nparagraph \\\"\\\"\\n[ax-1769051239104081350] link \\\"\\\"\\nparagraph \\\"HTTPX - A next-generation HTTP client for Python.\\\"\\nparagraph \\\"\\\"\\n[ax-9593165827836383539] link \\\"\\\"\\n[ax-15799151330582125332] link \\\"\\\"\\nparagraph \\\"HTTPX is a fully featured HTTP client library for Python 3. It includes an integrated command line client, has support for both HTTP/1.1 and HTTP/2, and provides both sync and async APIs.\\\"\\nparagraph \\\"Install HTTPX using pip:\\\"\\ncode \\\"$ pip install httpx\\\"\\nparagraph \\\"Now, let's get started:\\\"\\ncode \\\">>> import httpx >>> r = httpx.get('https://www.example.org/') >>> r <Response [200 OK]> >>> r.status_code 200 >>> r.headers['content-type'] 'text/html; charset=UTF-8' >>> r.text '<!doctype html>\\\\\\\\n<ht\\\"\\nparagraph \\\"Or, using the command-line client.\\\"\\ncode \\\"$ pip install 'httpx[cli]' # The command line client is an optional dependency.\\\"\\nparagraph \\\"Which now allows us to use HTTPX directly from the command-line...\\\"\\nparagraph \\\"\\\"\\nparagraph \\\"Sending a request...\\\"\\nparagraph \\\"\\\"\\nheading \\\"Features\\\"\\nparagraph \\\"HTTPX builds on the well-established usability of requests, and gives you:\\\"\\nlistitem \\\"A broadly requests-compatible API.\\\"\\n[ax-14745654955837677509] link \\\"requests-compatible API\\\"\\nlistitem \\\"An integrated command-line client.\\\"\\nlistitem \\\"HTTP/1.1 and HTTP/2 support.\\\"\\n[ax-6589082653649863238] link \\\"and HTTP/2 support\\\"\\nlistitem \\\"Standard synchronous interface, but with async support if you need it.\\\"\\n[ax-11588376424699663261] link \\\"async support if you need it\\\"\\nlistitem \\\"Ability to make requests directly to WSGI applications or ASGI applications.\\\"\\n[ax-18415361347884968967] link \\\"WSGI applications\\\"\\n[ax-16685873822528572720] link \\\"ASGI applications\\\"\\nlistitem \\\"Strict timeouts everywhere.\\\"\\nlistitem \\\"Fully type annotated.\\\"\\nlistitem \\\"100% test coverage.\\\"\\nparagraph \\\"Plus all the standard features of requests...\\\"\\nlistitem \\\"International Domains and URLs\\\"\\nlistitem \\\"Keep-Alive & Connection Pooling\\\"\\nlistitem \\\"Sessions with Cookie Persistence\\\"\\nlistitem \\\"Browser-style SSL Verification\\\"\\nlistitem \\\"Basic/Digest Authentication\\\"\\nlistitem \\\"Elegant Key/Value Cookies\\\"\\nlistitem \\\"Automatic Decompression\\\"\\nlistitem \\\"Automatic Content Decoding\\\"\\nlistitem \\\"Unicode Response Bodies\\\"\\nlistitem \\\"Multipart File Uploads\\\"\\nlistitem \\\"HTTP(S) Proxy Support\\\"\\nlistitem \\\"Connection Timeouts\\\"\\nlistitem \\\"Streaming Downloads\\\"\\nlistitem \\\".netrc Support\\\"\\nlistitem \\\"Chunked Requests\\\"\\nheading \\\"Installation\\\"\\nparagraph \\\"Install with pip:\\\"\\ncode \\\"$ pip install httpx\\\"\\nparagraph \\\"Or, to include the optional HTTP/2 support, use:\\\"\\ncode \\\"$ pip install httpx[http2]\\\"\\nparagraph \\\"HTTPX requires Python 3.8+.\\\"\\nheading \\\"Documentation\\\"\\nparagraph \\\"Project documentation is available at https://www.python-httpx.org/.\\\"\\n[ax-17920833272805442087] link \\\"https://www.python-httpx.org/\\\"\\nparagraph \\\"For a run-through of all the basics, head over to the QuickStart.\\\"\\n[ax-9943423295525680299] link \\\"QuickStart\\\"\\nparagraph \\\"For more advanced topics, see the Advanced Usage section, the async support section, or the HTTP/2 section.\\\"\\n[ax-15482868452078271302] link \\\"Advanced Usage\\\"\\n[ax-4268793993511373993] link \\\"async support\\\"\\n[ax-15130656662350525372] link \\\"HTTP/2\\\"\\nparagraph \\\"The Developer Interface provides a comprehensive API reference.\\\"\\n[ax-2356541642992624401] link \\\"Developer Interface\\\"\\nparagraph \\\"To find out about tools that integrate with HTTPX, see Third Party Packages.\\\"\\n[ax-18375803266829316946] link \\\"Third Party Packages\\\"\\nheading \\\"Contribute\\\"\\nparagraph \\\"If you want to contribute with HTTPX check out the Contributing Guide to learn how to start.\\\"\\n[ax-15060864870789309134] link \\\"Contributing Guide\\\"\\nheading \\\"Dependencies\\\"\\nparagraph \\\"The HTTPX project relies on these excellent libraries:\\\"\\nlistitem \\\"httpcore - The underlying transport implementation for httpx. h11 - HTTP/1.1 support.\\\"\\nlistitem \\\"h11 - HTTP/1.1 support.\\\"\\nlistitem \\\"certifi - SSL certificates.\\\"\\nlistitem \\\"idna - Internationalized domain name support.\\\"\\nlistitem \\\"sniffio - Async library autodetection.\\\"\\nparagraph \\\"As well as these optional installs:\\\"\\nlistitem \\\"h2 - HTTP/2 support. (Optional, with httpx[http2])\\\"\\nlistitem \\\"socksio - SOCKS proxy support. (Optional, with httpx[socks])\\\"\\nlistitem \\\"rich - Rich terminal support. (Optional, with httpx[cli])\\\"\\nlistitem \\\"click - Command line client support. (Optional, with httpx[cli])\\\"\\nlistitem \\\"brotli or brotlicffi - Decoding for \\\\\\\"brotli\\\\\\\" compressed responses. (Optional, with httpx[brotli])\\\"\\nlistitem \\\"zstandard - Decoding for \\\\\\\"zstd\\\\\\\" compressed responses. (Optional, with httpx[zstd])\\\"\\nparagraph \\\"A huge amount of credit is due to requests for the API layout that much of this work follows, as well as to urllib3 for plenty of design inspiration around the lower-level networking details.\\\"\\nparagraph \\\"HTTPX is BSD licensed code. Designed & crafted with care. — 🦋 —\\\"\\n[ax-12963760772054923525] link \\\"BSD licensed\\\"\\nheading \\\"Release Information\\\"\\nheading \\\"Fixed\\\"\\nlistitem \\\"Reintroduced supposedly-private URLTypes shortcut. (#2673)\\\"\\nparagraph \\\"Full changelog\\\"\\n[ax-6333225274254588044] link \\\"Full changelog\\\"\\nheading \\\"Project links\\\"\\nlistitem \\\"Changelog\\\"\\n[ax-18086818641200307382] link \\\"Changelog\\\"\\nlistitem \\\"Documentation\\\"\\n[ax-14039434075552274013] link \\\"Documentation\\\"\\nlistitem \\\"Homepage\\\"\\n[ax-13494634100930002218] link \\\"Homepage\\\"\\nlistitem \\\"Source\\\"\\n[ax-1188005977628574457] link \\\"Source\\\"\\nheading \\\"Key dates\\\"\\nlistitem \\\"Released: Dec 6, 2024\\\"\\nheading \\\"2 maintainers\\\"\\n[ax-17498065185033781714] link \\\"cagil\\\"\\n[ax-11823769871005653064] link \\\"lovelydinosaur\\\"\\nheading \\\"Credits\\\"\\nparagraph \\\"Author: Tom Christie\\\"\\n[ax-8543036848881048818] link \\\"Tom Christie\\\"\\nheading \\\"License\\\"\\nparagraph \\\"BSD License (BSD-3-Clause)\\\"\\nheading \\\"Requires\\\"\\nparagraph \\\"Python >=3.8\\\"\\nheading \\\"Provides Extra\\\"\\nparagraph \\\"brotli cli http2 socks zstd\\\"\\nheading \\\"Classifiers\\\"\\nlistitem \\\"Development Status 4 - Beta\\\"\\nlistitem \\\"4 - Beta\\\"\\n[ax-13576155124978273827] link \\\"4 - Beta\\\"\\nlistitem \\\"Environment Web Environment\\\"\\nlistitem \\\"Web Environment\\\"\\n[ax-8562125731669489636] link \\\"Web Environment\\\"\\nlistitem \\\"Framework AsyncIO Trio\\\"\\nlistitem \\\"AsyncIO\\\"\\n[ax-14932382362451812949] link \\\"AsyncIO\\\"\\nlistitem \\\"Trio\\\"\\n[ax-14156037294040365064] link \\\"Trio\\\"\\nlistitem \\\"Intended Audience Developers\\\"\\nlistitem \\\"Developers\\\"\\n[ax-4132768202367496523] link \\\"Developers\\\"\\nlistitem \\\"License OSI Approved :: BSD License\\\"\\nlistitem \\\"OSI Approved :: BSD License\\\"\\n[ax-9585646741446048594] link \\\"OSI Approved :: BSD License\\\"\\nlistitem \\\"Operating System OS Independent\\\"\\nlistitem \\\"OS Independent\\\"\\n[ax-3828347371352800764] link \\\"OS Independent\\\"\\nlistitem \\\"Programming Language Python :: 3 Python :: 3 :: Only Python :: 3.8 Python :: 3.9 Python :: 3.10 Python :: 3.11 Python :: 3.12\\\"\\nlistitem \\\"Python :: 3\\\"\\n[ax-7626153651447909352] link \\\"Python :: 3\\\"\\nlistitem \\\"Python :: 3 :: Only\\\"\\n[ax-9808687491500842642] link \\\"Python :: 3 :: Only\\\"\\nlistitem \\\"Python :: 3.8\\\"\\n[ax-465421915298485860] link \\\"Python :: 3.8\\\"\\nlistitem \\\"Python :: 3.9\\\"\\n[ax-3168768021982857084] link \\\"Python :: 3.9\\\"\\nlistitem \\\"Python :: 3.10\\\"\\n[ax-13064664656951117887] link \\\"Python :: 3.10\\\"\\nlistitem \\\"Python :: 3.11\\\"\\n[ax-11175677494906609050] link \\\"Python :: 3.11\\\"\\nlistitem \\\"Python :: 3.12\\\"\\n[ax-17364306791213958174] link \\\"Python :: 3.12\\\"\\nlistitem \\\"Topic Internet :: WWW/HTTP\\\"\\nlistitem \\\"Internet :: WWW/HTTP\\\"\\n[ax-661916249308724407] link \\\"Internet :: WWW/HTTP\\\"\\n[ax-8328779920629998399] link \\\"PyPI\\\"\\nparagraph \\\"Developed and maintained by the Python Software Foundation and Python community, for the Python community.\\\"\\n[ax-9006782640071450638] link \\\"Python Software Foundation\\\"\\nparagraph \\\"Status: all systems operational\\\"\\n[ax-4695359522493859166] link \\\"Status: all systems operational\\\"\\n[ax-1211747139805160320] link \\\"Donate today!\\\"\\nheading \\\"Help\\\"\\nlistitem \\\"PyPI documentation\\\"\\n[ax-3541192007265742811] link \\\"PyPI documentation\\\"\\nlistitem \\\"Getting help\\\"\\n[ax-16479132366735782291] link \\\"Getting help\\\"\\nlistitem \\\"Installing packages\\\"\\n[ax-17149891740381437249] link \\\"Installing packages\\\"\\nlistitem \\\"Uploading packages\\\"\\n[ax-15044658230678413126] link \\\"Uploading packages\\\"\\nlistitem \\\"Packaging user guide\\\"\\n[ax-7368728165823604217] link \\\"Packaging user guide\\\"\\nheading \\\"About PyPI\\\"\\nlistitem \\\"PyPI blog\\\"\\n[ax-2392989187515382891] link \\\"PyPI blog\\\"\\nlistitem \\\"Infrastructure dashboard\\\"\\n[ax-5752203982540297045] link \\\"Infrastructure dashboard\\\"\\nlistitem \\\"Statistics\\\"\\n[ax-12732975520492537081] link \\\"Statistics\\\"\\nlistitem \\\"Logos & trademarks\\\"\\n[ax-605271628862710039] link \\\"Logos & trademarks\\\"\\nlistitem \\\"Our sponsors\\\"\\n[ax-8882612799509727988] link \\\"Our sponsors\\\"\\nheading \\\"Contributing to PyPI\\\"\\nlistitem \\\"Bugs and feedback\\\"\\n[ax-379032431470505293] link \\\"Bugs and feedback\\\"\\nlistitem \\\"Contribute on GitHub\\\"\\n[ax-7922009183644677469] link \\\"Contribute on GitHub\\\"\\nlistitem \\\"Translate PyPI\\\"\\n[ax-5001838778596723440] link \\\"Translate PyPI\\\"\\nlistitem \\\"Sponsor PyPI\\\"\\n[ax-9167175627461547580] link \\\"Sponsor PyPI\\\"\\nlistitem \\\"Development credits\\\"\\n[ax-17409549572774041967] link \\\"Development credits\\\"\\nheading \\\"Using PyPI\\\"\\nlistitem \\\"Terms of Service\\\"\\n[ax-3729217315784183650] link \\\"Terms of Service\\\"\\nlistitem \\\"Report security issue\\\"\\n[ax-9107505515817699430] link \\\"Report security issue\\\"\\nlistitem \\\"Code of conduct\\\"\\n[ax-8765164894057012368] link \\\"Code of conduct\\\"\\nlistitem \\\"Privacy Notice\\\"\\n[ax-693483109926883071] link \\\"Privacy Notice\\\"\\nlistitem \\\"Acceptable Use Policy\\\"\\n[ax-15616550473734602589] link \\\"Acceptable Use Policy\\\"\\n[ax-17903708864913526296] link \\\"Anthropic, PBC Visionary sponsor\\\"\\n[ax-10116919643782488416] link \\\"Bloomberg Visionary sponsor\\\"\\n[ax-4797023351026835027] link \\\"Hudson River Trading Visionary sponsor\\\"\\n[ax-16905434433422856167] link \\\"Meta Visionary sponsor\\\"\\n[ax-5684161639270214975] link \\\"NVIDIA Visionary sponsor\\\"\\n[ax-12244515490228017577] link \\\"Microsoft Sustainability sponsor\\\"\\n[ax-10037248285149815770] link \\\"Depot Continuous Integration\\\"\\n[ax-14162737473859578388] link \\\"AWS Cloud computing and Security Sponsor\\\"\\n[ax-15129250387861535294] link \\\"Datadog Monitoring\\\"\\n[ax-10195320108694897873] link \\\"Fastly CDN\\\"\\n[ax-15824909421645103780] link \\\"Google Download Analytics\\\"\\n[ax-3809875842162989202] link \\\"Sentry Error logging\\\"\\n[ax-14933835895898573582] link \\\"StatusPage Status page\\\"\\nlistitem \\\"\\\\\\\"PyPI\\\\\\\", \\\\\\\"Python Package Index\\\\\\\", and the blocks logos are registered trademarks of the Python Software Foundation.\\\"\\n[ax-3325683684778921399] link \\\"trademarks\\\"\\n[ax-15388248471612083471] link \\\"Python Software Foundation\\\"\\nlistitem \\\"© 2026 Python Software Foundation\\\"\\n[ax-16876817893727197011] link \\\"Python Software Foundation\\\"\\nlistitem \\\"Site map\\\"\\n[ax-7402162309223121862] link \\\"Site map\\\"\\nlistitem \\\"Deployed from 748d628\\\"\\n[ax-8211074109266582391] link \\\"748d628\\\"\\n[ax-2787226121760852251] status \\\"\\\"\",\"title\":\"httpx · PyPI\",\"truncated\":false,\"url\":\"https://pypi.org/project/httpx/\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\"]}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_4",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto_click",
+          "arguments": {
+            "ref": "ax-15548361690450133983"
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_4",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto_click",
+          "arguments": {
+            "ref": "ax-15548361690450133983"
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"completed\":true,\"navigationStarted\":true}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_5",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto_snapshot",
+          "arguments": {
+            "max_chars": 13500
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_5",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto_snapshot",
+          "arguments": {
+            "max_chars": 13500
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"next_offset\":322,\"offset\":0,\"order_changed\":false,\"revision\":\"ax-15775652565187018830:2\",\"text\":\"[ax-5635086520204543756] link \\\"Skip to main content\\\"\\n[ax-7371680505946427440] link \\\"\\\"\\n[ax-15743244288207788316] search \\\"Search PyPI Search\\\"\\n[ax-7186822807779188531] textbox \\\"Search PyPI\\\"\\n[ax-14540348099282801439] button \\\"Search\\\"\\nlistitem \\\"Blog\\\"\\n[ax-4414244014944786194] link \\\"Blog\\\"\\nlistitem \\\"Docs\\\"\\n[ax-3734873418203142518] link \\\"Docs\\\"\\nlistitem \\\"Log in\\\"\\n[ax-6397087503449669957] link \\\"Log in\\\"\\nlistitem \\\"Register\\\"\\n[ax-5714525366197327108] link \\\"Register\\\"\\n[ax-13665777685280472283] button \\\"Change language\\\"\\nheading \\\"httpx 0.28.1\\\"\\nparagraph \\\"The next generation HTTP client.\\\"\\nparagraph \\\"pip install httpx Copy PIP instructions\\\"\\n[ax-9385473838030218439] button \\\"Copy PIP instructions\\\"\\npresentation \\\"Description\\\"\\n[ax-12258640091278906905] tab \\\"Project description. Focus will be moved to the description.\\\"\\npresentation \\\"Release files\\\"\\n[ax-8150580686253210808] tab \\\"Release files. Focus will be moved to the release files panel.\\\"\\npresentation \\\"Security\\\"\\n[ax-4029412375876281357] tab \\\"Release security. Focus will be moved to the security panel.\\\"\\npresentation \\\"Release history\\\"\\n[ax-15548361690450133983] tab \\\"Release history. Focus will be moved to the release history panel.\\\"\\n[ax-18374764464227467575] tabpanel \\\"Release history\\\"\\nheading \\\"Release history Release notifications | RSS feed\\\"\\n[ax-9241796945623541829] link \\\"Release notifications\\\"\\n[ax-18005868110607255354] link \\\"RSS feed\\\"\\n[ax-474033307927459629] link \\\"PRE-RELEASE\\\"\\nheading \\\"1.0.dev6\\\"\\n[ax-11385697943043919086] link \\\"1.0.dev6\\\"\\nparagraph \\\"Aug 31, 2026 2 release files No provenance\\\"\\n[ax-1252488234364702601] link \\\"2 release files\\\"\\n[ax-15800478496620225158] link \\\"No provenance\\\"\\n[ax-17486514756277720675] link \\\"PRE-RELEASE\\\"\\nheading \\\"1.0.dev5\\\"\\n[ax-7278347900623293045] link \\\"1.0.dev5\\\"\\nparagraph \\\"Aug 21, 2026 2 release files No provenance\\\"\\n[ax-4186180510666584387] link \\\"2 release files\\\"\\n[ax-2739890939065198937] link \\\"No provenance\\\"\\n[ax-4597569104600775701] link \\\"PRE-RELEASE\\\"\\nheading \\\"1.0.dev4\\\"\\n[ax-8025902384143749696] link \\\"1.0.dev4\\\"\\nparagraph \\\"Aug 19, 2026 2 release files No provenance\\\"\\n[ax-2098011264655734394] link \\\"2 release files\\\"\\n[ax-15144458325903190291] link \\\"No provenance\\\"\\n[ax-16948646191247991618] link \\\"PRE-RELEASE\\\"\\nheading \\\"1.0.dev3\\\"\\n[ax-2058919160036189518] link \\\"1.0.dev3\\\"\\nparagraph \\\"Sep 15, 2025 2 release files No provenance\\\"\\n[ax-9583922909709901208] link \\\"2 release files\\\"\\n[ax-15078290763657045389] link \\\"No provenance\\\"\\n[ax-8939644819748044813] link \\\"PRE-RELEASE\\\"\\nheading \\\"1.0.dev2\\\"\\n[ax-6938337202269969584] link \\\"1.0.dev2\\\"\\nparagraph \\\"Aug 4, 2025 2 release files No provenance\\\"\\n[ax-10202241624056230747] link \\\"2 release files\\\"\\n[ax-14385023047584490089] link \\\"No provenance\\\"\\n[ax-13510636249138902579] link \\\"PRE-RELEASE\\\"\\nheading \\\"1.0.dev1\\\"\\n[ax-1337617440829109682] link \\\"1.0.dev1\\\"\\nparagraph \\\"Jul 3, 2025 2 release files No provenance\\\"\\n[ax-1921408845024027942] link \\\"2 release files\\\"\\n[ax-16702360171739272000] link \\\"No provenance\\\"\\nheading \\\"0.28.1\\\"\\n[ax-5952035528400002359] link \\\"0.28.1\\\"\\nparagraph \\\"Dec 6, 2024 2 release files No provenance\\\"\\n[ax-16442470080137382057] link \\\"2 release files\\\"\\n[ax-6463928030687271952] link \\\"No provenance\\\"\\nheading \\\"0.28.0\\\"\\n[ax-7668017236131467877] link \\\"0.28.0\\\"\\nparagraph \\\"Nov 28, 2024 2 release files No provenance\\\"\\n[ax-11070751568885595046] link \\\"2 release files\\\"\\n[ax-13831928940917295043] link \\\"No provenance\\\"\\nheading \\\"0.27.2\\\"\\n[ax-15107364248618362413] link \\\"0.27.2\\\"\\nparagraph \\\"Aug 27, 2024 2 release files No provenance\\\"\\n[ax-953491702827604563] link \\\"2 release files\\\"\\n[ax-8218359802272801314] link \\\"No provenance\\\"\\nheading \\\"0.27.1\\\"\\n[ax-2455552415378591660] link \\\"0.27.1\\\"\\nparagraph \\\"Aug 27, 2024 2 release files No provenance\\\"\\n[ax-12749885115274138566] link \\\"2 release files\\\"\\n[ax-3339739273337970523] link \\\"No provenance\\\"\\nheading \\\"0.27.0\\\"\\n[ax-3222540073159830340] link \\\"0.27.0\\\"\\nparagraph \\\"Feb 21, 2024 2 release files No provenance\\\"\\n[ax-11366607232279920910] link \\\"2 release files\\\"\\n[ax-15572159548883270501] link \\\"No provenance\\\"\\nheading \\\"0.26.0\\\"\\n[ax-4512312220032005023] link \\\"0.26.0\\\"\\nparagraph \\\"Dec 20, 2023 2 release files No provenance\\\"\\n[ax-1563112042302149774] link \\\"2 release files\\\"\\n[ax-15722429117234771590] link \\\"No provenance\\\"\\nheading \\\"0.25.2\\\"\\n[ax-11453511600653691619] link \\\"0.25.2\\\"\\nparagraph \\\"Nov 24, 2023 2 release files No provenance\\\"\\n[ax-7557631073194801180] link \\\"2 release files\\\"\\n[ax-16167058403126698423] link \\\"No provenance\\\"\\nheading \\\"0.25.1\\\"\\n[ax-9120825291308448522] link \\\"0.25.1\\\"\\nparagraph \\\"Nov 3, 2023 2 release files No provenance\\\"\\n[ax-9783246268873004038] link \\\"2 release files\\\"\\n[ax-13231372228922141716] link \\\"No provenance\\\"\\nheading \\\"0.25.0\\\"\\n[ax-1752107578807102535] link \\\"0.25.0\\\"\\nparagraph \\\"Sep 11, 2023 2 release files No provenance\\\"\\n[ax-11416011573672452635] link \\\"2 release files\\\"\\n[ax-13844741934726212059] link \\\"No provenance\\\"\\nheading \\\"0.24.1\\\"\\n[ax-4242443186134465454] link \\\"0.24.1\\\"\\nparagraph \\\"May 19, 2023 2 release files No provenance\\\"\\n[ax-3454778424000103315] link \\\"2 release files\\\"\\n[ax-3809998833584779262] link \\\"No provenance\\\"\\nheading \\\"0.24.0\\\"\\n[ax-8649458681717306469] link \\\"0.24.0\\\"\\nparagraph \\\"Apr 11, 2023 2 release files No provenance\\\"\\n[ax-1944562051125955438] link \\\"2 release files\\\"\\n[ax-14629351819415076524] link \\\"No provenance\\\"\\nheading \\\"0.23.3\\\"\\n[ax-15673836438692083846] link \\\"0.23.3\\\"\\nparagraph \\\"Jan 4, 2023 2 release files No provenance\\\"\\n[ax-203848855385379058] link \\\"2 release files\\\"\\n[ax-10427319532704580113] link \\\"No provenance\\\"\\nheading \\\"0.23.2\\\"\\n[ax-12554671894944714468] link \\\"0.23.2\\\"\\nparagraph \\\"Jan 2, 2023 2 release files No provenance\\\"\\n[ax-15363559744982560669] link \\\"2 release files\\\"\\n[ax-11213173634459169988] link \\\"No provenance\\\"\\nheading \\\"0.23.1\\\"\\n[ax-17145486987447254609] link \\\"0.23.1\\\"\\nparagraph \\\"Nov 18, 2022 2 release files No provenance\\\"\\n[ax-2409824582134563215] link \\\"2 release files\\\"\\n[ax-11869199395264436294] link \\\"No provenance\\\"\\nheading \\\"0.23.0\\\"\\n[ax-14058281531609810798] link \\\"0.23.0\\\"\\nparagraph \\\"May 23, 2022 2 release files No provenance\\\"\\n[ax-5648206537512830994] link \\\"2 release files\\\"\\n[ax-8512597821617263566] link \\\"No provenance\\\"\\nheading \\\"0.22.0\\\"\\n[ax-5390280054757047144] link \\\"0.22.0\\\"\\nparagraph \\\"Jan 26, 2022 2 release files No provenance\\\"\\n[ax-3788186235648353114] link \\\"2 release files\\\"\\n[ax-11710212927974746624] link \\\"No provenance\\\"\\nheading \\\"0.21.3\\\"\\n[ax-15779767916600986286] link \\\"0.21.3\\\"\\nparagraph \\\"Jan 6, 2022 2 release files No provenance\\\"\\n[ax-1519569113142557475] link \\\"2 release files\\\"\\n[ax-4599233569429682144] link \\\"No provenance\\\"\\nheading \\\"0.21.2\\\"\\n[ax-1417297087512536176] link \\\"0.21.2\\\"\\nparagraph \\\"Jan 5, 2022 2 release files No provenance\\\"\\n[ax-8168337649123293648] link \\\"2 release files\\\"\\n[ax-8562243958998101070] link \\\"No provenance\\\"\\nheading \\\"0.21.1\\\"\\n[ax-9252957637489649624] link \\\"0.21.1\\\"\\nparagraph \\\"Nov 16, 2021 2 release files No provenance\\\"\\n[ax-17194521611818682701] link \\\"2 release files\\\"\\n[ax-10231399343092860571] link \\\"No provenance\\\"\\nheading \\\"0.21.0\\\"\\n[ax-2322873441049061250] link \\\"0.21.0\\\"\\nparagraph \\\"Nov 15, 2021 2 release files No provenance\\\"\\n[ax-1959427123157841565] link \\\"2 release files\\\"\\n[ax-18267789451329771068] link \\\"No provenance\\\"\\nheading \\\"0.20.0\\\"\\n[ax-3828727814323204592] link \\\"0.20.0\\\"\\nparagraph \\\"Oct 13, 2021 2 release files No provenance\\\"\\n[ax-5444077901727497749] link \\\"2 release files\\\"\\n[ax-10745929457296154807] link \\\"No provenance\\\"\\nheading \\\"0.19.0\\\"\\n[ax-8111564573420272769] link \\\"0.19.0\\\"\\nparagraph \\\"Aug 19, 2021 2 release files No provenance\\\"\\n[ax-4519925990282148285] link \\\"2 release files\\\"\\n[ax-3422847454056885745] link \\\"No provenance\\\"\\nheading \\\"0.18.2\\\"\\n[ax-9173763055899746276] link \\\"0.18.2\\\"\\nparagraph \\\"Jun 17, 2021 2 release files No provenance\\\"\\n[ax-3867995624659106816] link \\\"2 release files\\\"\\n[ax-9528372431918083041] link \\\"No provenance\\\"\\nheading \\\"0.18.1\\\"\\n[ax-11122384906711169467] link \\\"0.18.1\\\"\\nparagraph \\\"Apr 29, 2021 2 release files No provenance\\\"\\n[ax-17570888696440706601] link \\\"2 release files\\\"\\n[ax-31626882618253700] link \\\"No provenance\\\"\\nheading \\\"0.18.0\\\"\\n[ax-11121774222702390875] link \\\"0.18.0\\\"\\nparagraph \\\"Apr 27, 2021 2 release files No provenance\\\"\\n[ax-127897115089930485] link \\\"2 release files\\\"\\n[ax-15888378195395534560] link \\\"No provenance\\\"\\nheading \\\"0.17.1\\\"\\n[ax-5727543424844153762] link \\\"0.17.1\\\"\\nparagraph \\\"Mar 15, 2021 2 release files No provenance\\\"\\n[ax-3166732859282805131] link \\\"2 release files\\\"\\n[ax-12341495839145435808] link \\\"No provenance\\\"\\nheading \\\"0.17.0\\\"\\n[ax-1587104490251202028] link \\\"0.17.0\\\"\\nparagraph \\\"Feb 28, 2021 2 release files No provenance\\\"\\n[ax-3061447941086135372] link \\\"2 release files\\\"\\n[ax-11833559251325390136] link \\\"No provenance\\\"\\nheading \\\"0.16.1\\\"\\n[ax-15091163459135819910] link \\\"0.16.1\\\"\\nparagraph \\\"Oct 8, 2020 2 release files No provenance\\\"\\n[ax-325373962839821189] link \\\"2 release files\\\"\\n[ax-13999085125707123541] link \\\"No provenance\\\"\\nheading \\\"0.16.0\\\"\\n[ax-12888682785666960642] link \\\"0.16.0\\\"\\nparagraph \\\"Oct 6, 2020 2 release files No provenance\\\"\\n[ax-7206123155878852665] link \\\"2 release files\\\"\\n[ax-9102426907514054750] link \\\"No provenance\\\"\\nheading \\\"0.15.5\\\"\\n[ax-2412453319894028361] link \\\"0.15.5\\\"\\nparagraph \\\"Oct 1, 2020 2 release files No provenance\\\"\\n[ax-677148680737160828] link \\\"2 release files\\\"\\n[ax-6323009944979140479] link \\\"No provenance\\\"\\nheading \\\"0.15.4\\\"\\n[ax-6972855232630285726] link \\\"0.15.4\\\"\\nparagraph \\\"Sep 25, 2020 2 release files No provenance\\\"\\n[ax-16485708202339597598] link \\\"2 release files\\\"\\n[ax-11562471152862792379] link \\\"No provenance\\\"\\nheading \\\"0.15.3\\\"\\n[ax-2068867957610742684] link \\\"0.15.3\\\"\\nparagraph \\\"Sep 24, 2020 2 release files No provenance\\\"\\n[ax-5697108925337051085] link \\\"2 release files\\\"\\n[ax-6627736625358114480] link \\\"No provenance\\\"\\nheading \\\"0.15.2\\\"\\n[ax-11230989377592837650] link \\\"0.15.2\\\"\\nparagraph \\\"Sep 23, 2020 2 release files No provenance\\\"\\n[ax-12071601232619748747] link \\\"2 release files\\\"\\n[ax-8397259931621319330] link \\\"No provenance\\\"\\nheading \\\"0.15.1\\\"\\n[ax-405598011088719923] link \\\"0.15.1\\\"\\nparagraph \\\"Sep 23, 2020 2 release files No provenance\\\"\\n[ax-5581078512501350658] link \\\"2 release files\\\"\\n[ax-10812218780370862545] link \\\"No provenance\\\"\\nheading \\\"0.15.0\\\"\\n[ax-17402651789777500853] link \\\"0.15.0\\\"\\nparagraph \\\"Sep 22, 2020 2 release files No provenance\\\"\\n[ax-24601566125894576] link \\\"2 release files\\\"\\n[ax-11851144858390869048] link \\\"No provenance\\\"\\nheading \\\"0.14.3\\\"\\n[ax-4864964264746142116] link \\\"0.14.3\\\"\\nparagraph \\\"Sep 2, 2020 2 release files No provenance\\\"\\n[ax-10755772312996016367] link \\\"2 release files\\\"\\n[ax-1851643785690314964] link \\\"No provenance\\\"\\nheading \\\"0.14.2\\\"\\n[ax-5249680378312740388] link \\\"0.14.2\\\"\\nparagraph \\\"Aug 24, 2020 2 release files No provenance\\\"\\n[ax-17254111151619854826] link \\\"2 release files\\\"\\n[ax-1217960211723500456] link \\\"No provenance\\\"\\nheading \\\"0.14.1\\\"\\n[ax-6978483819565869151] link \\\"0.14.1\\\"\\nparagraph \\\"Aug 11, 2020 2 release files No provenance\\\"\\n[ax-18268602792531789883] link \\\"2 release files\\\"\\n[ax-13477574075430324635] link \\\"No provenance\\\"\\nheading \\\"0.14.0\\\"\\n[ax-2297632568637664101] link \\\"0.14.0\\\"\\nparagraph \\\"Aug 7, 2020 2 release files No provenance\\\"\\n[ax-13100989687288786972] link \\\"2 release files\\\"\\n[ax-2752690595207393479] link \\\"No provenance\\\"\\nheading \\\"0.13.3\\\"\\n[ax-3650295500790620211] link \\\"0.13.3\\\"\\nparagraph \\\"May 29, 2020 2 release files No provenance\\\"\\n[ax-17001361107414064693] link \\\"2 release files\\\"\\n[ax-13986161538801185216] link \\\"No provenance\\\"\\nheading \\\"0.13.2\\\"\\n[ax-8053697065238512510] link \\\"0.13.2\\\"\\nparagraph \\\"May 27, 2020 2 release files No provenance\\\"\\n[ax-7965148730426976195] link \\\"2 release files\\\"\\n[ax-3317650501656043454] link \\\"No provenance\\\"\\nheading \\\"0.13.1\\\"\\n[ax-72643844982225371] link \\\"0.13.1\\\"\\nparagraph \\\"May 22, 2020 2 release files No provenance\\\"\\n[ax-14751591117597613205] link \\\"2 release files\\\"\\n[ax-13007045469530241803] link \\\"No provenance\\\"\\nheading \\\"0.13.0\\\"\\n[ax-1793258179736413755] link \\\"0.13.0\\\"\\nparagraph \\\"May 22, 2020 2 release files No provenance\\\"\\n[ax-14139337009648754550] link \\\"2 release files\\\"\\n[ax-9565964725963983197] link \\\"No provenance\\\"\\n[ax-3460275740589175968] link \\\"PRE-RELEASE\\\"\\nheading \\\"0.13.0.dev2\\\"\\n[ax-12372015673771260377] link \\\"0.13.0.dev2\\\"\\nparagraph \\\"May 12, 2020 2 release files No provenance\\\"\\n[ax-17184453693091943929] link \\\"2 release files\\\"\\n[ax-4073922981601792468] link \\\"No provenance\\\"\\n[ax-7819949786788804160] link \\\"PRE-RELEASE\\\"\\nheading \\\"0.13.0.dev1\\\"\\n[ax-12700395683624426132] link \\\"0.13.0.dev1\\\"\\nparagraph \\\"May 6, 2020 2 release files No provenance\\\"\\n[ax-1306980215117329640] link \\\"2 release files\\\"\\n[ax-11643779449250051070] link \\\"No provenance\\\"\\n[ax-12875488088074372572] link \\\"PRE-RELEASE\\\"\\nheading \\\"0.13.dev0\\\"\\n[ax-18033429431510788499] link \\\"0.13.dev0\\\"\\nparagraph \\\"Apr 30, 2020 2 release files No provenance\\\"\\n[ax-18287254944996904986] link \\\"2 release files\\\"\\n[ax-6268923298361986982] link \\\"No provenance\\\"\\nheading \\\"0.12.1\\\"\\n[ax-9206595350027815006] link \\\"0.12.1\\\"\\nparagraph \\\"Mar 20, 2020 2 release files No provenance\\\"\\n[ax-15906122472064833799] link \\\"2 release files\\\"\\n[ax-11107761307278041767] link \\\"No provenance\\\"\\nheading \\\"0.12.0\\\"\\n[ax-10640642134079556252] link \\\"0.12.0\\\"\\nparagraph \\\"Mar 9, 2020 2 release files No provenance\\\"\\n[ax-7610535860679340850] link \\\"2 release files\\\"\\n[ax-11827398284155870541] link \\\"No provenance\\\"\\nheading \\\"0.11.1\\\"\\n[ax-11427954463231496111] link \\\"0.11.1\\\"\\nparagraph \\\"Jan 18, 2020 2 release files No provenance\\\"\\n[ax-6783505919776738812] link \\\"2 release files\\\"\\n[ax-10976864773410913294] link \\\"No provenance\\\"\\nheading \\\"0.11.0\\\"\\n[ax-1381544368040539962] link \\\"0.11.0\\\"\\nparagraph \\\"Jan 9, 2020 2 release files No provenance\\\"\\n[ax-17919592139901835977] link \\\"2 release files\\\"\\n[ax-6453058359612255692] link \\\"No provenance\\\"\\nheading \\\"0.10.1\\\"\\n[ax-9873805559761058091] link \\\"0.10.1\\\"\\nparagraph \\\"Jan 1, 2020 2 release files No provenance\\\"\",\"title\":\"httpx · PyPI\",\"truncated\":true,\"url\":\"https://pypi.org/project/httpx/#history\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\",\"Continue with next_offset and revision to read this captured snapshot.\"]}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_6",
+          "type": "agent_message",
+          "text": "{\"answer\":\"The latest stable httpx release is 0.28.1. It requires Python 3.8 or newer (>=3.8). The release history lists newer 1.0.dev versions as pre-releases.\",\"evidence\":[{\"url\":\"https://pypi.org/project/httpx/\",\"quote\":\"httpx 0.28.1\"},{\"url\":\"https://pypi.org/project/httpx/\",\"quote\":\"Python >=3.8\"},{\"url\":\"https://pypi.org/project/httpx/#history\",\"quote\":\"0.28.1\"}]}"
+        }
+      },
+      {
+        "type": "turn.completed",
+        "usage": {
+          "input_tokens": 88354,
+          "cached_input_tokens": 61312,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 329,
+          "reasoning_output_tokens": 0
+        }
+      }
+    ],
+    "parse_errors": 0,
+    "diagnostic": null,
+    "configuration": {
+      "model": "gpt-6.1-sol",
+      "effort": "high",
+      "sandbox": "read-only",
+      "shell_tool": false,
+      "web_search": "disabled",
+      "user_config_loaded": false,
+      "project_instructions_loaded": false,
+      "skills_catalog_max_tokens": 1,
+      "automatic_skill_instructions": false,
+      "fixture_tool_approval": "explicit approve",
+      "auth": "existing signed-in Codex host",
+      "mcp_transport": "stdio → private Unix socket → native runtime MCP client"
+    }
+  },
+  "tools": [
+    {
+      "sequence": 1,
+      "name": "callisto_snapshot",
+      "arguments": {
+        "max_chars": 18000
+      },
+      "started_at": "2026-11-16T16:29:10.210Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"next_offset\":null,\"offset\":0,\"order_changed\":false,\"revision\":\"ax-586122787590419400:2\",\"text\":\"heading \\\"Ready for a public-site task\\\"\",\"title\":\"Browser benchmark start\",\"truncated\":false,\"url\":\"http://127.0.0.1:41079/\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\"]}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 3.287853000103496,
+      "response_bytes": 476
+    },
+    {
+      "sequence": 2,
+      "name": "callisto_navigate",
+      "arguments": {
+        "url": "https://pypi.org/project/httpx/"
+      },
+      "started_at": "2026-11-16T16:29:12.863Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"navigationStarted\":true}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 3.4608279999811202,
+      "response_bytes": 67
+    },
+    {
+      "sequence": 3,
+      "name": "callisto_snapshot",
+      "arguments": {
+        "max_chars": 22000
+      },
+      "started_at": "2026-11-16T16:29:12.869Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"navigationStarted\":true,\"next_offset\":null,\"offset\":0,\"order_changed\":false,\"revision\":\"ax-15775652565187018830:1\",\"text\":\"[ax-5635086520204543756] link \\\"Skip to main content\\\"\\n[ax-7371680505946427440] link \\\"\\\"\\n[ax-15743244288207788316] search \\\"Search PyPI Search\\\"\\n[ax-7186822807779188531] textbox \\\"Search PyPI\\\"\\n[ax-14540348099282801439] button \\\"Search\\\"\\nlistitem \\\"Blog\\\"\\n[ax-4414244014944786194] link \\\"Blog\\\"\\nlistitem \\\"Docs\\\"\\n[ax-3734873418203142518] link \\\"Docs\\\"\\nlistitem \\\"Log in\\\"\\n[ax-6397087503449669957] link \\\"Log in\\\"\\nlistitem \\\"Register\\\"\\n[ax-5714525366197327108] link \\\"Register\\\"\\n[ax-13665777685280472283] button \\\"Change language\\\"\\nheading \\\"httpx 0.28.1\\\"\\nparagraph \\\"The next generation HTTP client.\\\"\\nparagraph \\\"pip install httpx Copy PIP instructions\\\"\\n[ax-9385473838030218439] button \\\"Copy PIP instructions\\\"\\npresentation \\\"Description\\\"\\n[ax-12258640091278906905] tab \\\"Project description. Focus will be moved to the description.\\\"\\npresentation \\\"Release files\\\"\\n[ax-8150580686253210808] tab \\\"Release files. Focus will be moved to the release files panel.\\\"\\npresentation \\\"Security\\\"\\n[ax-4029412375876281357] tab \\\"Release security. Focus will be moved to the security panel.\\\"\\npresentation \\\"Release history\\\"\\n[ax-15548361690450133983] tab \\\"Release history. Focus will be moved to the release history panel.\\\"\\n[ax-6384572254294467153] tabpanel \\\"Description\\\"\\nparagraph \\\"\\\"\\n[ax-1769051239104081350] link \\\"\\\"\\nparagraph \\\"HTTPX - A next-generation HTTP client for Python.\\\"\\nparagraph \\\"\\\"\\n[ax-9593165827836383539] link \\\"\\\"\\n[ax-15799151330582125332] link \\\"\\\"\\nparagraph \\\"HTTPX is a fully featured HTTP client library for Python 3. It includes an integrated command line client, has support for both HTTP/1.1 and HTTP/2, and provides both sync and async APIs.\\\"\\nparagraph \\\"Install HTTPX using pip:\\\"\\ncode \\\"$ pip install httpx\\\"\\nparagraph \\\"Now, let's get started:\\\"\\ncode \\\">>> import httpx >>> r = httpx.get('https://www.example.org/') >>> r <Response [200 OK]> >>> r.status_code 200 >>> r.headers['content-type'] 'text/html; charset=UTF-8' >>> r.text '<!doctype html>\\\\\\\\n<ht\\\"\\nparagraph \\\"Or, using the command-line client.\\\"\\ncode \\\"$ pip install 'httpx[cli]' # The command line client is an optional dependency.\\\"\\nparagraph \\\"Which now allows us to use HTTPX directly from the command-line...\\\"\\nparagraph \\\"\\\"\\nparagraph \\\"Sending a request...\\\"\\nparagraph \\\"\\\"\\nheading \\\"Features\\\"\\nparagraph \\\"HTTPX builds on the well-established usability of requests, and gives you:\\\"\\nlistitem \\\"A broadly requests-compatible API.\\\"\\n[ax-14745654955837677509] link \\\"requests-compatible API\\\"\\nlistitem \\\"An integrated command-line client.\\\"\\nlistitem \\\"HTTP/1.1 and HTTP/2 support.\\\"\\n[ax-6589082653649863238] link \\\"and HTTP/2 support\\\"\\nlistitem \\\"Standard synchronous interface, but with async support if you need it.\\\"\\n[ax-11588376424699663261] link \\\"async support if you need it\\\"\\nlistitem \\\"Ability to make requests directly to WSGI applications or ASGI applications.\\\"\\n[ax-18415361347884968967] link \\\"WSGI applications\\\"\\n[ax-16685873822528572720] link \\\"ASGI applications\\\"\\nlistitem \\\"Strict timeouts everywhere.\\\"\\nlistitem \\\"Fully type annotated.\\\"\\nlistitem \\\"100% test coverage.\\\"\\nparagraph \\\"Plus all the standard features of requests...\\\"\\nlistitem \\\"International Domains and URLs\\\"\\nlistitem \\\"Keep-Alive & Connection Pooling\\\"\\nlistitem \\\"Sessions with Cookie Persistence\\\"\\nlistitem \\\"Browser-style SSL Verification\\\"\\nlistitem \\\"Basic/Digest Authentication\\\"\\nlistitem \\\"Elegant Key/Value Cookies\\\"\\nlistitem \\\"Automatic Decompression\\\"\\nlistitem \\\"Automatic Content Decoding\\\"\\nlistitem \\\"Unicode Response Bodies\\\"\\nlistitem \\\"Multipart File Uploads\\\"\\nlistitem \\\"HTTP(S) Proxy Support\\\"\\nlistitem \\\"Connection Timeouts\\\"\\nlistitem \\\"Streaming Downloads\\\"\\nlistitem \\\".netrc Support\\\"\\nlistitem \\\"Chunked Requests\\\"\\nheading \\\"Installation\\\"\\nparagraph \\\"Install with pip:\\\"\\ncode \\\"$ pip install httpx\\\"\\nparagraph \\\"Or, to include the optional HTTP/2 support, use:\\\"\\ncode \\\"$ pip install httpx[http2]\\\"\\nparagraph \\\"HTTPX requires Python 3.8+.\\\"\\nheading \\\"Documentation\\\"\\nparagraph \\\"Project documentation is available at https://www.python-httpx.org/.\\\"\\n[ax-17920833272805442087] link \\\"https://www.python-httpx.org/\\\"\\nparagraph \\\"For a run-through of all the basics, head over to the QuickStart.\\\"\\n[ax-9943423295525680299] link \\\"QuickStart\\\"\\nparagraph \\\"For more advanced topics, see the Advanced Usage section, the async support section, or the HTTP/2 section.\\\"\\n[ax-15482868452078271302] link \\\"Advanced Usage\\\"\\n[ax-4268793993511373993] link \\\"async support\\\"\\n[ax-15130656662350525372] link \\\"HTTP/2\\\"\\nparagraph \\\"The Developer Interface provides a comprehensive API reference.\\\"\\n[ax-2356541642992624401] link \\\"Developer Interface\\\"\\nparagraph \\\"To find out about tools that integrate with HTTPX, see Third Party Packages.\\\"\\n[ax-18375803266829316946] link \\\"Third Party Packages\\\"\\nheading \\\"Contribute\\\"\\nparagraph \\\"If you want to contribute with HTTPX check out the Contributing Guide to learn how to start.\\\"\\n[ax-15060864870789309134] link \\\"Contributing Guide\\\"\\nheading \\\"Dependencies\\\"\\nparagraph \\\"The HTTPX project relies on these excellent libraries:\\\"\\nlistitem \\\"httpcore - The underlying transport implementation for httpx. h11 - HTTP/1.1 support.\\\"\\nlistitem \\\"h11 - HTTP/1.1 support.\\\"\\nlistitem \\\"certifi - SSL certificates.\\\"\\nlistitem \\\"idna - Internationalized domain name support.\\\"\\nlistitem \\\"sniffio - Async library autodetection.\\\"\\nparagraph \\\"As well as these optional installs:\\\"\\nlistitem \\\"h2 - HTTP/2 support. (Optional, with httpx[http2])\\\"\\nlistitem \\\"socksio - SOCKS proxy support. (Optional, with httpx[socks])\\\"\\nlistitem \\\"rich - Rich terminal support. (Optional, with httpx[cli])\\\"\\nlistitem \\\"click - Command line client support. (Optional, with httpx[cli])\\\"\\nlistitem \\\"brotli or brotlicffi - Decoding for \\\\\\\"brotli\\\\\\\" compressed responses. (Optional, with httpx[brotli])\\\"\\nlistitem \\\"zstandard - Decoding for \\\\\\\"zstd\\\\\\\" compressed responses. (Optional, with httpx[zstd])\\\"\\nparagraph \\\"A huge amount of credit is due to requests for the API layout that much of this work follows, as well as to urllib3 for plenty of design inspiration around the lower-level networking details.\\\"\\nparagraph \\\"HTTPX is BSD licensed code. Designed & crafted with care. — 🦋 —\\\"\\n[ax-12963760772054923525] link \\\"BSD licensed\\\"\\nheading \\\"Release Information\\\"\\nheading \\\"Fixed\\\"\\nlistitem \\\"Reintroduced supposedly-private URLTypes shortcut. (#2673)\\\"\\nparagraph \\\"Full changelog\\\"\\n[ax-6333225274254588044] link \\\"Full changelog\\\"\\nheading \\\"Project links\\\"\\nlistitem \\\"Changelog\\\"\\n[ax-18086818641200307382] link \\\"Changelog\\\"\\nlistitem \\\"Documentation\\\"\\n[ax-14039434075552274013] link \\\"Documentation\\\"\\nlistitem \\\"Homepage\\\"\\n[ax-13494634100930002218] link \\\"Homepage\\\"\\nlistitem \\\"Source\\\"\\n[ax-1188005977628574457] link \\\"Source\\\"\\nheading \\\"Key dates\\\"\\nlistitem \\\"Released: Dec 6, 2024\\\"\\nheading \\\"2 maintainers\\\"\\n[ax-17498065185033781714] link \\\"cagil\\\"\\n[ax-11823769871005653064] link \\\"lovelydinosaur\\\"\\nheading \\\"Credits\\\"\\nparagraph \\\"Author: Tom Christie\\\"\\n[ax-8543036848881048818] link \\\"Tom Christie\\\"\\nheading \\\"License\\\"\\nparagraph \\\"BSD License (BSD-3-Clause)\\\"\\nheading \\\"Requires\\\"\\nparagraph \\\"Python >=3.8\\\"\\nheading \\\"Provides Extra\\\"\\nparagraph \\\"brotli cli http2 socks zstd\\\"\\nheading \\\"Classifiers\\\"\\nlistitem \\\"Development Status 4 - Beta\\\"\\nlistitem \\\"4 - Beta\\\"\\n[ax-13576155124978273827] link \\\"4 - Beta\\\"\\nlistitem \\\"Environment Web Environment\\\"\\nlistitem \\\"Web Environment\\\"\\n[ax-8562125731669489636] link \\\"Web Environment\\\"\\nlistitem \\\"Framework AsyncIO Trio\\\"\\nlistitem \\\"AsyncIO\\\"\\n[ax-14932382362451812949] link \\\"AsyncIO\\\"\\nlistitem \\\"Trio\\\"\\n[ax-14156037294040365064] link \\\"Trio\\\"\\nlistitem \\\"Intended Audience Developers\\\"\\nlistitem \\\"Developers\\\"\\n[ax-4132768202367496523] link \\\"Developers\\\"\\nlistitem \\\"License OSI Approved :: BSD License\\\"\\nlistitem \\\"OSI Approved :: BSD License\\\"\\n[ax-9585646741446048594] link \\\"OSI Approved :: BSD License\\\"\\nlistitem \\\"Operating System OS Independent\\\"\\nlistitem \\\"OS Independent\\\"\\n[ax-3828347371352800764] link \\\"OS Independent\\\"\\nlistitem \\\"Programming Language Python :: 3 Python :: 3 :: Only Python :: 3.8 Python :: 3.9 Python :: 3.10 Python :: 3.11 Python :: 3.12\\\"\\nlistitem \\\"Python :: 3\\\"\\n[ax-7626153651447909352] link \\\"Python :: 3\\\"\\nlistitem \\\"Python :: 3 :: Only\\\"\\n[ax-9808687491500842642] link \\\"Python :: 3 :: Only\\\"\\nlistitem \\\"Python :: 3.8\\\"\\n[ax-465421915298485860] link \\\"Python :: 3.8\\\"\\nlistitem \\\"Python :: 3.9\\\"\\n[ax-3168768021982857084] link \\\"Python :: 3.9\\\"\\nlistitem \\\"Python :: 3.10\\\"\\n[ax-13064664656951117887] link \\\"Python :: 3.10\\\"\\nlistitem \\\"Python :: 3.11\\\"\\n[ax-11175677494906609050] link \\\"Python :: 3.11\\\"\\nlistitem \\\"Python :: 3.12\\\"\\n[ax-17364306791213958174] link \\\"Python :: 3.12\\\"\\nlistitem \\\"Topic Internet :: WWW/HTTP\\\"\\nlistitem \\\"Internet :: WWW/HTTP\\\"\\n[ax-661916249308724407] link \\\"Internet :: WWW/HTTP\\\"\\n[ax-8328779920629998399] link \\\"PyPI\\\"\\nparagraph \\\"Developed and maintained by the Python Software Foundation and Python community, for the Python community.\\\"\\n[ax-9006782640071450638] link \\\"Python Software Foundation\\\"\\nparagraph \\\"Status: all systems operational\\\"\\n[ax-4695359522493859166] link \\\"Status: all systems operational\\\"\\n[ax-1211747139805160320] link \\\"Donate today!\\\"\\nheading \\\"Help\\\"\\nlistitem \\\"PyPI documentation\\\"\\n[ax-3541192007265742811] link \\\"PyPI documentation\\\"\\nlistitem \\\"Getting help\\\"\\n[ax-16479132366735782291] link \\\"Getting help\\\"\\nlistitem \\\"Installing packages\\\"\\n[ax-17149891740381437249] link \\\"Installing packages\\\"\\nlistitem \\\"Uploading packages\\\"\\n[ax-15044658230678413126] link \\\"Uploading packages\\\"\\nlistitem \\\"Packaging user guide\\\"\\n[ax-7368728165823604217] link \\\"Packaging user guide\\\"\\nheading \\\"About PyPI\\\"\\nlistitem \\\"PyPI blog\\\"\\n[ax-2392989187515382891] link \\\"PyPI blog\\\"\\nlistitem \\\"Infrastructure dashboard\\\"\\n[ax-5752203982540297045] link \\\"Infrastructure dashboard\\\"\\nlistitem \\\"Statistics\\\"\\n[ax-12732975520492537081] link \\\"Statistics\\\"\\nlistitem \\\"Logos & trademarks\\\"\\n[ax-605271628862710039] link \\\"Logos & trademarks\\\"\\nlistitem \\\"Our sponsors\\\"\\n[ax-8882612799509727988] link \\\"Our sponsors\\\"\\nheading \\\"Contributing to PyPI\\\"\\nlistitem \\\"Bugs and feedback\\\"\\n[ax-379032431470505293] link \\\"Bugs and feedback\\\"\\nlistitem \\\"Contribute on GitHub\\\"\\n[ax-7922009183644677469] link \\\"Contribute on GitHub\\\"\\nlistitem \\\"Translate PyPI\\\"\\n[ax-5001838778596723440] link \\\"Translate PyPI\\\"\\nlistitem \\\"Sponsor PyPI\\\"\\n[ax-9167175627461547580] link \\\"Sponsor PyPI\\\"\\nlistitem \\\"Development credits\\\"\\n[ax-17409549572774041967] link \\\"Development credits\\\"\\nheading \\\"Using PyPI\\\"\\nlistitem \\\"Terms of Service\\\"\\n[ax-3729217315784183650] link \\\"Terms of Service\\\"\\nlistitem \\\"Report security issue\\\"\\n[ax-9107505515817699430] link \\\"Report security issue\\\"\\nlistitem \\\"Code of conduct\\\"\\n[ax-8765164894057012368] link \\\"Code of conduct\\\"\\nlistitem \\\"Privacy Notice\\\"\\n[ax-693483109926883071] link \\\"Privacy Notice\\\"\\nlistitem \\\"Acceptable Use Policy\\\"\\n[ax-15616550473734602589] link \\\"Acceptable Use Policy\\\"\\n[ax-17903708864913526296] link \\\"Anthropic, PBC Visionary sponsor\\\"\\n[ax-10116919643782488416] link \\\"Bloomberg Visionary sponsor\\\"\\n[ax-4797023351026835027] link \\\"Hudson River Trading Visionary sponsor\\\"\\n[ax-16905434433422856167] link \\\"Meta Visionary sponsor\\\"\\n[ax-5684161639270214975] link \\\"NVIDIA Visionary sponsor\\\"\\n[ax-12244515490228017577] link \\\"Microsoft Sustainability sponsor\\\"\\n[ax-10037248285149815770] link \\\"Depot Continuous Integration\\\"\\n[ax-14162737473859578388] link \\\"AWS Cloud computing and Security Sponsor\\\"\\n[ax-15129250387861535294] link \\\"Datadog Monitoring\\\"\\n[ax-10195320108694897873] link \\\"Fastly CDN\\\"\\n[ax-15824909421645103780] link \\\"Google Download Analytics\\\"\\n[ax-3809875842162989202] link \\\"Sentry Error logging\\\"\\n[ax-14933835895898573582] link \\\"StatusPage Status page\\\"\\nlistitem \\\"\\\\\\\"PyPI\\\\\\\", \\\\\\\"Python Package Index\\\\\\\", and the blocks logos are registered trademarks of the Python Software Foundation.\\\"\\n[ax-3325683684778921399] link \\\"trademarks\\\"\\n[ax-15388248471612083471] link \\\"Python Software Foundation\\\"\\nlistitem \\\"© 2026 Python Software Foundation\\\"\\n[ax-16876817893727197011] link \\\"Python Software Foundation\\\"\\nlistitem \\\"Site map\\\"\\n[ax-7402162309223121862] link \\\"Site map\\\"\\nlistitem \\\"Deployed from 748d628\\\"\\n[ax-8211074109266582391] link \\\"748d628\\\"\\n[ax-2787226121760852251] status \\\"\\\"\",\"title\":\"httpx · PyPI\",\"truncated\":false,\"url\":\"https://pypi.org/project/httpx/\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\"]}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 275.4110479999799,
+      "response_bytes": 14270
+    },
+    {
+      "sequence": 4,
+      "name": "callisto_click",
+      "arguments": {
+        "ref": "ax-15548361690450133983"
+      },
+      "started_at": "2026-11-16T16:29:15.595Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"completed\":true,\"navigationStarted\":true}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 33.94363599992357,
+      "response_bytes": 86
+    },
+    {
+      "sequence": 5,
+      "name": "callisto_snapshot",
+      "arguments": {
+        "max_chars": 13500
+      },
+      "started_at": "2026-11-16T16:29:15.631Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"next_offset\":322,\"offset\":0,\"order_changed\":false,\"revision\":\"ax-15775652565187018830:2\",\"text\":\"[ax-5635086520204543756] link \\\"Skip to main content\\\"\\n[ax-7371680505946427440] link \\\"\\\"\\n[ax-15743244288207788316] search \\\"Search PyPI Search\\\"\\n[ax-7186822807779188531] textbox \\\"Search PyPI\\\"\\n[ax-14540348099282801439] button \\\"Search\\\"\\nlistitem \\\"Blog\\\"\\n[ax-4414244014944786194] link \\\"Blog\\\"\\nlistitem \\\"Docs\\\"\\n[ax-3734873418203142518] link \\\"Docs\\\"\\nlistitem \\\"Log in\\\"\\n[ax-6397087503449669957] link \\\"Log in\\\"\\nlistitem \\\"Register\\\"\\n[ax-5714525366197327108] link \\\"Register\\\"\\n[ax-13665777685280472283] button \\\"Change language\\\"\\nheading \\\"httpx 0.28.1\\\"\\nparagraph \\\"The next generation HTTP client.\\\"\\nparagraph \\\"pip install httpx Copy PIP instructions\\\"\\n[ax-9385473838030218439] button \\\"Copy PIP instructions\\\"\\npresentation \\\"Description\\\"\\n[ax-12258640091278906905] tab \\\"Project description. Focus will be moved to the description.\\\"\\npresentation \\\"Release files\\\"\\n[ax-8150580686253210808] tab \\\"Release files. Focus will be moved to the release files panel.\\\"\\npresentation \\\"Security\\\"\\n[ax-4029412375876281357] tab \\\"Release security. Focus will be moved to the security panel.\\\"\\npresentation \\\"Release history\\\"\\n[ax-15548361690450133983] tab \\\"Release history. Focus will be moved to the release history panel.\\\"\\n[ax-18374764464227467575] tabpanel \\\"Release history\\\"\\nheading \\\"Release history Release notifications | RSS feed\\\"\\n[ax-9241796945623541829] link \\\"Release notifications\\\"\\n[ax-18005868110607255354] link \\\"RSS feed\\\"\\n[ax-474033307927459629] link \\\"PRE-RELEASE\\\"\\nheading \\\"1.0.dev6\\\"\\n[ax-11385697943043919086] link \\\"1.0.dev6\\\"\\nparagraph \\\"Aug 31, 2026 2 release files No provenance\\\"\\n[ax-1252488234364702601] link \\\"2 release files\\\"\\n[ax-15800478496620225158] link \\\"No provenance\\\"\\n[ax-17486514756277720675] link \\\"PRE-RELEASE\\\"\\nheading \\\"1.0.dev5\\\"\\n[ax-7278347900623293045] link \\\"1.0.dev5\\\"\\nparagraph \\\"Aug 21, 2026 2 release files No provenance\\\"\\n[ax-4186180510666584387] link \\\"2 release files\\\"\\n[ax-2739890939065198937] link \\\"No provenance\\\"\\n[ax-4597569104600775701] link \\\"PRE-RELEASE\\\"\\nheading \\\"1.0.dev4\\\"\\n[ax-8025902384143749696] link \\\"1.0.dev4\\\"\\nparagraph \\\"Aug 19, 2026 2 release files No provenance\\\"\\n[ax-2098011264655734394] link \\\"2 release files\\\"\\n[ax-15144458325903190291] link \\\"No provenance\\\"\\n[ax-16948646191247991618] link \\\"PRE-RELEASE\\\"\\nheading \\\"1.0.dev3\\\"\\n[ax-2058919160036189518] link \\\"1.0.dev3\\\"\\nparagraph \\\"Sep 15, 2025 2 release files No provenance\\\"\\n[ax-9583922909709901208] link \\\"2 release files\\\"\\n[ax-15078290763657045389] link \\\"No provenance\\\"\\n[ax-8939644819748044813] link \\\"PRE-RELEASE\\\"\\nheading \\\"1.0.dev2\\\"\\n[ax-6938337202269969584] link \\\"1.0.dev2\\\"\\nparagraph \\\"Aug 4, 2025 2 release files No provenance\\\"\\n[ax-10202241624056230747] link \\\"2 release files\\\"\\n[ax-14385023047584490089] link \\\"No provenance\\\"\\n[ax-13510636249138902579] link \\\"PRE-RELEASE\\\"\\nheading \\\"1.0.dev1\\\"\\n[ax-1337617440829109682] link \\\"1.0.dev1\\\"\\nparagraph \\\"Jul 3, 2025 2 release files No provenance\\\"\\n[ax-1921408845024027942] link \\\"2 release files\\\"\\n[ax-16702360171739272000] link \\\"No provenance\\\"\\nheading \\\"0.28.1\\\"\\n[ax-5952035528400002359] link \\\"0.28.1\\\"\\nparagraph \\\"Dec 6, 2024 2 release files No provenance\\\"\\n[ax-16442470080137382057] link \\\"2 release files\\\"\\n[ax-6463928030687271952] link \\\"No provenance\\\"\\nheading \\\"0.28.0\\\"\\n[ax-7668017236131467877] link \\\"0.28.0\\\"\\nparagraph \\\"Nov 28, 2024 2 release files No provenance\\\"\\n[ax-11070751568885595046] link \\\"2 release files\\\"\\n[ax-13831928940917295043] link \\\"No provenance\\\"\\nheading \\\"0.27.2\\\"\\n[ax-15107364248618362413] link \\\"0.27.2\\\"\\nparagraph \\\"Aug 27, 2024 2 release files No provenance\\\"\\n[ax-953491702827604563] link \\\"2 release files\\\"\\n[ax-8218359802272801314] link \\\"No provenance\\\"\\nheading \\\"0.27.1\\\"\\n[ax-2455552415378591660] link \\\"0.27.1\\\"\\nparagraph \\\"Aug 27, 2024 2 release files No provenance\\\"\\n[ax-12749885115274138566] link \\\"2 release files\\\"\\n[ax-3339739273337970523] link \\\"No provenance\\\"\\nheading \\\"0.27.0\\\"\\n[ax-3222540073159830340] link \\\"0.27.0\\\"\\nparagraph \\\"Feb 21, 2024 2 release files No provenance\\\"\\n[ax-11366607232279920910] link \\\"2 release files\\\"\\n[ax-15572159548883270501] link \\\"No provenance\\\"\\nheading \\\"0.26.0\\\"\\n[ax-4512312220032005023] link \\\"0.26.0\\\"\\nparagraph \\\"Dec 20, 2023 2 release files No provenance\\\"\\n[ax-1563112042302149774] link \\\"2 release files\\\"\\n[ax-15722429117234771590] link \\\"No provenance\\\"\\nheading \\\"0.25.2\\\"\\n[ax-11453511600653691619] link \\\"0.25.2\\\"\\nparagraph \\\"Nov 24, 2023 2 release files No provenance\\\"\\n[ax-7557631073194801180] link \\\"2 release files\\\"\\n[ax-16167058403126698423] link \\\"No provenance\\\"\\nheading \\\"0.25.1\\\"\\n[ax-9120825291308448522] link \\\"0.25.1\\\"\\nparagraph \\\"Nov 3, 2023 2 release files No provenance\\\"\\n[ax-9783246268873004038] link \\\"2 release files\\\"\\n[ax-13231372228922141716] link \\\"No provenance\\\"\\nheading \\\"0.25.0\\\"\\n[ax-1752107578807102535] link \\\"0.25.0\\\"\\nparagraph \\\"Sep 11, 2023 2 release files No provenance\\\"\\n[ax-11416011573672452635] link \\\"2 release files\\\"\\n[ax-13844741934726212059] link \\\"No provenance\\\"\\nheading \\\"0.24.1\\\"\\n[ax-4242443186134465454] link \\\"0.24.1\\\"\\nparagraph \\\"May 19, 2023 2 release files No provenance\\\"\\n[ax-3454778424000103315] link \\\"2 release files\\\"\\n[ax-3809998833584779262] link \\\"No provenance\\\"\\nheading \\\"0.24.0\\\"\\n[ax-8649458681717306469] link \\\"0.24.0\\\"\\nparagraph \\\"Apr 11, 2023 2 release files No provenance\\\"\\n[ax-1944562051125955438] link \\\"2 release files\\\"\\n[ax-14629351819415076524] link \\\"No provenance\\\"\\nheading \\\"0.23.3\\\"\\n[ax-15673836438692083846] link \\\"0.23.3\\\"\\nparagraph \\\"Jan 4, 2023 2 release files No provenance\\\"\\n[ax-203848855385379058] link \\\"2 release files\\\"\\n[ax-10427319532704580113] link \\\"No provenance\\\"\\nheading \\\"0.23.2\\\"\\n[ax-12554671894944714468] link \\\"0.23.2\\\"\\nparagraph \\\"Jan 2, 2023 2 release files No provenance\\\"\\n[ax-15363559744982560669] link \\\"2 release files\\\"\\n[ax-11213173634459169988] link \\\"No provenance\\\"\\nheading \\\"0.23.1\\\"\\n[ax-17145486987447254609] link \\\"0.23.1\\\"\\nparagraph \\\"Nov 18, 2022 2 release files No provenance\\\"\\n[ax-2409824582134563215] link \\\"2 release files\\\"\\n[ax-11869199395264436294] link \\\"No provenance\\\"\\nheading \\\"0.23.0\\\"\\n[ax-14058281531609810798] link \\\"0.23.0\\\"\\nparagraph \\\"May 23, 2022 2 release files No provenance\\\"\\n[ax-5648206537512830994] link \\\"2 release files\\\"\\n[ax-8512597821617263566] link \\\"No provenance\\\"\\nheading \\\"0.22.0\\\"\\n[ax-5390280054757047144] link \\\"0.22.0\\\"\\nparagraph \\\"Jan 26, 2022 2 release files No provenance\\\"\\n[ax-3788186235648353114] link \\\"2 release files\\\"\\n[ax-11710212927974746624] link \\\"No provenance\\\"\\nheading \\\"0.21.3\\\"\\n[ax-15779767916600986286] link \\\"0.21.3\\\"\\nparagraph \\\"Jan 6, 2022 2 release files No provenance\\\"\\n[ax-1519569113142557475] link \\\"2 release files\\\"\\n[ax-4599233569429682144] link \\\"No provenance\\\"\\nheading \\\"0.21.2\\\"\\n[ax-1417297087512536176] link \\\"0.21.2\\\"\\nparagraph \\\"Jan 5, 2022 2 release files No provenance\\\"\\n[ax-8168337649123293648] link \\\"2 release files\\\"\\n[ax-8562243958998101070] link \\\"No provenance\\\"\\nheading \\\"0.21.1\\\"\\n[ax-9252957637489649624] link \\\"0.21.1\\\"\\nparagraph \\\"Nov 16, 2021 2 release files No provenance\\\"\\n[ax-17194521611818682701] link \\\"2 release files\\\"\\n[ax-10231399343092860571] link \\\"No provenance\\\"\\nheading \\\"0.21.0\\\"\\n[ax-2322873441049061250] link \\\"0.21.0\\\"\\nparagraph \\\"Nov 15, 2021 2 release files No provenance\\\"\\n[ax-1959427123157841565] link \\\"2 release files\\\"\\n[ax-18267789451329771068] link \\\"No provenance\\\"\\nheading \\\"0.20.0\\\"\\n[ax-3828727814323204592] link \\\"0.20.0\\\"\\nparagraph \\\"Oct 13, 2021 2 release files No provenance\\\"\\n[ax-5444077901727497749] link \\\"2 release files\\\"\\n[ax-10745929457296154807] link \\\"No provenance\\\"\\nheading \\\"0.19.0\\\"\\n[ax-8111564573420272769] link \\\"0.19.0\\\"\\nparagraph \\\"Aug 19, 2021 2 release files No provenance\\\"\\n[ax-4519925990282148285] link \\\"2 release files\\\"\\n[ax-3422847454056885745] link \\\"No provenance\\\"\\nheading \\\"0.18.2\\\"\\n[ax-9173763055899746276] link \\\"0.18.2\\\"\\nparagraph \\\"Jun 17, 2021 2 release files No provenance\\\"\\n[ax-3867995624659106816] link \\\"2 release files\\\"\\n[ax-9528372431918083041] link \\\"No provenance\\\"\\nheading \\\"0.18.1\\\"\\n[ax-11122384906711169467] link \\\"0.18.1\\\"\\nparagraph \\\"Apr 29, 2021 2 release files No provenance\\\"\\n[ax-17570888696440706601] link \\\"2 release files\\\"\\n[ax-31626882618253700] link \\\"No provenance\\\"\\nheading \\\"0.18.0\\\"\\n[ax-11121774222702390875] link \\\"0.18.0\\\"\\nparagraph \\\"Apr 27, 2021 2 release files No provenance\\\"\\n[ax-127897115089930485] link \\\"2 release files\\\"\\n[ax-15888378195395534560] link \\\"No provenance\\\"\\nheading \\\"0.17.1\\\"\\n[ax-5727543424844153762] link \\\"0.17.1\\\"\\nparagraph \\\"Mar 15, 2021 2 release files No provenance\\\"\\n[ax-3166732859282805131] link \\\"2 release files\\\"\\n[ax-12341495839145435808] link \\\"No provenance\\\"\\nheading \\\"0.17.0\\\"\\n[ax-1587104490251202028] link \\\"0.17.0\\\"\\nparagraph \\\"Feb 28, 2021 2 release files No provenance\\\"\\n[ax-3061447941086135372] link \\\"2 release files\\\"\\n[ax-11833559251325390136] link \\\"No provenance\\\"\\nheading \\\"0.16.1\\\"\\n[ax-15091163459135819910] link \\\"0.16.1\\\"\\nparagraph \\\"Oct 8, 2020 2 release files No provenance\\\"\\n[ax-325373962839821189] link \\\"2 release files\\\"\\n[ax-13999085125707123541] link \\\"No provenance\\\"\\nheading \\\"0.16.0\\\"\\n[ax-12888682785666960642] link \\\"0.16.0\\\"\\nparagraph \\\"Oct 6, 2020 2 release files No provenance\\\"\\n[ax-7206123155878852665] link \\\"2 release files\\\"\\n[ax-9102426907514054750] link \\\"No provenance\\\"\\nheading \\\"0.15.5\\\"\\n[ax-2412453319894028361] link \\\"0.15.5\\\"\\nparagraph \\\"Oct 1, 2020 2 release files No provenance\\\"\\n[ax-677148680737160828] link \\\"2 release files\\\"\\n[ax-6323009944979140479] link \\\"No provenance\\\"\\nheading \\\"0.15.4\\\"\\n[ax-6972855232630285726] link \\\"0.15.4\\\"\\nparagraph \\\"Sep 25, 2020 2 release files No provenance\\\"\\n[ax-16485708202339597598] link \\\"2 release files\\\"\\n[ax-11562471152862792379] link \\\"No provenance\\\"\\nheading \\\"0.15.3\\\"\\n[ax-2068867957610742684] link \\\"0.15.3\\\"\\nparagraph \\\"Sep 24, 2020 2 release files No provenance\\\"\\n[ax-5697108925337051085] link \\\"2 release files\\\"\\n[ax-6627736625358114480] link \\\"No provenance\\\"\\nheading \\\"0.15.2\\\"\\n[ax-11230989377592837650] link \\\"0.15.2\\\"\\nparagraph \\\"Sep 23, 2020 2 release files No provenance\\\"\\n[ax-12071601232619748747] link \\\"2 release files\\\"\\n[ax-8397259931621319330] link \\\"No provenance\\\"\\nheading \\\"0.15.1\\\"\\n[ax-405598011088719923] link \\\"0.15.1\\\"\\nparagraph \\\"Sep 23, 2020 2 release files No provenance\\\"\\n[ax-5581078512501350658] link \\\"2 release files\\\"\\n[ax-10812218780370862545] link \\\"No provenance\\\"\\nheading \\\"0.15.0\\\"\\n[ax-17402651789777500853] link \\\"0.15.0\\\"\\nparagraph \\\"Sep 22, 2020 2 release files No provenance\\\"\\n[ax-24601566125894576] link \\\"2 release files\\\"\\n[ax-11851144858390869048] link \\\"No provenance\\\"\\nheading \\\"0.14.3\\\"\\n[ax-4864964264746142116] link \\\"0.14.3\\\"\\nparagraph \\\"Sep 2, 2020 2 release files No provenance\\\"\\n[ax-10755772312996016367] link \\\"2 release files\\\"\\n[ax-1851643785690314964] link \\\"No provenance\\\"\\nheading \\\"0.14.2\\\"\\n[ax-5249680378312740388] link \\\"0.14.2\\\"\\nparagraph \\\"Aug 24, 2020 2 release files No provenance\\\"\\n[ax-17254111151619854826] link \\\"2 release files\\\"\\n[ax-1217960211723500456] link \\\"No provenance\\\"\\nheading \\\"0.14.1\\\"\\n[ax-6978483819565869151] link \\\"0.14.1\\\"\\nparagraph \\\"Aug 11, 2020 2 release files No provenance\\\"\\n[ax-18268602792531789883] link \\\"2 release files\\\"\\n[ax-13477574075430324635] link \\\"No provenance\\\"\\nheading \\\"0.14.0\\\"\\n[ax-2297632568637664101] link \\\"0.14.0\\\"\\nparagraph \\\"Aug 7, 2020 2 release files No provenance\\\"\\n[ax-13100989687288786972] link \\\"2 release files\\\"\\n[ax-2752690595207393479] link \\\"No provenance\\\"\\nheading \\\"0.13.3\\\"\\n[ax-3650295500790620211] link \\\"0.13.3\\\"\\nparagraph \\\"May 29, 2020 2 release files No provenance\\\"\\n[ax-17001361107414064693] link \\\"2 release files\\\"\\n[ax-13986161538801185216] link \\\"No provenance\\\"\\nheading \\\"0.13.2\\\"\\n[ax-8053697065238512510] link \\\"0.13.2\\\"\\nparagraph \\\"May 27, 2020 2 release files No provenance\\\"\\n[ax-7965148730426976195] link \\\"2 release files\\\"\\n[ax-3317650501656043454] link \\\"No provenance\\\"\\nheading \\\"0.13.1\\\"\\n[ax-72643844982225371] link \\\"0.13.1\\\"\\nparagraph \\\"May 22, 2020 2 release files No provenance\\\"\\n[ax-14751591117597613205] link \\\"2 release files\\\"\\n[ax-13007045469530241803] link \\\"No provenance\\\"\\nheading \\\"0.13.0\\\"\\n[ax-1793258179736413755] link \\\"0.13.0\\\"\\nparagraph \\\"May 22, 2020 2 release files No provenance\\\"\\n[ax-14139337009648754550] link \\\"2 release files\\\"\\n[ax-9565964725963983197] link \\\"No provenance\\\"\\n[ax-3460275740589175968] link \\\"PRE-RELEASE\\\"\\nheading \\\"0.13.0.dev2\\\"\\n[ax-12372015673771260377] link \\\"0.13.0.dev2\\\"\\nparagraph \\\"May 12, 2020 2 release files No provenance\\\"\\n[ax-17184453693091943929] link \\\"2 release files\\\"\\n[ax-4073922981601792468] link \\\"No provenance\\\"\\n[ax-7819949786788804160] link \\\"PRE-RELEASE\\\"\\nheading \\\"0.13.0.dev1\\\"\\n[ax-12700395683624426132] link \\\"0.13.0.dev1\\\"\\nparagraph \\\"May 6, 2020 2 release files No provenance\\\"\\n[ax-1306980215117329640] link \\\"2 release files\\\"\\n[ax-11643779449250051070] link \\\"No provenance\\\"\\n[ax-12875488088074372572] link \\\"PRE-RELEASE\\\"\\nheading \\\"0.13.dev0\\\"\\n[ax-18033429431510788499] link \\\"0.13.dev0\\\"\\nparagraph \\\"Apr 30, 2020 2 release files No provenance\\\"\\n[ax-18287254944996904986] link \\\"2 release files\\\"\\n[ax-6268923298361986982] link \\\"No provenance\\\"\\nheading \\\"0.12.1\\\"\\n[ax-9206595350027815006] link \\\"0.12.1\\\"\\nparagraph \\\"Mar 20, 2020 2 release files No provenance\\\"\\n[ax-15906122472064833799] link \\\"2 release files\\\"\\n[ax-11107761307278041767] link \\\"No provenance\\\"\\nheading \\\"0.12.0\\\"\\n[ax-10640642134079556252] link \\\"0.12.0\\\"\\nparagraph \\\"Mar 9, 2020 2 release files No provenance\\\"\\n[ax-7610535860679340850] link \\\"2 release files\\\"\\n[ax-11827398284155870541] link \\\"No provenance\\\"\\nheading \\\"0.11.1\\\"\\n[ax-11427954463231496111] link \\\"0.11.1\\\"\\nparagraph \\\"Jan 18, 2020 2 release files No provenance\\\"\\n[ax-6783505919776738812] link \\\"2 release files\\\"\\n[ax-10976864773410913294] link \\\"No provenance\\\"\\nheading \\\"0.11.0\\\"\\n[ax-1381544368040539962] link \\\"0.11.0\\\"\\nparagraph \\\"Jan 9, 2020 2 release files No provenance\\\"\\n[ax-17919592139901835977] link \\\"2 release files\\\"\\n[ax-6453058359612255692] link \\\"No provenance\\\"\\nheading \\\"0.10.1\\\"\\n[ax-9873805559761058091] link \\\"0.10.1\\\"\\nparagraph \\\"Jan 1, 2020 2 release files No provenance\\\"\",\"title\":\"httpx · PyPI\",\"truncated\":true,\"url\":\"https://pypi.org/project/httpx/#history\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\",\"Continue with next_offset and revision to read this captured snapshot.\"]}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 83.68714499997441,
+      "response_bytes": 16548
+    }
+  ]
+}

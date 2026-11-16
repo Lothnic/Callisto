@@ -1,0 +1,840 @@
+{
+  "schema": "callisto.real-world-trace.v1",
+  "engine": "zen",
+  "task": "arxiv-paper",
+  "round": 1,
+  "success": true,
+  "outcome": "passed",
+  "answer": {
+    "answer": "“Attention Is All You Need” — arXiv:1706.03762. First two authors: Ashish Vaswani and Noam Shazeer. Original submission date: 12 June 2017.",
+    "evidence": [
+      {
+        "url": "https://arxiv.org/abs/1706.03762",
+        "quote": "Title:Attention Is All You Need"
+      },
+      {
+        "url": "https://arxiv.org/abs/1706.03762",
+        "quote": "arXiv:1706.03762 [cs.CL]"
+      },
+      {
+        "url": "https://arxiv.org/abs/1706.03762",
+        "quote": "Authors:Ashish Vaswani, Noam Shazeer"
+      },
+      {
+        "url": "https://arxiv.org/abs/1706.03762",
+        "quote": "[Submitted on 12 Jun 2017 (v1), last revised 2 Aug 2023 (this version, v7)]"
+      }
+    ]
+  },
+  "expected": {
+    "id": "1706.03762",
+    "authors": [
+      "Ashish Vaswani",
+      "Noam Shazeer"
+    ],
+    "date": "12 June 2017"
+  },
+  "evaluation": {
+    "passed": true,
+    "facts": [
+      {
+        "pattern": "1706\\.03762",
+        "passed": true
+      },
+      {
+        "pattern": "Ashish\\s+Vaswani",
+        "passed": true
+      },
+      {
+        "pattern": "Noam\\s+Shazeer",
+        "passed": true
+      },
+      {
+        "pattern": "12\\s+Jun(?:e)?\\s+2017|Jun(?:e)?\\s+12,?\\s+2017|2017-06-12",
+        "passed": true
+      }
+    ],
+    "evidence": [
+      {
+        "url": "https://arxiv.org/abs/1706.03762",
+        "quote": "Title:Attention Is All You Need",
+        "source_matches": true,
+        "quote_observed": true
+      },
+      {
+        "url": "https://arxiv.org/abs/1706.03762",
+        "quote": "arXiv:1706.03762 [cs.CL]",
+        "source_matches": true,
+        "quote_observed": true
+      },
+      {
+        "url": "https://arxiv.org/abs/1706.03762",
+        "quote": "Authors:Ashish Vaswani, Noam Shazeer",
+        "source_matches": true,
+        "quote_observed": true
+      },
+      {
+        "url": "https://arxiv.org/abs/1706.03762",
+        "quote": "[Submitted on 12 Jun 2017 (v1), last revised 2 Aug 2023 (this version, v7)]",
+        "source_matches": true,
+        "quote_observed": true
+      }
+    ],
+    "forbidden_network_or_file_calls": 0
+  },
+  "preparation_ms": 43.50234000000637,
+  "host_elapsed_ms": 35973.18100500002,
+  "verification_ms": 5.277807999984361,
+  "task_elapsed_ms": 35982.996021000086,
+  "usage": {
+    "input_tokens": 224464,
+    "cached_input_tokens": 196608,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 695,
+    "reasoning_output_tokens": 38
+  },
+  "tool_calls": 10,
+  "tool_failures": 0,
+  "tool_elapsed_ms": 2948.2688690000214,
+  "response_bytes": 64633,
+  "response_characters": 64620,
+  "forbidden_host_calls": 0,
+  "cost_usd": null,
+  "timed_out": false,
+  "trace_file": "zen-arxiv-paper-1.json",
+  "prompt": "Complete this read-only public website task using ONLY the browser MCP tools. You must inspect the live page; do not answer from memory. You choose your own observations, selectors and actions. Do not use HTTP/API clients, fetch, network replay, files, shell, other agents, or non-browser tools. Browser DOM evaluation is allowed for text extraction, but must not make network requests. Do not visit API endpoints. Do not sign in, create accounts, post messages, buy, or change account settings. Do not solve CAPTCHAs or bypass access challenges; report them. You may follow links, use site search and recover from errors. Stay on the task site. Maximum 30 browser calls. Verify all requested facts and finish with JSON {\"answer\":\"concise answer covering every requested fact\",\"evidence\":[{\"url\":\"source page URL\",\"quote\":\"a short exact supporting quote you observed in browser output\"}]}. Evidence quotes must be copied exactly from an observation. Do not claim success when blocked.\nYou control the owned Zen tab using Callisto in synthetic-dom input mode. Navigation starts loading; read a fresh snapshot before using refs. You may use run, batches, targeted observations, extraction and supported explicit waits. Do not enable or change input mode.\nStart URL: https://arxiv.org/\nTask: Find the paper titled exactly “Attention Is All You Need” on arXiv. Report its arXiv identifier, first two authors and original submission date. Cite the abstract page and a short supporting quote.",
+  "host": {
+    "code": 0,
+    "signal": null,
+    "error": null,
+    "timed_out": false,
+    "elapsed_ms": 35973.18100500002,
+    "usage": {
+      "input_tokens": 224464,
+      "cached_input_tokens": 196608,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 695,
+      "reasoning_output_tokens": 38
+    },
+    "final": "{\"answer\":\"“Attention Is All You Need” — arXiv:1706.03762. First two authors: Ashish Vaswani and Noam Shazeer. Original submission date: 12 June 2017.\",\"evidence\":[{\"url\":\"https://arxiv.org/abs/1706.03762\",\"quote\":\"Title:Attention Is All You Need\"},{\"url\":\"https://arxiv.org/abs/1706.03762\",\"quote\":\"arXiv:1706.03762 [cs.CL]\"},{\"url\":\"https://arxiv.org/abs/1706.03762\",\"quote\":\"Authors:Ashish Vaswani, Noam Shazeer\"},{\"url\":\"https://arxiv.org/abs/1706.03762\",\"quote\":\"[Submitted on 12 Jun 2017 (v1), last revised 2 Aug 2023 (this version, v7)]\"}]}",
+    "events": [
+      {
+        "type": "thread.started",
+        "thread_id": "01a1e52e-52be-74f0-9428-3742df19b4ce"
+      },
+      {
+        "type": "turn.started"
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_0",
+          "type": "agent_message",
+          "text": "I’ll search arXiv and check the paper’s abstract page for the requested details."
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_1",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto_snapshot",
+          "arguments": {
+            "include_text": true,
+            "max_chars": 14000
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_1",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto_snapshot",
+          "arguments": {
+            "include_text": true,
+            "max_chars": 14000
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"next_offset\":null,\"offset\":0,\"order_changed\":false,\"revision\":\"ax-4840236282725928499:2\",\"text\":\"heading \\\"Ready for a public-site task\\\"\",\"title\":\"Browser benchmark start\",\"truncated\":false,\"url\":\"http://127.0.0.1:41079/\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\"]}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_2",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto_navigate",
+          "arguments": {
+            "url": "https://arxiv.org/"
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_2",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto_navigate",
+          "arguments": {
+            "url": "https://arxiv.org/"
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"navigationStarted\":true}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_3",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto_snapshot",
+          "arguments": {
+            "include_text": true,
+            "max_chars": 16000
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_3",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto_snapshot",
+          "arguments": {
+            "include_text": true,
+            "max_chars": 16000
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"navigationStarted\":true,\"next_offset\":233,\"offset\":0,\"order_changed\":false,\"revision\":\"ax-10882189782010410741:1\",\"text\":\"[ax-16787437245339095017] link \\\"Skip to main content\\\"\\n[ax-7937152563854971410] link \\\"archive home\\\"\\n[ax-6615824907026331981] link \\\"Search\\\"\\n[ax-13569453471677933674] link \\\"Submit\\\"\\n[ax-16196278419360165531] link \\\"Donate\\\"\\n[ax-4162104580367705642] link \\\"Log in\\\"\\nparagraph \\\"arXiv is a free distribution service and an open-access archive for more than 3.2 million scholarly articles in the fields of physics, mathematics, computer science, quantitative biology, quantitative\\\"\\n[ax-12363337043464090202] search \\\"Subject search and browse:\\\"\\n[ax-18255057794825207728] combobox \\\"Subject search and browse:\\\"\\n[ax-9361597545497402350] button \\\"\\\"\\n[ax-30751449656339457] button \\\"Form Interface\\\"\\n[ax-6863127529562138005] button \\\"Catchup\\\"\\nheading \\\"Physics\\\"\\nlistitem \\\"Astrophysics (astro-ph new, recent, search) Astrophysics of Galaxies; Cosmology and Nongalactic Astrophysics; Earth and Planetary Astrophysics; High Energy Astrophysical Phenomena; Instrumentation and\\\"\\n[ax-5488187050729860812] link \\\"Astrophysics\\\"\\n[ax-3729359627125651164] link \\\"new astro-ph\\\"\\n[ax-4214653549158239825] link \\\"recent astro-ph\\\"\\n[ax-2968761261166999997] link \\\"search astro-ph\\\"\\n[ax-5227222820200109850] link \\\"Astrophysics Astrophysics of Galaxies\\\"\\n[ax-14976877092567206764] link \\\"Astrophysics Cosmology and Nongalactic Astrophysics\\\"\\n[ax-15663681496129590507] link \\\"Astrophysics Earth and Planetary Astrophysics\\\"\\n[ax-2607329015526584984] link \\\"Astrophysics High Energy Astrophysical Phenomena\\\"\\n[ax-9317691012940580647] link \\\"Astrophysics Instrumentation and Methods for Astrophysics\\\"\\n[ax-16707101057635381419] link \\\"Astrophysics Solar and Stellar Astrophysics\\\"\\nlistitem \\\"Condensed Matter (cond-mat new, recent, search) Disordered Systems and Neural Networks; Materials Science; Mesoscale and Nanoscale Physics; Other Condensed Matter; Quantum Gases; Soft Condensed Matter\\\"\\n[ax-17958491993851774098] link \\\"Condensed Matter\\\"\\n[ax-10014449035212908379] link \\\"new cond-mat\\\"\\n[ax-15493900355477457912] link \\\"recent cond-mat\\\"\\n[ax-10272804483769545316] link \\\"search cond-mat\\\"\\n[ax-13564173256067970515] link \\\"Condensed Matter Disordered Systems and Neural Networks\\\"\\n[ax-7821994890655402722] link \\\"Condensed Matter Materials Science\\\"\\n[ax-6757112292017861842] link \\\"Condensed Matter Mesoscale and Nanoscale Physics\\\"\\n[ax-11281605258246988226] link \\\"Condensed Matter Other Condensed Matter\\\"\\n[ax-7481665987814002497] link \\\"Condensed Matter Quantum Gases\\\"\\n[ax-2356482343949539277] link \\\"Condensed Matter Soft Condensed Matter\\\"\\n[ax-17231969347049766355] link \\\"Condensed Matter Statistical Mechanics\\\"\\n[ax-13681371072837859385] link \\\"Condensed Matter Strongly Correlated Electrons\\\"\\n[ax-13619095478823815667] link \\\"Condensed Matter Superconductivity\\\"\\nlistitem \\\"General Relativity and Quantum Cosmology (gr-qc new, recent, search)\\\"\\n[ax-4508031164045688648] link \\\"General Relativity and Quantum Cosmology\\\"\\n[ax-8449968171431358261] link \\\"new gr-qc\\\"\\n[ax-18019391227869166299] link \\\"recent gr-qc\\\"\\n[ax-2175819429770875385] link \\\"search gr-qc\\\"\\nlistitem \\\"High Energy Physics - Experiment (hep-ex new, recent, search)\\\"\\n[ax-7204420304735187702] link \\\"High Energy Physics - Experiment\\\"\\n[ax-9129822191483688779] link \\\"new hep-ex\\\"\\n[ax-7599591004253355145] link \\\"recent hep-ex\\\"\\n[ax-17269667828558355333] link \\\"search hep-ex\\\"\\nlistitem \\\"High Energy Physics - Lattice (hep-lat new, recent, search)\\\"\\n[ax-30029099143743100] link \\\"High Energy Physics - Lattice\\\"\\n[ax-17893211550287804609] link \\\"new hep-lat\\\"\\n[ax-16906217294813572119] link \\\"recent hep-lat\\\"\\n[ax-13773754277289706765] link \\\"search hep-lat\\\"\\nlistitem \\\"High Energy Physics - Phenomenology (hep-ph new, recent, search)\\\"\\n[ax-9003279099983378461] link \\\"High Energy Physics - Phenomenology\\\"\\n[ax-9874385038027951207] link \\\"new hep-ph\\\"\\n[ax-12624280018779934301] link \\\"recent hep-ph\\\"\\n[ax-17193768463015976125] link \\\"search hep-ph\\\"\\nlistitem \\\"High Energy Physics - Theory (hep-th new, recent, search)\\\"\\n[ax-12349577079458859784] link \\\"High Energy Physics - Theory\\\"\\n[ax-10279514997866920359] link \\\"new hep-th\\\"\\n[ax-17907912255304042720] link \\\"recent hep-th\\\"\\n[ax-11634261413465466405] link \\\"search hep-th\\\"\\nlistitem \\\"Mathematical Physics (math-ph new, recent, search)\\\"\\n[ax-6956721475344956910] link \\\"Mathematical Physics\\\"\\n[ax-14620798039067354411] link \\\"new math-ph\\\"\\n[ax-17995372711120537945] link \\\"recent math-ph\\\"\\n[ax-9250298235524016952] link \\\"search math-ph\\\"\\nlistitem \\\"Nonlinear Sciences (nlin new, recent, search) includes: Adaptation and Self-Organizing Systems; Cellular Automata and Lattice Gases; Chaotic Dynamics; Exactly Solvable and Integrable Systems; Pattern \\\"\\n[ax-12783037184806330529] link \\\"Nonlinear Sciences\\\"\\n[ax-14780335396031914727] link \\\"new nlin\\\"\\n[ax-14928383895132277762] link \\\"recent nlin\\\"\\n[ax-8776333042517551652] link \\\"search nlin\\\"\\n[ax-13856641848454384428] link \\\"Nonlinear Sciences Adaptation and Self-Organizing Systems\\\"\\n[ax-7522131549032901165] link \\\"Nonlinear Sciences Cellular Automata and Lattice Gases\\\"\\n[ax-946419491663422254] link \\\"Nonlinear Sciences Chaotic Dynamics\\\"\\n[ax-15202374675277520977] link \\\"Nonlinear Sciences Exactly Solvable and Integrable Systems\\\"\\n[ax-15618386692513351433] link \\\"Nonlinear Sciences Pattern Formation and Solitons\\\"\\nlistitem \\\"Nuclear Experiment (nucl-ex new, recent, search)\\\"\\n[ax-17634872231092169110] link \\\"Nuclear Experiment\\\"\\n[ax-17195662098196279820] link \\\"new nucl-ex\\\"\\n[ax-7039302604155631952] link \\\"recent nucl-ex\\\"\\n[ax-8626252717629579023] link \\\"search nucl-ex\\\"\\nlistitem \\\"Nuclear Theory (nucl-th new, recent, search)\\\"\\n[ax-6145707476197069071] link \\\"Nuclear Theory\\\"\\n[ax-15993017771329191802] link \\\"new nucl-th\\\"\\n[ax-1640311925092766253] link \\\"recent nucl-th\\\"\\n[ax-15118258325199261383] link \\\"search nucl-th\\\"\\nlistitem \\\"Physics (physics new, recent, search) includes: Accelerator Physics; Applied Physics; Atmospheric and Oceanic Physics; Atomic and Molecular Clusters; Atomic Physics; Biological Physics; Chemical Physi\\\"\\n[ax-2698474088128957687] link \\\"Physics\\\"\\n[ax-658082856604393932] link \\\"new physics\\\"\\n[ax-11863919090826780585] link \\\"recent physics\\\"\\n[ax-16542299484707392287] link \\\"search physics\\\"\\n[ax-15818073247175744815] link \\\"Physics Accelerator Physics\\\"\\n[ax-15994812266727373421] link \\\"Physics Applied Physics\\\"\\n[ax-12422077796081755536] link \\\"Physics Atmospheric and Oceanic Physics\\\"\\n[ax-18203330546030419555] link \\\"Physics Atomic and Molecular Clusters\\\"\\n[ax-7990642386738425483] link \\\"Physics Atomic Physics\\\"\\n[ax-6195797584301628858] link \\\"Physics Biological Physics\\\"\\n[ax-10375453533133394532] link \\\"Physics Chemical Physics\\\"\\n[ax-13136483009662539447] link \\\"Physics Classical Physics\\\"\\n[ax-11663289842071439463] link \\\"Physics Computational Physics\\\"\\n[ax-6605981505693188933] link \\\"Physics Data Analysis, Statistics and Probability\\\"\\n[ax-1907692479899398281] link \\\"Physics Fluid Dynamics\\\"\\n[ax-13518854183711880941] link \\\"Physics General Physics\\\"\\n[ax-18099192684754035052] link \\\"Physics Geophysics\\\"\\n[ax-8125481230055132004] link \\\"Physics History and Philosophy of Physics\\\"\\n[ax-9745181514628322994] link \\\"Physics Instrumentation and Detectors\\\"\\n[ax-17597052560651292124] link \\\"Physics Medical Physics\\\"\\n[ax-14918038013432754171] link \\\"Physics Optics\\\"\\n[ax-11856743846912914835] link \\\"Physics Physics and Society\\\"\\n[ax-16153537940911418175] link \\\"Physics Physics Education\\\"\\n[ax-16855630868024950122] link \\\"Physics Plasma Physics\\\"\\n[ax-17499336496386144786] link \\\"Physics Popular Physics\\\"\\n[ax-8030177495416296485] link \\\"Physics Space Physics\\\"\\nlistitem \\\"Quantum Physics (quant-ph new, recent, search)\\\"\\n[ax-10472125520831811448] link \\\"Quantum Physics\\\"\\n[ax-4196794869833875229] link \\\"new quant-ph\\\"\\n[ax-8819047996745219143] link \\\"recent quant-ph\\\"\\n[ax-4885775195110641771] link \\\"search quant-ph\\\"\\nheading \\\"Mathematics\\\"\\nlistitem \\\"Mathematics (math new, recent, search) includes: (see detailed description): Algebraic Geometry; Algebraic Topology; Analysis of PDEs; Category Theory; Classical Analysis and ODEs; Combinatorics; Comm\\\"\\n[ax-742002848165934550] link \\\"Mathematics\\\"\\n[ax-17425288960989660002] link \\\"new math\\\"\\n[ax-3590832494395069636] link \\\"recent math\\\"\\n[ax-2020317694736651629] link \\\"search math\\\"\\n[ax-1018002607494478498] link \\\"detailed description Mathematics\\\"\\n[ax-7890261482417563620] link \\\"Mathematics Algebraic Geometry\\\"\\n[ax-4869140694099591451] link \\\"Mathematics Algebraic Topology\\\"\\n[ax-10349176223075388189] link \\\"Mathematics Analysis of PDEs\\\"\\n[ax-13216665460927682055] link \\\"Mathematics Category Theory\\\"\\n[ax-796916261525072532] link \\\"Mathematics Classical Analysis and ODEs\\\"\\n[ax-2467192314351142974] link \\\"Mathematics Combinatorics\\\"\\n[ax-7905599224672140060] link \\\"Mathematics Commutative Algebra\\\"\\n[ax-4955539622656581237] link \\\"Mathematics Complex Variables\\\"\\n[ax-12923669378216663474] link \\\"Mathematics Differential Geometry\\\"\\n[ax-6140786880162984608] link \\\"Mathematics Dynamical Systems\\\"\\n[ax-2671697982294142976] link \\\"Mathematics Functional Analysis\\\"\\n[ax-17391711981337234080] link \\\"Mathematics General Mathematics\\\"\\n[ax-12482383718872573869] link \\\"Mathematics General Topology\\\"\\n[ax-5639956812101886185] link \\\"Mathematics Geometric Topology\\\"\\n[ax-18204714449611251079] link \\\"Mathematics Group Theory\\\"\\n[ax-5270787157826583200] link \\\"Mathematics History and Overview\\\"\\n[ax-18199856169447147631] link \\\"Mathematics Information Theory\\\"\\n[ax-12061911798908677720] link \\\"Mathematics K-Theory and Homology\\\"\\n[ax-5509955437098051867] link \\\"Mathematics Logic\\\"\\n[ax-6176489173816784369] link \\\"Mathematics Mathematical Physics\\\"\\n[ax-8193131799464310931] link \\\"Mathematics Metric Geometry\\\"\\n[ax-11381484154079730175] link \\\"Mathematics Number Theory\\\"\\n[ax-1685545414552957978] link \\\"Mathematics Numerical Analysis\\\"\\n[ax-5687115187700384374] link \\\"Mathematics Operator Algebras\\\"\\n[ax-5840109276203634885] link \\\"Mathematics Optimization and Control\\\"\\n[ax-15381386466143231204] link \\\"Mathematics Probability\\\"\\n[ax-17274594332538210698] link \\\"Mathematics Quantum Algebra\\\"\\n[ax-14506923042519258120] link \\\"Mathematics Representation Theory\\\"\\n[ax-3923263047583127473] link \\\"Mathematics Rings and Algebras\\\"\\n[ax-7345991799689407940] link \\\"Mathematics Spectral Theory\\\"\\n[ax-13644524910980532565] link \\\"Mathematics Statistics Theory\\\"\\n[ax-5186790783348730427] link \\\"Mathematics Symplectic Geometry\\\"\\nheading \\\"Computer Science\\\"\\nlistitem \\\"Computing Research Repository (CoRR new, recent, search) includes: (see detailed description): Artificial Intelligence; Computation and Language; Computational Complexity; Computational Engineering, F\\\"\\n[ax-6862925758017401038] link \\\"Computing Research Repository\\\"\\n[ax-16010392022025550678] link \\\"new CoRR\\\"\\n[ax-11754519922043463088] link \\\"recent CoRR\\\"\\n[ax-4996254243288788747] link \\\"search CoRR\\\"\\n[ax-17364767742331230190] link \\\"detailed description Computing Research Repository\\\"\\n[ax-3724847384725217226] link \\\"Computing Research Repository Artificial Intelligence\\\"\\n[ax-2202624544624915312] link \\\"Computing Research Repository Computation and Language\\\"\\n[ax-12348733775139041801] link \\\"Computing Research Repository Computational Complexity\\\"\\n[ax-10001994861369157462] link \\\"Computing Research Repository Computational Engineering, Finance, and Science\\\"\\n[ax-4487447928140213428] link \\\"Computing Research Repository Computational Geometry\\\"\\n[ax-7875026490864188113] link \\\"Computing Research Repository Computer Science and Game Theory\\\"\\n[ax-3340009637688554924] link \\\"Computing Research Repository Computer Vision and Pattern Recognition\\\"\\n[ax-3428736942396466067] link \\\"Computing Research Repository Computers and Society\\\"\\n[ax-5703862766542044924] link \\\"Computing Research Repository Cryptography and Security\\\"\\n[ax-11627936995562325574] link \\\"Computing Research Repository Data Structures and Algorithms\\\"\\n[ax-1652846480342106427] link \\\"Computing Research Repository Databases\\\"\\n[ax-683548455063193598] link \\\"Computing Research Repository Digital Libraries\\\"\\n[ax-1815621654753164944] link \\\"Computing Research Repository Discrete Mathematics\\\"\\n[ax-2769422729615992517] link \\\"Computing Research Repository Distributed, Parallel, and Cluster Computing\\\"\\n[ax-15229349224381777286] link \\\"Computing Research Repository Emerging Technologies\\\"\\n[ax-6487545786178150128] link \\\"Computing Research Repository Formal Languages and Automata Theory\\\"\\n[ax-5068306608193644829] link \\\"Computing Research Repository General Literature\\\"\\n[ax-13033200577772037900] link \\\"Computing Research Repository Graphics\\\"\\n[ax-9303865528895155534] link \\\"Computing Research Repository Hardware Architecture\\\"\\n[ax-11090116035023225482] link \\\"Computing Research Repository Human-Computer Interaction\\\"\\n[ax-15884410145746457602] link \\\"Computing Research Repository Information Retrieval\\\"\\n[ax-14908270756529366424] link \\\"Computing Research Repository Information Theory\\\"\\n[ax-12478687352154323692] link \\\"Computing Research Repository Logic in Computer Science\\\"\\n[ax-13688446017503601299] link \\\"Computing Research Repository Machine Learning\\\"\\n[ax-10477498356210561510] link \\\"Computing Research Repository Mathematical Software\\\"\\n[ax-2796776353754415671] link \\\"Computing Research Repository Multiagent Systems\\\"\\n[ax-15835222235053876362] link \\\"Computing Research Repository Multimedia\\\"\\n[ax-399001729089311014] link \\\"Computing Research Repository Networking and Internet Architecture\\\"\\n[ax-9459877063745615955] link \\\"Computing Research Repository Neural and Evolutionary Computing\\\"\\n[ax-13715219355991427839] link \\\"Computing Research Repository Numerical Analysis\\\"\\n[ax-11451327733279763860] link \\\"Computing Research Repository Operating Systems\\\"\\n[ax-2599017014484248411] link \\\"Computing Research Repository Other Computer Science\\\"\\n[ax-12062872030857877199] link \\\"Computing Research Repository Performance\\\"\\n[ax-9981136261051936145] link \\\"Computing Research Repository Programming Languages\\\"\\n[ax-13707461955128369795] link \\\"Computing Research Repository Robotics\\\"\\n[ax-15924049468187728845] link \\\"Computing Research Repository Social and Information Networks\\\"\\n[ax-12953884288510521286] link \\\"Computing Research Repository Software Engineering\\\"\\n[ax-7978874672363876133] link \\\"Computing Research Repository Sound\\\"\\n[ax-13505739139364753934] link \\\"Computing Research Repository Symbolic Computation\\\"\\n[ax-5171329781923558556] link \\\"Computing Research Repository Systems and Control\\\"\\nheading \\\"Quantitative Biology\\\"\\nlistitem \\\"Quantitative Biology (q-bio new, recent, search) includes: (see detailed description): Biomolecules; Cell Behavior; Genomics; Molecular Networks; Neurons and Cognition; Other Quantitative Biology; Pop\\\"\\n[ax-8997664806385912844] link \\\"Quantitative Biology\\\"\\n[ax-2273427821144588713] link \\\"new q-bio\\\"\\n[ax-2678577061705582105] link \\\"recent q-bio\\\"\\n[ax-1000524640331861923] link \\\"search q-bio\\\"\\n[ax-17730066953758950285] link \\\"detailed description Quantitative Biology\\\"\\n[ax-4351558563621988121] link \\\"Quantitative Biology Biomolecules\\\"\\n[ax-14550370147787469165] link \\\"Quantitative Biology Cell Behavior\\\"\\n[ax-12124411584935216814] link \\\"Quantitative Biology Genomics\\\"\\n[ax-1018036341441004520] link \\\"Quantitative Biology Molecular Networks\\\"\\n[ax-8855386497288057963] link \\\"Quantitative Biology Neurons and Cognition\\\"\\n[ax-15834745956819135678] link \\\"Quantitative Biology Other Quantitative Biology\\\"\\n[ax-9251392440139025738] link \\\"Quantitative Biology Populations and Evolution\\\"\\n[ax-15381516589141462796] link \\\"Quantitative Biology Quantitative Methods\\\"\\n[ax-13168300345185906458] link \\\"Quantitative Biology Subcellular Processes\\\"\\n[ax-1283349911148748829] link \\\"Quantitative Biology Tissues and Organs\\\"\\nheading \\\"Quantitative Finance\\\"\\nlistitem \\\"Quantitative Finance (q-fin new, recent, search) includes: (see detailed description): Computational Finance; Economics; General Finance; Mathematical Finance; Portfolio Management; Pricing of Securit\\\"\\n[ax-3356608638660798728] link \\\"Quantitative Finance\\\"\\n[ax-2702690602494701108] link \\\"new q-fin\\\"\\n[ax-12696114489944213826] link \\\"recent q-fin\\\"\\n[ax-17178846461999417414] link \\\"search q-fin\\\"\\n[ax-4329227208775213016] link \\\"detailed description Quantitative Finance\\\"\\n[ax-1020330482005630783] link \\\"Quantitative Finance Computational Finance\\\"\\n[ax-6110508086212903000] link \\\"Quantitative Finance Economics\\\"\\n[ax-10592806690558601529] link \\\"Quantitative Finance General Finance\\\"\",\"title\":\"arXiv.org e-Print archive\",\"truncated\":true,\"url\":\"https://arxiv.org/\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\",\"Continue with next_offset and revision to read this captured snapshot.\"]}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_4",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto_click",
+          "arguments": {
+            "ref": "ax-6615824907026331981"
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_4",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto_click",
+          "arguments": {
+            "ref": "ax-6615824907026331981"
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"completed\":true}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_5",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto_snapshot",
+          "arguments": {
+            "include_text": true,
+            "max_chars": 12000
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_5",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto_snapshot",
+          "arguments": {
+            "include_text": true,
+            "max_chars": 12000
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"next_offset\":183,\"offset\":0,\"order_changed\":false,\"revision\":\"ax-10882189782010410741:2\",\"text\":\"[ax-16787437245339095017] link \\\"Skip to main content\\\"\\n[ax-7937152563854971410] link \\\"archive home\\\"\\n[ax-6615824907026331981] link \\\"Search\\\"\\n[ax-13569453471677933674] link \\\"Submit\\\"\\n[ax-16196278419360165531] link \\\"Donate\\\"\\n[ax-4162104580367705642] link \\\"Log in\\\"\\n[ax-7424710729208110965] search \\\"Search arXiv Press Enter to search · Advanced search\\\"\\n[ax-9029605794731664717] textbox \\\"Search arXiv\\\"\\nparagraph \\\"Press Enter to search · Advanced search\\\"\\n[ax-5597895106394581800] link \\\"Advanced search\\\"\\nparagraph \\\"arXiv is a free distribution service and an open-access archive for more than 3.2 million scholarly articles in the fields of physics, mathematics, computer science, quantitative biology, quantitative\\\"\\n[ax-12363337043464090202] search \\\"Subject search and browse:\\\"\\n[ax-18255057794825207728] combobox \\\"Subject search and browse:\\\"\\n[ax-9361597545497402350] button \\\"\\\"\\n[ax-30751449656339457] button \\\"Form Interface\\\"\\n[ax-6863127529562138005] button \\\"Catchup\\\"\\nheading \\\"Physics\\\"\\nlistitem \\\"Astrophysics (astro-ph new, recent, search) Astrophysics of Galaxies; Cosmology and Nongalactic Astrophysics; Earth and Planetary Astrophysics; High Energy Astrophysical Phenomena; Instrumentation and\\\"\\n[ax-5488187050729860812] link \\\"Astrophysics\\\"\\n[ax-3729359627125651164] link \\\"new astro-ph\\\"\\n[ax-4214653549158239825] link \\\"recent astro-ph\\\"\\n[ax-2968761261166999997] link \\\"search astro-ph\\\"\\n[ax-5227222820200109850] link \\\"Astrophysics Astrophysics of Galaxies\\\"\\n[ax-14976877092567206764] link \\\"Astrophysics Cosmology and Nongalactic Astrophysics\\\"\\n[ax-15663681496129590507] link \\\"Astrophysics Earth and Planetary Astrophysics\\\"\\n[ax-2607329015526584984] link \\\"Astrophysics High Energy Astrophysical Phenomena\\\"\\n[ax-9317691012940580647] link \\\"Astrophysics Instrumentation and Methods for Astrophysics\\\"\\n[ax-16707101057635381419] link \\\"Astrophysics Solar and Stellar Astrophysics\\\"\\nlistitem \\\"Condensed Matter (cond-mat new, recent, search) Disordered Systems and Neural Networks; Materials Science; Mesoscale and Nanoscale Physics; Other Condensed Matter; Quantum Gases; Soft Condensed Matter\\\"\\n[ax-17958491993851774098] link \\\"Condensed Matter\\\"\\n[ax-10014449035212908379] link \\\"new cond-mat\\\"\\n[ax-15493900355477457912] link \\\"recent cond-mat\\\"\\n[ax-10272804483769545316] link \\\"search cond-mat\\\"\\n[ax-13564173256067970515] link \\\"Condensed Matter Disordered Systems and Neural Networks\\\"\\n[ax-7821994890655402722] link \\\"Condensed Matter Materials Science\\\"\\n[ax-6757112292017861842] link \\\"Condensed Matter Mesoscale and Nanoscale Physics\\\"\\n[ax-11281605258246988226] link \\\"Condensed Matter Other Condensed Matter\\\"\\n[ax-7481665987814002497] link \\\"Condensed Matter Quantum Gases\\\"\\n[ax-2356482343949539277] link \\\"Condensed Matter Soft Condensed Matter\\\"\\n[ax-17231969347049766355] link \\\"Condensed Matter Statistical Mechanics\\\"\\n[ax-13681371072837859385] link \\\"Condensed Matter Strongly Correlated Electrons\\\"\\n[ax-13619095478823815667] link \\\"Condensed Matter Superconductivity\\\"\\nlistitem \\\"General Relativity and Quantum Cosmology (gr-qc new, recent, search)\\\"\\n[ax-4508031164045688648] link \\\"General Relativity and Quantum Cosmology\\\"\\n[ax-8449968171431358261] link \\\"new gr-qc\\\"\\n[ax-18019391227869166299] link \\\"recent gr-qc\\\"\\n[ax-2175819429770875385] link \\\"search gr-qc\\\"\\nlistitem \\\"High Energy Physics - Experiment (hep-ex new, recent, search)\\\"\\n[ax-7204420304735187702] link \\\"High Energy Physics - Experiment\\\"\\n[ax-9129822191483688779] link \\\"new hep-ex\\\"\\n[ax-7599591004253355145] link \\\"recent hep-ex\\\"\\n[ax-17269667828558355333] link \\\"search hep-ex\\\"\\nlistitem \\\"High Energy Physics - Lattice (hep-lat new, recent, search)\\\"\\n[ax-30029099143743100] link \\\"High Energy Physics - Lattice\\\"\\n[ax-17893211550287804609] link \\\"new hep-lat\\\"\\n[ax-16906217294813572119] link \\\"recent hep-lat\\\"\\n[ax-13773754277289706765] link \\\"search hep-lat\\\"\\nlistitem \\\"High Energy Physics - Phenomenology (hep-ph new, recent, search)\\\"\\n[ax-9003279099983378461] link \\\"High Energy Physics - Phenomenology\\\"\\n[ax-9874385038027951207] link \\\"new hep-ph\\\"\\n[ax-12624280018779934301] link \\\"recent hep-ph\\\"\\n[ax-17193768463015976125] link \\\"search hep-ph\\\"\\nlistitem \\\"High Energy Physics - Theory (hep-th new, recent, search)\\\"\\n[ax-12349577079458859784] link \\\"High Energy Physics - Theory\\\"\\n[ax-10279514997866920359] link \\\"new hep-th\\\"\\n[ax-17907912255304042720] link \\\"recent hep-th\\\"\\n[ax-11634261413465466405] link \\\"search hep-th\\\"\\nlistitem \\\"Mathematical Physics (math-ph new, recent, search)\\\"\\n[ax-6956721475344956910] link \\\"Mathematical Physics\\\"\\n[ax-14620798039067354411] link \\\"new math-ph\\\"\\n[ax-17995372711120537945] link \\\"recent math-ph\\\"\\n[ax-9250298235524016952] link \\\"search math-ph\\\"\\nlistitem \\\"Nonlinear Sciences (nlin new, recent, search) includes: Adaptation and Self-Organizing Systems; Cellular Automata and Lattice Gases; Chaotic Dynamics; Exactly Solvable and Integrable Systems; Pattern \\\"\\n[ax-12783037184806330529] link \\\"Nonlinear Sciences\\\"\\n[ax-14780335396031914727] link \\\"new nlin\\\"\\n[ax-14928383895132277762] link \\\"recent nlin\\\"\\n[ax-8776333042517551652] link \\\"search nlin\\\"\\n[ax-13856641848454384428] link \\\"Nonlinear Sciences Adaptation and Self-Organizing Systems\\\"\\n[ax-7522131549032901165] link \\\"Nonlinear Sciences Cellular Automata and Lattice Gases\\\"\\n[ax-946419491663422254] link \\\"Nonlinear Sciences Chaotic Dynamics\\\"\\n[ax-15202374675277520977] link \\\"Nonlinear Sciences Exactly Solvable and Integrable Systems\\\"\\n[ax-15618386692513351433] link \\\"Nonlinear Sciences Pattern Formation and Solitons\\\"\\nlistitem \\\"Nuclear Experiment (nucl-ex new, recent, search)\\\"\\n[ax-17634872231092169110] link \\\"Nuclear Experiment\\\"\\n[ax-17195662098196279820] link \\\"new nucl-ex\\\"\\n[ax-7039302604155631952] link \\\"recent nucl-ex\\\"\\n[ax-8626252717629579023] link \\\"search nucl-ex\\\"\\nlistitem \\\"Nuclear Theory (nucl-th new, recent, search)\\\"\\n[ax-6145707476197069071] link \\\"Nuclear Theory\\\"\\n[ax-15993017771329191802] link \\\"new nucl-th\\\"\\n[ax-1640311925092766253] link \\\"recent nucl-th\\\"\\n[ax-15118258325199261383] link \\\"search nucl-th\\\"\\nlistitem \\\"Physics (physics new, recent, search) includes: Accelerator Physics; Applied Physics; Atmospheric and Oceanic Physics; Atomic and Molecular Clusters; Atomic Physics; Biological Physics; Chemical Physi\\\"\\n[ax-2698474088128957687] link \\\"Physics\\\"\\n[ax-658082856604393932] link \\\"new physics\\\"\\n[ax-11863919090826780585] link \\\"recent physics\\\"\\n[ax-16542299484707392287] link \\\"search physics\\\"\\n[ax-15818073247175744815] link \\\"Physics Accelerator Physics\\\"\\n[ax-15994812266727373421] link \\\"Physics Applied Physics\\\"\\n[ax-12422077796081755536] link \\\"Physics Atmospheric and Oceanic Physics\\\"\\n[ax-18203330546030419555] link \\\"Physics Atomic and Molecular Clusters\\\"\\n[ax-7990642386738425483] link \\\"Physics Atomic Physics\\\"\\n[ax-6195797584301628858] link \\\"Physics Biological Physics\\\"\\n[ax-10375453533133394532] link \\\"Physics Chemical Physics\\\"\\n[ax-13136483009662539447] link \\\"Physics Classical Physics\\\"\\n[ax-11663289842071439463] link \\\"Physics Computational Physics\\\"\\n[ax-6605981505693188933] link \\\"Physics Data Analysis, Statistics and Probability\\\"\\n[ax-1907692479899398281] link \\\"Physics Fluid Dynamics\\\"\\n[ax-13518854183711880941] link \\\"Physics General Physics\\\"\\n[ax-18099192684754035052] link \\\"Physics Geophysics\\\"\\n[ax-8125481230055132004] link \\\"Physics History and Philosophy of Physics\\\"\\n[ax-9745181514628322994] link \\\"Physics Instrumentation and Detectors\\\"\\n[ax-17597052560651292124] link \\\"Physics Medical Physics\\\"\\n[ax-14918038013432754171] link \\\"Physics Optics\\\"\\n[ax-11856743846912914835] link \\\"Physics Physics and Society\\\"\\n[ax-16153537940911418175] link \\\"Physics Physics Education\\\"\\n[ax-16855630868024950122] link \\\"Physics Plasma Physics\\\"\\n[ax-17499336496386144786] link \\\"Physics Popular Physics\\\"\\n[ax-8030177495416296485] link \\\"Physics Space Physics\\\"\\nlistitem \\\"Quantum Physics (quant-ph new, recent, search)\\\"\\n[ax-10472125520831811448] link \\\"Quantum Physics\\\"\\n[ax-4196794869833875229] link \\\"new quant-ph\\\"\\n[ax-8819047996745219143] link \\\"recent quant-ph\\\"\\n[ax-4885775195110641771] link \\\"search quant-ph\\\"\\nheading \\\"Mathematics\\\"\\nlistitem \\\"Mathematics (math new, recent, search) includes: (see detailed description): Algebraic Geometry; Algebraic Topology; Analysis of PDEs; Category Theory; Classical Analysis and ODEs; Combinatorics; Comm\\\"\\n[ax-742002848165934550] link \\\"Mathematics\\\"\\n[ax-17425288960989660002] link \\\"new math\\\"\\n[ax-3590832494395069636] link \\\"recent math\\\"\\n[ax-2020317694736651629] link \\\"search math\\\"\\n[ax-1018002607494478498] link \\\"detailed description Mathematics\\\"\\n[ax-7890261482417563620] link \\\"Mathematics Algebraic Geometry\\\"\\n[ax-4869140694099591451] link \\\"Mathematics Algebraic Topology\\\"\\n[ax-10349176223075388189] link \\\"Mathematics Analysis of PDEs\\\"\\n[ax-13216665460927682055] link \\\"Mathematics Category Theory\\\"\\n[ax-796916261525072532] link \\\"Mathematics Classical Analysis and ODEs\\\"\\n[ax-2467192314351142974] link \\\"Mathematics Combinatorics\\\"\\n[ax-7905599224672140060] link \\\"Mathematics Commutative Algebra\\\"\\n[ax-4955539622656581237] link \\\"Mathematics Complex Variables\\\"\\n[ax-12923669378216663474] link \\\"Mathematics Differential Geometry\\\"\\n[ax-6140786880162984608] link \\\"Mathematics Dynamical Systems\\\"\\n[ax-2671697982294142976] link \\\"Mathematics Functional Analysis\\\"\\n[ax-17391711981337234080] link \\\"Mathematics General Mathematics\\\"\\n[ax-12482383718872573869] link \\\"Mathematics General Topology\\\"\\n[ax-5639956812101886185] link \\\"Mathematics Geometric Topology\\\"\\n[ax-18204714449611251079] link \\\"Mathematics Group Theory\\\"\\n[ax-5270787157826583200] link \\\"Mathematics History and Overview\\\"\\n[ax-18199856169447147631] link \\\"Mathematics Information Theory\\\"\\n[ax-12061911798908677720] link \\\"Mathematics K-Theory and Homology\\\"\\n[ax-5509955437098051867] link \\\"Mathematics Logic\\\"\\n[ax-6176489173816784369] link \\\"Mathematics Mathematical Physics\\\"\\n[ax-8193131799464310931] link \\\"Mathematics Metric Geometry\\\"\\n[ax-11381484154079730175] link \\\"Mathematics Number Theory\\\"\\n[ax-1685545414552957978] link \\\"Mathematics Numerical Analysis\\\"\\n[ax-5687115187700384374] link \\\"Mathematics Operator Algebras\\\"\\n[ax-5840109276203634885] link \\\"Mathematics Optimization and Control\\\"\\n[ax-15381386466143231204] link \\\"Mathematics Probability\\\"\\n[ax-17274594332538210698] link \\\"Mathematics Quantum Algebra\\\"\\n[ax-14506923042519258120] link \\\"Mathematics Representation Theory\\\"\\n[ax-3923263047583127473] link \\\"Mathematics Rings and Algebras\\\"\\n[ax-7345991799689407940] link \\\"Mathematics Spectral Theory\\\"\\n[ax-13644524910980532565] link \\\"Mathematics Statistics Theory\\\"\\n[ax-5186790783348730427] link \\\"Mathematics Symplectic Geometry\\\"\\nheading \\\"Computer Science\\\"\\nlistitem \\\"Computing Research Repository (CoRR new, recent, search) includes: (see detailed description): Artificial Intelligence; Computation and Language; Computational Complexity; Computational Engineering, F\\\"\\n[ax-6862925758017401038] link \\\"Computing Research Repository\\\"\\n[ax-16010392022025550678] link \\\"new CoRR\\\"\\n[ax-11754519922043463088] link \\\"recent CoRR\\\"\\n[ax-4996254243288788747] link \\\"search CoRR\\\"\\n[ax-17364767742331230190] link \\\"detailed description Computing Research Repository\\\"\\n[ax-3724847384725217226] link \\\"Computing Research Repository Artificial Intelligence\\\"\\n[ax-2202624544624915312] link \\\"Computing Research Repository Computation and Language\\\"\\n[ax-12348733775139041801] link \\\"Computing Research Repository Computational Complexity\\\"\\n[ax-10001994861369157462] link \\\"Computing Research Repository Computational Engineering, Finance, and Science\\\"\\n[ax-4487447928140213428] link \\\"Computing Research Repository Computational Geometry\\\"\\n[ax-7875026490864188113] link \\\"Computing Research Repository Computer Science and Game Theory\\\"\\n[ax-3340009637688554924] link \\\"Computing Research Repository Computer Vision and Pattern Recognition\\\"\\n[ax-3428736942396466067] link \\\"Computing Research Repository Computers and Society\\\"\\n[ax-5703862766542044924] link \\\"Computing Research Repository Cryptography and Security\\\"\\n[ax-11627936995562325574] link \\\"Computing Research Repository Data Structures and Algorithms\\\"\\n[ax-1652846480342106427] link \\\"Computing Research Repository Databases\\\"\\n[ax-683548455063193598] link \\\"Computing Research Repository Digital Libraries\\\"\\n[ax-1815621654753164944] link \\\"Computing Research Repository Discrete Mathematics\\\"\",\"title\":\"arXiv.org e-Print archive\",\"truncated\":true,\"url\":\"https://arxiv.org/\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\",\"Continue with next_offset and revision to read this captured snapshot.\"]}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_6",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto_run",
+          "arguments": {
+            "steps": [
+              {
+                "action": "fill_ref",
+                "ref": "ax-9029605794731664717",
+                "value": "\"Attention Is All You Need\""
+              },
+              {
+                "action": "submit_ref",
+                "ref": "ax-9029605794731664717"
+              }
+            ],
+            "snapshot": true
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_6",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto_run",
+          "arguments": {
+            "steps": [
+              {
+                "action": "fill_ref",
+                "ref": "ax-9029605794731664717",
+                "value": "\"Attention Is All You Need\""
+              },
+              {
+                "action": "submit_ref",
+                "ref": "ax-9029605794731664717"
+              }
+            ],
+            "snapshot": true
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"completed\":2,\"elapsed_ms\":50,\"snapshot\":{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"navigationStarted\":true,\"next_offset\":160,\"offset\":0,\"order_changed\":false,\"revision\":\"ax-229682662649243628:1\",\"text\":\"[ax-2473645984436240568] link \\\"Skip to main content\\\"\\n[ax-14024005108458006849] link \\\"archive home\\\"\\n[ax-8082606079533737730] link \\\"Search\\\"\\n[ax-6706313680137719113] link \\\"Submit\\\"\\n[ax-9758863867380309180] link \\\"Donate\\\"\\n[ax-13877716812397480421] link \\\"Log in\\\"\\nheading \\\"Showing 1–47 of 47 results for all: \\\\\\\"Attention Is All You Need\\\\\\\"\\\"\\ntext \\\"\\\\\\\"Attention Is All You Need\\\\\\\"\\\"\\n[ax-5106469560225282421] link \\\"Search v0.5.6 released 2020-02-24\\\"\\n[ax-14087424613644450671] textbox \\\"Search term or terms\\\" =\\\"Attention Is All You Need\\\"\\n[ax-14251830220602575081] combobox \\\"Field\\\"\\n[ax-5177158258270961128] button \\\"Search\\\"\\n[ax-8154747331041961011] radio \\\"Show abstracts Show abstracts\\\"\\n[ax-14973086572383626094] radio \\\"Hide abstracts Hide abstracts\\\"\\n[ax-14934348914686578615] link \\\"Advanced Search\\\"\\ntext \\\".\\\"\\n[ax-17550607449246094462] combobox \\\"results per page\\\"\\n[ax-17721306106320440974] combobox \\\"Sort results by\\\"\\n[ax-15774781627246440372] button \\\"Go\\\"\\nlistitem \\\"arXiv:2609.13531 [pdf] cs.LG cs.AI physics.flu-dyn Attention Is All You Need (to Avoid Spurious Oscillations) Authors: Jinyoung Jeong, Joseph B. Choi, Xinlun Cheng, H. S. Udaykumar, Sanghun Choi, Step\\\"\\nparagraph \\\"arXiv:2609.13531 [pdf]\\\"\\n[ax-10280717977654794865] link \\\"arXiv:2609.13531\\\"\\n[ax-12839908781354656607] link \\\"pdf\\\"\\nparagraph \\\"Attention Is All You Need (to Avoid Spurious Oscillations)\\\"\\nparagraph \\\"Authors: Jinyoung Jeong, Joseph B. Choi, Xinlun Cheng, H. S. Udaykumar, Sanghun Choi, Stephen S. Baek\\\"\\n[ax-13549552246662517068] link \\\"Jinyoung Jeong\\\"\\n[ax-16022140191905400121] link \\\"Joseph B. Choi\\\"\\n[ax-5985206506295905871] link \\\"Xinlun Cheng\\\"\\n[ax-10348185792691641101] link \\\"H. S. Udaykumar\\\"\\n[ax-12507328398756432920] link \\\"Sanghun Choi\\\"\\n[ax-12122306980392821502] link \\\"Stephen S. Baek\\\"\\nparagraph \\\"Abstract: Can attention move a shock across several cells in one update without breaking it? We develop a conservative, fixed grid finite-volume scheme in which a CFL-conditioned attention flux select\\\"\\nparagraph \\\"Submitted 29 September, 2026; v1 submitted 11 September, 2026; originally announced September 2026.\\\"\\nlistitem \\\"arXiv:2608.15061 [pdf, ps, other] cs.CV Do Visual Grounding Decoders Need Feed-Forward Networks? A Controlled Study over Frozen Vision-Language Features Authors: Tarun Tomar Abstract: Do feed-forward \\\"\\nparagraph \\\"arXiv:2608.15061 [pdf, ps, other]\\\"\\n[ax-2412303009656442458] link \\\"arXiv:2608.15061\\\"\\n[ax-3650873920714962684] link \\\"pdf\\\"\\n[ax-3164512967732256874] link \\\"ps\\\"\\n[ax-14336900497520521960] link \\\"other\\\"\\nparagraph \\\"Do Visual Grounding Decoders Need Feed-Forward Networks? A Controlled Study over Frozen Vision-Language Features\\\"\\nparagraph \\\"Authors: Tarun Tomar\\\"\\n[ax-2238588529390594832] link \\\"Tarun Tomar\\\"\\nparagraph \\\"Abstract: Do feed-forward networks (FFNs) in visual grounding decoders add essential computation once a pretrained vision-language model has already encoded image and language context? We compare a fo\\\"\\nparagraph \\\"Submitted 15 August, 2026; originally announced August 2026.\\\"\\nparagraph \\\"Comments: 14 pages, 8 figures, 5 tables. Code and project page: https://github.com/TarunTomar122/attention-is-all-you-need-for-vlms\\\"\\nlistitem \\\"arXiv:2606.02332 [pdf, ps, other] cs.AI cs.CL cs.LG Forget Attention: Importance-Aware Attention Is All You Need Authors: Suhyeong Shin, Yeongwook Yang Abstract: Attention retrieves content precisely,\\\"\\nparagraph \\\"arXiv:2606.02332 [pdf, ps, other]\\\"\\n[ax-5135971173036045097] link \\\"arXiv:2606.02332\\\"\\n[ax-15395241588358149287] link \\\"pdf\\\"\\n[ax-7728749782460886101] link \\\"ps\\\"\\n[ax-11030773170003100670] link \\\"other\\\"\\nparagraph \\\"Forget Attention: Importance-Aware Attention Is All You Need\\\"\\nparagraph \\\"Authors: Suhyeong Shin, Yeongwook Yang\\\"\\n[ax-13952936048177086684] link \\\"Suhyeong Shin\\\"\\n[ax-4129445556733709466] link \\\"Yeongwook Yang\\\"\\nparagraph \\\"Abstract: Attention retrieves content precisely, but its scores depend only on query--key products, leaving order and recency to positional encodings. Conversely, state-space models (SSMs) such as Mam\\\"\\nparagraph \\\"Submitted 27 October, 2026; v1 submitted 1 June, 2026; originally announced June 2026.\\\"\\nparagraph \\\"ACM Class: I.2.7; I.2.6\\\"\\nlistitem \\\"arXiv:2604.21816 [pdf, ps, other] cs.AI Tool Attention Is All You Need: Dynamic Tool Gating and Lazy Schema Loading for Eliminating the MCP/Tools Tax in Scalable Agentic Workflows Authors: Anuj Sadani\\\"\\nparagraph \\\"arXiv:2604.21816 [pdf, ps, other]\\\"\\n[ax-8367517789785708796] link \\\"arXiv:2604.21816\\\"\\n[ax-12144791261044684761] link \\\"pdf\\\"\\n[ax-1846678168924875663] link \\\"ps\\\"\\n[ax-5594030564658184160] link \\\"other\\\"\\nparagraph \\\"Tool Attention Is All You Need: Dynamic Tool Gating and Lazy Schema Loading for Eliminating the MCP/Tools Tax in Scalable Agentic Workflows\\\"\\nparagraph \\\"Authors: Anuj Sadani, Deepak Kumar\\\"\\n[ax-9248734871337765703] link \\\"Anuj Sadani\\\"\\n[ax-15403847410295857629] link \\\"Deepak Kumar\\\"\\nparagraph \\\"Abstract: …fracture points around 70%, and turns token budgets into a recurring operational cost. We introduce Tool Attention, a middleware-layer mechanism that generalizes the \\\\\\\"Attention Is All You N\\\"\\nparagraph \\\"Submitted 23 April, 2026; originally announced April 2026.\\\"\\nparagraph \\\"Comments: 21 pages\\\"\\nlistitem \\\"arXiv:2601.22161 [pdf, ps, other] cs.LG cs.CV cs.SD eess.AS Attention Isn't All You Need for Emotion Recognition:Domain Features Outperform Transformers on the EAV Dataset Authors: Anmol Guragain Abst\\\"\\nparagraph \\\"arXiv:2601.22161 [pdf, ps, other]\\\"\\n[ax-8661184099862206691] link \\\"arXiv:2601.22161\\\"\\n[ax-13907819840836798020] link \\\"pdf\\\"\\n[ax-9998744279357215921] link \\\"ps\\\"\\n[ax-4952224338244446005] link \\\"other\\\"\\nparagraph \\\"Attention Isn't All You Need for Emotion Recognition:Domain Features Outperform Transformers on the EAV Dataset\\\"\\nparagraph \\\"Authors: Anmol Guragain\\\"\\n[ax-10740034214759093803] link \\\"Anmol Guragain\\\"\\nparagraph \\\"Abstract: We present a systematic study of multimodal emotion recognition using the EAV dataset, investigating whether complex attention mechanisms improve performance on small datasets. We implement \\\"\\nparagraph \\\"Submitted 2 February, 2026; v1 submitted 7 January, 2026; originally announced January 2026.\\\"\\nparagraph \\\"Comments: 2 figures, 10 Pages\\\"\\nlistitem \\\"arXiv:2512.19700 [pdf, ps, other] cs.CY cs.DL \\\\\\\"All You Need\\\\\\\" is Not All You Need for a Paper Title: On the Origins of a Scientific Meme Authors: Anton Alyakin Abstract: The 2017 paper ''Attention Is A\\\"\\nparagraph \\\"arXiv:2512.19700 [pdf, ps, other]\\\"\\n[ax-8352088629351574255] link \\\"arXiv:2512.19700\\\"\\n[ax-4195713983254526594] link \\\"pdf\\\"\\n[ax-1721043989235325010] link \\\"ps\\\"\\n[ax-14144238594319488656] link \\\"other\\\"\\nparagraph \\\"\\\\\\\"All You Need\\\\\\\" is Not All You Need for a Paper Title: On the Origins of a Scientific Meme\\\"\\nparagraph \\\"Authors: Anton Alyakin\\\"\\n[ax-1824866670595146540] link \\\"Anton Alyakin\\\"\\nparagraph \\\"Abstract: The 2017 paper ''Attention Is All You Need'' introduced the Transformer architecture-and inadvertently spawned one of machine learning's most persistent naming conventions. We analyze 717 ar\\\"\\nparagraph \\\"Submitted 3 December, 2025; originally announced December 2025.\\\"\\nlistitem \\\"arXiv:2512.11254 [pdf, ps, other] cs.IR FAIR: Focused Attention Is All You Need for Generative Recommendation Authors: Longtao Xiao, Haolin Zhang, Guohao Cai, Jieming Zhu, Yifan Wang, Heng Chang, Zhen\\\"\\nparagraph \\\"arXiv:2512.11254 [pdf, ps, other]\\\"\\n[ax-10041424902038431962] link \\\"arXiv:2512.11254\\\"\\n[ax-6179189795856313292] link \\\"pdf\\\"\\n[ax-7191566033760164018] link \\\"ps\\\"\\n[ax-1655008507351920985] link \\\"other\\\"\\nparagraph \\\"FAIR: Focused Attention Is All You Need for Generative Recommendation\\\"\\nparagraph \\\"Authors: Longtao Xiao, Haolin Zhang, Guohao Cai, Jieming Zhu, Yifan Wang, Heng Chang, Zhenhua Dong, Xiu Li, Ruixuan Li\\\"\\n[ax-9863047900808556604] link \\\"Longtao Xiao\\\"\\n[ax-13807071795306344168] link \\\"Haolin Zhang\\\"\\n[ax-14724970186090596889] link \\\"Guohao Cai\\\"\\n[ax-1052790142645737143] link \\\"Jieming Zhu\\\"\\n[ax-2125439295190082650] link \\\"Yifan Wang\\\"\\n[ax-3620867436878238521] link \\\"Heng Chang\\\"\\n[ax-14013340383282139882] link \\\"Zhenhua Dong\\\"\\n[ax-15809796802947378734] link \\\"Xiu Li\\\"\\n[ax-12416987830384938306] link \\\"Ruixuan Li\\\"\\nparagraph \\\"Abstract: Recently, transformer-based generative recommendation has garnered significant attention for user behavior modeling. However, it often requires discretizing items into multi-code representat\\\"\\nparagraph \\\"Submitted 16 December, 2025; v1 submitted 11 December, 2025; originally announced December 2025.\\\"\\nlistitem \\\"arXiv:2512.08417 [pdf, ps, other] cs.CR Attention is All You Need to Defend Against Indirect Prompt Injection Attacks in LLMs Authors: Yinan Zhong, Qianhao Miao, Yanjiao Chen, Jiangyi Deng, Yushi Chen\\\"\\nparagraph \\\"arXiv:2512.08417 [pdf, ps, other]\\\"\\n[ax-6626765720157069643] link \\\"arXiv:2512.08417\\\"\\n[ax-171920110077388394] link \\\"pdf\\\"\\n[ax-8179322394147917484] link \\\"ps\\\"\\n[ax-17027136972785903478] link \\\"other\\\"\\nparagraph \\\"Attention is All You Need to Defend Against Indirect Prompt Injection Attacks in LLMs\\\"\\nparagraph \\\"Authors: Yinan Zhong, Qianhao Miao, Yanjiao Chen, Jiangyi Deng, Yushi Cheng, Wenyuan Xu\\\"\\n[ax-9562770981055967170] link \\\"Yinan Zhong\\\"\\n[ax-1511105034023430520] link \\\"Qianhao Miao\\\"\\n[ax-8373810450813900398] link \\\"Yanjiao Chen\\\"\\n[ax-12818921666290475579] link \\\"Jiangyi Deng\\\"\\n[ax-1482578492096755005] link \\\"Yushi Cheng\\\"\\n[ax-11501563879510626911] link \\\"Wenyuan Xu\\\"\\nparagraph \\\"Abstract: Large Language Models (LLMs) have been integrated into many applications (e.g., web agents) to perform more sophisticated tasks. However, LLM-empowered applications are vulnerable to Indirec\\\"\\nparagraph \\\"Submitted 11 August, 2026; v1 submitted 9 December, 2025; originally announced December 2025.\\\"\\nparagraph \\\"Comments: Accepted by Network and Distributed System Security (NDSS) Symposium 2026\\\"\\nlistitem \\\"arXiv:2510.19861 [pdf, ps, other] cs.LG Some Attention is All You Need for Retrieval Authors: Felix Michalak, Steven Abreu Abstract: We demonstrate complete functional segregation in hybrid SSM-Transf\\\"\\nparagraph \\\"arXiv:2510.19861 [pdf, ps, other]\\\"\\n[ax-10026972420208568447] link \\\"arXiv:2510.19861\\\"\\n[ax-11831351594759752866] link \\\"pdf\\\"\\n[ax-7184372559127141750] link \\\"ps\\\"\\n[ax-6507713911890863611] link \\\"other\\\"\\nparagraph \\\"Some Attention is All You Need for Retrieval\\\"\\nparagraph \\\"Authors: Felix Michalak, Steven Abreu\\\"\\n[ax-8226105021884820070] link \\\"Felix Michalak\\\"\\n[ax-3471104859895355801] link \\\"Steven Abreu\\\"\\nparagraph \\\"Abstract: We demonstrate complete functional segregation in hybrid SSM-Transformer architectures: retrieval depends exclusively on self-attention layers. Across RecurrentGemma-2B/9B and Jamba-Mini-1.6\\\"\\nparagraph \\\"Submitted 21 October, 2025; originally announced October 2025.\\\"\\nparagraph \\\"Comments: 16 pages, 10 figures\\\"\\nlistitem \\\"arXiv:2510.14973 [pdf, ps, other] cs.CL cs.AI cs.LG Attention Is All You Need for KV Cache in Diffusion LLMs Authors: Quan Nguyen-Tri, Mukul Ranjan, Zhiqiang Shen Abstract: This work studies how to ad\\\"\\nparagraph \\\"arXiv:2510.14973 [pdf, ps, other]\\\"\\n[ax-935117115950132023] link \\\"arXiv:2510.14973\\\"\\n[ax-3195814945643469533] link \\\"pdf\\\"\\n[ax-7672667679739405343] link \\\"ps\\\"\\n[ax-15970735488485064672] link \\\"other\\\"\\nparagraph \\\"Attention Is All You Need for KV Cache in Diffusion LLMs\\\"\\nparagraph \\\"Authors: Quan Nguyen-Tri, Mukul Ranjan, Zhiqiang Shen\\\"\\n[ax-2271854611381416056] link \\\"Quan Nguyen-Tri\\\"\\n[ax-11906330609935785895] link \\\"Mukul Ranjan\\\"\\n[ax-10897841687670935885] link \\\"Zhiqiang Shen\\\"\\nparagraph \\\"Abstract: This work studies how to adaptively recompute key-value (KV) caches for diffusion large language models (DLMs) to maximize prediction accuracy while minimizing decoding latency. Prior method\\\"\\nparagraph \\\"Submitted 28 December, 2025; v1 submitted 16 October, 2025; originally announced October 2025.\\\"\\nparagraph \\\"Comments: Code at: https://github.com/VILA-Lab/Elastic-Cache\\\"\\nlistitem \\\"arXiv:2510.06828 [pdf, ps, other] cs.LG cs.AI Recurrence-Complete Frame-based Action Models Authors: Michael Keiblinger Abstract: …years, attention-like mechanisms have been used to great success in t\\\"\\nparagraph \\\"arXiv:2510.06828 [pdf, ps, other]\\\"\\n[ax-8110324414703023316] link \\\"arXiv:2510.06828\\\"\",\"title\":\"Search | arXiv e-print repository\",\"truncated\":true,\"url\":\"https://arxiv.org/search/?query=%22Attention+Is+All+You+Need%22&searchtype=all&source=header\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\",\"Continue with next_offset and revision to read this captured snapshot.\"]}}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_7",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto_extract",
+          "arguments": {
+            "selector": "li.arxiv-result",
+            "fields": {
+              "title": ".title",
+              "link": {
+                "selector": ".list-title a",
+                "attribute": "href"
+              },
+              "authors": ".authors"
+            },
+            "limit": 50
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_7",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto_extract",
+          "arguments": {
+            "selector": "li.arxiv-result",
+            "fields": {
+              "title": ".title",
+              "link": {
+                "selector": ".list-title a",
+                "attribute": "href"
+              },
+              "authors": ".authors"
+            },
+            "limit": 50
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"count\":47,\"pages\":1,\"rows\":[{\"authors\":\"Authors: Jinyoung Jeong, Joseph B. Choi, Xinlun Cheng, H. S. Udaykumar, Sanghun Choi, Stephen S. Baek\",\"link\":\"https://arxiv.org/abs/2609.13531\",\"title\":\"Attention Is All You Need (to Avoid Spurious Oscillations)\"},{\"authors\":\"Authors: Tarun Tomar\",\"link\":\"https://arxiv.org/abs/2608.15061\",\"title\":\"Do Visual Grounding Decoders Need Feed-Forward Networks? A Controlled Study over Frozen Vision-Language Features\"},{\"authors\":\"Authors: Suhyeong Shin, Yeongwook Yang\",\"link\":\"https://arxiv.org/abs/2606.02332\",\"title\":\"Forget Attention: Importance-Aware Attention Is All You Need\"},{\"authors\":\"Authors: Anuj Sadani, Deepak Kumar\",\"link\":\"https://arxiv.org/abs/2604.21816\",\"title\":\"Tool Attention Is All You Need: Dynamic Tool Gating and Lazy Schema Loading for Eliminating the MCP/Tools Tax in Scalable Agentic Workflows\"},{\"authors\":\"Authors: Anmol Guragain\",\"link\":\"https://arxiv.org/abs/2601.22161\",\"title\":\"Attention Isn't All You Need for Emotion Recognition:Domain Features Outperform Transformers on the EAV Dataset\"},{\"authors\":\"Authors: Anton Alyakin\",\"link\":\"https://arxiv.org/abs/2512.19700\",\"title\":\"\\\"All You Need\\\" is Not All You Need for a Paper Title: On the Origins of a Scientific Meme\"},{\"authors\":\"Authors: Longtao Xiao, Haolin Zhang, Guohao Cai, Jieming Zhu, Yifan Wang, Heng Chang, Zhenhua Dong, Xiu Li, Ruixuan Li\",\"link\":\"https://arxiv.org/abs/2512.11254\",\"title\":\"FAIR: Focused Attention Is All You Need for Generative Recommendation\"},{\"authors\":\"Authors: Yinan Zhong, Qianhao Miao, Yanjiao Chen, Jiangyi Deng, Yushi Cheng, Wenyuan Xu\",\"link\":\"https://arxiv.org/abs/2512.08417\",\"title\":\"Attention is All You Need to Defend Against Indirect Prompt Injection Attacks in LLMs\"},{\"authors\":\"Authors: Felix Michalak, Steven Abreu\",\"link\":\"https://arxiv.org/abs/2510.19861\",\"title\":\"Some Attention is All You Need for Retrieval\"},{\"authors\":\"Authors: Quan Nguyen-Tri, Mukul Ranjan, Zhiqiang Shen\",\"link\":\"https://arxiv.org/abs/2510.14973\",\"title\":\"Attention Is All You Need for KV Cache in Diffusion LLMs\"},{\"authors\":\"Authors: Michael Keiblinger\",\"link\":\"https://arxiv.org/abs/2510.06828\",\"title\":\"Recurrence-Complete Frame-based Action Models\"},{\"authors\":\"Authors: Phuoc-Nguyen Bui, Khanh-Binh Nguyen, Hyunseung Choo\",\"link\":\"https://arxiv.org/abs/2509.03895\",\"title\":\"Attn-Adapter: Attention Is All You Need for Online Few-shot Learner of Vision-Language Model\"},{\"authors\":\"Authors: Chun-Tse Li, Tzen Ong, Max Geier, Hsin Lin, Liang Fu\",\"link\":\"https://arxiv.org/abs/2509.03683\",\"title\":\"Attention is all you need to solve chiral superconductivity\"},{\"authors\":\"Authors: Zan Huang\",\"link\":\"https://arxiv.org/abs/2504.09596\",\"title\":\"Revisiting Self-Attentive Sequential Recommendation Beyond the LLM Paradigm\"},{\"authors\":\"Authors: Fanxu Meng, Pingzhi Tang, Xiaojuan Tang, Zengwei Yao, Xing Sun, Muhan Zhang\",\"link\":\"https://arxiv.org/abs/2502.07864\",\"title\":\"TransMLA: Multi-Head Latent Attention Is All You Need\"},{\"authors\":\"Authors: M. Murat Yaslioglu\",\"link\":\"https://arxiv.org/abs/2501.09166\",\"title\":\"Attention is All You Need Until You Need Retention\"},{\"authors\":\"Authors: Tapio Pitkäranta\",\"link\":\"https://arxiv.org/abs/2501.06929\",\"title\":\"Why are we living the age of AI applications right now? The long innovation path from AI's birth to a child's bedtime magic\"},{\"authors\":\"Authors: Yifan Zhang, Yifeng Liu, Huizhuo Yuan, Zhen Qin, Yang Yuan, Quanquan Gu, Andrew Chi-Chih Yao\",\"link\":\"https://arxiv.org/abs/2501.06425\",\"title\":\"Tensor Product Attention Is All You Need\"},{\"authors\":\"Authors: Guoxin Feng\",\"link\":\"https://arxiv.org/abs/2501.05730\",\"title\":\"Element-wise Attention Is All You Need\"},{\"authors\":\"Authors: Advait Gadhikar, Souptik Kumar Majumdar, Niclas Popp, Piyapat Saranrittichai, Martin Rapp, Lukas Schott\",\"link\":\"https://arxiv.org/abs/2412.20875\",\"title\":\"Attention Is All You Need For Mixture-of-Depths Routing\"},{\"authors\":\"Authors: Iman Kazemian, Murat Yildirim, Paritosh Ramanan\",\"link\":\"https://arxiv.org/abs/2410.24052\",\"title\":\"Attention is All You Need to Optimize Wind Farm Operations and Maintenance\"},{\"authors\":\"Authors: Lu Yu, Haiyang Zhang, Changsheng Xu\",\"link\":\"https://arxiv.org/abs/2410.21802\",\"title\":\"Text-Guided Attention is All You Need for Zero-Shot Robustness in Vision-Language Models\"},{\"authors\":\"Authors: Runzhen Xue, Hao Wu, Mingyu Yan, Ziheng Xiao, Guangyu Sun, Xiaochun Ye, Dongrui Fan\",\"link\":\"https://arxiv.org/abs/2410.18368\",\"title\":\"Multi-objective Optimization in CPU Design Space Exploration: Attention is All You Need\"},{\"authors\":\"Authors: Akram Elghouat, Ahmed Algouti, Abdellah Algouti, Soukaina Baid\",\"link\":\"https://arxiv.org/abs/2408.02692\",\"title\":\"Attention is all you need for an improved CNN-based flash flood susceptibility modeling. The case of the ungauged Rheraya watershed, Morocco\"},{\"authors\":\"Authors: Georgy Tyukin, Gbetondji J-S Dovonon, Jean Kaddour, Pasquale Minervini\",\"link\":\"https://arxiv.org/abs/2407.15516\",\"title\":\"Attention Is All You Need But You Don't Need All Of It For Inference of Large Language Models\"},{\"authors\":\"Authors: André Sacilotti, Samuel Felipe dos Santos, Nicu Sebe, Jurandy Almeida\",\"link\":\"https://arxiv.org/abs/2407.01375\",\"title\":\"Transferable-guided Attention Is All You Need for Video Domain Adaptation\"},{\"authors\":\"Authors: Yinwei Wu\",\"link\":\"https://arxiv.org/abs/2403.15419\",\"title\":\"Attention is all you need for boosting graph convolutional neural network\"},{\"authors\":\"Authors: Georgios Ioannides, Aman Chadha, Aaron Elkins\",\"link\":\"https://arxiv.org/abs/2401.11143\",\"title\":\"Density Adaptive Attention is All You Need: Robust Parameter-Efficient Fine-Tuning Across Multiple Modalities\"},{\"authors\":\"Authors: Zihan Liu, Zewei Sun, Shanbo Cheng, Shujian Huang, Mingxuan Wang\",\"link\":\"https://arxiv.org/abs/2309.14174\",\"title\":\"Only 5\\\\% Attention Is All You Need: Efficient Long-range Document-level Neural Machine Translation\"},{\"authors\":\"Authors: Chunxi Wang, Maoshen Jia, Meiran Li, Changchun Bao, Wenyu Jin\",\"link\":\"https://arxiv.org/abs/2309.13504\",\"title\":\"Attention Is All You Need For Blind Room Volume Estimation\"},{\"authors\":\"Authors: Davoud Ataee Tarzanagh, Yingcong Li, Christos Thrampoulidis, Samet Oymak\",\"link\":\"https://arxiv.org/abs/2308.16898\",\"title\":\"Transformers as Support Vector Machines\"},{\"authors\":\"Authors: Daniel Murnane\",\"link\":\"https://arxiv.org/abs/2307.16662\",\"title\":\"Graph Structure from Point Clouds: Geometric Attention is All You Need\"},{\"authors\":\"Authors: Jiaming Liang, Lei Cao, Samuel Madden, Zachary Ives, Guoliang Li\",\"link\":\"https://arxiv.org/abs/2306.01926\",\"title\":\"RITA: Group Attention is All You Need for Timeseries Analytics\"},{\"authors\":\"Authors: Yeqi Gao, Zhao Song, Xin Yang, Yufa Zhou\",\"link\":\"https://arxiv.org/abs/2305.04701\",\"title\":\"Differentially Private Attention Computation\"},{\"authors\":\"Authors: Markus Eisenbach, Jannik Lübberstedt, Dustin Aganian, Horst-Michael Gross\",\"link\":\"https://arxiv.org/abs/2302.14574\",\"title\":\"A Little Bit Attention Is All You Need for Person Re-Identification\"},{\"authors\":\"Authors: Shucong Zhang, Malcolm Chadwick, Alberto Gil C. P. Ramos, Sourav Bhattacharya\",\"link\":\"https://arxiv.org/abs/2211.04346\",\"title\":\"Cross-Attention is all you need: Real-Time Streaming Transformers for Personalised Speech Enhancement\"},{\"authors\":\"Authors: Nic Fishman, Leif Hancox-Li\",\"link\":\"https://arxiv.org/abs/2205.08377\",\"title\":\"Should attention be all we need? The epistemic and ethical implications of unification in machine learning\"},{\"authors\":\"Authors: Prateek Verma\",\"link\":\"https://arxiv.org/abs/2110.03183\",\"title\":\"Attention is All You Need? Good Embeddings with Statistics are enough:Large Scale Audio Understanding without Transformers/ Convolutions/ BERTs/ Mixers/ Attention/ RNNs or ....\"},{\"authors\":\"Authors: Shuhao Cao\",\"link\":\"https://arxiv.org/abs/2105.14995\",\"title\":\"Choose a Transformer: Fourier or Galerkin\"},{\"authors\":\"Authors: Mozhdeh Gheini, Xiang Ren, Jonathan May\",\"link\":\"https://arxiv.org/abs/2104.08771\",\"title\":\"Cross-Attention is All You Need: Adapting Pretrained Transformers for Machine Translation\"},{\"authors\":\"Authors: Hongqiu Wu, Hai Zhao, Min Zhang\",\"link\":\"https://arxiv.org/abs/2104.04692\",\"title\":\"Not All Attention Is All You Need\"},{\"authors\":\"Authors: Kaiji Lu, Zifan Wang, Piotr Mardziel, Anupam Datta\",\"link\":\"https://arxiv.org/abs/2011.00740\",\"title\":\"Influence Patterns for Explaining Information Flow in BERT\"},{\"authors\":\"Authors: Cem Subakan, Mirco Ravanelli, Samuele Cornell, Mirko Bronzi, Jianyuan Zhong\",\"link\":\"https://arxiv.org/abs/2010.13154\",\"title\":\"Attention is All You Need in Speech Separation\"},{\"authors\":\"Authors: Peter Cha, Paul Ginsparg, Felix Wu, Juan Carrasquilla, Peter L. McMahon, Eun-Ah Kim\",\"link\":\"https://arxiv.org/abs/2006.12469\",\"title\":\"Attention-based Quantum Tomography\"},{\"authors\":\"Authors: Sufeng Duan, Hai Zhao\",\"link\":\"https://arxiv.org/abs/1910.14537\",\"title\":\"Attention Is All You Need for Chinese Word Segmentation\"},{\"authors\":\"Authors: Manjot Bilkhu, Siyang Wang, Tushar Dobhal\",\"link\":\"https://arxiv.org/abs/1906.02792\",\"title\":\"Attention is all you need for Videos: Self-attention based Video Summarization using Universal Transformers\"},{\"authors\":\"Authors: Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N. Gomez, Lukasz Kaiser, Illia Polosukhin\",\"link\":\"https://arxiv.org/abs/1706.03762\",\"title\":\"Attention Is All You Need\"}],\"title\":\"[Callisto] Search | arXiv e-print repository\",\"truncated\":false,\"url\":\"https://arxiv.org/search/?query=%22Attention+Is+All+You+Need%22&searchtype=all&source=header\"}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_8",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto_navigate",
+          "arguments": {
+            "url": "https://arxiv.org/abs/1706.03762"
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_8",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto_navigate",
+          "arguments": {
+            "url": "https://arxiv.org/abs/1706.03762"
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"navigationStarted\":true}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_9",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto_snapshot",
+          "arguments": {
+            "include_text": true,
+            "max_chars": 18000
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_9",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto_snapshot",
+          "arguments": {
+            "include_text": true,
+            "max_chars": 18000
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"navigationStarted\":true,\"next_offset\":null,\"offset\":0,\"order_changed\":false,\"revision\":\"ax-8526291130055558465:1\",\"text\":\"[ax-16421576473535632077] link \\\"Skip to main content\\\"\\n[ax-17545896933843847637] link \\\"archive home\\\"\\n[ax-6661089921843601018] link \\\"Search\\\"\\n[ax-17830946486929018065] link \\\"Submit\\\"\\n[ax-6924537703893353762] link \\\"Donate\\\"\\n[ax-15407824499877131014] link \\\"Log in\\\"\\nheading \\\"Computer Science > Computation and Language\\\"\\ntext \\\"[Submitted on 12 Jun 2017 ( ), last revised 2 Aug 2023 (this version, v7)]\\\"\\n[ax-4178446004357327215] link \\\"v1\\\"\\nheading \\\"Attention Is All You Need\\\"\\ntext \\\", , , , , , ,\\\"\\n[ax-9918547238966229569] link \\\"Ashish Vaswani\\\"\\n[ax-3793132447710845637] link \\\"Noam Shazeer\\\"\\n[ax-805701240255473888] link \\\"Niki Parmar\\\"\\n[ax-5634174031579301522] link \\\"Jakob Uszkoreit\\\"\\n[ax-11431914651137560354] link \\\"Llion Jones\\\"\\n[ax-17172212354745313648] link \\\"Aidan N. Gomez\\\"\\n[ax-7290895036835113850] link \\\"Lukasz Kaiser\\\"\\n[ax-9611609853909208112] link \\\"Illia Polosukhin\\\"\\nblockquote \\\"The dominant sequence transduction models are based on complex recurrent or convolutional neural networks in an encoder-decoder configuration. The best performing models also connect the encoder and d\\\"\\ncell \\\"Comments:\\\"\\ncell \\\"15 pages, 5 figures\\\"\\ncell \\\"Subjects:\\\"\\ncell \\\"Computation and Language (cs.CL); Machine Learning (cs.LG)\\\"\\ncell \\\"Cite as:\\\"\\ncell \\\"arXiv:1706.03762 [cs.CL]\\\"\\n[ax-14976650390055558533] link \\\"arXiv:1706.03762\\\"\\ncell \\\"\\\"\\ncell \\\"(or arXiv:1706.03762v7 [cs.CL] for this version)\\\"\\n[ax-12978861491141285621] link \\\"arXiv:1706.03762v7\\\"\\ncell \\\"\\\"\\ncell \\\"https://doi.org/10.48550/arXiv.1706.03762 Focus to learn more\\\"\\n[ax-14358380950641528178] link \\\"https://doi.org/10.48550/arXiv.1706.03762\\\"\\n[ax-8944864282243052023] button \\\"Focus to learn more\\\"\\npresentation \\\"\\\"\\ntext \\\"From: Llion Jones [ ] Mon, 12 Jun 2017 17:57:34 UTC (1,102 KB) Mon, 19 Jun 2017 16:49:45 UTC (1,125 KB) Tue, 20 Jun 2017 05:20:02 UTC (1,125 KB) Fri, 30 Jun 2017 17:29:30 UTC (1,124 KB) Wed, 6 Dec 201\\\"\\nheading \\\"Submission history\\\"\\n[ax-18445284081447959242] link \\\"view email\\\"\\n[ax-6511233239211974418] link \\\"[v1]\\\"\\n[ax-4846432748110878529] link \\\"[v2]\\\"\\n[ax-3979249002020021715] link \\\"[v3]\\\"\\n[ax-15165505278933084829] link \\\"[v4]\\\"\\n[ax-15118613918409607470] link \\\"[v5]\\\"\\n[ax-4811897876291815515] link \\\"[v6]\\\"\\nheading \\\"Access Paper:\\\"\\nlistitem \\\"View PDF\\\"\\n[ax-5481595919786601537] link \\\"View PDF\\\"\\nlistitem \\\"HTML (experimental)\\\"\\n[ax-10224574729857623893] link \\\"HTML (experimental)\\\"\\nlistitem \\\"TeX Source\\\"\\n[ax-8745638856947031862] link \\\"TeX Source\\\"\\n[ax-2166520858803972489] link \\\"view license\\\"\\nheading \\\"Current browse context:\\\"\\ntext \\\"cs.CL\\\"\\n[ax-7512228163067022863] link \\\"< prev\\\"\\ntext \\\"|\\\"\\n[ax-6454406495009373728] link \\\"next >\\\"\\n[ax-13922427637113177130] link \\\"new\\\"\\ntext \\\"|\\\"\\n[ax-9779525779896793209] link \\\"recent\\\"\\ntext \\\"|\\\"\\n[ax-15929587936236910109] link \\\"2017-06\\\"\\ntext \\\"Change to browse by:\\\"\\n[ax-6049111019128165820] link \\\"cs\\\"\\n[ax-13268456874755712628] link \\\"cs.LG\\\"\\nheading \\\"References & Citations\\\"\\nlistitem \\\"NASA ADS\\\"\\n[ax-5379805340460561717] link \\\"NASA ADS\\\"\\nlistitem \\\"Google Scholar\\\"\\n[ax-5132765669959419589] link \\\"Google Scholar\\\"\\nlistitem \\\"Semantic Scholar\\\"\\n[ax-16829317621145095189] link \\\"Semantic Scholar\\\"\\ntext \\\"( )\\\"\\nheading \\\"123 blog links\\\"\\n[ax-15512066042408344842] link \\\"123 blog links\\\"\\n[ax-5732603478356328317] link \\\"what is this?\\\"\\nheading \\\"DBLP - CS Bibliography\\\"\\n[ax-12671387887509452819] link \\\"DBLP\\\"\\ntext \\\"|\\\"\\n[ax-6345152426967789927] link \\\"listing\\\"\\n[ax-719593048185689657] link \\\"bibtex\\\"\\n[ax-12368146561563525814] link \\\"Ashish Vaswani\\\"\\n[ax-5052724786695438548] link \\\"Noam Shazeer\\\"\\n[ax-5084218721196044644] link \\\"Niki Parmar\\\"\\n[ax-7349328680361198352] link \\\"Jakob Uszkoreit\\\"\\n[ax-15939184045984752486] link \\\"Llion Jones\\\"\\ntext \\\"…\\\"\\n[ax-8425377584693383443] button \\\"Export BibTeX Citation\\\"\\nheading \\\"Bookmark\\\"\\n[ax-2843774178989803561] link \\\"\\\"\\n[ax-2920118386727726984] link \\\"Bookmark on Reddit\\\"\\n[ax-1585577806826089263] tablist \\\"arXivLabs tools\\\"\\n[ax-5439888290738801638] radio \\\"Bibliographic Tools\\\"\\n[ax-9308956163146998304] tab \\\"Bibliographic Tools\\\"\\n[ax-15607607849949555892] tabpanel \\\"Bibliographic Tools\\\"\\nheading \\\"Bibliographic and Citation Tools\\\"\\n[ax-3367622979946187600] link \\\"What is the Explorer?\\\"\\n[ax-12300785087104436451] link \\\"What is Connected Papers?\\\"\\n[ax-4308357388549547890] link \\\"What is Litmaps?\\\"\\n[ax-576355251534937460] link \\\"What are Smart Citations?\\\"\\n[ax-16772905212610211325] radio \\\"Code, Data, Media\\\"\\n[ax-6417132151678021767] tab \\\"Code, Data, Media\\\"\\n[ax-6154289240193513756] radio \\\"Demos\\\"\\n[ax-8748531911014052712] tab \\\"Demos\\\"\\n[ax-5062357931943605022] radio \\\"Related Papers\\\"\\n[ax-1269090444543907707] tab \\\"Related Papers\\\"\\n[ax-9288117631192335166] radio \\\"About arXivLabs\\\"\\n[ax-6189465598157861929] tab \\\"About arXivLabs\\\"\\ntext \\\"| ( )\\\"\\n[ax-1901900892203672933] link \\\"Which authors of this paper are endorsers?\\\"\\n[ax-9197942535028634594] link \\\"Disable MathJax\\\"\\n[ax-10966070392654880233] link \\\"What is MathJax?\\\"\\ntext \\\"We gratefully acknowledge support from our , , and all contributors.\\\"\\n[ax-216532761594083122] link \\\"member institutions\\\"\\n[ax-9086262221083822317] link \\\"About\\\"\\n[ax-4799469908261364537] link \\\"Help\\\"\\n[ax-8373723336597340870] link \\\"Contact\\\"\\n[ax-15429249862561496580] link \\\"Subscribe\\\"\\n[ax-13605562308040727905] link \\\"Copyright\\\"\\n[ax-18255404702517617332] link \\\"Privacy\\\"\\n[ax-16490937187327684464] link \\\"Accessibility\\\"\\n[ax-5643295960582328580] link \\\"Operational Status (opens in new tab)\\\"\\ntext \\\"Major funding support from\\\"\\n[ax-8696830321374960163] link \\\"\\\"\\n[ax-14265428463524085897] link \\\"\\\"\\n[ax-5433544515136954549] link \\\"\\\"\",\"title\":\"[1706.03762] Attention Is All You Need\",\"truncated\":false,\"url\":\"https://arxiv.org/abs/1706.03762\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\"]}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_10",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto_extract",
+          "arguments": {
+            "selector": "#abs",
+            "fields": {
+              "title": "h1.title",
+              "authors": ".authors",
+              "submission": ".dateline",
+              "identifier": ".arxivid",
+              "history": ".submission-history"
+            },
+            "limit": 1
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_10",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto_extract",
+          "arguments": {
+            "selector": "#abs",
+            "fields": {
+              "title": "h1.title",
+              "authors": ".authors",
+              "submission": ".dateline",
+              "identifier": ".arxivid",
+              "history": ".submission-history"
+            },
+            "limit": 1
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"count\":1,\"pages\":1,\"rows\":[{\"authors\":\"Authors:Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N. Gomez, Lukasz Kaiser, Illia Polosukhin\",\"history\":null,\"identifier\":\"arXiv:1706.03762 [cs.CL]\",\"submission\":\"[Submitted on 12 Jun 2017 (v1), last revised 2 Aug 2023 (this version, v7)]\",\"title\":\"Title:Attention Is All You Need\"}],\"title\":\"[Callisto] [1706.03762] Attention Is All You Need\",\"truncated\":false,\"url\":\"https://arxiv.org/abs/1706.03762\"}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_11",
+          "type": "agent_message",
+          "text": "{\"answer\":\"“Attention Is All You Need” — arXiv:1706.03762. First two authors: Ashish Vaswani and Noam Shazeer. Original submission date: 12 June 2017.\",\"evidence\":[{\"url\":\"https://arxiv.org/abs/1706.03762\",\"quote\":\"Title:Attention Is All You Need\"},{\"url\":\"https://arxiv.org/abs/1706.03762\",\"quote\":\"arXiv:1706.03762 [cs.CL]\"},{\"url\":\"https://arxiv.org/abs/1706.03762\",\"quote\":\"Authors:Ashish Vaswani, Noam Shazeer\"},{\"url\":\"https://arxiv.org/abs/1706.03762\",\"quote\":\"[Submitted on 12 Jun 2017 (v1), last revised 2 Aug 2023 (this version, v7)]\"}]}"
+        }
+      },
+      {
+        "type": "turn.completed",
+        "usage": {
+          "input_tokens": 224464,
+          "cached_input_tokens": 196608,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 695,
+          "reasoning_output_tokens": 38
+        }
+      }
+    ],
+    "parse_errors": 0,
+    "diagnostic": null,
+    "configuration": {
+      "model": "gpt-6.1-sol",
+      "effort": "high",
+      "sandbox": "read-only",
+      "shell_tool": false,
+      "web_search": "disabled",
+      "user_config_loaded": false,
+      "project_instructions_loaded": false,
+      "skills_catalog_max_tokens": 1,
+      "automatic_skill_instructions": false,
+      "fixture_tool_approval": "explicit approve",
+      "auth": "existing signed-in Codex host",
+      "mcp_transport": "stdio → private Unix socket → native runtime MCP client"
+    }
+  },
+  "tools": [
+    {
+      "sequence": 1,
+      "name": "callisto_snapshot",
+      "arguments": {
+        "include_text": true,
+        "max_chars": 14000
+      },
+      "started_at": "2026-11-16T16:26:27.811Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"next_offset\":null,\"offset\":0,\"order_changed\":false,\"revision\":\"ax-4840236282725928499:2\",\"text\":\"heading \\\"Ready for a public-site task\\\"\",\"title\":\"Browser benchmark start\",\"truncated\":false,\"url\":\"http://127.0.0.1:41079/\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\"]}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 3.683143000002019,
+      "response_bytes": 477
+    },
+    {
+      "sequence": 2,
+      "name": "callisto_navigate",
+      "arguments": {
+        "url": "https://arxiv.org/"
+      },
+      "started_at": "2026-11-16T16:26:30.636Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"navigationStarted\":true}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 3.8459380000131205,
+      "response_bytes": 67
+    },
+    {
+      "sequence": 3,
+      "name": "callisto_snapshot",
+      "arguments": {
+        "include_text": true,
+        "max_chars": 16000
+      },
+      "started_at": "2026-11-16T16:26:30.642Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"navigationStarted\":true,\"next_offset\":233,\"offset\":0,\"order_changed\":false,\"revision\":\"ax-10882189782010410741:1\",\"text\":\"[ax-16787437245339095017] link \\\"Skip to main content\\\"\\n[ax-7937152563854971410] link \\\"archive home\\\"\\n[ax-6615824907026331981] link \\\"Search\\\"\\n[ax-13569453471677933674] link \\\"Submit\\\"\\n[ax-16196278419360165531] link \\\"Donate\\\"\\n[ax-4162104580367705642] link \\\"Log in\\\"\\nparagraph \\\"arXiv is a free distribution service and an open-access archive for more than 3.2 million scholarly articles in the fields of physics, mathematics, computer science, quantitative biology, quantitative\\\"\\n[ax-12363337043464090202] search \\\"Subject search and browse:\\\"\\n[ax-18255057794825207728] combobox \\\"Subject search and browse:\\\"\\n[ax-9361597545497402350] button \\\"\\\"\\n[ax-30751449656339457] button \\\"Form Interface\\\"\\n[ax-6863127529562138005] button \\\"Catchup\\\"\\nheading \\\"Physics\\\"\\nlistitem \\\"Astrophysics (astro-ph new, recent, search) Astrophysics of Galaxies; Cosmology and Nongalactic Astrophysics; Earth and Planetary Astrophysics; High Energy Astrophysical Phenomena; Instrumentation and\\\"\\n[ax-5488187050729860812] link \\\"Astrophysics\\\"\\n[ax-3729359627125651164] link \\\"new astro-ph\\\"\\n[ax-4214653549158239825] link \\\"recent astro-ph\\\"\\n[ax-2968761261166999997] link \\\"search astro-ph\\\"\\n[ax-5227222820200109850] link \\\"Astrophysics Astrophysics of Galaxies\\\"\\n[ax-14976877092567206764] link \\\"Astrophysics Cosmology and Nongalactic Astrophysics\\\"\\n[ax-15663681496129590507] link \\\"Astrophysics Earth and Planetary Astrophysics\\\"\\n[ax-2607329015526584984] link \\\"Astrophysics High Energy Astrophysical Phenomena\\\"\\n[ax-9317691012940580647] link \\\"Astrophysics Instrumentation and Methods for Astrophysics\\\"\\n[ax-16707101057635381419] link \\\"Astrophysics Solar and Stellar Astrophysics\\\"\\nlistitem \\\"Condensed Matter (cond-mat new, recent, search) Disordered Systems and Neural Networks; Materials Science; Mesoscale and Nanoscale Physics; Other Condensed Matter; Quantum Gases; Soft Condensed Matter\\\"\\n[ax-17958491993851774098] link \\\"Condensed Matter\\\"\\n[ax-10014449035212908379] link \\\"new cond-mat\\\"\\n[ax-15493900355477457912] link \\\"recent cond-mat\\\"\\n[ax-10272804483769545316] link \\\"search cond-mat\\\"\\n[ax-13564173256067970515] link \\\"Condensed Matter Disordered Systems and Neural Networks\\\"\\n[ax-7821994890655402722] link \\\"Condensed Matter Materials Science\\\"\\n[ax-6757112292017861842] link \\\"Condensed Matter Mesoscale and Nanoscale Physics\\\"\\n[ax-11281605258246988226] link \\\"Condensed Matter Other Condensed Matter\\\"\\n[ax-7481665987814002497] link \\\"Condensed Matter Quantum Gases\\\"\\n[ax-2356482343949539277] link \\\"Condensed Matter Soft Condensed Matter\\\"\\n[ax-17231969347049766355] link \\\"Condensed Matter Statistical Mechanics\\\"\\n[ax-13681371072837859385] link \\\"Condensed Matter Strongly Correlated Electrons\\\"\\n[ax-13619095478823815667] link \\\"Condensed Matter Superconductivity\\\"\\nlistitem \\\"General Relativity and Quantum Cosmology (gr-qc new, recent, search)\\\"\\n[ax-4508031164045688648] link \\\"General Relativity and Quantum Cosmology\\\"\\n[ax-8449968171431358261] link \\\"new gr-qc\\\"\\n[ax-18019391227869166299] link \\\"recent gr-qc\\\"\\n[ax-2175819429770875385] link \\\"search gr-qc\\\"\\nlistitem \\\"High Energy Physics - Experiment (hep-ex new, recent, search)\\\"\\n[ax-7204420304735187702] link \\\"High Energy Physics - Experiment\\\"\\n[ax-9129822191483688779] link \\\"new hep-ex\\\"\\n[ax-7599591004253355145] link \\\"recent hep-ex\\\"\\n[ax-17269667828558355333] link \\\"search hep-ex\\\"\\nlistitem \\\"High Energy Physics - Lattice (hep-lat new, recent, search)\\\"\\n[ax-30029099143743100] link \\\"High Energy Physics - Lattice\\\"\\n[ax-17893211550287804609] link \\\"new hep-lat\\\"\\n[ax-16906217294813572119] link \\\"recent hep-lat\\\"\\n[ax-13773754277289706765] link \\\"search hep-lat\\\"\\nlistitem \\\"High Energy Physics - Phenomenology (hep-ph new, recent, search)\\\"\\n[ax-9003279099983378461] link \\\"High Energy Physics - Phenomenology\\\"\\n[ax-9874385038027951207] link \\\"new hep-ph\\\"\\n[ax-12624280018779934301] link \\\"recent hep-ph\\\"\\n[ax-17193768463015976125] link \\\"search hep-ph\\\"\\nlistitem \\\"High Energy Physics - Theory (hep-th new, recent, search)\\\"\\n[ax-12349577079458859784] link \\\"High Energy Physics - Theory\\\"\\n[ax-10279514997866920359] link \\\"new hep-th\\\"\\n[ax-17907912255304042720] link \\\"recent hep-th\\\"\\n[ax-11634261413465466405] link \\\"search hep-th\\\"\\nlistitem \\\"Mathematical Physics (math-ph new, recent, search)\\\"\\n[ax-6956721475344956910] link \\\"Mathematical Physics\\\"\\n[ax-14620798039067354411] link \\\"new math-ph\\\"\\n[ax-17995372711120537945] link \\\"recent math-ph\\\"\\n[ax-9250298235524016952] link \\\"search math-ph\\\"\\nlistitem \\\"Nonlinear Sciences (nlin new, recent, search) includes: Adaptation and Self-Organizing Systems; Cellular Automata and Lattice Gases; Chaotic Dynamics; Exactly Solvable and Integrable Systems; Pattern \\\"\\n[ax-12783037184806330529] link \\\"Nonlinear Sciences\\\"\\n[ax-14780335396031914727] link \\\"new nlin\\\"\\n[ax-14928383895132277762] link \\\"recent nlin\\\"\\n[ax-8776333042517551652] link \\\"search nlin\\\"\\n[ax-13856641848454384428] link \\\"Nonlinear Sciences Adaptation and Self-Organizing Systems\\\"\\n[ax-7522131549032901165] link \\\"Nonlinear Sciences Cellular Automata and Lattice Gases\\\"\\n[ax-946419491663422254] link \\\"Nonlinear Sciences Chaotic Dynamics\\\"\\n[ax-15202374675277520977] link \\\"Nonlinear Sciences Exactly Solvable and Integrable Systems\\\"\\n[ax-15618386692513351433] link \\\"Nonlinear Sciences Pattern Formation and Solitons\\\"\\nlistitem \\\"Nuclear Experiment (nucl-ex new, recent, search)\\\"\\n[ax-17634872231092169110] link \\\"Nuclear Experiment\\\"\\n[ax-17195662098196279820] link \\\"new nucl-ex\\\"\\n[ax-7039302604155631952] link \\\"recent nucl-ex\\\"\\n[ax-8626252717629579023] link \\\"search nucl-ex\\\"\\nlistitem \\\"Nuclear Theory (nucl-th new, recent, search)\\\"\\n[ax-6145707476197069071] link \\\"Nuclear Theory\\\"\\n[ax-15993017771329191802] link \\\"new nucl-th\\\"\\n[ax-1640311925092766253] link \\\"recent nucl-th\\\"\\n[ax-15118258325199261383] link \\\"search nucl-th\\\"\\nlistitem \\\"Physics (physics new, recent, search) includes: Accelerator Physics; Applied Physics; Atmospheric and Oceanic Physics; Atomic and Molecular Clusters; Atomic Physics; Biological Physics; Chemical Physi\\\"\\n[ax-2698474088128957687] link \\\"Physics\\\"\\n[ax-658082856604393932] link \\\"new physics\\\"\\n[ax-11863919090826780585] link \\\"recent physics\\\"\\n[ax-16542299484707392287] link \\\"search physics\\\"\\n[ax-15818073247175744815] link \\\"Physics Accelerator Physics\\\"\\n[ax-15994812266727373421] link \\\"Physics Applied Physics\\\"\\n[ax-12422077796081755536] link \\\"Physics Atmospheric and Oceanic Physics\\\"\\n[ax-18203330546030419555] link \\\"Physics Atomic and Molecular Clusters\\\"\\n[ax-7990642386738425483] link \\\"Physics Atomic Physics\\\"\\n[ax-6195797584301628858] link \\\"Physics Biological Physics\\\"\\n[ax-10375453533133394532] link \\\"Physics Chemical Physics\\\"\\n[ax-13136483009662539447] link \\\"Physics Classical Physics\\\"\\n[ax-11663289842071439463] link \\\"Physics Computational Physics\\\"\\n[ax-6605981505693188933] link \\\"Physics Data Analysis, Statistics and Probability\\\"\\n[ax-1907692479899398281] link \\\"Physics Fluid Dynamics\\\"\\n[ax-13518854183711880941] link \\\"Physics General Physics\\\"\\n[ax-18099192684754035052] link \\\"Physics Geophysics\\\"\\n[ax-8125481230055132004] link \\\"Physics History and Philosophy of Physics\\\"\\n[ax-9745181514628322994] link \\\"Physics Instrumentation and Detectors\\\"\\n[ax-17597052560651292124] link \\\"Physics Medical Physics\\\"\\n[ax-14918038013432754171] link \\\"Physics Optics\\\"\\n[ax-11856743846912914835] link \\\"Physics Physics and Society\\\"\\n[ax-16153537940911418175] link \\\"Physics Physics Education\\\"\\n[ax-16855630868024950122] link \\\"Physics Plasma Physics\\\"\\n[ax-17499336496386144786] link \\\"Physics Popular Physics\\\"\\n[ax-8030177495416296485] link \\\"Physics Space Physics\\\"\\nlistitem \\\"Quantum Physics (quant-ph new, recent, search)\\\"\\n[ax-10472125520831811448] link \\\"Quantum Physics\\\"\\n[ax-4196794869833875229] link \\\"new quant-ph\\\"\\n[ax-8819047996745219143] link \\\"recent quant-ph\\\"\\n[ax-4885775195110641771] link \\\"search quant-ph\\\"\\nheading \\\"Mathematics\\\"\\nlistitem \\\"Mathematics (math new, recent, search) includes: (see detailed description): Algebraic Geometry; Algebraic Topology; Analysis of PDEs; Category Theory; Classical Analysis and ODEs; Combinatorics; Comm\\\"\\n[ax-742002848165934550] link \\\"Mathematics\\\"\\n[ax-17425288960989660002] link \\\"new math\\\"\\n[ax-3590832494395069636] link \\\"recent math\\\"\\n[ax-2020317694736651629] link \\\"search math\\\"\\n[ax-1018002607494478498] link \\\"detailed description Mathematics\\\"\\n[ax-7890261482417563620] link \\\"Mathematics Algebraic Geometry\\\"\\n[ax-4869140694099591451] link \\\"Mathematics Algebraic Topology\\\"\\n[ax-10349176223075388189] link \\\"Mathematics Analysis of PDEs\\\"\\n[ax-13216665460927682055] link \\\"Mathematics Category Theory\\\"\\n[ax-796916261525072532] link \\\"Mathematics Classical Analysis and ODEs\\\"\\n[ax-2467192314351142974] link \\\"Mathematics Combinatorics\\\"\\n[ax-7905599224672140060] link \\\"Mathematics Commutative Algebra\\\"\\n[ax-4955539622656581237] link \\\"Mathematics Complex Variables\\\"\\n[ax-12923669378216663474] link \\\"Mathematics Differential Geometry\\\"\\n[ax-6140786880162984608] link \\\"Mathematics Dynamical Systems\\\"\\n[ax-2671697982294142976] link \\\"Mathematics Functional Analysis\\\"\\n[ax-17391711981337234080] link \\\"Mathematics General Mathematics\\\"\\n[ax-12482383718872573869] link \\\"Mathematics General Topology\\\"\\n[ax-5639956812101886185] link \\\"Mathematics Geometric Topology\\\"\\n[ax-18204714449611251079] link \\\"Mathematics Group Theory\\\"\\n[ax-5270787157826583200] link \\\"Mathematics History and Overview\\\"\\n[ax-18199856169447147631] link \\\"Mathematics Information Theory\\\"\\n[ax-12061911798908677720] link \\\"Mathematics K-Theory and Homology\\\"\\n[ax-5509955437098051867] link \\\"Mathematics Logic\\\"\\n[ax-6176489173816784369] link \\\"Mathematics Mathematical Physics\\\"\\n[ax-8193131799464310931] link \\\"Mathematics Metric Geometry\\\"\\n[ax-11381484154079730175] link \\\"Mathematics Number Theory\\\"\\n[ax-1685545414552957978] link \\\"Mathematics Numerical Analysis\\\"\\n[ax-5687115187700384374] link \\\"Mathematics Operator Algebras\\\"\\n[ax-5840109276203634885] link \\\"Mathematics Optimization and Control\\\"\\n[ax-15381386466143231204] link \\\"Mathematics Probability\\\"\\n[ax-17274594332538210698] link \\\"Mathematics Quantum Algebra\\\"\\n[ax-14506923042519258120] link \\\"Mathematics Representation Theory\\\"\\n[ax-3923263047583127473] link \\\"Mathematics Rings and Algebras\\\"\\n[ax-7345991799689407940] link \\\"Mathematics Spectral Theory\\\"\\n[ax-13644524910980532565] link \\\"Mathematics Statistics Theory\\\"\\n[ax-5186790783348730427] link \\\"Mathematics Symplectic Geometry\\\"\\nheading \\\"Computer Science\\\"\\nlistitem \\\"Computing Research Repository (CoRR new, recent, search) includes: (see detailed description): Artificial Intelligence; Computation and Language; Computational Complexity; Computational Engineering, F\\\"\\n[ax-6862925758017401038] link \\\"Computing Research Repository\\\"\\n[ax-16010392022025550678] link \\\"new CoRR\\\"\\n[ax-11754519922043463088] link \\\"recent CoRR\\\"\\n[ax-4996254243288788747] link \\\"search CoRR\\\"\\n[ax-17364767742331230190] link \\\"detailed description Computing Research Repository\\\"\\n[ax-3724847384725217226] link \\\"Computing Research Repository Artificial Intelligence\\\"\\n[ax-2202624544624915312] link \\\"Computing Research Repository Computation and Language\\\"\\n[ax-12348733775139041801] link \\\"Computing Research Repository Computational Complexity\\\"\\n[ax-10001994861369157462] link \\\"Computing Research Repository Computational Engineering, Finance, and Science\\\"\\n[ax-4487447928140213428] link \\\"Computing Research Repository Computational Geometry\\\"\\n[ax-7875026490864188113] link \\\"Computing Research Repository Computer Science and Game Theory\\\"\\n[ax-3340009637688554924] link \\\"Computing Research Repository Computer Vision and Pattern Recognition\\\"\\n[ax-3428736942396466067] link \\\"Computing Research Repository Computers and Society\\\"\\n[ax-5703862766542044924] link \\\"Computing Research Repository Cryptography and Security\\\"\\n[ax-11627936995562325574] link \\\"Computing Research Repository Data Structures and Algorithms\\\"\\n[ax-1652846480342106427] link \\\"Computing Research Repository Databases\\\"\\n[ax-683548455063193598] link \\\"Computing Research Repository Digital Libraries\\\"\\n[ax-1815621654753164944] link \\\"Computing Research Repository Discrete Mathematics\\\"\\n[ax-2769422729615992517] link \\\"Computing Research Repository Distributed, Parallel, and Cluster Computing\\\"\\n[ax-15229349224381777286] link \\\"Computing Research Repository Emerging Technologies\\\"\\n[ax-6487545786178150128] link \\\"Computing Research Repository Formal Languages and Automata Theory\\\"\\n[ax-5068306608193644829] link \\\"Computing Research Repository General Literature\\\"\\n[ax-13033200577772037900] link \\\"Computing Research Repository Graphics\\\"\\n[ax-9303865528895155534] link \\\"Computing Research Repository Hardware Architecture\\\"\\n[ax-11090116035023225482] link \\\"Computing Research Repository Human-Computer Interaction\\\"\\n[ax-15884410145746457602] link \\\"Computing Research Repository Information Retrieval\\\"\\n[ax-14908270756529366424] link \\\"Computing Research Repository Information Theory\\\"\\n[ax-12478687352154323692] link \\\"Computing Research Repository Logic in Computer Science\\\"\\n[ax-13688446017503601299] link \\\"Computing Research Repository Machine Learning\\\"\\n[ax-10477498356210561510] link \\\"Computing Research Repository Mathematical Software\\\"\\n[ax-2796776353754415671] link \\\"Computing Research Repository Multiagent Systems\\\"\\n[ax-15835222235053876362] link \\\"Computing Research Repository Multimedia\\\"\\n[ax-399001729089311014] link \\\"Computing Research Repository Networking and Internet Architecture\\\"\\n[ax-9459877063745615955] link \\\"Computing Research Repository Neural and Evolutionary Computing\\\"\\n[ax-13715219355991427839] link \\\"Computing Research Repository Numerical Analysis\\\"\\n[ax-11451327733279763860] link \\\"Computing Research Repository Operating Systems\\\"\\n[ax-2599017014484248411] link \\\"Computing Research Repository Other Computer Science\\\"\\n[ax-12062872030857877199] link \\\"Computing Research Repository Performance\\\"\\n[ax-9981136261051936145] link \\\"Computing Research Repository Programming Languages\\\"\\n[ax-13707461955128369795] link \\\"Computing Research Repository Robotics\\\"\\n[ax-15924049468187728845] link \\\"Computing Research Repository Social and Information Networks\\\"\\n[ax-12953884288510521286] link \\\"Computing Research Repository Software Engineering\\\"\\n[ax-7978874672363876133] link \\\"Computing Research Repository Sound\\\"\\n[ax-13505739139364753934] link \\\"Computing Research Repository Symbolic Computation\\\"\\n[ax-5171329781923558556] link \\\"Computing Research Repository Systems and Control\\\"\\nheading \\\"Quantitative Biology\\\"\\nlistitem \\\"Quantitative Biology (q-bio new, recent, search) includes: (see detailed description): Biomolecules; Cell Behavior; Genomics; Molecular Networks; Neurons and Cognition; Other Quantitative Biology; Pop\\\"\\n[ax-8997664806385912844] link \\\"Quantitative Biology\\\"\\n[ax-2273427821144588713] link \\\"new q-bio\\\"\\n[ax-2678577061705582105] link \\\"recent q-bio\\\"\\n[ax-1000524640331861923] link \\\"search q-bio\\\"\\n[ax-17730066953758950285] link \\\"detailed description Quantitative Biology\\\"\\n[ax-4351558563621988121] link \\\"Quantitative Biology Biomolecules\\\"\\n[ax-14550370147787469165] link \\\"Quantitative Biology Cell Behavior\\\"\\n[ax-12124411584935216814] link \\\"Quantitative Biology Genomics\\\"\\n[ax-1018036341441004520] link \\\"Quantitative Biology Molecular Networks\\\"\\n[ax-8855386497288057963] link \\\"Quantitative Biology Neurons and Cognition\\\"\\n[ax-15834745956819135678] link \\\"Quantitative Biology Other Quantitative Biology\\\"\\n[ax-9251392440139025738] link \\\"Quantitative Biology Populations and Evolution\\\"\\n[ax-15381516589141462796] link \\\"Quantitative Biology Quantitative Methods\\\"\\n[ax-13168300345185906458] link \\\"Quantitative Biology Subcellular Processes\\\"\\n[ax-1283349911148748829] link \\\"Quantitative Biology Tissues and Organs\\\"\\nheading \\\"Quantitative Finance\\\"\\nlistitem \\\"Quantitative Finance (q-fin new, recent, search) includes: (see detailed description): Computational Finance; Economics; General Finance; Mathematical Finance; Portfolio Management; Pricing of Securit\\\"\\n[ax-3356608638660798728] link \\\"Quantitative Finance\\\"\\n[ax-2702690602494701108] link \\\"new q-fin\\\"\\n[ax-12696114489944213826] link \\\"recent q-fin\\\"\\n[ax-17178846461999417414] link \\\"search q-fin\\\"\\n[ax-4329227208775213016] link \\\"detailed description Quantitative Finance\\\"\\n[ax-1020330482005630783] link \\\"Quantitative Finance Computational Finance\\\"\\n[ax-6110508086212903000] link \\\"Quantitative Finance Economics\\\"\\n[ax-10592806690558601529] link \\\"Quantitative Finance General Finance\\\"\",\"title\":\"arXiv.org e-Print archive\",\"truncated\":true,\"url\":\"https://arxiv.org/\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\",\"Continue with next_offset and revision to read this captured snapshot.\"]}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 622.6376100000925,
+      "response_bytes": 18371
+    },
+    {
+      "sequence": 4,
+      "name": "callisto_click",
+      "arguments": {
+        "ref": "ax-6615824907026331981"
+      },
+      "started_at": "2026-11-16T16:26:34.432Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"completed\":true}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 12.536901999963447,
+      "response_bytes": 59
+    },
+    {
+      "sequence": 5,
+      "name": "callisto_snapshot",
+      "arguments": {
+        "include_text": true,
+        "max_chars": 12000
+      },
+      "started_at": "2026-11-16T16:26:34.447Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"next_offset\":183,\"offset\":0,\"order_changed\":false,\"revision\":\"ax-10882189782010410741:2\",\"text\":\"[ax-16787437245339095017] link \\\"Skip to main content\\\"\\n[ax-7937152563854971410] link \\\"archive home\\\"\\n[ax-6615824907026331981] link \\\"Search\\\"\\n[ax-13569453471677933674] link \\\"Submit\\\"\\n[ax-16196278419360165531] link \\\"Donate\\\"\\n[ax-4162104580367705642] link \\\"Log in\\\"\\n[ax-7424710729208110965] search \\\"Search arXiv Press Enter to search · Advanced search\\\"\\n[ax-9029605794731664717] textbox \\\"Search arXiv\\\"\\nparagraph \\\"Press Enter to search · Advanced search\\\"\\n[ax-5597895106394581800] link \\\"Advanced search\\\"\\nparagraph \\\"arXiv is a free distribution service and an open-access archive for more than 3.2 million scholarly articles in the fields of physics, mathematics, computer science, quantitative biology, quantitative\\\"\\n[ax-12363337043464090202] search \\\"Subject search and browse:\\\"\\n[ax-18255057794825207728] combobox \\\"Subject search and browse:\\\"\\n[ax-9361597545497402350] button \\\"\\\"\\n[ax-30751449656339457] button \\\"Form Interface\\\"\\n[ax-6863127529562138005] button \\\"Catchup\\\"\\nheading \\\"Physics\\\"\\nlistitem \\\"Astrophysics (astro-ph new, recent, search) Astrophysics of Galaxies; Cosmology and Nongalactic Astrophysics; Earth and Planetary Astrophysics; High Energy Astrophysical Phenomena; Instrumentation and\\\"\\n[ax-5488187050729860812] link \\\"Astrophysics\\\"\\n[ax-3729359627125651164] link \\\"new astro-ph\\\"\\n[ax-4214653549158239825] link \\\"recent astro-ph\\\"\\n[ax-2968761261166999997] link \\\"search astro-ph\\\"\\n[ax-5227222820200109850] link \\\"Astrophysics Astrophysics of Galaxies\\\"\\n[ax-14976877092567206764] link \\\"Astrophysics Cosmology and Nongalactic Astrophysics\\\"\\n[ax-15663681496129590507] link \\\"Astrophysics Earth and Planetary Astrophysics\\\"\\n[ax-2607329015526584984] link \\\"Astrophysics High Energy Astrophysical Phenomena\\\"\\n[ax-9317691012940580647] link \\\"Astrophysics Instrumentation and Methods for Astrophysics\\\"\\n[ax-16707101057635381419] link \\\"Astrophysics Solar and Stellar Astrophysics\\\"\\nlistitem \\\"Condensed Matter (cond-mat new, recent, search) Disordered Systems and Neural Networks; Materials Science; Mesoscale and Nanoscale Physics; Other Condensed Matter; Quantum Gases; Soft Condensed Matter\\\"\\n[ax-17958491993851774098] link \\\"Condensed Matter\\\"\\n[ax-10014449035212908379] link \\\"new cond-mat\\\"\\n[ax-15493900355477457912] link \\\"recent cond-mat\\\"\\n[ax-10272804483769545316] link \\\"search cond-mat\\\"\\n[ax-13564173256067970515] link \\\"Condensed Matter Disordered Systems and Neural Networks\\\"\\n[ax-7821994890655402722] link \\\"Condensed Matter Materials Science\\\"\\n[ax-6757112292017861842] link \\\"Condensed Matter Mesoscale and Nanoscale Physics\\\"\\n[ax-11281605258246988226] link \\\"Condensed Matter Other Condensed Matter\\\"\\n[ax-7481665987814002497] link \\\"Condensed Matter Quantum Gases\\\"\\n[ax-2356482343949539277] link \\\"Condensed Matter Soft Condensed Matter\\\"\\n[ax-17231969347049766355] link \\\"Condensed Matter Statistical Mechanics\\\"\\n[ax-13681371072837859385] link \\\"Condensed Matter Strongly Correlated Electrons\\\"\\n[ax-13619095478823815667] link \\\"Condensed Matter Superconductivity\\\"\\nlistitem \\\"General Relativity and Quantum Cosmology (gr-qc new, recent, search)\\\"\\n[ax-4508031164045688648] link \\\"General Relativity and Quantum Cosmology\\\"\\n[ax-8449968171431358261] link \\\"new gr-qc\\\"\\n[ax-18019391227869166299] link \\\"recent gr-qc\\\"\\n[ax-2175819429770875385] link \\\"search gr-qc\\\"\\nlistitem \\\"High Energy Physics - Experiment (hep-ex new, recent, search)\\\"\\n[ax-7204420304735187702] link \\\"High Energy Physics - Experiment\\\"\\n[ax-9129822191483688779] link \\\"new hep-ex\\\"\\n[ax-7599591004253355145] link \\\"recent hep-ex\\\"\\n[ax-17269667828558355333] link \\\"search hep-ex\\\"\\nlistitem \\\"High Energy Physics - Lattice (hep-lat new, recent, search)\\\"\\n[ax-30029099143743100] link \\\"High Energy Physics - Lattice\\\"\\n[ax-17893211550287804609] link \\\"new hep-lat\\\"\\n[ax-16906217294813572119] link \\\"recent hep-lat\\\"\\n[ax-13773754277289706765] link \\\"search hep-lat\\\"\\nlistitem \\\"High Energy Physics - Phenomenology (hep-ph new, recent, search)\\\"\\n[ax-9003279099983378461] link \\\"High Energy Physics - Phenomenology\\\"\\n[ax-9874385038027951207] link \\\"new hep-ph\\\"\\n[ax-12624280018779934301] link \\\"recent hep-ph\\\"\\n[ax-17193768463015976125] link \\\"search hep-ph\\\"\\nlistitem \\\"High Energy Physics - Theory (hep-th new, recent, search)\\\"\\n[ax-12349577079458859784] link \\\"High Energy Physics - Theory\\\"\\n[ax-10279514997866920359] link \\\"new hep-th\\\"\\n[ax-17907912255304042720] link \\\"recent hep-th\\\"\\n[ax-11634261413465466405] link \\\"search hep-th\\\"\\nlistitem \\\"Mathematical Physics (math-ph new, recent, search)\\\"\\n[ax-6956721475344956910] link \\\"Mathematical Physics\\\"\\n[ax-14620798039067354411] link \\\"new math-ph\\\"\\n[ax-17995372711120537945] link \\\"recent math-ph\\\"\\n[ax-9250298235524016952] link \\\"search math-ph\\\"\\nlistitem \\\"Nonlinear Sciences (nlin new, recent, search) includes: Adaptation and Self-Organizing Systems; Cellular Automata and Lattice Gases; Chaotic Dynamics; Exactly Solvable and Integrable Systems; Pattern \\\"\\n[ax-12783037184806330529] link \\\"Nonlinear Sciences\\\"\\n[ax-14780335396031914727] link \\\"new nlin\\\"\\n[ax-14928383895132277762] link \\\"recent nlin\\\"\\n[ax-8776333042517551652] link \\\"search nlin\\\"\\n[ax-13856641848454384428] link \\\"Nonlinear Sciences Adaptation and Self-Organizing Systems\\\"\\n[ax-7522131549032901165] link \\\"Nonlinear Sciences Cellular Automata and Lattice Gases\\\"\\n[ax-946419491663422254] link \\\"Nonlinear Sciences Chaotic Dynamics\\\"\\n[ax-15202374675277520977] link \\\"Nonlinear Sciences Exactly Solvable and Integrable Systems\\\"\\n[ax-15618386692513351433] link \\\"Nonlinear Sciences Pattern Formation and Solitons\\\"\\nlistitem \\\"Nuclear Experiment (nucl-ex new, recent, search)\\\"\\n[ax-17634872231092169110] link \\\"Nuclear Experiment\\\"\\n[ax-17195662098196279820] link \\\"new nucl-ex\\\"\\n[ax-7039302604155631952] link \\\"recent nucl-ex\\\"\\n[ax-8626252717629579023] link \\\"search nucl-ex\\\"\\nlistitem \\\"Nuclear Theory (nucl-th new, recent, search)\\\"\\n[ax-6145707476197069071] link \\\"Nuclear Theory\\\"\\n[ax-15993017771329191802] link \\\"new nucl-th\\\"\\n[ax-1640311925092766253] link \\\"recent nucl-th\\\"\\n[ax-15118258325199261383] link \\\"search nucl-th\\\"\\nlistitem \\\"Physics (physics new, recent, search) includes: Accelerator Physics; Applied Physics; Atmospheric and Oceanic Physics; Atomic and Molecular Clusters; Atomic Physics; Biological Physics; Chemical Physi\\\"\\n[ax-2698474088128957687] link \\\"Physics\\\"\\n[ax-658082856604393932] link \\\"new physics\\\"\\n[ax-11863919090826780585] link \\\"recent physics\\\"\\n[ax-16542299484707392287] link \\\"search physics\\\"\\n[ax-15818073247175744815] link \\\"Physics Accelerator Physics\\\"\\n[ax-15994812266727373421] link \\\"Physics Applied Physics\\\"\\n[ax-12422077796081755536] link \\\"Physics Atmospheric and Oceanic Physics\\\"\\n[ax-18203330546030419555] link \\\"Physics Atomic and Molecular Clusters\\\"\\n[ax-7990642386738425483] link \\\"Physics Atomic Physics\\\"\\n[ax-6195797584301628858] link \\\"Physics Biological Physics\\\"\\n[ax-10375453533133394532] link \\\"Physics Chemical Physics\\\"\\n[ax-13136483009662539447] link \\\"Physics Classical Physics\\\"\\n[ax-11663289842071439463] link \\\"Physics Computational Physics\\\"\\n[ax-6605981505693188933] link \\\"Physics Data Analysis, Statistics and Probability\\\"\\n[ax-1907692479899398281] link \\\"Physics Fluid Dynamics\\\"\\n[ax-13518854183711880941] link \\\"Physics General Physics\\\"\\n[ax-18099192684754035052] link \\\"Physics Geophysics\\\"\\n[ax-8125481230055132004] link \\\"Physics History and Philosophy of Physics\\\"\\n[ax-9745181514628322994] link \\\"Physics Instrumentation and Detectors\\\"\\n[ax-17597052560651292124] link \\\"Physics Medical Physics\\\"\\n[ax-14918038013432754171] link \\\"Physics Optics\\\"\\n[ax-11856743846912914835] link \\\"Physics Physics and Society\\\"\\n[ax-16153537940911418175] link \\\"Physics Physics Education\\\"\\n[ax-16855630868024950122] link \\\"Physics Plasma Physics\\\"\\n[ax-17499336496386144786] link \\\"Physics Popular Physics\\\"\\n[ax-8030177495416296485] link \\\"Physics Space Physics\\\"\\nlistitem \\\"Quantum Physics (quant-ph new, recent, search)\\\"\\n[ax-10472125520831811448] link \\\"Quantum Physics\\\"\\n[ax-4196794869833875229] link \\\"new quant-ph\\\"\\n[ax-8819047996745219143] link \\\"recent quant-ph\\\"\\n[ax-4885775195110641771] link \\\"search quant-ph\\\"\\nheading \\\"Mathematics\\\"\\nlistitem \\\"Mathematics (math new, recent, search) includes: (see detailed description): Algebraic Geometry; Algebraic Topology; Analysis of PDEs; Category Theory; Classical Analysis and ODEs; Combinatorics; Comm\\\"\\n[ax-742002848165934550] link \\\"Mathematics\\\"\\n[ax-17425288960989660002] link \\\"new math\\\"\\n[ax-3590832494395069636] link \\\"recent math\\\"\\n[ax-2020317694736651629] link \\\"search math\\\"\\n[ax-1018002607494478498] link \\\"detailed description Mathematics\\\"\\n[ax-7890261482417563620] link \\\"Mathematics Algebraic Geometry\\\"\\n[ax-4869140694099591451] link \\\"Mathematics Algebraic Topology\\\"\\n[ax-10349176223075388189] link \\\"Mathematics Analysis of PDEs\\\"\\n[ax-13216665460927682055] link \\\"Mathematics Category Theory\\\"\\n[ax-796916261525072532] link \\\"Mathematics Classical Analysis and ODEs\\\"\\n[ax-2467192314351142974] link \\\"Mathematics Combinatorics\\\"\\n[ax-7905599224672140060] link \\\"Mathematics Commutative Algebra\\\"\\n[ax-4955539622656581237] link \\\"Mathematics Complex Variables\\\"\\n[ax-12923669378216663474] link \\\"Mathematics Differential Geometry\\\"\\n[ax-6140786880162984608] link \\\"Mathematics Dynamical Systems\\\"\\n[ax-2671697982294142976] link \\\"Mathematics Functional Analysis\\\"\\n[ax-17391711981337234080] link \\\"Mathematics General Mathematics\\\"\\n[ax-12482383718872573869] link \\\"Mathematics General Topology\\\"\\n[ax-5639956812101886185] link \\\"Mathematics Geometric Topology\\\"\\n[ax-18204714449611251079] link \\\"Mathematics Group Theory\\\"\\n[ax-5270787157826583200] link \\\"Mathematics History and Overview\\\"\\n[ax-18199856169447147631] link \\\"Mathematics Information Theory\\\"\\n[ax-12061911798908677720] link \\\"Mathematics K-Theory and Homology\\\"\\n[ax-5509955437098051867] link \\\"Mathematics Logic\\\"\\n[ax-6176489173816784369] link \\\"Mathematics Mathematical Physics\\\"\\n[ax-8193131799464310931] link \\\"Mathematics Metric Geometry\\\"\\n[ax-11381484154079730175] link \\\"Mathematics Number Theory\\\"\\n[ax-1685545414552957978] link \\\"Mathematics Numerical Analysis\\\"\\n[ax-5687115187700384374] link \\\"Mathematics Operator Algebras\\\"\\n[ax-5840109276203634885] link \\\"Mathematics Optimization and Control\\\"\\n[ax-15381386466143231204] link \\\"Mathematics Probability\\\"\\n[ax-17274594332538210698] link \\\"Mathematics Quantum Algebra\\\"\\n[ax-14506923042519258120] link \\\"Mathematics Representation Theory\\\"\\n[ax-3923263047583127473] link \\\"Mathematics Rings and Algebras\\\"\\n[ax-7345991799689407940] link \\\"Mathematics Spectral Theory\\\"\\n[ax-13644524910980532565] link \\\"Mathematics Statistics Theory\\\"\\n[ax-5186790783348730427] link \\\"Mathematics Symplectic Geometry\\\"\\nheading \\\"Computer Science\\\"\\nlistitem \\\"Computing Research Repository (CoRR new, recent, search) includes: (see detailed description): Artificial Intelligence; Computation and Language; Computational Complexity; Computational Engineering, F\\\"\\n[ax-6862925758017401038] link \\\"Computing Research Repository\\\"\\n[ax-16010392022025550678] link \\\"new CoRR\\\"\\n[ax-11754519922043463088] link \\\"recent CoRR\\\"\\n[ax-4996254243288788747] link \\\"search CoRR\\\"\\n[ax-17364767742331230190] link \\\"detailed description Computing Research Repository\\\"\\n[ax-3724847384725217226] link \\\"Computing Research Repository Artificial Intelligence\\\"\\n[ax-2202624544624915312] link \\\"Computing Research Repository Computation and Language\\\"\\n[ax-12348733775139041801] link \\\"Computing Research Repository Computational Complexity\\\"\\n[ax-10001994861369157462] link \\\"Computing Research Repository Computational Engineering, Finance, and Science\\\"\\n[ax-4487447928140213428] link \\\"Computing Research Repository Computational Geometry\\\"\\n[ax-7875026490864188113] link \\\"Computing Research Repository Computer Science and Game Theory\\\"\\n[ax-3340009637688554924] link \\\"Computing Research Repository Computer Vision and Pattern Recognition\\\"\\n[ax-3428736942396466067] link \\\"Computing Research Repository Computers and Society\\\"\\n[ax-5703862766542044924] link \\\"Computing Research Repository Cryptography and Security\\\"\\n[ax-11627936995562325574] link \\\"Computing Research Repository Data Structures and Algorithms\\\"\\n[ax-1652846480342106427] link \\\"Computing Research Repository Databases\\\"\\n[ax-683548455063193598] link \\\"Computing Research Repository Digital Libraries\\\"\\n[ax-1815621654753164944] link \\\"Computing Research Repository Discrete Mathematics\\\"\",\"title\":\"arXiv.org e-Print archive\",\"truncated\":true,\"url\":\"https://arxiv.org/\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\",\"Continue with next_offset and revision to read this captured snapshot.\"]}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 12.709907999960706,
+      "response_bytes": 13959
+    },
+    {
+      "sequence": 6,
+      "name": "callisto_run",
+      "arguments": {
+        "steps": [
+          {
+            "action": "fill_ref",
+            "ref": "ax-9029605794731664717",
+            "value": "\"Attention Is All You Need\""
+          },
+          {
+            "action": "submit_ref",
+            "ref": "ax-9029605794731664717"
+          }
+        ],
+        "snapshot": true
+      },
+      "started_at": "2026-11-16T16:26:37.551Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"completed\":2,\"elapsed_ms\":50,\"snapshot\":{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"navigationStarted\":true,\"next_offset\":160,\"offset\":0,\"order_changed\":false,\"revision\":\"ax-229682662649243628:1\",\"text\":\"[ax-2473645984436240568] link \\\"Skip to main content\\\"\\n[ax-14024005108458006849] link \\\"archive home\\\"\\n[ax-8082606079533737730] link \\\"Search\\\"\\n[ax-6706313680137719113] link \\\"Submit\\\"\\n[ax-9758863867380309180] link \\\"Donate\\\"\\n[ax-13877716812397480421] link \\\"Log in\\\"\\nheading \\\"Showing 1–47 of 47 results for all: \\\\\\\"Attention Is All You Need\\\\\\\"\\\"\\ntext \\\"\\\\\\\"Attention Is All You Need\\\\\\\"\\\"\\n[ax-5106469560225282421] link \\\"Search v0.5.6 released 2020-02-24\\\"\\n[ax-14087424613644450671] textbox \\\"Search term or terms\\\" =\\\"Attention Is All You Need\\\"\\n[ax-14251830220602575081] combobox \\\"Field\\\"\\n[ax-5177158258270961128] button \\\"Search\\\"\\n[ax-8154747331041961011] radio \\\"Show abstracts Show abstracts\\\"\\n[ax-14973086572383626094] radio \\\"Hide abstracts Hide abstracts\\\"\\n[ax-14934348914686578615] link \\\"Advanced Search\\\"\\ntext \\\".\\\"\\n[ax-17550607449246094462] combobox \\\"results per page\\\"\\n[ax-17721306106320440974] combobox \\\"Sort results by\\\"\\n[ax-15774781627246440372] button \\\"Go\\\"\\nlistitem \\\"arXiv:2609.13531 [pdf] cs.LG cs.AI physics.flu-dyn Attention Is All You Need (to Avoid Spurious Oscillations) Authors: Jinyoung Jeong, Joseph B. Choi, Xinlun Cheng, H. S. Udaykumar, Sanghun Choi, Step\\\"\\nparagraph \\\"arXiv:2609.13531 [pdf]\\\"\\n[ax-10280717977654794865] link \\\"arXiv:2609.13531\\\"\\n[ax-12839908781354656607] link \\\"pdf\\\"\\nparagraph \\\"Attention Is All You Need (to Avoid Spurious Oscillations)\\\"\\nparagraph \\\"Authors: Jinyoung Jeong, Joseph B. Choi, Xinlun Cheng, H. S. Udaykumar, Sanghun Choi, Stephen S. Baek\\\"\\n[ax-13549552246662517068] link \\\"Jinyoung Jeong\\\"\\n[ax-16022140191905400121] link \\\"Joseph B. Choi\\\"\\n[ax-5985206506295905871] link \\\"Xinlun Cheng\\\"\\n[ax-10348185792691641101] link \\\"H. S. Udaykumar\\\"\\n[ax-12507328398756432920] link \\\"Sanghun Choi\\\"\\n[ax-12122306980392821502] link \\\"Stephen S. Baek\\\"\\nparagraph \\\"Abstract: Can attention move a shock across several cells in one update without breaking it? We develop a conservative, fixed grid finite-volume scheme in which a CFL-conditioned attention flux select\\\"\\nparagraph \\\"Submitted 29 September, 2026; v1 submitted 11 September, 2026; originally announced September 2026.\\\"\\nlistitem \\\"arXiv:2608.15061 [pdf, ps, other] cs.CV Do Visual Grounding Decoders Need Feed-Forward Networks? A Controlled Study over Frozen Vision-Language Features Authors: Tarun Tomar Abstract: Do feed-forward \\\"\\nparagraph \\\"arXiv:2608.15061 [pdf, ps, other]\\\"\\n[ax-2412303009656442458] link \\\"arXiv:2608.15061\\\"\\n[ax-3650873920714962684] link \\\"pdf\\\"\\n[ax-3164512967732256874] link \\\"ps\\\"\\n[ax-14336900497520521960] link \\\"other\\\"\\nparagraph \\\"Do Visual Grounding Decoders Need Feed-Forward Networks? A Controlled Study over Frozen Vision-Language Features\\\"\\nparagraph \\\"Authors: Tarun Tomar\\\"\\n[ax-2238588529390594832] link \\\"Tarun Tomar\\\"\\nparagraph \\\"Abstract: Do feed-forward networks (FFNs) in visual grounding decoders add essential computation once a pretrained vision-language model has already encoded image and language context? We compare a fo\\\"\\nparagraph \\\"Submitted 15 August, 2026; originally announced August 2026.\\\"\\nparagraph \\\"Comments: 14 pages, 8 figures, 5 tables. Code and project page: https://github.com/TarunTomar122/attention-is-all-you-need-for-vlms\\\"\\nlistitem \\\"arXiv:2606.02332 [pdf, ps, other] cs.AI cs.CL cs.LG Forget Attention: Importance-Aware Attention Is All You Need Authors: Suhyeong Shin, Yeongwook Yang Abstract: Attention retrieves content precisely,\\\"\\nparagraph \\\"arXiv:2606.02332 [pdf, ps, other]\\\"\\n[ax-5135971173036045097] link \\\"arXiv:2606.02332\\\"\\n[ax-15395241588358149287] link \\\"pdf\\\"\\n[ax-7728749782460886101] link \\\"ps\\\"\\n[ax-11030773170003100670] link \\\"other\\\"\\nparagraph \\\"Forget Attention: Importance-Aware Attention Is All You Need\\\"\\nparagraph \\\"Authors: Suhyeong Shin, Yeongwook Yang\\\"\\n[ax-13952936048177086684] link \\\"Suhyeong Shin\\\"\\n[ax-4129445556733709466] link \\\"Yeongwook Yang\\\"\\nparagraph \\\"Abstract: Attention retrieves content precisely, but its scores depend only on query--key products, leaving order and recency to positional encodings. Conversely, state-space models (SSMs) such as Mam\\\"\\nparagraph \\\"Submitted 27 October, 2026; v1 submitted 1 June, 2026; originally announced June 2026.\\\"\\nparagraph \\\"ACM Class: I.2.7; I.2.6\\\"\\nlistitem \\\"arXiv:2604.21816 [pdf, ps, other] cs.AI Tool Attention Is All You Need: Dynamic Tool Gating and Lazy Schema Loading for Eliminating the MCP/Tools Tax in Scalable Agentic Workflows Authors: Anuj Sadani\\\"\\nparagraph \\\"arXiv:2604.21816 [pdf, ps, other]\\\"\\n[ax-8367517789785708796] link \\\"arXiv:2604.21816\\\"\\n[ax-12144791261044684761] link \\\"pdf\\\"\\n[ax-1846678168924875663] link \\\"ps\\\"\\n[ax-5594030564658184160] link \\\"other\\\"\\nparagraph \\\"Tool Attention Is All You Need: Dynamic Tool Gating and Lazy Schema Loading for Eliminating the MCP/Tools Tax in Scalable Agentic Workflows\\\"\\nparagraph \\\"Authors: Anuj Sadani, Deepak Kumar\\\"\\n[ax-9248734871337765703] link \\\"Anuj Sadani\\\"\\n[ax-15403847410295857629] link \\\"Deepak Kumar\\\"\\nparagraph \\\"Abstract: …fracture points around 70%, and turns token budgets into a recurring operational cost. We introduce Tool Attention, a middleware-layer mechanism that generalizes the \\\\\\\"Attention Is All You N\\\"\\nparagraph \\\"Submitted 23 April, 2026; originally announced April 2026.\\\"\\nparagraph \\\"Comments: 21 pages\\\"\\nlistitem \\\"arXiv:2601.22161 [pdf, ps, other] cs.LG cs.CV cs.SD eess.AS Attention Isn't All You Need for Emotion Recognition:Domain Features Outperform Transformers on the EAV Dataset Authors: Anmol Guragain Abst\\\"\\nparagraph \\\"arXiv:2601.22161 [pdf, ps, other]\\\"\\n[ax-8661184099862206691] link \\\"arXiv:2601.22161\\\"\\n[ax-13907819840836798020] link \\\"pdf\\\"\\n[ax-9998744279357215921] link \\\"ps\\\"\\n[ax-4952224338244446005] link \\\"other\\\"\\nparagraph \\\"Attention Isn't All You Need for Emotion Recognition:Domain Features Outperform Transformers on the EAV Dataset\\\"\\nparagraph \\\"Authors: Anmol Guragain\\\"\\n[ax-10740034214759093803] link \\\"Anmol Guragain\\\"\\nparagraph \\\"Abstract: We present a systematic study of multimodal emotion recognition using the EAV dataset, investigating whether complex attention mechanisms improve performance on small datasets. We implement \\\"\\nparagraph \\\"Submitted 2 February, 2026; v1 submitted 7 January, 2026; originally announced January 2026.\\\"\\nparagraph \\\"Comments: 2 figures, 10 Pages\\\"\\nlistitem \\\"arXiv:2512.19700 [pdf, ps, other] cs.CY cs.DL \\\\\\\"All You Need\\\\\\\" is Not All You Need for a Paper Title: On the Origins of a Scientific Meme Authors: Anton Alyakin Abstract: The 2017 paper ''Attention Is A\\\"\\nparagraph \\\"arXiv:2512.19700 [pdf, ps, other]\\\"\\n[ax-8352088629351574255] link \\\"arXiv:2512.19700\\\"\\n[ax-4195713983254526594] link \\\"pdf\\\"\\n[ax-1721043989235325010] link \\\"ps\\\"\\n[ax-14144238594319488656] link \\\"other\\\"\\nparagraph \\\"\\\\\\\"All You Need\\\\\\\" is Not All You Need for a Paper Title: On the Origins of a Scientific Meme\\\"\\nparagraph \\\"Authors: Anton Alyakin\\\"\\n[ax-1824866670595146540] link \\\"Anton Alyakin\\\"\\nparagraph \\\"Abstract: The 2017 paper ''Attention Is All You Need'' introduced the Transformer architecture-and inadvertently spawned one of machine learning's most persistent naming conventions. We analyze 717 ar\\\"\\nparagraph \\\"Submitted 3 December, 2025; originally announced December 2025.\\\"\\nlistitem \\\"arXiv:2512.11254 [pdf, ps, other] cs.IR FAIR: Focused Attention Is All You Need for Generative Recommendation Authors: Longtao Xiao, Haolin Zhang, Guohao Cai, Jieming Zhu, Yifan Wang, Heng Chang, Zhen\\\"\\nparagraph \\\"arXiv:2512.11254 [pdf, ps, other]\\\"\\n[ax-10041424902038431962] link \\\"arXiv:2512.11254\\\"\\n[ax-6179189795856313292] link \\\"pdf\\\"\\n[ax-7191566033760164018] link \\\"ps\\\"\\n[ax-1655008507351920985] link \\\"other\\\"\\nparagraph \\\"FAIR: Focused Attention Is All You Need for Generative Recommendation\\\"\\nparagraph \\\"Authors: Longtao Xiao, Haolin Zhang, Guohao Cai, Jieming Zhu, Yifan Wang, Heng Chang, Zhenhua Dong, Xiu Li, Ruixuan Li\\\"\\n[ax-9863047900808556604] link \\\"Longtao Xiao\\\"\\n[ax-13807071795306344168] link \\\"Haolin Zhang\\\"\\n[ax-14724970186090596889] link \\\"Guohao Cai\\\"\\n[ax-1052790142645737143] link \\\"Jieming Zhu\\\"\\n[ax-2125439295190082650] link \\\"Yifan Wang\\\"\\n[ax-3620867436878238521] link \\\"Heng Chang\\\"\\n[ax-14013340383282139882] link \\\"Zhenhua Dong\\\"\\n[ax-15809796802947378734] link \\\"Xiu Li\\\"\\n[ax-12416987830384938306] link \\\"Ruixuan Li\\\"\\nparagraph \\\"Abstract: Recently, transformer-based generative recommendation has garnered significant attention for user behavior modeling. However, it often requires discretizing items into multi-code representat\\\"\\nparagraph \\\"Submitted 16 December, 2025; v1 submitted 11 December, 2025; originally announced December 2025.\\\"\\nlistitem \\\"arXiv:2512.08417 [pdf, ps, other] cs.CR Attention is All You Need to Defend Against Indirect Prompt Injection Attacks in LLMs Authors: Yinan Zhong, Qianhao Miao, Yanjiao Chen, Jiangyi Deng, Yushi Chen\\\"\\nparagraph \\\"arXiv:2512.08417 [pdf, ps, other]\\\"\\n[ax-6626765720157069643] link \\\"arXiv:2512.08417\\\"\\n[ax-171920110077388394] link \\\"pdf\\\"\\n[ax-8179322394147917484] link \\\"ps\\\"\\n[ax-17027136972785903478] link \\\"other\\\"\\nparagraph \\\"Attention is All You Need to Defend Against Indirect Prompt Injection Attacks in LLMs\\\"\\nparagraph \\\"Authors: Yinan Zhong, Qianhao Miao, Yanjiao Chen, Jiangyi Deng, Yushi Cheng, Wenyuan Xu\\\"\\n[ax-9562770981055967170] link \\\"Yinan Zhong\\\"\\n[ax-1511105034023430520] link \\\"Qianhao Miao\\\"\\n[ax-8373810450813900398] link \\\"Yanjiao Chen\\\"\\n[ax-12818921666290475579] link \\\"Jiangyi Deng\\\"\\n[ax-1482578492096755005] link \\\"Yushi Cheng\\\"\\n[ax-11501563879510626911] link \\\"Wenyuan Xu\\\"\\nparagraph \\\"Abstract: Large Language Models (LLMs) have been integrated into many applications (e.g., web agents) to perform more sophisticated tasks. However, LLM-empowered applications are vulnerable to Indirec\\\"\\nparagraph \\\"Submitted 11 August, 2026; v1 submitted 9 December, 2025; originally announced December 2025.\\\"\\nparagraph \\\"Comments: Accepted by Network and Distributed System Security (NDSS) Symposium 2026\\\"\\nlistitem \\\"arXiv:2510.19861 [pdf, ps, other] cs.LG Some Attention is All You Need for Retrieval Authors: Felix Michalak, Steven Abreu Abstract: We demonstrate complete functional segregation in hybrid SSM-Transf\\\"\\nparagraph \\\"arXiv:2510.19861 [pdf, ps, other]\\\"\\n[ax-10026972420208568447] link \\\"arXiv:2510.19861\\\"\\n[ax-11831351594759752866] link \\\"pdf\\\"\\n[ax-7184372559127141750] link \\\"ps\\\"\\n[ax-6507713911890863611] link \\\"other\\\"\\nparagraph \\\"Some Attention is All You Need for Retrieval\\\"\\nparagraph \\\"Authors: Felix Michalak, Steven Abreu\\\"\\n[ax-8226105021884820070] link \\\"Felix Michalak\\\"\\n[ax-3471104859895355801] link \\\"Steven Abreu\\\"\\nparagraph \\\"Abstract: We demonstrate complete functional segregation in hybrid SSM-Transformer architectures: retrieval depends exclusively on self-attention layers. Across RecurrentGemma-2B/9B and Jamba-Mini-1.6\\\"\\nparagraph \\\"Submitted 21 October, 2025; originally announced October 2025.\\\"\\nparagraph \\\"Comments: 16 pages, 10 figures\\\"\\nlistitem \\\"arXiv:2510.14973 [pdf, ps, other] cs.CL cs.AI cs.LG Attention Is All You Need for KV Cache in Diffusion LLMs Authors: Quan Nguyen-Tri, Mukul Ranjan, Zhiqiang Shen Abstract: This work studies how to ad\\\"\\nparagraph \\\"arXiv:2510.14973 [pdf, ps, other]\\\"\\n[ax-935117115950132023] link \\\"arXiv:2510.14973\\\"\\n[ax-3195814945643469533] link \\\"pdf\\\"\\n[ax-7672667679739405343] link \\\"ps\\\"\\n[ax-15970735488485064672] link \\\"other\\\"\\nparagraph \\\"Attention Is All You Need for KV Cache in Diffusion LLMs\\\"\\nparagraph \\\"Authors: Quan Nguyen-Tri, Mukul Ranjan, Zhiqiang Shen\\\"\\n[ax-2271854611381416056] link \\\"Quan Nguyen-Tri\\\"\\n[ax-11906330609935785895] link \\\"Mukul Ranjan\\\"\\n[ax-10897841687670935885] link \\\"Zhiqiang Shen\\\"\\nparagraph \\\"Abstract: This work studies how to adaptively recompute key-value (KV) caches for diffusion large language models (DLMs) to maximize prediction accuracy while minimizing decoding latency. Prior method\\\"\\nparagraph \\\"Submitted 28 December, 2025; v1 submitted 16 October, 2025; originally announced October 2025.\\\"\\nparagraph \\\"Comments: Code at: https://github.com/VILA-Lab/Elastic-Cache\\\"\\nlistitem \\\"arXiv:2510.06828 [pdf, ps, other] cs.LG cs.AI Recurrence-Complete Frame-based Action Models Authors: Michael Keiblinger Abstract: …years, attention-like mechanisms have been used to great success in t\\\"\\nparagraph \\\"arXiv:2510.06828 [pdf, ps, other]\\\"\\n[ax-8110324414703023316] link \\\"arXiv:2510.06828\\\"\",\"title\":\"Search | arXiv e-print repository\",\"truncated\":true,\"url\":\"https://arxiv.org/search/?query=%22Attention+Is+All+You+Need%22&searchtype=all&source=header\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\",\"Continue with next_offset and revision to read this captured snapshot.\"]}}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 2182.8585619999794,
+      "response_bytes": 13984
+    },
+    {
+      "sequence": 7,
+      "name": "callisto_extract",
+      "arguments": {
+        "selector": "li.arxiv-result",
+        "fields": {
+          "title": ".title",
+          "link": {
+            "selector": ".list-title a",
+            "attribute": "href"
+          },
+          "authors": ".authors"
+        },
+        "limit": 50
+      },
+      "started_at": "2026-11-16T16:26:43.039Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"count\":47,\"pages\":1,\"rows\":[{\"authors\":\"Authors: Jinyoung Jeong, Joseph B. Choi, Xinlun Cheng, H. S. Udaykumar, Sanghun Choi, Stephen S. Baek\",\"link\":\"https://arxiv.org/abs/2609.13531\",\"title\":\"Attention Is All You Need (to Avoid Spurious Oscillations)\"},{\"authors\":\"Authors: Tarun Tomar\",\"link\":\"https://arxiv.org/abs/2608.15061\",\"title\":\"Do Visual Grounding Decoders Need Feed-Forward Networks? A Controlled Study over Frozen Vision-Language Features\"},{\"authors\":\"Authors: Suhyeong Shin, Yeongwook Yang\",\"link\":\"https://arxiv.org/abs/2606.02332\",\"title\":\"Forget Attention: Importance-Aware Attention Is All You Need\"},{\"authors\":\"Authors: Anuj Sadani, Deepak Kumar\",\"link\":\"https://arxiv.org/abs/2604.21816\",\"title\":\"Tool Attention Is All You Need: Dynamic Tool Gating and Lazy Schema Loading for Eliminating the MCP/Tools Tax in Scalable Agentic Workflows\"},{\"authors\":\"Authors: Anmol Guragain\",\"link\":\"https://arxiv.org/abs/2601.22161\",\"title\":\"Attention Isn't All You Need for Emotion Recognition:Domain Features Outperform Transformers on the EAV Dataset\"},{\"authors\":\"Authors: Anton Alyakin\",\"link\":\"https://arxiv.org/abs/2512.19700\",\"title\":\"\\\"All You Need\\\" is Not All You Need for a Paper Title: On the Origins of a Scientific Meme\"},{\"authors\":\"Authors: Longtao Xiao, Haolin Zhang, Guohao Cai, Jieming Zhu, Yifan Wang, Heng Chang, Zhenhua Dong, Xiu Li, Ruixuan Li\",\"link\":\"https://arxiv.org/abs/2512.11254\",\"title\":\"FAIR: Focused Attention Is All You Need for Generative Recommendation\"},{\"authors\":\"Authors: Yinan Zhong, Qianhao Miao, Yanjiao Chen, Jiangyi Deng, Yushi Cheng, Wenyuan Xu\",\"link\":\"https://arxiv.org/abs/2512.08417\",\"title\":\"Attention is All You Need to Defend Against Indirect Prompt Injection Attacks in LLMs\"},{\"authors\":\"Authors: Felix Michalak, Steven Abreu\",\"link\":\"https://arxiv.org/abs/2510.19861\",\"title\":\"Some Attention is All You Need for Retrieval\"},{\"authors\":\"Authors: Quan Nguyen-Tri, Mukul Ranjan, Zhiqiang Shen\",\"link\":\"https://arxiv.org/abs/2510.14973\",\"title\":\"Attention Is All You Need for KV Cache in Diffusion LLMs\"},{\"authors\":\"Authors: Michael Keiblinger\",\"link\":\"https://arxiv.org/abs/2510.06828\",\"title\":\"Recurrence-Complete Frame-based Action Models\"},{\"authors\":\"Authors: Phuoc-Nguyen Bui, Khanh-Binh Nguyen, Hyunseung Choo\",\"link\":\"https://arxiv.org/abs/2509.03895\",\"title\":\"Attn-Adapter: Attention Is All You Need for Online Few-shot Learner of Vision-Language Model\"},{\"authors\":\"Authors: Chun-Tse Li, Tzen Ong, Max Geier, Hsin Lin, Liang Fu\",\"link\":\"https://arxiv.org/abs/2509.03683\",\"title\":\"Attention is all you need to solve chiral superconductivity\"},{\"authors\":\"Authors: Zan Huang\",\"link\":\"https://arxiv.org/abs/2504.09596\",\"title\":\"Revisiting Self-Attentive Sequential Recommendation Beyond the LLM Paradigm\"},{\"authors\":\"Authors: Fanxu Meng, Pingzhi Tang, Xiaojuan Tang, Zengwei Yao, Xing Sun, Muhan Zhang\",\"link\":\"https://arxiv.org/abs/2502.07864\",\"title\":\"TransMLA: Multi-Head Latent Attention Is All You Need\"},{\"authors\":\"Authors: M. Murat Yaslioglu\",\"link\":\"https://arxiv.org/abs/2501.09166\",\"title\":\"Attention is All You Need Until You Need Retention\"},{\"authors\":\"Authors: Tapio Pitkäranta\",\"link\":\"https://arxiv.org/abs/2501.06929\",\"title\":\"Why are we living the age of AI applications right now? The long innovation path from AI's birth to a child's bedtime magic\"},{\"authors\":\"Authors: Yifan Zhang, Yifeng Liu, Huizhuo Yuan, Zhen Qin, Yang Yuan, Quanquan Gu, Andrew Chi-Chih Yao\",\"link\":\"https://arxiv.org/abs/2501.06425\",\"title\":\"Tensor Product Attention Is All You Need\"},{\"authors\":\"Authors: Guoxin Feng\",\"link\":\"https://arxiv.org/abs/2501.05730\",\"title\":\"Element-wise Attention Is All You Need\"},{\"authors\":\"Authors: Advait Gadhikar, Souptik Kumar Majumdar, Niclas Popp, Piyapat Saranrittichai, Martin Rapp, Lukas Schott\",\"link\":\"https://arxiv.org/abs/2412.20875\",\"title\":\"Attention Is All You Need For Mixture-of-Depths Routing\"},{\"authors\":\"Authors: Iman Kazemian, Murat Yildirim, Paritosh Ramanan\",\"link\":\"https://arxiv.org/abs/2410.24052\",\"title\":\"Attention is All You Need to Optimize Wind Farm Operations and Maintenance\"},{\"authors\":\"Authors: Lu Yu, Haiyang Zhang, Changsheng Xu\",\"link\":\"https://arxiv.org/abs/2410.21802\",\"title\":\"Text-Guided Attention is All You Need for Zero-Shot Robustness in Vision-Language Models\"},{\"authors\":\"Authors: Runzhen Xue, Hao Wu, Mingyu Yan, Ziheng Xiao, Guangyu Sun, Xiaochun Ye, Dongrui Fan\",\"link\":\"https://arxiv.org/abs/2410.18368\",\"title\":\"Multi-objective Optimization in CPU Design Space Exploration: Attention is All You Need\"},{\"authors\":\"Authors: Akram Elghouat, Ahmed Algouti, Abdellah Algouti, Soukaina Baid\",\"link\":\"https://arxiv.org/abs/2408.02692\",\"title\":\"Attention is all you need for an improved CNN-based flash flood susceptibility modeling. The case of the ungauged Rheraya watershed, Morocco\"},{\"authors\":\"Authors: Georgy Tyukin, Gbetondji J-S Dovonon, Jean Kaddour, Pasquale Minervini\",\"link\":\"https://arxiv.org/abs/2407.15516\",\"title\":\"Attention Is All You Need But You Don't Need All Of It For Inference of Large Language Models\"},{\"authors\":\"Authors: André Sacilotti, Samuel Felipe dos Santos, Nicu Sebe, Jurandy Almeida\",\"link\":\"https://arxiv.org/abs/2407.01375\",\"title\":\"Transferable-guided Attention Is All You Need for Video Domain Adaptation\"},{\"authors\":\"Authors: Yinwei Wu\",\"link\":\"https://arxiv.org/abs/2403.15419\",\"title\":\"Attention is all you need for boosting graph convolutional neural network\"},{\"authors\":\"Authors: Georgios Ioannides, Aman Chadha, Aaron Elkins\",\"link\":\"https://arxiv.org/abs/2401.11143\",\"title\":\"Density Adaptive Attention is All You Need: Robust Parameter-Efficient Fine-Tuning Across Multiple Modalities\"},{\"authors\":\"Authors: Zihan Liu, Zewei Sun, Shanbo Cheng, Shujian Huang, Mingxuan Wang\",\"link\":\"https://arxiv.org/abs/2309.14174\",\"title\":\"Only 5\\\\% Attention Is All You Need: Efficient Long-range Document-level Neural Machine Translation\"},{\"authors\":\"Authors: Chunxi Wang, Maoshen Jia, Meiran Li, Changchun Bao, Wenyu Jin\",\"link\":\"https://arxiv.org/abs/2309.13504\",\"title\":\"Attention Is All You Need For Blind Room Volume Estimation\"},{\"authors\":\"Authors: Davoud Ataee Tarzanagh, Yingcong Li, Christos Thrampoulidis, Samet Oymak\",\"link\":\"https://arxiv.org/abs/2308.16898\",\"title\":\"Transformers as Support Vector Machines\"},{\"authors\":\"Authors: Daniel Murnane\",\"link\":\"https://arxiv.org/abs/2307.16662\",\"title\":\"Graph Structure from Point Clouds: Geometric Attention is All You Need\"},{\"authors\":\"Authors: Jiaming Liang, Lei Cao, Samuel Madden, Zachary Ives, Guoliang Li\",\"link\":\"https://arxiv.org/abs/2306.01926\",\"title\":\"RITA: Group Attention is All You Need for Timeseries Analytics\"},{\"authors\":\"Authors: Yeqi Gao, Zhao Song, Xin Yang, Yufa Zhou\",\"link\":\"https://arxiv.org/abs/2305.04701\",\"title\":\"Differentially Private Attention Computation\"},{\"authors\":\"Authors: Markus Eisenbach, Jannik Lübberstedt, Dustin Aganian, Horst-Michael Gross\",\"link\":\"https://arxiv.org/abs/2302.14574\",\"title\":\"A Little Bit Attention Is All You Need for Person Re-Identification\"},{\"authors\":\"Authors: Shucong Zhang, Malcolm Chadwick, Alberto Gil C. P. Ramos, Sourav Bhattacharya\",\"link\":\"https://arxiv.org/abs/2211.04346\",\"title\":\"Cross-Attention is all you need: Real-Time Streaming Transformers for Personalised Speech Enhancement\"},{\"authors\":\"Authors: Nic Fishman, Leif Hancox-Li\",\"link\":\"https://arxiv.org/abs/2205.08377\",\"title\":\"Should attention be all we need? The epistemic and ethical implications of unification in machine learning\"},{\"authors\":\"Authors: Prateek Verma\",\"link\":\"https://arxiv.org/abs/2110.03183\",\"title\":\"Attention is All You Need? Good Embeddings with Statistics are enough:Large Scale Audio Understanding without Transformers/ Convolutions/ BERTs/ Mixers/ Attention/ RNNs or ....\"},{\"authors\":\"Authors: Shuhao Cao\",\"link\":\"https://arxiv.org/abs/2105.14995\",\"title\":\"Choose a Transformer: Fourier or Galerkin\"},{\"authors\":\"Authors: Mozhdeh Gheini, Xiang Ren, Jonathan May\",\"link\":\"https://arxiv.org/abs/2104.08771\",\"title\":\"Cross-Attention is All You Need: Adapting Pretrained Transformers for Machine Translation\"},{\"authors\":\"Authors: Hongqiu Wu, Hai Zhao, Min Zhang\",\"link\":\"https://arxiv.org/abs/2104.04692\",\"title\":\"Not All Attention Is All You Need\"},{\"authors\":\"Authors: Kaiji Lu, Zifan Wang, Piotr Mardziel, Anupam Datta\",\"link\":\"https://arxiv.org/abs/2011.00740\",\"title\":\"Influence Patterns for Explaining Information Flow in BERT\"},{\"authors\":\"Authors: Cem Subakan, Mirco Ravanelli, Samuele Cornell, Mirko Bronzi, Jianyuan Zhong\",\"link\":\"https://arxiv.org/abs/2010.13154\",\"title\":\"Attention is All You Need in Speech Separation\"},{\"authors\":\"Authors: Peter Cha, Paul Ginsparg, Felix Wu, Juan Carrasquilla, Peter L. McMahon, Eun-Ah Kim\",\"link\":\"https://arxiv.org/abs/2006.12469\",\"title\":\"Attention-based Quantum Tomography\"},{\"authors\":\"Authors: Sufeng Duan, Hai Zhao\",\"link\":\"https://arxiv.org/abs/1910.14537\",\"title\":\"Attention Is All You Need for Chinese Word Segmentation\"},{\"authors\":\"Authors: Manjot Bilkhu, Siyang Wang, Tushar Dobhal\",\"link\":\"https://arxiv.org/abs/1906.02792\",\"title\":\"Attention is all you need for Videos: Self-attention based Video Summarization using Universal Transformers\"},{\"authors\":\"Authors: Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N. Gomez, Lukasz Kaiser, Illia Polosukhin\",\"link\":\"https://arxiv.org/abs/1706.03762\",\"title\":\"Attention Is All You Need\"}],\"title\":\"[Callisto] Search | arXiv e-print repository\",\"truncated\":false,\"url\":\"https://arxiv.org/search/?query=%22Attention+Is+All+You+Need%22&searchtype=all&source=header\"}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 12.015700999996625,
+      "response_bytes": 10237
+    },
+    {
+      "sequence": 8,
+      "name": "callisto_navigate",
+      "arguments": {
+        "url": "https://arxiv.org/abs/1706.03762"
+      },
+      "started_at": "2026-11-16T16:26:45.868Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"navigationStarted\":true}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 3.6089930000016466,
+      "response_bytes": 67
+    },
+    {
+      "sequence": 9,
+      "name": "callisto_snapshot",
+      "arguments": {
+        "include_text": true,
+        "max_chars": 18000
+      },
+      "started_at": "2026-11-16T16:26:45.874Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"navigationStarted\":true,\"next_offset\":null,\"offset\":0,\"order_changed\":false,\"revision\":\"ax-8526291130055558465:1\",\"text\":\"[ax-16421576473535632077] link \\\"Skip to main content\\\"\\n[ax-17545896933843847637] link \\\"archive home\\\"\\n[ax-6661089921843601018] link \\\"Search\\\"\\n[ax-17830946486929018065] link \\\"Submit\\\"\\n[ax-6924537703893353762] link \\\"Donate\\\"\\n[ax-15407824499877131014] link \\\"Log in\\\"\\nheading \\\"Computer Science > Computation and Language\\\"\\ntext \\\"[Submitted on 12 Jun 2017 ( ), last revised 2 Aug 2023 (this version, v7)]\\\"\\n[ax-4178446004357327215] link \\\"v1\\\"\\nheading \\\"Attention Is All You Need\\\"\\ntext \\\", , , , , , ,\\\"\\n[ax-9918547238966229569] link \\\"Ashish Vaswani\\\"\\n[ax-3793132447710845637] link \\\"Noam Shazeer\\\"\\n[ax-805701240255473888] link \\\"Niki Parmar\\\"\\n[ax-5634174031579301522] link \\\"Jakob Uszkoreit\\\"\\n[ax-11431914651137560354] link \\\"Llion Jones\\\"\\n[ax-17172212354745313648] link \\\"Aidan N. Gomez\\\"\\n[ax-7290895036835113850] link \\\"Lukasz Kaiser\\\"\\n[ax-9611609853909208112] link \\\"Illia Polosukhin\\\"\\nblockquote \\\"The dominant sequence transduction models are based on complex recurrent or convolutional neural networks in an encoder-decoder configuration. The best performing models also connect the encoder and d\\\"\\ncell \\\"Comments:\\\"\\ncell \\\"15 pages, 5 figures\\\"\\ncell \\\"Subjects:\\\"\\ncell \\\"Computation and Language (cs.CL); Machine Learning (cs.LG)\\\"\\ncell \\\"Cite as:\\\"\\ncell \\\"arXiv:1706.03762 [cs.CL]\\\"\\n[ax-14976650390055558533] link \\\"arXiv:1706.03762\\\"\\ncell \\\"\\\"\\ncell \\\"(or arXiv:1706.03762v7 [cs.CL] for this version)\\\"\\n[ax-12978861491141285621] link \\\"arXiv:1706.03762v7\\\"\\ncell \\\"\\\"\\ncell \\\"https://doi.org/10.48550/arXiv.1706.03762 Focus to learn more\\\"\\n[ax-14358380950641528178] link \\\"https://doi.org/10.48550/arXiv.1706.03762\\\"\\n[ax-8944864282243052023] button \\\"Focus to learn more\\\"\\npresentation \\\"\\\"\\ntext \\\"From: Llion Jones [ ] Mon, 12 Jun 2017 17:57:34 UTC (1,102 KB) Mon, 19 Jun 2017 16:49:45 UTC (1,125 KB) Tue, 20 Jun 2017 05:20:02 UTC (1,125 KB) Fri, 30 Jun 2017 17:29:30 UTC (1,124 KB) Wed, 6 Dec 201\\\"\\nheading \\\"Submission history\\\"\\n[ax-18445284081447959242] link \\\"view email\\\"\\n[ax-6511233239211974418] link \\\"[v1]\\\"\\n[ax-4846432748110878529] link \\\"[v2]\\\"\\n[ax-3979249002020021715] link \\\"[v3]\\\"\\n[ax-15165505278933084829] link \\\"[v4]\\\"\\n[ax-15118613918409607470] link \\\"[v5]\\\"\\n[ax-4811897876291815515] link \\\"[v6]\\\"\\nheading \\\"Access Paper:\\\"\\nlistitem \\\"View PDF\\\"\\n[ax-5481595919786601537] link \\\"View PDF\\\"\\nlistitem \\\"HTML (experimental)\\\"\\n[ax-10224574729857623893] link \\\"HTML (experimental)\\\"\\nlistitem \\\"TeX Source\\\"\\n[ax-8745638856947031862] link \\\"TeX Source\\\"\\n[ax-2166520858803972489] link \\\"view license\\\"\\nheading \\\"Current browse context:\\\"\\ntext \\\"cs.CL\\\"\\n[ax-7512228163067022863] link \\\"< prev\\\"\\ntext \\\"|\\\"\\n[ax-6454406495009373728] link \\\"next >\\\"\\n[ax-13922427637113177130] link \\\"new\\\"\\ntext \\\"|\\\"\\n[ax-9779525779896793209] link \\\"recent\\\"\\ntext \\\"|\\\"\\n[ax-15929587936236910109] link \\\"2017-06\\\"\\ntext \\\"Change to browse by:\\\"\\n[ax-6049111019128165820] link \\\"cs\\\"\\n[ax-13268456874755712628] link \\\"cs.LG\\\"\\nheading \\\"References & Citations\\\"\\nlistitem \\\"NASA ADS\\\"\\n[ax-5379805340460561717] link \\\"NASA ADS\\\"\\nlistitem \\\"Google Scholar\\\"\\n[ax-5132765669959419589] link \\\"Google Scholar\\\"\\nlistitem \\\"Semantic Scholar\\\"\\n[ax-16829317621145095189] link \\\"Semantic Scholar\\\"\\ntext \\\"( )\\\"\\nheading \\\"123 blog links\\\"\\n[ax-15512066042408344842] link \\\"123 blog links\\\"\\n[ax-5732603478356328317] link \\\"what is this?\\\"\\nheading \\\"DBLP - CS Bibliography\\\"\\n[ax-12671387887509452819] link \\\"DBLP\\\"\\ntext \\\"|\\\"\\n[ax-6345152426967789927] link \\\"listing\\\"\\n[ax-719593048185689657] link \\\"bibtex\\\"\\n[ax-12368146561563525814] link \\\"Ashish Vaswani\\\"\\n[ax-5052724786695438548] link \\\"Noam Shazeer\\\"\\n[ax-5084218721196044644] link \\\"Niki Parmar\\\"\\n[ax-7349328680361198352] link \\\"Jakob Uszkoreit\\\"\\n[ax-15939184045984752486] link \\\"Llion Jones\\\"\\ntext \\\"…\\\"\\n[ax-8425377584693383443] button \\\"Export BibTeX Citation\\\"\\nheading \\\"Bookmark\\\"\\n[ax-2843774178989803561] link \\\"\\\"\\n[ax-2920118386727726984] link \\\"Bookmark on Reddit\\\"\\n[ax-1585577806826089263] tablist \\\"arXivLabs tools\\\"\\n[ax-5439888290738801638] radio \\\"Bibliographic Tools\\\"\\n[ax-9308956163146998304] tab \\\"Bibliographic Tools\\\"\\n[ax-15607607849949555892] tabpanel \\\"Bibliographic Tools\\\"\\nheading \\\"Bibliographic and Citation Tools\\\"\\n[ax-3367622979946187600] link \\\"What is the Explorer?\\\"\\n[ax-12300785087104436451] link \\\"What is Connected Papers?\\\"\\n[ax-4308357388549547890] link \\\"What is Litmaps?\\\"\\n[ax-576355251534937460] link \\\"What are Smart Citations?\\\"\\n[ax-16772905212610211325] radio \\\"Code, Data, Media\\\"\\n[ax-6417132151678021767] tab \\\"Code, Data, Media\\\"\\n[ax-6154289240193513756] radio \\\"Demos\\\"\\n[ax-8748531911014052712] tab \\\"Demos\\\"\\n[ax-5062357931943605022] radio \\\"Related Papers\\\"\\n[ax-1269090444543907707] tab \\\"Related Papers\\\"\\n[ax-9288117631192335166] radio \\\"About arXivLabs\\\"\\n[ax-6189465598157861929] tab \\\"About arXivLabs\\\"\\ntext \\\"| ( )\\\"\\n[ax-1901900892203672933] link \\\"Which authors of this paper are endorsers?\\\"\\n[ax-9197942535028634594] link \\\"Disable MathJax\\\"\\n[ax-10966070392654880233] link \\\"What is MathJax?\\\"\\ntext \\\"We gratefully acknowledge support from our , , and all contributors.\\\"\\n[ax-216532761594083122] link \\\"member institutions\\\"\\n[ax-9086262221083822317] link \\\"About\\\"\\n[ax-4799469908261364537] link \\\"Help\\\"\\n[ax-8373723336597340870] link \\\"Contact\\\"\\n[ax-15429249862561496580] link \\\"Subscribe\\\"\\n[ax-13605562308040727905] link \\\"Copyright\\\"\\n[ax-18255404702517617332] link \\\"Privacy\\\"\\n[ax-16490937187327684464] link \\\"Accessibility\\\"\\n[ax-5643295960582328580] link \\\"Operational Status (opens in new tab)\\\"\\ntext \\\"Major funding support from\\\"\\n[ax-8696830321374960163] link \\\"\\\"\\n[ax-14265428463524085897] link \\\"\\\"\\n[ax-5433544515136954549] link \\\"\\\"\",\"title\":\"[1706.03762] Attention Is All You Need\",\"truncated\":false,\"url\":\"https://arxiv.org/abs/1706.03762\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\"]}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 89.60829999996349,
+      "response_bytes": 6859
+    },
+    {
+      "sequence": 10,
+      "name": "callisto_extract",
+      "arguments": {
+        "selector": "#abs",
+        "fields": {
+          "title": "h1.title",
+          "authors": ".authors",
+          "submission": ".dateline",
+          "identifier": ".arxivid",
+          "history": ".submission-history"
+        },
+        "limit": 1
+      },
+      "started_at": "2026-11-16T16:26:49.623Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"count\":1,\"pages\":1,\"rows\":[{\"authors\":\"Authors:Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N. Gomez, Lukasz Kaiser, Illia Polosukhin\",\"history\":null,\"identifier\":\"arXiv:1706.03762 [cs.CL]\",\"submission\":\"[Submitted on 12 Jun 2017 (v1), last revised 2 Aug 2023 (this version, v7)]\",\"title\":\"Title:Attention Is All You Need\"}],\"title\":\"[Callisto] [1706.03762] Attention Is All You Need\",\"truncated\":false,\"url\":\"https://arxiv.org/abs/1706.03762\"}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 4.763812000048347,
+      "response_bytes": 553
+    }
+  ]
+}

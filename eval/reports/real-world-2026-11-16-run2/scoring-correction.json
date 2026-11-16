@@ -1,0 +1,22 @@
+{
+  "at": "2026-11-16T16:34:08.474Z",
+  "reason": "Calendar answers can state the year once for both dates. Require the requested year in the answer and the correct two day/month values; do not require repeating the year after each date. This is applied uniformly to both engines and every saved trial. Requested facts, source URL, observed-quote and no-direct-fetch criteria are unchanged. Original answers, timings, usage, traces and raw results are preserved.",
+  "changed_trials": [
+    {
+      "engine": "browse",
+      "task": "govuk-calendar",
+      "round": 0,
+      "before": "agent_failure",
+      "after": "passed"
+    },
+    {
+      "engine": "zen",
+      "task": "govuk-calendar",
+      "round": 0,
+      "before": "agent_failure",
+      "after": "passed"
+    }
+  ],
+  "scorer_sha256": "63e82610d46063a4f9f7bfd5e42de772d6f3ab6dd0fc1336f7001ad8ebfb4b54",
+  "offline_scoring_ms": null
+}

@@ -1,0 +1,5 @@
+{
+  "at": "2026-11-16T16:31:09.911Z",
+  "message": "Reported token session-boundary guard reached",
+  "stack": "Error: Reported token session-boundary guard reached\n    at file:///home/lothnic/Desktop/Projects/callisto/eval/agent-comparison/real-world-agent.mjs:82:100"
+}

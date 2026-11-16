@@ -1,0 +1,10 @@
+{
+  "real-world-agent.mjs": "f92adeb3a80ea227b66778073af65117009cfb81f365dcd38e4d2d7cf91483c3",
+  "real-world-tasks.mjs": "5f125cdf135730da632856e7d8ce9b3bf69950d3e20e53958e1217ec57755468",
+  "host-session.mjs": "cde5776a3e7a080909a34fd6995d7839be63467220560366160632d9e7e83405",
+  "host-mcp-proxy.mjs": "a2675678c3857c3daf922c52de972aeff84a1b147c77e4163cb102e8f3e0777f",
+  "codex-host.mjs": "bcc8c68240729ef4fb043a2557e76fa96c16f788ec0aef5c83a392dbf691cd5a",
+  "zen-fixture.mjs": "66d210e98b92a6a41993f463d7b073085ea47108f50813b1a783c00dfc77e0c4",
+  "browse-fixture.mjs": "bb619a3f1ceae559ac9e41ea359ce2f22010daba31170d69efe43e170b789be1",
+  "mcp-client.mjs": "a0a7d68230241ce1dc5ddf2588620b2dfe4de58472dd0dbf2f8e48ba2dd34c97"
+}

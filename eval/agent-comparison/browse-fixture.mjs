@@ -18,7 +18,7 @@ export class BrowseFixture {
   await until(()=>fetch(`http://127.0.0.1:${this.port}/version`).then(r=>r.ok));
   let pairOutput;try{const result=await exec('browse',['pair','--wait-seconds','1'],{env:this.env,timeout:10000});pairOutput=result.stdout+'\n'+result.stderr;}catch(error){pairOutput=(error.stdout||'')+'\n'+(error.stderr||'');}
   const code=pairOutput.match(/\b[0-9A-HJKMNP-TV-Z]{4}-[0-9A-HJKMNP-TV-Z]{4}\b/)?.[0];if(!code)throw Error('Could not create private browse pairing code');
-  const extension=resolve('vendor/browse/dist');
+  const extension=resolve(process.env.BROWSE_EXTENSION_PATH||'vendor/browse/dist');
   this.browser=await chromium.launchPersistentContext(join(this.directory,'profile'),{executablePath:process.env.CHROMIUM_PATH||'/snap/bin/chromium',headless:false,viewport:{width:1440,height:900},args:['--no-sandbox',`--disable-extensions-except=${extension}`,`--load-extension=${extension}`]});
   const worker=this.browser.serviceWorkers()[0]||await this.browser.waitForEvent('serviceworker',{timeout:15000});
   await worker.evaluate(async({code,port})=>{await chrome.storage.local.set({agentRelayPort:port,agentRelayPairingCode:code.replace('-','')});},{code,port:this.port});

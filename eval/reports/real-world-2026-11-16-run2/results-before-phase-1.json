@@ -1,0 +1,2566 @@
+{
+  "schema": "callisto.real-world-agent.v1",
+  "updated_at": "2026-11-16T16:31:09.912Z",
+  "model": "gpt-6.1-sol",
+  "reasoning_effort": "high",
+  "input_mode": "synthetic-dom",
+  "repetitions": 2,
+  "planned_runs": 24,
+  "completed_runs": 21,
+  "metadata": {
+    "started_at": "2026-11-16T16:15:44.087Z",
+    "source_revision": "cfd0bc7b9c5d5eacbb608bebf3c7c1b234a678af",
+    "runtime_version": "callisto-firefox-tab-mcp 0.3.1-alpha.1",
+    "runtime_sha256": "22c09ac5f7123c23338ba8f3bb80470ee6a15c4ca2f923ed66d22097ab2b09c9",
+    "extension_source_version": "0.3.1",
+    "fixture_extension_version": "0.2.1",
+    "fixture_note": "Owned test extension uses pregranted optional permissions, automatic private pairing and test diagnostics. No task content or answers are injected.",
+    "extension_sources_sha256": {
+      "manifest.json": "86d6aac07f05c5a2d7d8169755da5e406d2d33e56940fa48da26e7e12a9d41aa",
+      "background.js": "0368598de3c6f15cf1e786a7853eb7571951ee580bbdb43fe2776039e612711b",
+      "content.js": "c98f0aad2c17868f510e859dcee1614afaec9c7e152348c679e6e7d66bd0f4de",
+      "browser-control.js": "c0abf50bd136c7989fa5ab3361ae86d7e5619a495bdfd3ceb617c4e61119e080"
+    },
+    "zen_version": "1.14.9b",
+    "zen_profile": "owned temporary persistent profile on Xvfb",
+    "zen_input": {
+      "extensionSharingControls": true,
+      "fallback": false,
+      "leaseBound": false,
+      "mode": "synthetic-dom",
+      "transportConnected": false
+    },
+    "codex_version": "codex-cli 0.166.0",
+    "browse_cli": "0.0.16",
+    "browse_extension_version": "0.0.17",
+    "browse_extension_manifest_sha256": "d2903431647c3a144fdf1e1deb5b22ad69581494086a86213f2cea4dbed81709",
+    "chromium_version": "157.0.8103.38",
+    "browse_profile": "owned anonymous profile on Xvfb",
+    "setup_elapsed_ms": 13646.315406,
+    "catalogs": {
+      "zen": {
+        "native_count": 25,
+        "exposed_count": 14,
+        "exposed_bytes": 9790
+      },
+      "browse": {
+        "native_count": 18,
+        "exposed_count": 1,
+        "exposed_bytes": 2730
+      }
+    }
+  },
+  "oracles": {
+    "captured_at": "2026-11-16T16:15:31.261Z",
+    "pypi": {
+      "version": "0.28.1",
+      "requires_python": ">=3.8"
+    },
+    "github": {
+      "title": "Suggestion: 'protected' modifier",
+      "state": "closed",
+      "author": "RyanCavanaugh",
+      "url": "https://github.com/microsoft/TypeScript/issues/1"
+    },
+    "holidays": [
+      {
+        "title": "Summer bank holiday",
+        "date": "2027-08-02",
+        "notes": "",
+        "bunting": true
+      },
+      {
+        "title": "St Andrew’s Day",
+        "date": "2027-11-30",
+        "notes": "",
+        "bunting": true
+      }
+    ],
+    "sources": [
+      "https://pypi.org/pypi/httpx/json",
+      "https://api.github.com/repos/microsoft/TypeScript/issues/1",
+      "https://www.gov.uk/bank-holidays.json"
+    ]
+  },
+  "tasks": [
+    {
+      "id": "wikipedia-biography",
+      "name": "Wikipedia biography",
+      "start": "https://en.wikipedia.org/wiki/Main_Page",
+      "origins": [
+        "https://en.wikipedia.org"
+      ],
+      "instruction": "Find Ada Lovelace on Wikipedia. Report her full birth date, birthplace and mother’s name. Cite the biography page and a short supporting quote.",
+      "expected": {
+        "date": "10 December 1815",
+        "place": "London",
+        "mother": "Anne Isabella Milbanke"
+      },
+      "answer_patterns": [
+        "10\\s+December\\s+1815|December\\s+10,?\\s+1815|1815-12-10",
+        "London",
+        "(?:Annabella|Anne?\\s+Isabella)(?:\\s+Noel)?\\s+(?:Milbanke|Byron)"
+      ],
+      "source_pattern": "en\\.wikipedia\\.org\\/wiki\\/Ada_Lovelace"
+    },
+    {
+      "id": "arxiv-paper",
+      "name": "arXiv paper lookup",
+      "start": "https://arxiv.org/",
+      "origins": [
+        "https://arxiv.org"
+      ],
+      "instruction": "Find the paper titled exactly “Attention Is All You Need” on arXiv. Report its arXiv identifier, first two authors and original submission date. Cite the abstract page and a short supporting quote.",
+      "expected": {
+        "id": "1706.03762",
+        "authors": [
+          "Ashish Vaswani",
+          "Noam Shazeer"
+        ],
+        "date": "12 June 2017"
+      },
+      "answer_patterns": [
+        "1706\\.03762",
+        "Ashish\\s+Vaswani",
+        "Noam\\s+Shazeer",
+        "12\\s+Jun(?:e)?\\s+2017|Jun(?:e)?\\s+12,?\\s+2017|2017-06-12"
+      ],
+      "source_pattern": "arxiv\\.org\\/abs\\/1706\\.03762"
+    },
+    {
+      "id": "github-issue",
+      "name": "GitHub issue lookup",
+      "start": "https://github.com/microsoft/TypeScript",
+      "origins": [
+        "https://github.com"
+      ],
+      "instruction": "Find issue #1 in microsoft/TypeScript on GitHub. Report its title, whether it is open or closed, and the username of the person who opened it. Cite the issue page and a short supporting quote.",
+      "oracle": "github",
+      "expected": {
+        "title": "Suggestion: 'protected' modifier",
+        "state": "closed",
+        "author": "RyanCavanaugh",
+        "url": "https://github.com/microsoft/TypeScript/issues/1"
+      },
+      "answer_patterns": [
+        "Suggestion.{0,10}protected.{0,10}modifier",
+        "closed",
+        "RyanCavanaugh"
+      ],
+      "source_pattern": "github\\.com\\/microsoft\\/TypeScript\\/issues\\/1(?:\\b|#)"
+    },
+    {
+      "id": "pypi-metadata",
+      "name": "PyPI package metadata",
+      "start": "https://pypi.org/project/httpx/",
+      "origins": [
+        "https://pypi.org"
+      ],
+      "instruction": "On PyPI, inspect the httpx project and its release history. Report the latest stable release version and its minimum required Python version. Cite the project page and a short supporting quote.",
+      "oracle": "pypi",
+      "expected": {
+        "version": "0.28.1",
+        "requires_python": ">=3.8"
+      },
+      "answer_patterns": [
+        "0\\.28\\.1",
+        "3\\.8"
+      ],
+      "source_pattern": "pypi\\.org\\/project\\/httpx\\/"
+    },
+    {
+      "id": "python-json",
+      "name": "Python documentation",
+      "start": "https://docs.python.org/3/",
+      "origins": [
+        "https://docs.python.org"
+      ],
+      "instruction": "Find the Python documentation for json.loads. Report the exception raised for invalid JSON and the supported types of its input argument s. Cite the relevant documentation page and a short supporting quote.",
+      "expected": {
+        "error": "JSONDecodeError",
+        "inputs": [
+          "str",
+          "bytes",
+          "bytearray"
+        ]
+      },
+      "answer_patterns": [
+        "JSONDecodeError",
+        "\\bstr\\b|string",
+        "\\bbytes\\b",
+        "\\bbytearray\\b"
+      ],
+      "source_pattern": "docs\\.python\\.org\\/3(?:\\.\\d+)?\\/library\\/json\\.html"
+    },
+    {
+      "id": "govuk-calendar",
+      "name": "GOV.UK holiday calendar",
+      "start": "https://www.gov.uk/bank-holidays",
+      "origins": [
+        "https://www.gov.uk"
+      ],
+      "instruction": "Use the GOV.UK bank holiday calendar for Scotland in 2027. Report the dates of the summer bank holiday and St Andrew’s Day. Cite the calendar page and a short supporting quote.",
+      "oracle": "holidays",
+      "expected": [
+        {
+          "title": "Summer bank holiday",
+          "date": "2027-08-02",
+          "notes": "",
+          "bunting": true
+        },
+        {
+          "title": "St Andrew’s Day",
+          "date": "2027-11-30",
+          "notes": "",
+          "bunting": true
+        }
+      ],
+      "answer_patterns": [
+        "2(?:st|nd|rd|th)?\\s+August\\s+2027|August\\s+2(?:st|nd|rd|th)?,?\\s+2027|2027-08-02",
+        "30(?:st|nd|rd|th)?\\s+November\\s+2027|November\\s+30(?:st|nd|rd|th)?,?\\s+2027|2027-11-30"
+      ],
+      "source_pattern": "gov\\.uk\\/bank-holidays"
+    }
+  ],
+  "catalogs": {
+    "zen": [
+      {
+        "description": "Dispatch synthetic keydown/keyup on the focused control, including chords such as Control+A. For JavaScript keyboard handlers only: native editing, focus navigation, shortcuts and form submission defaults are not emulated. Use fill or submit for those operations.",
+        "inputSchema": {
+          "properties": {
+            "key": {
+              "maxLength": 40,
+              "minLength": 1,
+              "type": "string"
+            }
+          },
+          "required": [
+            "key"
+          ],
+          "type": "object"
+        },
+        "name": "callisto_press"
+      },
+      {
+        "description": "List frames in the controlled tab. Frame access depends on granted website permissions.",
+        "inputSchema": {
+          "properties": {},
+          "type": "object"
+        },
+        "name": "callisto_frames"
+      },
+      {
+        "description": "Select a frame by frame_id from callisto_frames, inject the bridge and return a fresh snapshot. Navigation resets selection. Cross-origin frame input fails closed because parent hit testing cannot be verified.",
+        "inputSchema": {
+          "properties": {
+            "frame_id": {
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          "required": [
+            "frame_id"
+          ],
+          "type": "object"
+        },
+        "name": "callisto_frame"
+      },
+      {
+        "description": "Manage the user's browser after they grant Enable browser access in the extension. background start/pause/resume/stop controls only the already shared tab and needs the optional tabs grant; the user must prepare the window in the extension first because Firefox/Zen may focus it on creation. Execution then preserves the tab and login in an unfocused agent window. View is a user control. Other actions support tabs, screenshots, cookies, bookmarks, history and downloads. tab_select activates and shares that existing tab; tab_activate only focuses it, including browser-protected pages. tab_create accepts an HTTP(S) url and window_id; omitting url creates about:blank. Use tab_navigate with tab_id and an HTTP(S) url to load a blank tab before page actions. In opt-in Full browser control mode, new tabs/windows are automatically shared and page tools can adopt the active tab or reactivate their selected tab. Full mode can only be enabled in the extension UI; Stop turns it off. Check callisto_status.fullAccess. Browser restrictions still apply. window_close closes the specified whole window, including its tabs; use the id returned by window_create for agent-window cleanup. Cookie values are sensitive. Downloads prompt for a save location. Zen may omit inactive workspaces.",
+        "inputSchema": {
+          "properties": {
+            "action": {
+              "enum": [
+                "background",
+                "tabs_list",
+                "windows_list",
+                "tab_select",
+                "tab_activate",
+                "tab_create",
+                "tab_navigate",
+                "window_create",
+                "window_close",
+                "agent_container",
+                "tab_close",
+                "back",
+                "forward",
+                "reload",
+                "screenshot",
+                "cookies_list",
+                "cookie_set",
+                "cookie_remove",
+                "bookmarks_search",
+                "history_search",
+                "downloads_search",
+                "download"
+              ],
+              "type": "string"
+            },
+            "agent_container": {
+              "description": "Create a new tab or window in the opt-in isolated Callisto cookie container; existing logins will not be available there.",
+              "type": "boolean"
+            },
+            "cookie_store_id": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "operation": {
+              "description": "Required for background. The agent window must remain unfocused and unminimized; unsupported conditions pause instead of raising it.",
+              "enum": [
+                "start",
+                "pause",
+                "resume",
+                "stop"
+              ],
+              "type": "string"
+            },
+            "query": {
+              "maxLength": 200,
+              "type": "string"
+            },
+            "tab_id": {
+              "minimum": 0,
+              "type": "integer"
+            },
+            "url": {
+              "type": "string"
+            },
+            "value": {
+              "type": "string"
+            },
+            "window_id": {
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          "required": [
+            "action"
+          ],
+          "type": "object"
+        },
+        "name": "callisto_browser"
+      },
+      {
+        "description": "Additional DOM operations on the active controlled page. scroll uses viewport pixel deltas; hover dispatches synthetic pointer/mouse events; select chooses an option by value; check sets a checkbox; text returns bounded visible body text; find searches visible body text. Input uses the explicitly selected callisto_input mode.",
+        "inputSchema": {
+          "properties": {
+            "action": {
+              "enum": [
+                "scroll",
+                "hover",
+                "select",
+                "check",
+                "text",
+                "find"
+              ],
+              "type": "string"
+            },
+            "checked": {
+              "type": "boolean"
+            },
+            "delta_x": {
+              "type": "number"
+            },
+            "delta_y": {
+              "type": "number"
+            },
+            "query": {
+              "maxLength": 200,
+              "type": "string"
+            },
+            "ref": {
+              "pattern": "^ax-[0-9]+$",
+              "type": "string"
+            },
+            "value": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "action"
+          ],
+          "type": "object"
+        },
+        "name": "callisto_page"
+      },
+      {
+        "description": "Search visible page text and return bounded matching snippets. Unlike Chromium accessibility search, this uses rendered DOM text.",
+        "inputSchema": {
+          "properties": {
+            "max_matches": {
+              "default": 5,
+              "maximum": 10,
+              "minimum": 1,
+              "type": "integer"
+            },
+            "query": {
+              "maxLength": 200,
+              "minLength": 1,
+              "type": "string"
+            }
+          },
+          "required": [
+            "query"
+          ],
+          "type": "object"
+        },
+        "name": "callisto_find"
+      },
+      {
+        "description": "Submit the form associated with a snapshot ref, preserving browser validation and submit handlers. Use an input or submit-button ref. Submission may navigate; the next snapshot waits for the page.",
+        "inputSchema": {
+          "properties": {
+            "ref": {
+              "pattern": "^ax-[0-9]+$",
+              "type": "string"
+            }
+          },
+          "required": [
+            "ref"
+          ],
+          "type": "object"
+        },
+        "name": "callisto_submit"
+      },
+      {
+        "description": "Execute 1–10 dependent actions in the controlled tab and return a final snapshot in one tool call. Batches stop if tab ownership changes. Earlier actions are not rolled back on failure. Ten-second deadline; input uses the explicitly selected callisto_input mode.",
+        "inputSchema": {
+          "properties": {
+            "actions": {
+              "items": {
+                "properties": {
+                  "action": {
+                    "enum": [
+                      "navigate",
+                      "click_ref",
+                      "fill_ref",
+                      "submit_ref",
+                      "click_role",
+                      "fill_role",
+                      "submit_role",
+                      "scroll"
+                    ],
+                    "type": "string"
+                  },
+                  "delta_x": {
+                    "type": "number"
+                  },
+                  "delta_y": {
+                    "type": "number"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "ref": {
+                    "type": "string"
+                  },
+                  "role": {
+                    "type": "string"
+                  },
+                  "url": {
+                    "type": "string"
+                  },
+                  "value": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "action"
+                ],
+                "type": "object"
+              },
+              "maxItems": 10,
+              "minItems": 1,
+              "type": "array"
+            }
+          },
+          "required": [
+            "actions"
+          ],
+          "type": "object"
+        },
+        "name": "callisto_batch"
+      },
+      {
+        "description": "Read structured rows from the shared page using CSS selectors: a row selector plus a field map. Optionally follow a next-page control and merge pages. Returns typed rows, not a snapshot, so counting and aggregation need one call.",
+        "inputSchema": {
+          "properties": {
+            "fields": {
+              "additionalProperties": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "properties": {
+                      "attribute": {
+                        "type": "string"
+                      },
+                      "selector": {
+                        "type": "string"
+                      },
+                      "type": {
+                        "enum": [
+                          "text",
+                          "number"
+                        ],
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  }
+                ]
+              },
+              "maxProperties": 20,
+              "minProperties": 1,
+              "type": "object"
+            },
+            "include_text": {
+              "type": "boolean"
+            },
+            "limit": {
+              "maximum": 1000,
+              "minimum": 1,
+              "type": "integer"
+            },
+            "paginate": {
+              "properties": {
+                "max_pages": {
+                  "maximum": 25,
+                  "minimum": 1,
+                  "type": "integer"
+                },
+                "next": {
+                  "maxLength": 500,
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "next"
+              ],
+              "type": "object"
+            },
+            "selector": {
+              "maxLength": 500,
+              "minLength": 1,
+              "type": "string"
+            }
+          },
+          "required": [
+            "selector",
+            "fields"
+          ],
+          "type": "object"
+        },
+        "name": "callisto_extract"
+      },
+      {
+        "description": "Run 1–40 dependent steps in one call: navigate; click/fill/submit/select/check/hover by ref or exact role; press; scroll; wait; wait_for text or CSS selector state; extract rows. Use submit instead of synthetic Enter for forms. Returns the last extraction and an optional final snapshot. Stops at the first failure within a 60-second budget; earlier steps are not rolled back. Input uses the explicitly selected callisto_input mode.",
+        "inputSchema": {
+          "properties": {
+            "snapshot": {
+              "type": "boolean"
+            },
+            "steps": {
+              "items": {
+                "properties": {
+                  "action": {
+                    "enum": [
+                      "navigate",
+                      "click_ref",
+                      "click_role",
+                      "fill_ref",
+                      "fill_role",
+                      "submit_ref",
+                      "submit_role",
+                      "select_ref",
+                      "select_role",
+                      "check_ref",
+                      "check_role",
+                      "hover_ref",
+                      "hover_role",
+                      "press",
+                      "scroll",
+                      "wait",
+                      "wait_for",
+                      "extract"
+                    ],
+                    "type": "string"
+                  },
+                  "checked": {
+                    "type": "boolean"
+                  },
+                  "delta_x": {
+                    "type": "number"
+                  },
+                  "delta_y": {
+                    "type": "number"
+                  },
+                  "key": {
+                    "type": "string"
+                  },
+                  "ms": {
+                    "maximum": 5000,
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "ref": {
+                    "type": "string"
+                  },
+                  "role": {
+                    "type": "string"
+                  },
+                  "selector": {
+                    "maxLength": 500,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "spec": {
+                    "type": "object"
+                  },
+                  "state": {
+                    "enum": [
+                      "visible",
+                      "hidden",
+                      "attached",
+                      "detached"
+                    ],
+                    "type": "string"
+                  },
+                  "text": {
+                    "maxLength": 500,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "timeout_ms": {
+                    "maximum": 20000,
+                    "minimum": 100,
+                    "type": "integer"
+                  },
+                  "url": {
+                    "type": "string"
+                  },
+                  "value": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "action"
+                ],
+                "type": "object"
+              },
+              "maxItems": 40,
+              "minItems": 1,
+              "type": "array"
+            }
+          },
+          "required": [
+            "steps"
+          ],
+          "type": "object"
+        },
+        "name": "callisto_run"
+      },
+      {
+        "description": "Inspect the selected tab. In Full browser control mode, the active tab is adopted automatically when none is selected; otherwise share a tab or call callisto_browser tab_select first. Use max_chars to bound output and offset=next_offset to page through truncated controls. Refs belong to the latest snapshot. This experimental DOM-derived snapshot can omit content and frames.",
+        "inputSchema": {
+          "properties": {
+            "diff": {
+              "default": false,
+              "type": "boolean"
+            },
+            "include_text": {
+              "default": true,
+              "type": "boolean"
+            },
+            "max_chars": {
+              "maximum": 30000,
+              "minimum": 1000,
+              "type": "integer"
+            },
+            "offset": {
+              "maximum": 10000,
+              "minimum": 0,
+              "type": "integer"
+            },
+            "query": {
+              "maxLength": 200,
+              "minLength": 1,
+              "type": "string"
+            },
+            "revision": {
+              "type": "string"
+            },
+            "selector": {
+              "maxLength": 500,
+              "minLength": 1,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "name": "callisto_snapshot"
+      },
+      {
+        "description": "Navigate the shared active tab to an HTTP(S) URL. Requires the user to grant optional access to all websites and re-share the tab. Poll callisto_status until ready, then take a fresh snapshot.",
+        "inputSchema": {
+          "properties": {
+            "url": {
+              "maxLength": 8192,
+              "type": "string"
+            }
+          },
+          "required": [
+            "url"
+          ],
+          "type": "object"
+        },
+        "name": "callisto_navigate"
+      },
+      {
+        "description": "Click a ref from the latest snapshot in the shared tab using a synthetic DOM click. Some websites reject synthetic input.",
+        "inputSchema": {
+          "properties": {
+            "ref": {
+              "pattern": "^ax-[0-9]+$",
+              "type": "string"
+            }
+          },
+          "required": [
+            "ref"
+          ],
+          "type": "object"
+        },
+        "name": "callisto_click"
+      },
+      {
+        "description": "Fill a ref from the latest snapshot in the shared tab using synthetic input events. Some websites reject synthetic input.",
+        "inputSchema": {
+          "properties": {
+            "ref": {
+              "pattern": "^ax-[0-9]+$",
+              "type": "string"
+            },
+            "value": {
+              "maxLength": 100000,
+              "type": "string"
+            }
+          },
+          "required": [
+            "ref",
+            "value"
+          ],
+          "type": "object"
+        },
+        "name": "callisto_fill"
+      }
+    ],
+    "browse": [
+      {
+        "name": "execute",
+        "description": "Execute Playwright JavaScript against the browse session. Code runs in a restricted JavaScript realm on the relay without process, require, import(), fs, child_process, http/https or Node fetch; save and read files with the files helper inside the execute file roots, and cookie access is limited to the session's pages. Synchronous code stops after about 2 seconds. It is not a security boundary, so treat code as running as the user. The result includes console logs, warnings, a bounded execution-context diagnostic when relevant, and an aftermath summary (URL movement, navigations, error counts, handoffs, and a bot challenge or block page when one appears: hand interactive ones to the user with handoff(), never solve or retry-loop them).",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "description": "JavaScript code to execute. It receives browser, context, page, state, modules (path, url, util, crypto, buffer, zlib, events, stream), files (dir and roots properties; path(name), write(target, data), read(target, encoding?)), fillInput, fillInputs, snapshot(options?) for compact semantic outlines (options: find to search them, diff or delta for changes), persistent compatible ref(id) locators, webmcp (list/call), screenshotWithLabels(options?) and screenshotDiff(options) for screenshots, ariaSnapshot, ghostCursor, handoff, demonstrate, network (start/status/stop/cancel), pageConsole (start/stop capturing the page's own console messages and errors, off by default because pages can detect it), and secrets.type(locator, name) to type a stored site secret (see secrets_list) only on its allowed origins, without seeing it. There is no location, document or fetch global (they belong to the page: use page.url() or page.evaluate(...)), and no structuredClone."
+            },
+            "session": {
+              "type": "string",
+              "description": "Optional existing browse session id. Explicit ids must already exist; omit this field to use your current session (each agent has its own), which is created when needed."
+            },
+            "targetUrl": {
+              "type": "string",
+              "description": "Optional URL substring selecting an existing attached page. This does not navigate or open a URL; use page.goto() for that."
+            },
+            "targetIndex": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Optional zero-based attached page index selector."
+            },
+            "browser": {
+              "type": "string",
+              "description": "Optional browser id for a new session's tabs; omit for the default browser. A session stays in its browser. Call status to list the connected browsers."
+            },
+            "timeoutMs": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Optional overall script timeout in milliseconds (paused while handoff() waits on the user); defaults to 60000, 0 disables."
+            }
+          },
+          "required": [
+            "code"
+          ]
+        }
+      }
+    ]
+  },
+  "cost_usd": null,
+  "cost_note": "Actual CLI usage is retained. Signed-in subscription does not provide per-trial dollar charges.",
+  "measurement": "Fresh host conversation per run. Host elapsed includes startup, model turns, navigation, waits, failures and retries. Task elapsed additionally includes independent answer/evidence validation. Profile setup and neutral-tab reacquisition are separate. Verification is not cut off the timer. Browser output UTF-8 bytes and characters are separate from model input/output/cached tokens.",
+  "scope": "Six public informational workflows, two repetitions. Anonymous owned browser profiles, first round cold per site and second round warm. Fixed gold facts for stable pages; time-stamped official JSON/API oracles for mutable metadata. Native task-tool catalogs differ and are saved. Not a store-install, authenticated-account or production reliability test.",
+  "budget": {
+    "max_browser_calls": 35,
+    "host_timeout_ms": 180000,
+    "stop_before_next_session_at_reported_tokens": 3000000
+  },
+  "results": [
+    {
+      "engine": "zen",
+      "task": "wikipedia-biography",
+      "round": 0,
+      "success": true,
+      "outcome": "passed",
+      "answer": {
+        "answer": "Ada Lovelace was born on 10 December 1815 in London, England. Her mother was Anne Isabella Milbanke.",
+        "evidence": [
+          {
+            "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+            "quote": "Augusta Ada Byron 10 December 1815 London, England"
+          },
+          {
+            "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+            "quote": "Anne Isabella Milbanke (mother)"
+          }
+        ]
+      },
+      "expected": {
+        "date": "10 December 1815",
+        "place": "London",
+        "mother": "Anne Isabella Milbanke"
+      },
+      "evaluation": {
+        "passed": true,
+        "facts": [
+          {
+            "pattern": "10\\s+December\\s+1815|December\\s+10,?\\s+1815|1815-12-10",
+            "passed": true
+          },
+          {
+            "pattern": "London",
+            "passed": true
+          },
+          {
+            "pattern": "(?:Annabella|Anne?\\s+Isabella)(?:\\s+Noel)?\\s+(?:Milbanke|Byron)",
+            "passed": true
+          }
+        ],
+        "evidence": [
+          {
+            "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+            "quote": "Augusta Ada Byron 10 December 1815 London, England",
+            "source_matches": true,
+            "quote_observed": true
+          },
+          {
+            "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+            "quote": "Anne Isabella Milbanke (mother)",
+            "source_matches": true,
+            "quote_observed": true
+          }
+        ],
+        "forbidden_network_or_file_calls": 0
+      },
+      "preparation_ms": 60.334562000000005,
+      "host_elapsed_ms": 24188.506856999997,
+      "verification_ms": 3.4995600000038394,
+      "task_elapsed_ms": 24198.590648999998,
+      "usage": {
+        "input_tokens": 87441,
+        "cached_input_tokens": 61568,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 303,
+        "reasoning_output_tokens": 0
+      },
+      "tool_calls": 3,
+      "tool_failures": 0,
+      "tool_elapsed_ms": 2211.864820999999,
+      "response_bytes": 29394,
+      "response_characters": 29363,
+      "forbidden_host_calls": 0,
+      "cost_usd": null,
+      "timed_out": false,
+      "trace_file": "zen-wikipedia-biography-0.json"
+    },
+    {
+      "engine": "browse",
+      "task": "wikipedia-biography",
+      "round": 0,
+      "success": true,
+      "outcome": "passed",
+      "answer": {
+        "answer": "Ada Lovelace was born on 10 December 1815 in London, England. Her mother was Anne Isabella Milbanke.",
+        "evidence": [
+          {
+            "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+            "quote": "Born\tAugusta Ada Byron\n10 December 1815\nLondon, England"
+          },
+          {
+            "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+            "quote": "Anne Isabella Milbanke (mother)"
+          }
+        ]
+      },
+      "expected": {
+        "date": "10 December 1815",
+        "place": "London",
+        "mother": "Anne Isabella Milbanke"
+      },
+      "evaluation": {
+        "passed": true,
+        "facts": [
+          {
+            "pattern": "10\\s+December\\s+1815|December\\s+10,?\\s+1815|1815-12-10",
+            "passed": true
+          },
+          {
+            "pattern": "London",
+            "passed": true
+          },
+          {
+            "pattern": "(?:Annabella|Anne?\\s+Isabella)(?:\\s+Noel)?\\s+(?:Milbanke|Byron)",
+            "passed": true
+          }
+        ],
+        "evidence": [
+          {
+            "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+            "quote": "Born\tAugusta Ada Byron\n10 December 1815\nLondon, England",
+            "source_matches": true,
+            "quote_observed": true
+          },
+          {
+            "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+            "quote": "Anne Isabella Milbanke (mother)",
+            "source_matches": true,
+            "quote_observed": true
+          }
+        ],
+        "forbidden_network_or_file_calls": 0
+      },
+      "preparation_ms": 165.53956800000014,
+      "host_elapsed_ms": 28312.414958999994,
+      "verification_ms": 1.4130399999994552,
+      "task_elapsed_ms": 28320.465784,
+      "usage": {
+        "input_tokens": 128059,
+        "cached_input_tokens": 99072,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 487,
+        "reasoning_output_tokens": 14
+      },
+      "tool_calls": 4,
+      "tool_failures": 1,
+      "tool_elapsed_ms": 2639.9349120000043,
+      "response_bytes": 30216,
+      "response_characters": 29509,
+      "forbidden_host_calls": 0,
+      "cost_usd": null,
+      "timed_out": false,
+      "trace_file": "browse-wikipedia-biography-0.json"
+    },
+    {
+      "engine": "browse",
+      "task": "arxiv-paper",
+      "round": 0,
+      "success": true,
+      "outcome": "passed",
+      "answer": {
+        "answer": "“Attention Is All You Need” has arXiv identifier 1706.03762. Its first two authors are Ashish Vaswani and Noam Shazeer. It was originally submitted on 12 June 2017.",
+        "evidence": [
+          {
+            "url": "https://arxiv.org/abs/1706.03762",
+            "quote": "arXiv:1706.03762 [cs.CL]"
+          },
+          {
+            "url": "https://arxiv.org/abs/1706.03762",
+            "quote": "Ashish Vaswani, Noam Shazeer"
+          },
+          {
+            "url": "https://arxiv.org/abs/1706.03762",
+            "quote": "Submitted on 12 Jun 2017 (v1)"
+          }
+        ]
+      },
+      "expected": {
+        "id": "1706.03762",
+        "authors": [
+          "Ashish Vaswani",
+          "Noam Shazeer"
+        ],
+        "date": "12 June 2017"
+      },
+      "evaluation": {
+        "passed": true,
+        "facts": [
+          {
+            "pattern": "1706\\.03762",
+            "passed": true
+          },
+          {
+            "pattern": "Ashish\\s+Vaswani",
+            "passed": true
+          },
+          {
+            "pattern": "Noam\\s+Shazeer",
+            "passed": true
+          },
+          {
+            "pattern": "12\\s+Jun(?:e)?\\s+2017|Jun(?:e)?\\s+12,?\\s+2017|2017-06-12",
+            "passed": true
+          }
+        ],
+        "evidence": [
+          {
+            "url": "https://arxiv.org/abs/1706.03762",
+            "quote": "arXiv:1706.03762 [cs.CL]",
+            "source_matches": true,
+            "quote_observed": true
+          },
+          {
+            "url": "https://arxiv.org/abs/1706.03762",
+            "quote": "Ashish Vaswani, Noam Shazeer",
+            "source_matches": true,
+            "quote_observed": true
+          },
+          {
+            "url": "https://arxiv.org/abs/1706.03762",
+            "quote": "Submitted on 12 Jun 2017 (v1)",
+            "source_matches": true,
+            "quote_observed": true
+          }
+        ],
+        "forbidden_network_or_file_calls": 0
+      },
+      "preparation_ms": 56.57653599999321,
+      "host_elapsed_ms": 120987.68922000001,
+      "verification_ms": 4.305892000003951,
+      "task_elapsed_ms": 121000.02102,
+      "usage": {
+        "input_tokens": 321578,
+        "cached_input_tokens": 283520,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1177,
+        "reasoning_output_tokens": 26
+      },
+      "tool_calls": 11,
+      "tool_failures": 1,
+      "tool_elapsed_ms": 59273.635551000014,
+      "response_bytes": 56533,
+      "response_characters": 56227,
+      "forbidden_host_calls": 0,
+      "cost_usd": null,
+      "timed_out": false,
+      "trace_file": "browse-arxiv-paper-0.json"
+    },
+    {
+      "engine": "zen",
+      "task": "arxiv-paper",
+      "round": 0,
+      "success": true,
+      "outcome": "passed",
+      "answer": {
+        "answer": "“Attention Is All You Need” is arXiv:1706.03762. Its first two authors are Ashish Vaswani and Noam Shazeer. It was originally submitted on 12 June 2017.",
+        "evidence": [
+          {
+            "url": "https://arxiv.org/abs/1706.03762",
+            "quote": "arXiv:1706.03762 [cs.CL]"
+          },
+          {
+            "url": "https://arxiv.org/abs/1706.03762",
+            "quote": "Attention Is All You Need\nAshish Vaswani, Noam Shazeer"
+          },
+          {
+            "url": "https://arxiv.org/abs/1706.03762",
+            "quote": "[v1] Mon, 12 Jun 2017 17:57:34 UTC (1,102 KB)"
+          }
+        ]
+      },
+      "expected": {
+        "id": "1706.03762",
+        "authors": [
+          "Ashish Vaswani",
+          "Noam Shazeer"
+        ],
+        "date": "12 June 2017"
+      },
+      "evaluation": {
+        "passed": true,
+        "facts": [
+          {
+            "pattern": "1706\\.03762",
+            "passed": true
+          },
+          {
+            "pattern": "Ashish\\s+Vaswani",
+            "passed": true
+          },
+          {
+            "pattern": "Noam\\s+Shazeer",
+            "passed": true
+          },
+          {
+            "pattern": "12\\s+Jun(?:e)?\\s+2017|Jun(?:e)?\\s+12,?\\s+2017|2017-06-12",
+            "passed": true
+          }
+        ],
+        "evidence": [
+          {
+            "url": "https://arxiv.org/abs/1706.03762",
+            "quote": "arXiv:1706.03762 [cs.CL]",
+            "source_matches": true,
+            "quote_observed": true
+          },
+          {
+            "url": "https://arxiv.org/abs/1706.03762",
+            "quote": "Attention Is All You Need\nAshish Vaswani, Noam Shazeer",
+            "source_matches": true,
+            "quote_observed": true
+          },
+          {
+            "url": "https://arxiv.org/abs/1706.03762",
+            "quote": "[v1] Mon, 12 Jun 2017 17:57:34 UTC (1,102 KB)",
+            "source_matches": true,
+            "quote_observed": true
+          }
+        ],
+        "forbidden_network_or_file_calls": 0
+      },
+      "preparation_ms": 79.66202300001169,
+      "host_elapsed_ms": 54557.249825000006,
+      "verification_ms": 5.678667999978643,
+      "task_elapsed_ms": 54567.10277699999,
+      "usage": {
+        "input_tokens": 347304,
+        "cached_input_tokens": 302592,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 724,
+        "reasoning_output_tokens": 67
+      },
+      "tool_calls": 12,
+      "tool_failures": 1,
+      "tool_elapsed_ms": 12547.534340000042,
+      "response_bytes": 70977,
+      "response_characters": 70950,
+      "forbidden_host_calls": 0,
+      "cost_usd": null,
+      "timed_out": false,
+      "trace_file": "zen-arxiv-paper-0.json"
+    },
+    {
+      "engine": "zen",
+      "task": "github-issue",
+      "round": 0,
+      "success": true,
+      "outcome": "passed",
+      "answer": {
+        "answer": "Issue #1 is titled “Suggestion: 'protected' modifier”. It is closed and was opened by RyanCavanaugh.",
+        "evidence": [
+          {
+            "url": "https://github.com/microsoft/TypeScript/issues/1",
+            "quote": "Suggestion: 'protected' modifier #1"
+          },
+          {
+            "url": "https://github.com/microsoft/TypeScript/issues/1",
+            "quote": "Closed"
+          },
+          {
+            "url": "https://github.com/microsoft/TypeScript/issues/1",
+            "quote": "Ryan Cavanaugh (RyanCavanaugh)"
+          }
+        ]
+      },
+      "expected": {
+        "title": "Suggestion: 'protected' modifier",
+        "state": "closed",
+        "author": "RyanCavanaugh",
+        "url": "https://github.com/microsoft/TypeScript/issues/1"
+      },
+      "evaluation": {
+        "passed": true,
+        "facts": [
+          {
+            "pattern": "Suggestion.{0,10}protected.{0,10}modifier",
+            "passed": true
+          },
+          {
+            "pattern": "closed",
+            "passed": true
+          },
+          {
+            "pattern": "RyanCavanaugh",
+            "passed": true
+          }
+        ],
+        "evidence": [
+          {
+            "url": "https://github.com/microsoft/TypeScript/issues/1",
+            "quote": "Suggestion: 'protected' modifier #1",
+            "source_matches": true,
+            "quote_observed": true
+          },
+          {
+            "url": "https://github.com/microsoft/TypeScript/issues/1",
+            "quote": "Closed",
+            "source_matches": true,
+            "quote_observed": false
+          },
+          {
+            "url": "https://github.com/microsoft/TypeScript/issues/1",
+            "quote": "Ryan Cavanaugh (RyanCavanaugh)",
+            "source_matches": true,
+            "quote_observed": true
+          }
+        ],
+        "forbidden_network_or_file_calls": 0
+      },
+      "preparation_ms": 57.23794900000212,
+      "host_elapsed_ms": 28408.865159000008,
+      "verification_ms": 1.4909249999909662,
+      "task_elapsed_ms": 28414.88854600003,
+      "usage": {
+        "input_tokens": 99573,
+        "cached_input_tokens": 72320,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 274,
+        "reasoning_output_tokens": 0
+      },
+      "tool_calls": 3,
+      "tool_failures": 0,
+      "tool_elapsed_ms": 1170.217655000015,
+      "response_bytes": 19110,
+      "response_characters": 19088,
+      "forbidden_host_calls": 0,
+      "cost_usd": null,
+      "timed_out": false,
+      "trace_file": "zen-github-issue-0.json"
+    },
+    {
+      "engine": "browse",
+      "task": "github-issue",
+      "round": 0,
+      "success": true,
+      "outcome": "passed",
+      "answer": {
+        "answer": "Issue #1 is titled “Suggestion: 'protected' modifier”. It is closed and was opened by RyanCavanaugh.",
+        "evidence": [
+          {
+            "url": "https://github.com/microsoft/TypeScript/issues/1",
+            "quote": "Suggestion: 'protected' modifier\n #1\nNew issue\nClosed\nDescription\nRyan Cavanaugh (RyanCavanaugh)\nopened "
+          }
+        ]
+      },
+      "expected": {
+        "title": "Suggestion: 'protected' modifier",
+        "state": "closed",
+        "author": "RyanCavanaugh",
+        "url": "https://github.com/microsoft/TypeScript/issues/1"
+      },
+      "evaluation": {
+        "passed": true,
+        "facts": [
+          {
+            "pattern": "Suggestion.{0,10}protected.{0,10}modifier",
+            "passed": true
+          },
+          {
+            "pattern": "closed",
+            "passed": true
+          },
+          {
+            "pattern": "RyanCavanaugh",
+            "passed": true
+          }
+        ],
+        "evidence": [
+          {
+            "url": "https://github.com/microsoft/TypeScript/issues/1",
+            "quote": "Suggestion: 'protected' modifier\n #1\nNew issue\nClosed\nDescription\nRyan Cavanaugh (RyanCavanaugh)\nopened ",
+            "source_matches": true,
+            "quote_observed": true
+          }
+        ],
+        "forbidden_network_or_file_calls": 0
+      },
+      "preparation_ms": 67.74971199996071,
+      "host_elapsed_ms": 25479.112058,
+      "verification_ms": 0.8808529999805614,
+      "task_elapsed_ms": 25484.039141000016,
+      "usage": {
+        "input_tokens": 69225,
+        "cached_input_tokens": 51968,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 363,
+        "reasoning_output_tokens": 15
+      },
+      "tool_calls": 3,
+      "tool_failures": 0,
+      "tool_elapsed_ms": 4148.339032999938,
+      "response_bytes": 11655,
+      "response_characters": 11626,
+      "forbidden_host_calls": 0,
+      "cost_usd": null,
+      "timed_out": false,
+      "trace_file": "browse-github-issue-0.json"
+    },
+    {
+      "engine": "browse",
+      "task": "pypi-metadata",
+      "round": 0,
+      "success": true,
+      "outcome": "passed",
+      "answer": {
+        "answer": "The latest stable httpx release is 0.28.1 and requires Python 3.8 or newer (>=3.8). The release history lists newer 1.0 development versions as pre-releases.",
+        "evidence": [
+          {
+            "url": "https://pypi.org/project/httpx/",
+            "quote": "httpx 0.28.1"
+          },
+          {
+            "url": "https://pypi.org/project/httpx/",
+            "quote": "Python >=3.8"
+          },
+          {
+            "url": "https://pypi.org/project/httpx/#history",
+            "quote": "PRE-RELEASE\n1.0.dev6"
+          }
+        ]
+      },
+      "expected": {
+        "version": "0.28.1",
+        "requires_python": ">=3.8"
+      },
+      "evaluation": {
+        "passed": true,
+        "facts": [
+          {
+            "pattern": "0\\.28\\.1",
+            "passed": true
+          },
+          {
+            "pattern": "3\\.8",
+            "passed": true
+          }
+        ],
+        "evidence": [
+          {
+            "url": "https://pypi.org/project/httpx/",
+            "quote": "httpx 0.28.1",
+            "source_matches": true,
+            "quote_observed": true
+          },
+          {
+            "url": "https://pypi.org/project/httpx/",
+            "quote": "Python >=3.8",
+            "source_matches": true,
+            "quote_observed": true
+          },
+          {
+            "url": "https://pypi.org/project/httpx/#history",
+            "quote": "PRE-RELEASE\n1.0.dev6",
+            "source_matches": true,
+            "quote_observed": true
+          }
+        ],
+        "forbidden_network_or_file_calls": 0
+      },
+      "preparation_ms": 50.18147200002568,
+      "host_elapsed_ms": 65694.26304699999,
+      "verification_ms": 0.8224499999778345,
+      "task_elapsed_ms": 65699.23729299998,
+      "usage": {
+        "input_tokens": 149964,
+        "cached_input_tokens": 121600,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 532,
+        "reasoning_output_tokens": 0
+      },
+      "tool_calls": 5,
+      "tool_failures": 1,
+      "tool_elapsed_ms": 35246.70987699996,
+      "response_bytes": 18107,
+      "response_characters": 18098,
+      "forbidden_host_calls": 0,
+      "cost_usd": null,
+      "timed_out": false,
+      "trace_file": "browse-pypi-metadata-0.json"
+    },
+    {
+      "engine": "zen",
+      "task": "pypi-metadata",
+      "round": 0,
+      "success": true,
+      "outcome": "passed",
+      "answer": {
+        "answer": "The latest stable httpx release is 0.28.1. It requires Python 3.8 or newer (>=3.8). Release history lists newer 1.0.dev versions as pre-releases.",
+        "evidence": [
+          {
+            "url": "https://pypi.org/project/httpx/",
+            "quote": "httpx 0.28.1"
+          },
+          {
+            "url": "https://pypi.org/project/httpx/",
+            "quote": "Python >=3.8"
+          },
+          {
+            "url": "https://pypi.org/project/httpx/#history",
+            "quote": "PRE-RELEASE"
+          }
+        ]
+      },
+      "expected": {
+        "version": "0.28.1",
+        "requires_python": ">=3.8"
+      },
+      "evaluation": {
+        "passed": true,
+        "facts": [
+          {
+            "pattern": "0\\.28\\.1",
+            "passed": true
+          },
+          {
+            "pattern": "3\\.8",
+            "passed": true
+          }
+        ],
+        "evidence": [
+          {
+            "url": "https://pypi.org/project/httpx/",
+            "quote": "httpx 0.28.1",
+            "source_matches": true,
+            "quote_observed": true
+          },
+          {
+            "url": "https://pypi.org/project/httpx/",
+            "quote": "Python >=3.8",
+            "source_matches": true,
+            "quote_observed": true
+          },
+          {
+            "url": "https://pypi.org/project/httpx/#history",
+            "quote": "PRE-RELEASE",
+            "source_matches": true,
+            "quote_observed": false
+          }
+        ],
+        "forbidden_network_or_file_calls": 0
+      },
+      "preparation_ms": 78.4887410000083,
+      "host_elapsed_ms": 22926.014231000037,
+      "verification_ms": 1.3424799999920651,
+      "task_elapsed_ms": 22930.950927999977,
+      "usage": {
+        "input_tokens": 124596,
+        "cached_input_tokens": 105984,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 347,
+        "reasoning_output_tokens": 0
+      },
+      "tool_calls": 5,
+      "tool_failures": 0,
+      "tool_elapsed_ms": 83.2017839999753,
+      "response_bytes": 32182,
+      "response_characters": 32173,
+      "forbidden_host_calls": 0,
+      "cost_usd": null,
+      "timed_out": false,
+      "trace_file": "zen-pypi-metadata-0.json"
+    },
+    {
+      "engine": "zen",
+      "task": "python-json",
+      "round": 0,
+      "success": true,
+      "outcome": "passed",
+      "answer": {
+        "answer": "json.loads(s) raises json.JSONDecodeError for invalid JSON. Its input s supports str, bytes, and bytearray.",
+        "evidence": [
+          {
+            "url": "https://docs.python.org/3/library/json.html#json.loads",
+            "quote": "Identical to load(), but instead of a file-like object, deserialize s (a str, bytes or bytearray instance containing a JSON document) to a Python object using this conversion table."
+          },
+          {
+            "url": "https://docs.python.org/3/library/json.html#json.load",
+            "quote": "JSONDecodeError – When the data being deserialized is not a valid JSON document."
+          }
+        ]
+      },
+      "expected": {
+        "error": "JSONDecodeError",
+        "inputs": [
+          "str",
+          "bytes",
+          "bytearray"
+        ]
+      },
+      "evaluation": {
+        "passed": true,
+        "facts": [
+          {
+            "pattern": "JSONDecodeError",
+            "passed": true
+          },
+          {
+            "pattern": "\\bstr\\b|string",
+            "passed": true
+          },
+          {
+            "pattern": "\\bbytes\\b",
+            "passed": true
+          },
+          {
+            "pattern": "\\bbytearray\\b",
+            "passed": true
+          }
+        ],
+        "evidence": [
+          {
+            "url": "https://docs.python.org/3/library/json.html#json.loads",
+            "quote": "Identical to load(), but instead of a file-like object, deserialize s (a str, bytes or bytearray instance containing a JSON document) to a Python object using this conversion table.",
+            "source_matches": true,
+            "quote_observed": true
+          },
+          {
+            "url": "https://docs.python.org/3/library/json.html#json.load",
+            "quote": "JSONDecodeError – When the data being deserialized is not a valid JSON document.",
+            "source_matches": true,
+            "quote_observed": true
+          }
+        ],
+        "forbidden_network_or_file_calls": 0
+      },
+      "preparation_ms": 54.73418899998069,
+      "host_elapsed_ms": 65402.82891899999,
+      "verification_ms": 2.0064389999606647,
+      "task_elapsed_ms": 65408.76612700004,
+      "usage": {
+        "input_tokens": 159494,
+        "cached_input_tokens": 135680,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 469,
+        "reasoning_output_tokens": 0
+      },
+      "tool_calls": 7,
+      "tool_failures": 0,
+      "tool_elapsed_ms": 368.49292699992657,
+      "response_bytes": 22869,
+      "response_characters": 22745,
+      "forbidden_host_calls": 0,
+      "cost_usd": null,
+      "timed_out": false,
+      "trace_file": "zen-python-json-0.json"
+    },
+    {
+      "engine": "browse",
+      "task": "python-json",
+      "round": 0,
+      "success": true,
+      "outcome": "passed",
+      "answer": {
+        "answer": "json.loads(s) raises json.JSONDecodeError for invalid JSON. The input s supports str, bytes, and bytearray containing a JSON document.",
+        "evidence": [
+          {
+            "url": "https://docs.python.org/3/library/json.html#json.loads",
+            "quote": "deserialize s (a str, bytes or bytearray instance containing a JSON document)"
+          },
+          {
+            "url": "https://docs.python.org/3/library/json.html#json.loads",
+            "quote": "Identical to load(), but instead of a file-like object"
+          },
+          {
+            "url": "https://docs.python.org/3/library/json.html#json.load",
+            "quote": "JSONDecodeError – When the data being deserialized is not a valid JSON document."
+          }
+        ]
+      },
+      "expected": {
+        "error": "JSONDecodeError",
+        "inputs": [
+          "str",
+          "bytes",
+          "bytearray"
+        ]
+      },
+      "evaluation": {
+        "passed": true,
+        "facts": [
+          {
+            "pattern": "JSONDecodeError",
+            "passed": true
+          },
+          {
+            "pattern": "\\bstr\\b|string",
+            "passed": true
+          },
+          {
+            "pattern": "\\bbytes\\b",
+            "passed": true
+          },
+          {
+            "pattern": "\\bbytearray\\b",
+            "passed": true
+          }
+        ],
+        "evidence": [
+          {
+            "url": "https://docs.python.org/3/library/json.html#json.loads",
+            "quote": "deserialize s (a str, bytes or bytearray instance containing a JSON document)",
+            "source_matches": true,
+            "quote_observed": true
+          },
+          {
+            "url": "https://docs.python.org/3/library/json.html#json.loads",
+            "quote": "Identical to load(), but instead of a file-like object",
+            "source_matches": true,
+            "quote_observed": true
+          },
+          {
+            "url": "https://docs.python.org/3/library/json.html#json.load",
+            "quote": "JSONDecodeError – When the data being deserialized is not a valid JSON document.",
+            "source_matches": true,
+            "quote_observed": true
+          }
+        ],
+        "forbidden_network_or_file_calls": 0
+      },
+      "preparation_ms": 56.771911999967415,
+      "host_elapsed_ms": 107990.15546000004,
+      "verification_ms": 1.2220789999701083,
+      "task_elapsed_ms": 107995.65792999999,
+      "usage": {
+        "input_tokens": 211390,
+        "cached_input_tokens": 186624,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1006,
+        "reasoning_output_tokens": 33
+      },
+      "tool_calls": 8,
+      "tool_failures": 2,
+      "tool_elapsed_ms": 64414.53174099978,
+      "response_bytes": 8326,
+      "response_characters": 8139,
+      "forbidden_host_calls": 0,
+      "cost_usd": null,
+      "timed_out": false,
+      "trace_file": "browse-python-json-0.json"
+    },
+    {
+      "engine": "browse",
+      "task": "govuk-calendar",
+      "round": 0,
+      "success": false,
+      "outcome": "agent_failure",
+      "answer": {
+        "answer": "In Scotland in 2027, the summer bank holiday is Monday 2 August, and St Andrew’s Day is Tuesday 30 November.",
+        "evidence": [
+          {
+            "url": "https://www.gov.uk/bank-holidays#scotland",
+            "quote": "2 August\tMonday\tSummer bank holiday\n30 November\tTuesday\tSt Andrew’s Day"
+          }
+        ]
+      },
+      "expected": [
+        {
+          "title": "Summer bank holiday",
+          "date": "2027-08-02",
+          "notes": "",
+          "bunting": true
+        },
+        {
+          "title": "St Andrew’s Day",
+          "date": "2027-11-30",
+          "notes": "",
+          "bunting": true
+        }
+      ],
+      "evaluation": {
+        "passed": false,
+        "facts": [
+          {
+            "pattern": "2(?:st|nd|rd|th)?\\s+August\\s+2027|August\\s+2(?:st|nd|rd|th)?,?\\s+2027|2027-08-02",
+            "passed": false
+          },
+          {
+            "pattern": "30(?:st|nd|rd|th)?\\s+November\\s+2027|November\\s+30(?:st|nd|rd|th)?,?\\s+2027|2027-11-30",
+            "passed": false
+          }
+        ],
+        "evidence": [
+          {
+            "url": "https://www.gov.uk/bank-holidays#scotland",
+            "quote": "2 August\tMonday\tSummer bank holiday\n30 November\tTuesday\tSt Andrew’s Day",
+            "source_matches": true,
+            "quote_observed": true
+          }
+        ],
+        "forbidden_network_or_file_calls": 0
+      },
+      "preparation_ms": 59.63354100007564,
+      "host_elapsed_ms": 24489.187627000036,
+      "verification_ms": 1.1207580000627786,
+      "task_elapsed_ms": 24494.496533000027,
+      "usage": {
+        "input_tokens": 100602,
+        "cached_input_tokens": 84352,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 339,
+        "reasoning_output_tokens": 0
+      },
+      "tool_calls": 3,
+      "tool_failures": 0,
+      "tool_elapsed_ms": 5803.021755000111,
+      "response_bytes": 14282,
+      "response_characters": 14206,
+      "forbidden_host_calls": 0,
+      "cost_usd": null,
+      "timed_out": false,
+      "trace_file": "browse-govuk-calendar-0.json"
+    },
+    {
+      "engine": "zen",
+      "task": "govuk-calendar",
+      "round": 0,
+      "success": false,
+      "outcome": "agent_failure",
+      "answer": {
+        "answer": "In Scotland in 2027, the summer bank holiday is Monday 2 August, and St Andrew’s Day is Tuesday 30 November.",
+        "evidence": [
+          {
+            "url": "https://www.gov.uk/bank-holidays",
+            "quote": "2 August\tMonday\tSummer bank holiday\n30 November\tTuesday\tSt Andrew’s Day"
+          }
+        ]
+      },
+      "expected": [
+        {
+          "title": "Summer bank holiday",
+          "date": "2027-08-02",
+          "notes": "",
+          "bunting": true
+        },
+        {
+          "title": "St Andrew’s Day",
+          "date": "2027-11-30",
+          "notes": "",
+          "bunting": true
+        }
+      ],
+      "evaluation": {
+        "passed": false,
+        "facts": [
+          {
+            "pattern": "2(?:st|nd|rd|th)?\\s+August\\s+2027|August\\s+2(?:st|nd|rd|th)?,?\\s+2027|2027-08-02",
+            "passed": false
+          },
+          {
+            "pattern": "30(?:st|nd|rd|th)?\\s+November\\s+2027|November\\s+30(?:st|nd|rd|th)?,?\\s+2027|2027-11-30",
+            "passed": false
+          }
+        ],
+        "evidence": [
+          {
+            "url": "https://www.gov.uk/bank-holidays",
+            "quote": "2 August\tMonday\tSummer bank holiday\n30 November\tTuesday\tSt Andrew’s Day",
+            "source_matches": true,
+            "quote_observed": true
+          }
+        ],
+        "forbidden_network_or_file_calls": 0
+      },
+      "preparation_ms": 56.43408800009638,
+      "host_elapsed_ms": 18115.20524899999,
+      "verification_ms": 2.253897999995388,
+      "task_elapsed_ms": 18121.166308999993,
+      "usage": {
+        "input_tokens": 100759,
+        "cached_input_tokens": 77184,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 283,
+        "reasoning_output_tokens": 0
+      },
+      "tool_calls": 5,
+      "tool_failures": 0,
+      "tool_elapsed_ms": 49.027276999899186,
+      "response_bytes": 23979,
+      "response_characters": 23903,
+      "forbidden_host_calls": 0,
+      "cost_usd": null,
+      "timed_out": false,
+      "trace_file": "zen-govuk-calendar-0.json"
+    },
+    {
+      "engine": "browse",
+      "task": "wikipedia-biography",
+      "round": 1,
+      "success": true,
+      "outcome": "passed",
+      "answer": {
+        "answer": "Ada Lovelace was born on 10 December 1815 in London, England. Her mother was Anne Isabella Milbanke.",
+        "evidence": [
+          {
+            "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+            "quote": "Born\tAugusta Ada Byron\n10 December 1815\nLondon, England"
+          },
+          {
+            "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+            "quote": "Anne Isabella Milbanke (mother)"
+          }
+        ]
+      },
+      "expected": {
+        "date": "10 December 1815",
+        "place": "London",
+        "mother": "Anne Isabella Milbanke"
+      },
+      "evaluation": {
+        "passed": true,
+        "facts": [
+          {
+            "pattern": "10\\s+December\\s+1815|December\\s+10,?\\s+1815|1815-12-10",
+            "passed": true
+          },
+          {
+            "pattern": "London",
+            "passed": true
+          },
+          {
+            "pattern": "(?:Annabella|Anne?\\s+Isabella)(?:\\s+Noel)?\\s+(?:Milbanke|Byron)",
+            "passed": true
+          }
+        ],
+        "evidence": [
+          {
+            "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+            "quote": "Born\tAugusta Ada Byron\n10 December 1815\nLondon, England",
+            "source_matches": true,
+            "quote_observed": false
+          },
+          {
+            "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+            "quote": "Anne Isabella Milbanke (mother)",
+            "source_matches": true,
+            "quote_observed": true
+          }
+        ],
+        "forbidden_network_or_file_calls": 0
+      },
+      "preparation_ms": 172.20447999995667,
+      "host_elapsed_ms": 30839.667450000066,
+      "verification_ms": 0.43041899998206645,
+      "task_elapsed_ms": 30844.484638000024,
+      "usage": {
+        "input_tokens": 100194,
+        "cached_input_tokens": 74368,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 426,
+        "reasoning_output_tokens": 48
+      },
+      "tool_calls": 3,
+      "tool_failures": 0,
+      "tool_elapsed_ms": 9896.315204999875,
+      "response_bytes": 11276,
+      "response_characters": 10827,
+      "forbidden_host_calls": 0,
+      "cost_usd": null,
+      "timed_out": false,
+      "trace_file": "browse-wikipedia-biography-1.json"
+    },
+    {
+      "engine": "zen",
+      "task": "wikipedia-biography",
+      "round": 1,
+      "success": true,
+      "outcome": "passed",
+      "answer": {
+        "answer": "Ada Lovelace was born on 10 December 1815 in London, England. Her mother was Anne Isabella Milbanke.",
+        "evidence": [
+          {
+            "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+            "quote": "Augusta Ada Byron 10 December 1815 London, England"
+          },
+          {
+            "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+            "quote": "Anne Isabella Milbanke (mother)"
+          }
+        ]
+      },
+      "expected": {
+        "date": "10 December 1815",
+        "place": "London",
+        "mother": "Anne Isabella Milbanke"
+      },
+      "evaluation": {
+        "passed": true,
+        "facts": [
+          {
+            "pattern": "10\\s+December\\s+1815|December\\s+10,?\\s+1815|1815-12-10",
+            "passed": true
+          },
+          {
+            "pattern": "London",
+            "passed": true
+          },
+          {
+            "pattern": "(?:Annabella|Anne?\\s+Isabella)(?:\\s+Noel)?\\s+(?:Milbanke|Byron)",
+            "passed": true
+          }
+        ],
+        "evidence": [
+          {
+            "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+            "quote": "Augusta Ada Byron 10 December 1815 London, England",
+            "source_matches": true,
+            "quote_observed": true
+          },
+          {
+            "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+            "quote": "Anne Isabella Milbanke (mother)",
+            "source_matches": true,
+            "quote_observed": true
+          }
+        ],
+        "forbidden_network_or_file_calls": 0
+      },
+      "preparation_ms": 55.80463900009636,
+      "host_elapsed_ms": 17719.732123999973,
+      "verification_ms": 1.6769220000132918,
+      "task_elapsed_ms": 17726.01638699998,
+      "usage": {
+        "input_tokens": 108136,
+        "cached_input_tokens": 77184,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 310,
+        "reasoning_output_tokens": 0
+      },
+      "tool_calls": 3,
+      "tool_failures": 0,
+      "tool_elapsed_ms": 1651.8249059999362,
+      "response_bytes": 29356,
+      "response_characters": 29325,
+      "forbidden_host_calls": 0,
+      "cost_usd": null,
+      "timed_out": false,
+      "trace_file": "zen-wikipedia-biography-1.json"
+    },
+    {
+      "engine": "zen",
+      "task": "arxiv-paper",
+      "round": 1,
+      "success": true,
+      "outcome": "passed",
+      "answer": {
+        "answer": "“Attention Is All You Need” — arXiv:1706.03762. First two authors: Ashish Vaswani and Noam Shazeer. Original submission date: 12 June 2017.",
+        "evidence": [
+          {
+            "url": "https://arxiv.org/abs/1706.03762",
+            "quote": "Title:Attention Is All You Need"
+          },
+          {
+            "url": "https://arxiv.org/abs/1706.03762",
+            "quote": "arXiv:1706.03762 [cs.CL]"
+          },
+          {
+            "url": "https://arxiv.org/abs/1706.03762",
+            "quote": "Authors:Ashish Vaswani, Noam Shazeer"
+          },
+          {
+            "url": "https://arxiv.org/abs/1706.03762",
+            "quote": "[Submitted on 12 Jun 2017 (v1), last revised 2 Aug 2023 (this version, v7)]"
+          }
+        ]
+      },
+      "expected": {
+        "id": "1706.03762",
+        "authors": [
+          "Ashish Vaswani",
+          "Noam Shazeer"
+        ],
+        "date": "12 June 2017"
+      },
+      "evaluation": {
+        "passed": true,
+        "facts": [
+          {
+            "pattern": "1706\\.03762",
+            "passed": true
+          },
+          {
+            "pattern": "Ashish\\s+Vaswani",
+            "passed": true
+          },
+          {
+            "pattern": "Noam\\s+Shazeer",
+            "passed": true
+          },
+          {
+            "pattern": "12\\s+Jun(?:e)?\\s+2017|Jun(?:e)?\\s+12,?\\s+2017|2017-06-12",
+            "passed": true
+          }
+        ],
+        "evidence": [
+          {
+            "url": "https://arxiv.org/abs/1706.03762",
+            "quote": "Title:Attention Is All You Need",
+            "source_matches": true,
+            "quote_observed": true
+          },
+          {
+            "url": "https://arxiv.org/abs/1706.03762",
+            "quote": "arXiv:1706.03762 [cs.CL]",
+            "source_matches": true,
+            "quote_observed": true
+          },
+          {
+            "url": "https://arxiv.org/abs/1706.03762",
+            "quote": "Authors:Ashish Vaswani, Noam Shazeer",
+            "source_matches": true,
+            "quote_observed": true
+          },
+          {
+            "url": "https://arxiv.org/abs/1706.03762",
+            "quote": "[Submitted on 12 Jun 2017 (v1), last revised 2 Aug 2023 (this version, v7)]",
+            "source_matches": true,
+            "quote_observed": true
+          }
+        ],
+        "forbidden_network_or_file_calls": 0
+      },
+      "preparation_ms": 43.50234000000637,
+      "host_elapsed_ms": 35973.18100500002,
+      "verification_ms": 5.277807999984361,
+      "task_elapsed_ms": 35982.996021000086,
+      "usage": {
+        "input_tokens": 224464,
+        "cached_input_tokens": 196608,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 695,
+        "reasoning_output_tokens": 38
+      },
+      "tool_calls": 10,
+      "tool_failures": 0,
+      "tool_elapsed_ms": 2948.2688690000214,
+      "response_bytes": 64633,
+      "response_characters": 64620,
+      "forbidden_host_calls": 0,
+      "cost_usd": null,
+      "timed_out": false,
+      "trace_file": "zen-arxiv-paper-1.json"
+    },
+    {
+      "engine": "browse",
+      "task": "arxiv-paper",
+      "round": 1,
+      "success": true,
+      "outcome": "passed",
+      "answer": {
+        "answer": "“Attention Is All You Need” has arXiv identifier 1706.03762. Its first two authors are Ashish Vaswani and Noam Shazeer. The original submission date was 12 June 2017.",
+        "evidence": [
+          {
+            "url": "https://arxiv.org/abs/1706.03762",
+            "quote": "Attention Is All You Need"
+          },
+          {
+            "url": "https://arxiv.org/abs/1706.03762",
+            "quote": "arXiv:1706.03762 [cs.CL]"
+          },
+          {
+            "url": "https://arxiv.org/abs/1706.03762",
+            "quote": "Ashish Vaswani, Noam Shazeer"
+          },
+          {
+            "url": "https://arxiv.org/abs/1706.03762",
+            "quote": "[v1] Mon, 12 Jun 2017 17:57:34 UTC (1,102 KB)"
+          }
+        ]
+      },
+      "expected": {
+        "id": "1706.03762",
+        "authors": [
+          "Ashish Vaswani",
+          "Noam Shazeer"
+        ],
+        "date": "12 June 2017"
+      },
+      "evaluation": {
+        "passed": true,
+        "facts": [
+          {
+            "pattern": "1706\\.03762",
+            "passed": true
+          },
+          {
+            "pattern": "Ashish\\s+Vaswani",
+            "passed": true
+          },
+          {
+            "pattern": "Noam\\s+Shazeer",
+            "passed": true
+          },
+          {
+            "pattern": "12\\s+Jun(?:e)?\\s+2017|Jun(?:e)?\\s+12,?\\s+2017|2017-06-12",
+            "passed": true
+          }
+        ],
+        "evidence": [
+          {
+            "url": "https://arxiv.org/abs/1706.03762",
+            "quote": "Attention Is All You Need",
+            "source_matches": true,
+            "quote_observed": true
+          },
+          {
+            "url": "https://arxiv.org/abs/1706.03762",
+            "quote": "arXiv:1706.03762 [cs.CL]",
+            "source_matches": true,
+            "quote_observed": true
+          },
+          {
+            "url": "https://arxiv.org/abs/1706.03762",
+            "quote": "Ashish Vaswani, Noam Shazeer",
+            "source_matches": true,
+            "quote_observed": true
+          },
+          {
+            "url": "https://arxiv.org/abs/1706.03762",
+            "quote": "[v1] Mon, 12 Jun 2017 17:57:34 UTC (1,102 KB)",
+            "source_matches": true,
+            "quote_observed": true
+          }
+        ],
+        "forbidden_network_or_file_calls": 0
+      },
+      "preparation_ms": 60.487804000033066,
+      "host_elapsed_ms": 83215.05069900001,
+      "verification_ms": 2.247611000086181,
+      "task_elapsed_ms": 83221.89200300002,
+      "usage": {
+        "input_tokens": 253830,
+        "cached_input_tokens": 223360,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 936,
+        "reasoning_output_tokens": 31
+      },
+      "tool_calls": 9,
+      "tool_failures": 1,
+      "tool_elapsed_ms": 38066.651958000264,
+      "response_bytes": 27478,
+      "response_characters": 27411,
+      "forbidden_host_calls": 0,
+      "cost_usd": null,
+      "timed_out": false,
+      "trace_file": "browse-arxiv-paper-1.json"
+    },
+    {
+      "engine": "browse",
+      "task": "github-issue",
+      "round": 1,
+      "success": true,
+      "outcome": "passed",
+      "answer": {
+        "answer": "Issue #1 is titled “Suggestion: 'protected' modifier”. It is closed and was opened by RyanCavanaugh.",
+        "evidence": [
+          {
+            "url": "https://github.com/microsoft/TypeScript/issues/1",
+            "quote": "Suggestion: 'protected' modifier\n #1\nNew issue\nClosed\nDescription\nRyan Cavanaugh (RyanCavanaugh)\nopened "
+          }
+        ]
+      },
+      "expected": {
+        "title": "Suggestion: 'protected' modifier",
+        "state": "closed",
+        "author": "RyanCavanaugh",
+        "url": "https://github.com/microsoft/TypeScript/issues/1"
+      },
+      "evaluation": {
+        "passed": true,
+        "facts": [
+          {
+            "pattern": "Suggestion.{0,10}protected.{0,10}modifier",
+            "passed": true
+          },
+          {
+            "pattern": "closed",
+            "passed": true
+          },
+          {
+            "pattern": "RyanCavanaugh",
+            "passed": true
+          }
+        ],
+        "evidence": [
+          {
+            "url": "https://github.com/microsoft/TypeScript/issues/1",
+            "quote": "Suggestion: 'protected' modifier\n #1\nNew issue\nClosed\nDescription\nRyan Cavanaugh (RyanCavanaugh)\nopened ",
+            "source_matches": true,
+            "quote_observed": true
+          }
+        ],
+        "forbidden_network_or_file_calls": 0
+      },
+      "preparation_ms": 80.45604100008495,
+      "host_elapsed_ms": 23575.526450999896,
+      "verification_ms": 0.5396640000399202,
+      "task_elapsed_ms": 23580.716847999953,
+      "usage": {
+        "input_tokens": 49092,
+        "cached_input_tokens": 22528,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 287,
+        "reasoning_output_tokens": 0
+      },
+      "tool_calls": 2,
+      "tool_failures": 0,
+      "tool_elapsed_ms": 4608.182533000014,
+      "response_bytes": 11092,
+      "response_characters": 11065,
+      "forbidden_host_calls": 0,
+      "cost_usd": null,
+      "timed_out": false,
+      "trace_file": "browse-github-issue-1.json"
+    },
+    {
+      "engine": "zen",
+      "task": "github-issue",
+      "round": 1,
+      "success": true,
+      "outcome": "passed",
+      "answer": {
+        "answer": "Issue #1 is titled “Suggestion: 'protected' modifier”. It is closed and was opened by RyanCavanaugh.",
+        "evidence": [
+          {
+            "url": "https://github.com/microsoft/TypeScript/issues/1",
+            "quote": "Suggestion: 'protected' modifier #1"
+          },
+          {
+            "url": "https://github.com/microsoft/TypeScript/issues/1",
+            "quote": "Closed"
+          },
+          {
+            "url": "https://github.com/microsoft/TypeScript/issues/1",
+            "quote": "Ryan Cavanaugh (RyanCavanaugh)"
+          }
+        ]
+      },
+      "expected": {
+        "title": "Suggestion: 'protected' modifier",
+        "state": "closed",
+        "author": "RyanCavanaugh",
+        "url": "https://github.com/microsoft/TypeScript/issues/1"
+      },
+      "evaluation": {
+        "passed": true,
+        "facts": [
+          {
+            "pattern": "Suggestion.{0,10}protected.{0,10}modifier",
+            "passed": true
+          },
+          {
+            "pattern": "closed",
+            "passed": true
+          },
+          {
+            "pattern": "RyanCavanaugh",
+            "passed": true
+          }
+        ],
+        "evidence": [
+          {
+            "url": "https://github.com/microsoft/TypeScript/issues/1",
+            "quote": "Suggestion: 'protected' modifier #1",
+            "source_matches": true,
+            "quote_observed": true
+          },
+          {
+            "url": "https://github.com/microsoft/TypeScript/issues/1",
+            "quote": "Closed",
+            "source_matches": true,
+            "quote_observed": false
+          },
+          {
+            "url": "https://github.com/microsoft/TypeScript/issues/1",
+            "quote": "Ryan Cavanaugh (RyanCavanaugh)",
+            "source_matches": true,
+            "quote_observed": true
+          }
+        ],
+        "forbidden_network_or_file_calls": 0
+      },
+      "preparation_ms": 55.43115700001363,
+      "host_elapsed_ms": 18867.791952,
+      "verification_ms": 0.5667440000688657,
+      "task_elapsed_ms": 18872.68763499998,
+      "usage": {
+        "input_tokens": 61664,
+        "cached_input_tokens": 26240,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 263,
+        "reasoning_output_tokens": 12
+      },
+      "tool_calls": 2,
+      "tool_failures": 0,
+      "tool_elapsed_ms": 2093.3340340000577,
+      "response_bytes": 14510,
+      "response_characters": 14496,
+      "forbidden_host_calls": 0,
+      "cost_usd": null,
+      "timed_out": false,
+      "trace_file": "zen-github-issue-1.json"
+    },
+    {
+      "engine": "zen",
+      "task": "pypi-metadata",
+      "round": 1,
+      "success": true,
+      "outcome": "passed",
+      "answer": {
+        "answer": "The latest stable httpx release is 0.28.1. It requires Python 3.8 or newer (>=3.8). The release history lists newer 1.0.dev versions as pre-releases.",
+        "evidence": [
+          {
+            "url": "https://pypi.org/project/httpx/",
+            "quote": "httpx 0.28.1"
+          },
+          {
+            "url": "https://pypi.org/project/httpx/",
+            "quote": "Python >=3.8"
+          },
+          {
+            "url": "https://pypi.org/project/httpx/#history",
+            "quote": "0.28.1"
+          }
+        ]
+      },
+      "expected": {
+        "version": "0.28.1",
+        "requires_python": ">=3.8"
+      },
+      "evaluation": {
+        "passed": true,
+        "facts": [
+          {
+            "pattern": "0\\.28\\.1",
+            "passed": true
+          },
+          {
+            "pattern": "3\\.8",
+            "passed": true
+          }
+        ],
+        "evidence": [
+          {
+            "url": "https://pypi.org/project/httpx/",
+            "quote": "httpx 0.28.1",
+            "source_matches": true,
+            "quote_observed": true
+          },
+          {
+            "url": "https://pypi.org/project/httpx/",
+            "quote": "Python >=3.8",
+            "source_matches": true,
+            "quote_observed": true
+          },
+          {
+            "url": "https://pypi.org/project/httpx/#history",
+            "quote": "0.28.1",
+            "source_matches": true,
+            "quote_observed": false
+          }
+        ],
+        "forbidden_network_or_file_calls": 0
+      },
+      "preparation_ms": 55.74599700002,
+      "host_elapsed_ms": 19773.67455700005,
+      "verification_ms": 1.2518209998961538,
+      "task_elapsed_ms": 19779.505194000085,
+      "usage": {
+        "input_tokens": 88354,
+        "cached_input_tokens": 61312,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 329,
+        "reasoning_output_tokens": 0
+      },
+      "tool_calls": 5,
+      "tool_failures": 0,
+      "tool_elapsed_ms": 399.7905099999625,
+      "response_bytes": 31447,
+      "response_characters": 31438,
+      "forbidden_host_calls": 0,
+      "cost_usd": null,
+      "timed_out": false,
+      "trace_file": "zen-pypi-metadata-1.json"
+    },
+    {
+      "engine": "browse",
+      "task": "pypi-metadata",
+      "round": 1,
+      "success": true,
+      "outcome": "passed",
+      "answer": {
+        "answer": "The latest stable httpx release is 0.28.1, requiring Python 3.8 or newer (>=3.8). The release history marks newer 1.0.dev versions as pre-releases.",
+        "evidence": [
+          {
+            "url": "https://pypi.org/project/httpx/",
+            "quote": "httpx 0.28.1"
+          },
+          {
+            "url": "https://pypi.org/project/httpx/",
+            "quote": "Python >=3.8"
+          },
+          {
+            "url": "https://pypi.org/project/httpx/#history",
+            "quote": "PRE-RELEASE\n1.0.dev6"
+          }
+        ]
+      },
+      "expected": {
+        "version": "0.28.1",
+        "requires_python": ">=3.8"
+      },
+      "evaluation": {
+        "passed": true,
+        "facts": [
+          {
+            "pattern": "0\\.28\\.1",
+            "passed": true
+          },
+          {
+            "pattern": "3\\.8",
+            "passed": true
+          }
+        ],
+        "evidence": [
+          {
+            "url": "https://pypi.org/project/httpx/",
+            "quote": "httpx 0.28.1",
+            "source_matches": true,
+            "quote_observed": true
+          },
+          {
+            "url": "https://pypi.org/project/httpx/",
+            "quote": "Python >=3.8",
+            "source_matches": true,
+            "quote_observed": true
+          },
+          {
+            "url": "https://pypi.org/project/httpx/#history",
+            "quote": "PRE-RELEASE\n1.0.dev6",
+            "source_matches": true,
+            "quote_observed": true
+          }
+        ],
+        "forbidden_network_or_file_calls": 0
+      },
+      "preparation_ms": 50.111727000097744,
+      "host_elapsed_ms": 64413.224182000034,
+      "verification_ms": 0.7367719999747351,
+      "task_elapsed_ms": 64418.65663900005,
+      "usage": {
+        "input_tokens": 171062,
+        "cached_input_tokens": 143872,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 600,
+        "reasoning_output_tokens": 0
+      },
+      "tool_calls": 6,
+      "tool_failures": 1,
+      "tool_elapsed_ms": 33959.04657800007,
+      "response_bytes": 13770,
+      "response_characters": 13762,
+      "forbidden_host_calls": 0,
+      "cost_usd": null,
+      "timed_out": false,
+      "trace_file": "browse-pypi-metadata-1.json"
+    },
+    {
+      "engine": "browse",
+      "task": "python-json",
+      "round": 1,
+      "success": true,
+      "outcome": "passed",
+      "answer": {
+        "answer": "json.loads(s) accepts str, bytes, or bytearray containing a JSON document. Invalid JSON raises json.JSONDecodeError.",
+        "evidence": [
+          {
+            "url": "https://docs.python.org/3/library/json.html#json.loads",
+            "quote": "Identical to load(), but instead of a file-like object, deserialize s (a str, bytes or bytearray instance containing a JSON document) to a Python object using this conversion table."
+          },
+          {
+            "url": "https://docs.python.org/3/library/json.html#json.load",
+            "quote": "JSONDecodeError – When the data being deserialized is not a valid JSON document."
+          }
+        ]
+      },
+      "expected": {
+        "error": "JSONDecodeError",
+        "inputs": [
+          "str",
+          "bytes",
+          "bytearray"
+        ]
+      },
+      "evaluation": {
+        "passed": true,
+        "facts": [
+          {
+            "pattern": "JSONDecodeError",
+            "passed": true
+          },
+          {
+            "pattern": "\\bstr\\b|string",
+            "passed": true
+          },
+          {
+            "pattern": "\\bbytes\\b",
+            "passed": true
+          },
+          {
+            "pattern": "\\bbytearray\\b",
+            "passed": true
+          }
+        ],
+        "evidence": [
+          {
+            "url": "https://docs.python.org/3/library/json.html#json.loads",
+            "quote": "Identical to load(), but instead of a file-like object, deserialize s (a str, bytes or bytearray instance containing a JSON document) to a Python object using this conversion table.",
+            "source_matches": true,
+            "quote_observed": true
+          },
+          {
+            "url": "https://docs.python.org/3/library/json.html#json.load",
+            "quote": "JSONDecodeError – When the data being deserialized is not a valid JSON document.",
+            "source_matches": true,
+            "quote_observed": true
+          }
+        ],
+        "forbidden_network_or_file_calls": 0
+      },
+      "preparation_ms": 47.794145000050776,
+      "host_elapsed_ms": 43089.11580899998,
+      "verification_ms": 0.4589309999719262,
+      "task_elapsed_ms": 43093.76317099994,
+      "usage": {
+        "input_tokens": 125515,
+        "cached_input_tokens": 109184,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 823,
+        "reasoning_output_tokens": 14
+      },
+      "tool_calls": 7,
+      "tool_failures": 0,
+      "tool_elapsed_ms": 5706.342165000038,
+      "response_bytes": 4982,
+      "response_characters": 4944,
+      "forbidden_host_calls": 0,
+      "cost_usd": null,
+      "timed_out": false,
+      "trace_file": "browse-python-json-1.json"
+    }
+  ]
+}

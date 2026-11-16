@@ -1,0 +1,369 @@
+{
+  "schema": "callisto.real-world-trace.v1",
+  "engine": "zen",
+  "task": "wikipedia-biography",
+  "round": 0,
+  "success": true,
+  "outcome": "passed",
+  "answer": {
+    "answer": "Ada Lovelace was born on 10 December 1815 in London, England. Her mother was Anne Isabella Milbanke.",
+    "evidence": [
+      {
+        "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+        "quote": "Augusta Ada Byron 10 December 1815 London, England"
+      },
+      {
+        "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+        "quote": "Anne Isabella Milbanke (mother)"
+      }
+    ]
+  },
+  "expected": {
+    "date": "10 December 1815",
+    "place": "London",
+    "mother": "Anne Isabella Milbanke"
+  },
+  "evaluation": {
+    "passed": true,
+    "facts": [
+      {
+        "pattern": "10\\s+December\\s+1815|December\\s+10,?\\s+1815|1815-12-10",
+        "passed": true
+      },
+      {
+        "pattern": "London",
+        "passed": true
+      },
+      {
+        "pattern": "(?:Annabella|Anne?\\s+Isabella)(?:\\s+Noel)?\\s+(?:Milbanke|Byron)",
+        "passed": true
+      }
+    ],
+    "evidence": [
+      {
+        "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+        "quote": "Augusta Ada Byron 10 December 1815 London, England",
+        "source_matches": true,
+        "quote_observed": true
+      },
+      {
+        "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+        "quote": "Anne Isabella Milbanke (mother)",
+        "source_matches": true,
+        "quote_observed": true
+      }
+    ],
+    "forbidden_network_or_file_calls": 0
+  },
+  "preparation_ms": 60.334562000000005,
+  "host_elapsed_ms": 24188.506856999997,
+  "verification_ms": 3.4995600000038394,
+  "task_elapsed_ms": 24198.590648999998,
+  "usage": {
+    "input_tokens": 87441,
+    "cached_input_tokens": 61568,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 303,
+    "reasoning_output_tokens": 0
+  },
+  "tool_calls": 3,
+  "tool_failures": 0,
+  "tool_elapsed_ms": 2211.864820999999,
+  "response_bytes": 29394,
+  "response_characters": 29363,
+  "forbidden_host_calls": 0,
+  "cost_usd": null,
+  "timed_out": false,
+  "trace_file": "zen-wikipedia-biography-0.json",
+  "prompt": "Complete this read-only public website task using ONLY the browser MCP tools. You must inspect the live page; do not answer from memory. You choose your own observations, selectors and actions. Do not use HTTP/API clients, fetch, network replay, files, shell, other agents, or non-browser tools. Browser DOM evaluation is allowed for text extraction, but must not make network requests. Do not visit API endpoints. Do not sign in, create accounts, post messages, buy, or change account settings. Do not solve CAPTCHAs or bypass access challenges; report them. You may follow links, use site search and recover from errors. Stay on the task site. Maximum 30 browser calls. Verify all requested facts and finish with JSON {\"answer\":\"concise answer covering every requested fact\",\"evidence\":[{\"url\":\"source page URL\",\"quote\":\"a short exact supporting quote you observed in browser output\"}]}. Evidence quotes must be copied exactly from an observation. Do not claim success when blocked.\nYou control the owned Zen tab using Callisto in synthetic-dom input mode. Navigation starts loading; read a fresh snapshot before using refs. You may use run, batches, targeted observations, extraction and supported explicit waits. Do not enable or change input mode.\nStart URL: https://en.wikipedia.org/wiki/Main_Page\nTask: Find Ada Lovelace on Wikipedia. Report her full birth date, birthplace and mother’s name. Cite the biography page and a short supporting quote.",
+  "host": {
+    "code": 0,
+    "signal": null,
+    "error": null,
+    "timed_out": false,
+    "elapsed_ms": 24188.506856999997,
+    "usage": {
+      "input_tokens": 87441,
+      "cached_input_tokens": 61568,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 303,
+      "reasoning_output_tokens": 0
+    },
+    "final": "{\"answer\":\"Ada Lovelace was born on 10 December 1815 in London, England. Her mother was Anne Isabella Milbanke.\",\"evidence\":[{\"url\":\"https://en.wikipedia.org/wiki/Ada_Lovelace\",\"quote\":\"Augusta Ada Byron 10 December 1815 London, England\"},{\"url\":\"https://en.wikipedia.org/wiki/Ada_Lovelace\",\"quote\":\"Anne Isabella Milbanke (mother)\"}]}",
+    "events": [
+      {
+        "type": "thread.started",
+        "thread_id": "01a1e524-9d50-7063-9b1a-1adaf0941316"
+      },
+      {
+        "type": "turn.started"
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_0",
+          "type": "agent_message",
+          "text": "I’ll open Ada Lovelace’s Wikipedia biography and verify the three details on the live page."
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_1",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto_snapshot",
+          "arguments": {
+            "max_chars": 12000
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_1",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto_snapshot",
+          "arguments": {
+            "max_chars": 12000
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"next_offset\":null,\"offset\":0,\"order_changed\":false,\"revision\":\"ax-16354251341258813717:2\",\"text\":\"heading \\\"Ready for a public-site task\\\"\",\"title\":\"Browser benchmark start\",\"truncated\":false,\"url\":\"http://127.0.0.1:41079/\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\"]}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_2",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto_run",
+          "arguments": {
+            "steps": [
+              {
+                "action": "navigate",
+                "url": "https://en.wikipedia.org/wiki/Main_Page"
+              }
+            ],
+            "snapshot": true
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_2",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto_run",
+          "arguments": {
+            "steps": [
+              {
+                "action": "navigate",
+                "url": "https://en.wikipedia.org/wiki/Main_Page"
+              }
+            ],
+            "snapshot": true
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"completed\":1,\"elapsed_ms\":1011,\"snapshot\":{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"next_offset\":233,\"offset\":0,\"order_changed\":false,\"revision\":\"ax-9909062875741792998:1\",\"text\":\"[ax-13226223289830914072] link \\\"Jump to content\\\"\\n[ax-7923765683029107239] button \\\"Main menu\\\"\\n[ax-11360275918092502473] link \\\"\\\"\\n[ax-14766724577171818216] search \\\"Search\\\"\\n[ax-4983346010667195045] searchbox \\\"Search Wikipedia\\\"\\n[ax-5725913675711929994] button \\\"Search\\\"\\nlistitem \\\"Donate\\\"\\n[ax-16172098691460255565] link \\\"Donate\\\"\\nlistitem \\\"Create account\\\"\\n[ax-11922596977576005230] link \\\"Create account\\\"\\nlistitem \\\"Log in\\\"\\n[ax-10585251224772518909] link \\\"Log in\\\"\\nlistitem \\\"Main Page\\\"\\n[ax-1320824629631245197] link \\\"Main Page\\\"\\nlistitem \\\"Talk\\\"\\n[ax-10421934896667105219] link \\\"Talk\\\"\\nlistitem \\\"Read\\\"\\n[ax-14706632950253180343] link \\\"Read\\\"\\nlistitem \\\"View source\\\"\\n[ax-8368374858871325193] link \\\"View source\\\"\\nlistitem \\\"View history\\\"\\n[ax-4486256376784469681] link \\\"View history\\\"\\nlistitem \\\"Save\\\"\\n[ax-12475603661758479315] link \\\"Save\\\"\\n[ax-12442055074984796116] button \\\"Tools\\\"\\ntext \\\"Appearance\\\"\\n[ax-3409147708385039666] button \\\"Hide Appearance\\\"\\ntext \\\",\\\"\\nheading \\\"Welcome to Wikipedia\\\"\\n[ax-9995488142098671327] link \\\"Wikipedia\\\"\\ntext \\\"the encyclopedia that .\\\"\\n[ax-13101011380448988333] link \\\"free\\\"\\n[ax-9413427219647806019] link \\\"anyone can edit\\\"\\nlistitem \\\"261,656 active editors\\\"\\n[ax-14885586336276038426] link \\\"261,656\\\"\\nlistitem \\\"7,265,106 articles in English\\\"\\n[ax-15839378745023275819] link \\\"7,265,106\\\"\\n[ax-7412598335811975936] link \\\"English\\\"\\nheading \\\"From today's featured article\\\"\\ntext \\\"From today's featured article\\\"\\n[ax-6864917941958148388] link \\\"Mark Satin\\\"\\nparagraph \\\"Mark Satin (born November 16, 1946) is an American political theorist and writer. He contributed to the development of neopacifism in the 1960s, New Age politics in the 1970s and 1980s, and radical ce\\\"\\n[ax-1232584807307640084] link \\\"Mark Satin\\\"\\n[ax-15920596695334579565] link \\\"political theorist\\\"\\n[ax-10009544621497376711] link \\\"neopacifism\\\"\\n[ax-15497873857123699812] link \\\"New Age politics\\\"\\n[ax-18077672642722720385] link \\\"radical centrism\\\"\\n[ax-4617701259728481493] link \\\"Vietnam War\\\"\\n[ax-13935666417166681357] link \\\"simple living\\\"\\n[ax-3813094186839925553] link \\\"decentralism\\\"\\n[ax-7201987606910979123] link \\\"global responsibility\\\"\\n[ax-11178108291608202996] link \\\"New World Alliance\\\"\\n[ax-4683172618985482816] link \\\"Green Party of the United States\\\"\\n[ax-10195901975148497957] link \\\"Full article...\\\"\\ntext \\\"Recently featured:\\\"\\nlistitem \\\"\\\\\\\"Can't Let Go\\\\\\\" (Mariah Carey song)\\\"\\n[ax-6842662597489788431] link \\\"\\\\\\\"Can't Let Go\\\\\\\" (Mariah Carey song)\\\"\\nlistitem \\\"Aucanquilcha\\\"\\n[ax-15974582663096679559] link \\\"Aucanquilcha\\\"\\nlistitem \\\"2022–23 Notts County F.C. season\\\"\\n[ax-10289418229719078390] link \\\"2022–23 Notts County F.C. season\\\"\\nlistitem \\\"Archive\\\"\\n[ax-7695840596774855707] link \\\"Archive\\\"\\nlistitem \\\"By email\\\"\\n[ax-11001195268766797308] link \\\"By email\\\"\\nlistitem \\\"More featured articles\\\"\\n[ax-7121851332298851227] link \\\"More featured articles\\\"\\nlistitem \\\"About\\\"\\n[ax-15540374202949013398] link \\\"About\\\"\\nheading \\\"Did you know ...\\\"\\n[ax-8803865667679067083] link \\\"Wat Choeng Tha\\\"\\ntext \\\"Wat Choeng Tha\\\"\\nlistitem \\\"... that, according to a local tradition, Taksin studied at Wat Choeng Tha (pictured) as a child and later was ordained there as a monk for three years before becoming King of Thonburi?\\\"\\n[ax-5759415617366648196] link \\\"Taksin\\\"\\n[ax-12414222820905250389] link \\\"Wat Choeng Tha\\\"\\n[ax-7674064795531695928] link \\\"Thonburi\\\"\\nlistitem \\\"... that Ms. Rachel recorded five hundred personalized videos to fundraise for a nonprofit that supports children in dangerous locations?\\\"\\n[ax-1028599865637281622] link \\\"Ms. Rachel\\\"\\nlistitem \\\"... that a figure skater maxed out bonus points by putting all her jumps in the second half of an Olympic final, earning a gold medal and a rule patch?\\\"\\n[ax-6731470114864938838] link \\\"an Olympic final\\\"\\nlistitem \\\"... that Emma Waters argues that women should pursue a middle path between tradwife and girlboss archetypes?\\\"\\n[ax-5649801987378756193] link \\\"Emma Waters\\\"\\nlistitem \\\"... that Joe Murray developed Rocko's Modern Life after seeing a wallaby at a zoo in Bay Area, California?\\\"\\n[ax-12411568992279609719] link \\\"Joe Murray\\\"\\n[ax-1725676563979037774] link \\\"Rocko's Modern Life\\\"\\nlistitem \\\"... that Agatha Christie was a major inspiration for Grace Bruxner's Frog Detective?\\\"\\n[ax-10169840590468634856] link \\\"Agatha Christie\\\"\\n[ax-17107498985325884839] link \\\"Grace Bruxner\\\"\\nlistitem \\\"... that critics praised the surrealism of the early Japanese animated film Ginga no Uo Ursa Minor Blue, in which the Milky Way is literally represented as a river of stars?\\\"\\n[ax-5282140258179716687] link \\\"Ginga no Uo Ursa Minor Blue\\\"\\nlistitem \\\"... that the United States Navy once tried operating anti-submarine helicopters from modified container ships?\\\"\\n[ax-16476022044746752826] link \\\"modified container ships\\\"\\nlistitem \\\"... that RuPaul's song \\\\\\\"Sissy That Walk\\\\\\\" was inspired by a phrase used by a child-pageant coach?\\\"\\n[ax-1471366469678646061] link \\\"RuPaul\\\"\\n[ax-4822974961881024055] link \\\"Sissy That Walk\\\"\\n[ax-15615277531194142725] link \\\"child-pageant\\\"\\nlistitem \\\"Archive\\\"\\n[ax-16048720270920369548] link \\\"Archive\\\"\\nlistitem \\\"Start a new article\\\"\\n[ax-17750739137136453224] link \\\"Start a new article\\\"\\nlistitem \\\"Nominate an article\\\"\\n[ax-3354142335213483343] link \\\"Nominate an article\\\"\\nheading \\\"Help us improve this article!\\\"\\n[ax-17488014304129444957] link \\\"Garbage bin with trash on top\\\"\\ntext \\\"Garbage bin with trash on top\\\"\\ntext \\\"This week's article for improvement is , waste material discarded by humans. The words , , , and are generally used interchangeably.\\\"\\n[ax-2465427676729561384] link \\\"garbage\\\"\\nparagraph \\\"You can improve this article by:\\\"\\nlistitem \\\"Expanding the \\\\\\\"Treatment\\\\\\\", \\\\\\\"Disposal\\\\\\\", and \\\\\\\"History\\\\\\\" sections\\\"\\nlistitem \\\"Finding reliable sources about garbage disposal\\\"\\n[ax-8139315205838024892] link \\\"reliable sources\\\"\\nlistitem \\\"Using sources mentioned on the talk page to add content to the article\\\"\\n[ax-3938347489482700656] link \\\"sources mentioned on the talk page\\\"\\nparagraph \\\"You can be bold and start editing the article. Have questions or suggestions? Visit the article's talk page, or post at the Teahouse for general discussion.\\\"\\n[ax-9008579377114624282] link \\\"be bold\\\"\\n[ax-15156406777038151009] link \\\"start editing the article\\\"\\n[ax-14469438002723989648] link \\\"the article's talk page\\\"\\n[ax-4962474719500505833] link \\\"Teahouse\\\"\\nlistitem \\\"For new editors\\\"\\n[ax-849423965505727750] link \\\"For new editors\\\"\\nlistitem \\\"Archive\\\"\\n[ax-2028651744480913490] link \\\"Archive\\\"\\nlistitem \\\"What is this?\\\"\\n[ax-4733118963501818604] link \\\"What is this?\\\"\\nheading \\\"In the news\\\"\\n[ax-13199134939949767796] figure \\\"Jensen Huang\\\"\\n[ax-17043179165093699573] link \\\"Jensen Huang in 2026\\\"\\nlistitem \\\"Nvidia CEO Jensen Huang (pictured) resigns amidst allegations of being targeted by a Chinese spy and of having extramarital affairs.\\\"\\n[ax-10124472815870903056] link \\\"Nvidia\\\"\\n[ax-14029492385863970988] link \\\"Jensen Huang\\\"\\n[ax-16362942055008127758] link \\\"being targeted by a Chinese spy\\\"\\nlistitem \\\"The Salvadoran military intervention in Haiti intensifies with airstrikes on 400 Mawozo's alleged headquarters and a deployment to the Sylvio Cator Stadium.\\\"\\n[ax-15455313689151578570] link \\\"Salvadoran military intervention in Haiti\\\"\\n[ax-11534630656752535142] link \\\"400 Mawozo\\\"\\n[ax-3724943796934156723] link \\\"the Sylvio Cator Stadium\\\"\\nlistitem \\\"American ocean liner SS United States is scuttled in the Gulf of Mexico to create the largest artificial reef.\\\"\\n[ax-3832811154089248192] link \\\"SS United States\\\"\\n[ax-3024676480435617197] link \\\"scuttled\\\"\\n[ax-12623230536698898579] link \\\"artificial reef\\\"\\nlistitem \\\"The End of Everything by M. John Harrison wins the Booker Prize.\\\"\\n[ax-4833763043818169362] link \\\"The End of Everything\\\"\\n[ax-6522270819038600910] link \\\"M. John Harrison\\\"\\n[ax-9462175290329045990] link \\\"Booker Prize\\\"\\ntext \\\":\\\"\\nlistitem \\\"Iran war\\\"\\n[ax-13912778162118885764] link \\\"Iran war\\\"\\nlistitem \\\"Russo-Ukrainian war timeline\\\"\\n[ax-3157604987250057158] link \\\"Russo-Ukrainian war\\\"\\nlistitem \\\"timeline\\\"\\n[ax-9994312373067386813] link \\\"timeline\\\"\\nlistitem \\\"Yemen offensives\\\"\\n[ax-1660365683199331747] link \\\"Yemen offensives\\\"\\n[ax-17241919616073135272] link \\\"Recent deaths\\\"\\ntext \\\":\\\"\\nlistitem \\\"Alexander Darchiev\\\"\\n[ax-10082675196614989380] link \\\"Alexander Darchiev\\\"\\nlistitem \\\"Tom O'Brien\\\"\\n[ax-6202577105205020668] link \\\"Tom O'Brien\\\"\\nlistitem \\\"Antonello Palombi\\\"\\n[ax-10315543327402933782] link \\\"Antonello Palombi\\\"\\nlistitem \\\"Mitsuru Nagai\\\"\\n[ax-15190435218258529636] link \\\"Mitsuru Nagai\\\"\\nlistitem \\\"Tommy Walsh\\\"\\n[ax-11026429092380343668] link \\\"Tommy Walsh\\\"\\nlistitem \\\"Badrul Kamal\\\"\\n[ax-16200004252260713258] link \\\"Badrul Kamal\\\"\\nlistitem \\\"More current events\\\"\\n[ax-16018189200427972406] link \\\"More current events\\\"\\nlistitem \\\"Nominate an article\\\"\\n[ax-2718180955607799351] link \\\"Nominate an article\\\"\\nheading \\\"On this day\\\"\\nparagraph \\\"November 16\\\"\\n[ax-7880222437303463471] link \\\"November 16\\\"\\n[ax-1889549478318461267] link \\\"Vlad the Impaler\\\"\\ntext \\\"Vlad the Impaler\\\"\\nlistitem \\\"1476 – With the help of Stephen III and Stephen Báthory, Vlad the Impaler (pictured) ousted Basarab the Old and became the ruler of Wallachia for the third time.\\\"\\n[ax-6180892565407046656] link \\\"1476\\\"\\n[ax-12103585964288814233] link \\\"Stephen III\\\"\\n[ax-4389543580816511691] link \\\"Stephen Báthory\\\"\\n[ax-5096105322112208475] link \\\"Vlad the Impaler\\\"\\n[ax-14121205916129703449] link \\\"Basarab the Old\\\"\\n[ax-5765419981516889532] link \\\"Wallachia\\\"\\nlistitem \\\"1632 – Gustavus Adolphus, King of Sweden, was killed at the Battle of Lützen during the Thirty Years' War.\\\"\\n[ax-9424066205573733836] link \\\"1632\\\"\\n[ax-8564363714877526645] link \\\"Gustavus Adolphus\\\"\\n[ax-641787436513018028] link \\\"Battle of Lützen\\\"\\n[ax-1027594572046484317] link \\\"Thirty Years' War\\\"\\nlistitem \\\"1776 – American Revolutionary War: A Dutch fort on Sint Eustatius fired The First Salute to the brig Andrew Doria of the Continental Navy, marking the first international recognition of the American f\\\"\\n[ax-11691949245455509655] link \\\"1776\\\"\\n[ax-2753744149471699958] link \\\"American Revolutionary War\\\"\\n[ax-6697855126448376108] link \\\"A Dutch fort\\\"\\n[ax-1526558764592446088] link \\\"Sint Eustatius\\\"\\n[ax-7751569391242101988] link \\\"The First Salute\\\"\\n[ax-4771789601373788458] link \\\"Andrew Doria\\\"\\n[ax-5206426346442883357] link \\\"Continental Navy\\\"\\nlistitem \\\"1992 – The largest hoard of Roman silver and gold in Britain was found in the village of Hoxne in Suffolk.\\\"\\n[ax-7669295828367654086] link \\\"1992\\\"\\n[ax-18030077688801270123] link \\\"largest hoard of Roman silver and gold in Britain\\\"\\n[ax-3646009594439977975] link \\\"Hoxne\\\"\\n[ax-3278461339763267467] link \\\"Suffolk\\\"\\nlistitem \\\"2020 – The El Dorado Fire in California, United States, was extinguished after 71 days, having destroyed 20 structures and killed one firefighter.\\\"\\n[ax-4662782940781898884] link \\\"2020\\\"\\n[ax-9057888228386459880] link \\\"El Dorado Fire\\\"\\nlistitem \\\"Kalākaua (b. 1836)\\\"\\n[ax-8699129058068328766] link \\\"Kalākaua\\\"\\nlistitem \\\"Shirley Waldemar Baker (d. 1903)\\\"\\n[ax-2819611282507395129] link \\\"Shirley Waldemar Baker\\\"\\nlistitem \\\"Panditrao Agashe (d. 1986)\\\"\\n[ax-4526152883423811154] link \\\"Panditrao Agashe\\\"\\nlistitem \\\"Tommy Flanagan (d. 2001)\\\"\\n[ax-12963941089929952190] link \\\"Tommy Flanagan\\\"\\ntext \\\"More anniversaries:\\\"\\nlistitem \\\"November 15\\\"\\n[ax-2499402923098424465] link \\\"November 15\\\"\\nlistitem \\\"November 16\\\"\\n[ax-10105652587466779266] link \\\"November 16\\\"\\nlistitem \\\"November 17\\\"\\n[ax-305348951253086246] link \\\"November 17\\\"\\nlistitem \\\"Archive\\\"\\n[ax-2088826452939261325] link \\\"Archive\\\"\\nlistitem \\\"By email\\\"\\n[ax-11195473714054327291] link \\\"By email\\\"\\nlistitem \\\"List of days of the year\\\"\\n[ax-15048162632638317246] link \\\"List of days of the year\\\"\\nlistitem \\\"About\\\"\\n[ax-12777996471058334749] link \\\"About\\\"\\nheading \\\"From today's featured list\\\"\\n[ax-6129728669533929908] link \\\"Mohamed Muizzu\\\"\\ntext \\\"Mohamed Muizzu\\\"\\nparagraph \\\"There have been eight presidents of the Maldives since 1953. The president of the Maldives is the country's head of state and head of government, and is directly elected by the citizens of the country\\\"\\n[ax-11047185824957980041] link \\\"There have been eight presidents of the Maldives\\\"\\n[ax-14941214506240646122] link \\\"president of the Maldives\\\"\\n[ax-10642785307709358353] link \\\"head of state\\\"\",\"title\":\"Wikipedia, the free encyclopedia\",\"truncated\":true,\"url\":\"https://en.wikipedia.org/wiki/Main_Page\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\",\"Continue with next_offset and revision to read this captured snapshot.\"]}}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_3",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto_run",
+          "arguments": {
+            "steps": [
+              {
+                "action": "fill_ref",
+                "ref": "ax-4983346010667195045",
+                "value": "Ada Lovelace"
+              },
+              {
+                "action": "submit_ref",
+                "ref": "ax-4983346010667195045"
+              }
+            ],
+            "snapshot": true
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_3",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto_run",
+          "arguments": {
+            "steps": [
+              {
+                "action": "fill_ref",
+                "ref": "ax-4983346010667195045",
+                "value": "Ada Lovelace"
+              },
+              {
+                "action": "submit_ref",
+                "ref": "ax-4983346010667195045"
+              }
+            ],
+            "snapshot": true
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"completed\":2,\"elapsed_ms\":324,\"snapshot\":{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"navigationStarted\":true,\"next_offset\":220,\"offset\":0,\"order_changed\":false,\"revision\":\"ax-7828543666836273651:1\",\"text\":\"[ax-1457958188236322017] link \\\"Jump to content\\\"\\n[ax-2391279169667281325] button \\\"Main menu\\\"\\n[ax-9103534892450746866] link \\\"\\\"\\n[ax-1284316762855052592] search \\\"Search\\\"\\n[ax-12274132189491346512] searchbox \\\"Search Wikipedia\\\"\\n[ax-16653333054266594561] button \\\"Search\\\"\\nlistitem \\\"Donate\\\"\\n[ax-8167803212405871270] link \\\"Donate\\\"\\nlistitem \\\"Create account\\\"\\n[ax-6625586761801585802] link \\\"Create account\\\"\\nlistitem \\\"Log in\\\"\\n[ax-10444690531510704235] link \\\"Log in\\\"\\nheading \\\"Contents\\\"\\n[ax-6540715423601853429] button \\\"Hide Contents\\\"\\nlistitem \\\"(Top)\\\"\\n[ax-1190561210489572014] link \\\"(Top)\\\"\\nlistitem \\\"Biography Toggle Biography subsection\\\"\\n[ax-1156383973974248512] link \\\"Biography\\\"\\n[ax-12037864277510088230] button \\\"Toggle Biography subsection\\\"\\nlistitem \\\"Work Toggle Work subsection\\\"\\n[ax-13639091749925491100] link \\\"Work\\\"\\n[ax-10314771163177254448] button \\\"Toggle Work subsection\\\"\\nlistitem \\\"Commemoration Toggle Commemoration subsection\\\"\\n[ax-11164176898023487453] link \\\"Commemoration\\\"\\n[ax-9646745824206031317] button \\\"Toggle Commemoration subsection\\\"\\nlistitem \\\"In popular culture Toggle In popular culture subsection\\\"\\n[ax-12996915149189694830] link \\\"In popular culture\\\"\\n[ax-7279221960923885582] button \\\"Toggle In popular culture subsection\\\"\\nlistitem \\\"Publications Toggle Publications subsection\\\"\\n[ax-10630946546998459118] link \\\"Publications\\\"\\n[ax-10719474187836511602] button \\\"Toggle Publications subsection\\\"\\nlistitem \\\"See also\\\"\\n[ax-15845346995232195289] link \\\"See also\\\"\\nlistitem \\\"Explanatory notes\\\"\\n[ax-9591419029863147395] link \\\"Explanatory notes\\\"\\nlistitem \\\"References Toggle References subsection\\\"\\n[ax-6140083060770414855] link \\\"References\\\"\\n[ax-13780508532809483548] button \\\"Toggle References subsection\\\"\\nlistitem \\\"Further reading\\\"\\n[ax-12956916964173388800] link \\\"Further reading\\\"\\nlistitem \\\"External links\\\"\\n[ax-9181679741986388475] link \\\"External links\\\"\\nheading \\\"Ada Lovelace\\\"\\ntext \\\"Ada Lovelace\\\"\\n[ax-10275713569646720501] button \\\"113 languages\\\"\\nlistitem \\\"Article\\\"\\n[ax-9175530257611947788] link \\\"Article\\\"\\nlistitem \\\"Talk\\\"\\n[ax-5164023306184943640] link \\\"Talk\\\"\\nlistitem \\\"Read\\\"\\n[ax-5731960422859712632] link \\\"Read\\\"\\nlistitem \\\"View source\\\"\\n[ax-2669586058390263781] link \\\"View source\\\"\\nlistitem \\\"View history\\\"\\n[ax-11984928256720536402] link \\\"View history\\\"\\nlistitem \\\"Save\\\"\\n[ax-12925857466014447725] link \\\"Save\\\"\\n[ax-8597715050237346710] button \\\"Tools\\\"\\ntext \\\"Appearance\\\"\\n[ax-14086383819065966628] button \\\"Hide Appearance\\\"\\n[ax-15380676561984045487] link \\\"This article is semi-protected.\\\"\\ntext \\\"From Wikipedia, the free encyclopedia\\\"\\n[ax-9421221828808875439] note \\\"For the computer microarchitecture, see Ada Lovelace (microarchitecture).\\\"\\n[ax-9604854093650847484] link \\\"Ada Lovelace (microarchitecture)\\\"\\ncolumnheader \\\"The Right Honourable The Countess of Lovelace\\\"\\n[ax-11226903773240399709] link \\\"The Right Honourable\\\"\\ncell \\\"Daguerreotype of Lovelace (c. 1843)[1]\\\"\\n[ax-17727425335095178510] link \\\"\\\"\\n[ax-9820818426141647160] link \\\"Daguerreotype\\\"\\n[ax-15822769375886716616] link \\\"[1]\\\"\\ncolumnheader \\\"Born\\\"\\ncell \\\"Augusta Ada Byron 10 December 1815 London, England\\\"\\ncolumnheader \\\"Died\\\"\\ncell \\\"27 November 1852 (aged 36) Marylebone, London, England\\\"\\n[ax-12198984636685632087] link \\\"Marylebone\\\"\\ncolumnheader \\\"Resting place\\\"\\ncell \\\"Church of St Mary Magdalene, Hucknall, Nottingham, England\\\"\\n[ax-17074696267624509001] link \\\"Church of St Mary Magdalene, Hucknall\\\"\\ncolumnheader \\\"Known for\\\"\\ncell \\\"Mathematics, computing\\\"\\n[ax-6426507915826806522] link \\\"Mathematics\\\"\\n[ax-12473824110141757708] link \\\"computing\\\"\\ncolumnheader \\\"Spouse\\\"\\ncell \\\"William King-Noel, 1st Earl of Lovelace ​ ​(m. 1835)​\\\"\\n[ax-7641990729802573721] link \\\"William King-Noel, 1st Earl of Lovelace\\\"\\ncolumnheader \\\"Children\\\"\\ncell \\\"Byron King-Noel, Viscount Ockham Anne Blunt, 15th Baroness Wentworth Ralph King-Milbanke, 2nd Earl of Lovelace\\\"\\nlistitem \\\"Byron King-Noel, Viscount Ockham\\\"\\n[ax-18029289582112721567] link \\\"Byron King-Noel, Viscount Ockham\\\"\\nlistitem \\\"Anne Blunt, 15th Baroness Wentworth\\\"\\n[ax-11353033176533658353] link \\\"Anne Blunt, 15th Baroness Wentworth\\\"\\nlistitem \\\"Ralph King-Milbanke, 2nd Earl of Lovelace\\\"\\n[ax-3629248698470655807] link \\\"Ralph King-Milbanke, 2nd Earl of Lovelace\\\"\\ncolumnheader \\\"Parents\\\"\\ncell \\\"George Byron, 6th Baron Byron (father) Anne Isabella Milbanke (mother)\\\"\\nlistitem \\\"George Byron, 6th Baron Byron (father)\\\"\\n[ax-88676129020897841] link \\\"George Byron, 6th Baron Byron\\\"\\nlistitem \\\"Anne Isabella Milbanke (mother)\\\"\\n[ax-365268643489282581] link \\\"Anne Isabella Milbanke\\\"\\ncolumnheader \\\"Signature\\\"\\ncell \\\"\\\"\\n[ax-8402043369715827188] link \\\"\\\"\\nparagraph \\\"Augusta Ada King, Countess of Lovelace (née Byron; 10 December 1815 – 27 November 1852), also known as Ada Lovelace, was an English mathematician and writer chiefly known for work on Charles Babbage's\\\"\\n[ax-4918191369372881089] link \\\"née\\\"\\n[ax-976254004398396633] link \\\"mathematician\\\"\\n[ax-9951647328086703693] link \\\"writer\\\"\\n[ax-2100199952064297772] link \\\"Charles Babbage\\\"\\n[ax-18116199693293536891] link \\\"computer\\\"\\n[ax-12028496810978847113] link \\\"analytical engine\\\"\\n[ax-6696044389536811292] link \\\"computer programmer\\\"\\nparagraph \\\"Lovelace was the only legitimate child of poet Lord Byron and reformer Anne Isabella Milbanke.[2] Lord Byron separated from his wife a month after Ada was born, and died when she was eight. Although o\\\"\\n[ax-8841833721907426832] link \\\"legitimate child\\\"\\n[ax-14250445154025846138] link \\\"Lord Byron\\\"\\n[ax-11948845164036592969] link \\\"Anne Isabella Milbanke\\\"\\n[ax-10572371533893866458] link \\\"[2]\\\"\\n[ax-13402817916629312773] link \\\"assiduously\\\"\\n[ax-17303122062215205210] link \\\"William King\\\"\\n[ax-17489156455993421180] link \\\"Baron\\\"\\n[ax-6916350500310299561] link \\\"Earl of Lovelace\\\"\\n[ax-8557247039342426465] link \\\"Baron Lovelaces\\\"\\n[ax-602298568889046109] link \\\"[3]\\\"\\nparagraph \\\"Lovelace's educational and social exploits brought her into contact with scientists such as Andrew Crosse, Charles Babbage, David Brewster, Charles Wheatstone and Michael Faraday, and the author Charl\\\"\\n[ax-5367614480535752423] link \\\"Andrew Crosse\\\"\\n[ax-1694995523853680857] link \\\"David Brewster\\\"\\n[ax-16628378084499940181] link \\\"Charles Wheatstone\\\"\\n[ax-1720342065911930317] link \\\"Michael Faraday\\\"\\n[ax-6960558159397437105] link \\\"Charles Dickens\\\"\\n[ax-9260175622558065731] link \\\"[4]\\\"\\n[ax-9845694638579435650] link \\\"Metaphysician\\\"\\n[ax-4551964231466479463] link \\\"[5]\\\"\\nparagraph \\\"At age 18, Lovelace's mathematical talents led her to a long working relationship and friendship with fellow British mathematician Charles Babbage. She was particularly interested in Babbage's work on\\\"\\n[ax-5959053408690847809] link \\\"Charles Babbage's Saturday night soirées\\\"\\n[ax-7452004830545178166] link \\\"[6]\\\"\\n[ax-4260960585199694587] link \\\"Mary Somerville\\\"\\n[ax-14153932270463908388] link \\\"Turing-complete\\\"\\n[ax-11000273754662122776] link \\\"an article\\\"\\n[ax-2167451184114603279] link \\\"Luigi Menabrea\\\"\\n[ax-6770680881144299896] link \\\"seven long explanatory notes\\\"\\n[ax-11383091187636347421] link \\\"Bernoulli numbers\\\"\\n[ax-12781487427370480129] link \\\"computer program\\\"\\nparagraph \\\"She developed a vision of the capability of computers to go beyond mere calculating or number-crunching, while many others, including Babbage, focused only on those capabilities.[7] Lovelace was the f\\\"\\n[ax-16797790861880927238] link \\\"calculating\\\"\\n[ax-13805551881543768772] link \\\"[7]\\\"\\n[ax-9039304065956595151] link \\\"arithmetical\\\"\\n[ax-18058812833659896832] link \\\"music\\\"\\n[ax-9220818075767163907] link \\\"[8]\\\"\\n[ax-2787442777271474913] link \\\"programming language\\\"\\nheading \\\"Biography\\\"\\nheading \\\"Childhood\\\"\\nparagraph \\\"Lord Byron expected his child to be a \\\\\\\"glorious boy\\\\\\\" and was disappointed when Lady Byron gave birth to a girl.[9] The child was named after Byron's half-sister, Augusta Leigh, and was called \\\\\\\"Ada\\\\\\\" by\\\"\\n[ax-10618985962784204518] link \\\"Lord Byron\\\"\\n[ax-8123257120028812547] link \\\"Lady Byron\\\"\\n[ax-6823767327702986800] link \\\"[9]\\\"\\n[ax-4741884196846437666] link \\\"Augusta Leigh\\\"\\n[ax-9400129984101698235] link \\\"[10]\\\"\\n[ax-7876710394848277613] link \\\"Kirkby Mallory\\\"\\n[ax-10321501127133829175] link \\\"[9]\\\"\\n[ax-2126254606238337074] link \\\"[11]\\\"\\n[ax-6194006656043150184] link \\\"[12]\\\"\\n[ax-1337002577489376248] link \\\"\\\"\\ntext \\\"Ada Byron, aged four\\\"\\nparagraph \\\"On 21 April, Lord Byron signed the deed of separation, although very reluctantly, and left England for good a few days later.[13] Aside from an acrimonious separation, Lady Byron continued throughout \\\"\\n[ax-18063915159742465908] link \\\"deed of separation\\\"\\n[ax-428585243121415228] link \\\"[13]\\\"\\n[ax-4905421017428273236] link \\\"[14]\\\"\\n[ax-5029042495197901730] link \\\"[15]\\\"\\n[ax-9698617120314324202] link \\\"[16]\\\"\\n[ax-994215101003516515] link \\\"\\\"\\ntext \\\"Ada Byron, aged seven, by , 1822,\\\"\\n[ax-3893972102660299059] link \\\"Alfred d'Orsay\\\"\\n[ax-5144283471014807478] link \\\"Somerville College, Oxford\\\"\\nparagraph \\\"Lovelace did not have a close relationship with her mother. She was often left in the care of her maternal grandmother Judith, Hon. Lady Milbanke, who doted on her. However, because of societal attitu\\\"\\n[ax-3545574053627055163] link \\\"[17]\\\"\\n[ax-14214899622912472413] link \\\"[18]\\\"\\n[ax-11941402588527258632] link \\\"[19]\\\"\\n[ax-12104664481333495895] link \\\"\\\"\\ntext \\\"Ada Byron, aged seventeen, 1832\\\"\\nparagraph \\\"Lovelace was often ill, beginning in early childhood. At the age of eight, she experienced headaches that obscured her vision.[10] In June 1829, she was paralyzed after a bout of measles. She was subj\\\"\\n[ax-15218690722447084539] link \\\"[10]\\\"\\n[ax-17611191846751386515] link \\\"measles\\\"\\nblockquote \\\"When Ada was twelve years old, this future \\\\\\\"Lady Fairy\\\\\\\", as Charles Babbage affectionately called her, decided she wanted to fly. Ada Byron went about the project methodically, thoughtfully, with imag\\\"\\nparagraph \\\"When Ada was twelve years old, this future \\\\\\\"Lady Fairy\\\\\\\", as Charles Babbage affectionately called her, decided she wanted to fly. Ada Byron went about the project methodically, thoughtfully, with imag\\\"\\n[ax-10850041836594224001] link \\\"anatomy of birds\\\"\\n[ax-682584734086722337] link \\\"[8]\\\"\\nparagraph \\\"Ada Byron had an affair with a tutor in early 1833. She tried to elope with him after she was caught, but the tutor's relatives recognised her and contacted her mother. Lady Byron and her friends cove\\\"\\n[ax-4807041634649710589] link \\\"[20]\\\"\\n[ax-13356022824578493989] link \\\"Allegra\\\"\\n[ax-586303772623744328] link \\\"Claire Clairmont\\\"\\n[ax-15875896696692680023] link \\\"Elizabeth Medora Leigh\\\"\\n[ax-15417447752761485138] link \\\"[21]\\\"\\nheading \\\"Adult years\\\"\\n[ax-220837881969898841] link \\\"\\\"\\ntext \\\"Watercolor portrait of Ada Byron, by , c. 1835.\\\"\\n[ax-10495096461120058625] link \\\"Alfred Edward Chalon\\\"\\n[ax-18015924666064529066] link \\\"\\\"\\ntext \\\"Watercolour portrait of Ada King, Countess of Lovelace, , possibly by Alfred Edward Chalon\\\"\\ntext \\\"1840\\\"\\nparagraph \\\"Lovelace became close friends with her tutor Mary Somerville, who introduced her to Charles Babbage in 1833. She had a strong respect and affection for Somerville,[22] and they corresponded for many y\\\"\\n[ax-10494262037341225377] link \\\"Mary Somerville\\\"\\n[ax-14329711392807104882] link \\\"[22]\\\"\\n[ax-17316138924169546070] link \\\"Andrew Crosse\\\"\\n[ax-3705830306623674452] link \\\"Sir David Brewster\\\"\\n[ax-2319852239558043827] link \\\"Charles Wheatstone\\\"\\n[ax-10052128843646107519] link \\\"Michael Faraday\\\"\\n[ax-10092343609479483144] link \\\"Charles Dickens\\\"\\n[ax-5122572522824496555] link \\\"presented at Court\\\"\\n[ax-17679077696783892827] link \\\"[23]\\\"\\n[ax-8653078145377737021] link \\\"John Hobhouse\\\"\\n[ax-7700232695763694516] link \\\"[24]\\\"\\n[ax-12028622985012791735] link \\\"[25]\\\"\\n[ax-13503790479770995958] link \\\"\\\"\\ntext \\\"William King, 1st Earl of Lovelace in uniform\\\"\\nparagraph \\\"On 8 July 1835, she married William, 8th Baron King, becoming Lady King. They had three homes: Ockham Park, Surrey; a Scottish estate on Loch Torridon in Ross-shire; and a house in London. They spent \\\"\\n[ax-17903841359425847048] link \\\"William, 8th Baron King\\\"\\n[ax-834613335500957944] link \\\"Ockham Park\\\"\\n[ax-3631863518885436622] link \\\"Loch Torridon\\\"\\n[ax-446788146281824085] link \\\"Ross-shire\\\"\\n[ax-13398318650612628287] link \\\"Porlock Weir\\\"\\n[ax-2381287746206349994] link \\\"Horsley Towers\\\"\\n[ax-15564661008931568524] link \\\"Tudorbethan\\\"\",\"title\":\"Ada Lovelace - Wikipedia\",\"truncated\":true,\"url\":\"https://en.wikipedia.org/wiki/Ada_Lovelace\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\",\"Continue with next_offset and revision to read this captured snapshot.\"]}}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_4",
+          "type": "agent_message",
+          "text": "{\"answer\":\"Ada Lovelace was born on 10 December 1815 in London, England. Her mother was Anne Isabella Milbanke.\",\"evidence\":[{\"url\":\"https://en.wikipedia.org/wiki/Ada_Lovelace\",\"quote\":\"Augusta Ada Byron 10 December 1815 London, England\"},{\"url\":\"https://en.wikipedia.org/wiki/Ada_Lovelace\",\"quote\":\"Anne Isabella Milbanke (mother)\"}]}"
+        }
+      },
+      {
+        "type": "turn.completed",
+        "usage": {
+          "input_tokens": 87441,
+          "cached_input_tokens": 61568,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 303,
+          "reasoning_output_tokens": 0
+        }
+      }
+    ],
+    "parse_errors": 0,
+    "diagnostic": null,
+    "configuration": {
+      "model": "gpt-6.1-sol",
+      "effort": "high",
+      "sandbox": "read-only",
+      "shell_tool": false,
+      "web_search": "disabled",
+      "user_config_loaded": false,
+      "project_instructions_loaded": false,
+      "skills_catalog_max_tokens": 1,
+      "automatic_skill_instructions": false,
+      "fixture_tool_approval": "explicit approve",
+      "auth": "existing signed-in Codex host",
+      "mcp_transport": "stdio → private Unix socket → native runtime MCP client"
+    }
+  },
+  "tools": [
+    {
+      "sequence": 1,
+      "name": "callisto_snapshot",
+      "arguments": {
+        "max_chars": 12000
+      },
+      "started_at": "2026-11-16T16:15:54.162Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"next_offset\":null,\"offset\":0,\"order_changed\":false,\"revision\":\"ax-16354251341258813717:2\",\"text\":\"heading \\\"Ready for a public-site task\\\"\",\"title\":\"Browser benchmark start\",\"truncated\":false,\"url\":\"http://127.0.0.1:41079/\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\"]}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 5.8449149999978545,
+      "response_bytes": 478
+    },
+    {
+      "sequence": 2,
+      "name": "callisto_run",
+      "arguments": {
+        "steps": [
+          {
+            "action": "navigate",
+            "url": "https://en.wikipedia.org/wiki/Main_Page"
+          }
+        ],
+        "snapshot": true
+      },
+      "started_at": "2026-11-16T16:15:57.255Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"completed\":1,\"elapsed_ms\":1011,\"snapshot\":{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"next_offset\":233,\"offset\":0,\"order_changed\":false,\"revision\":\"ax-9909062875741792998:1\",\"text\":\"[ax-13226223289830914072] link \\\"Jump to content\\\"\\n[ax-7923765683029107239] button \\\"Main menu\\\"\\n[ax-11360275918092502473] link \\\"\\\"\\n[ax-14766724577171818216] search \\\"Search\\\"\\n[ax-4983346010667195045] searchbox \\\"Search Wikipedia\\\"\\n[ax-5725913675711929994] button \\\"Search\\\"\\nlistitem \\\"Donate\\\"\\n[ax-16172098691460255565] link \\\"Donate\\\"\\nlistitem \\\"Create account\\\"\\n[ax-11922596977576005230] link \\\"Create account\\\"\\nlistitem \\\"Log in\\\"\\n[ax-10585251224772518909] link \\\"Log in\\\"\\nlistitem \\\"Main Page\\\"\\n[ax-1320824629631245197] link \\\"Main Page\\\"\\nlistitem \\\"Talk\\\"\\n[ax-10421934896667105219] link \\\"Talk\\\"\\nlistitem \\\"Read\\\"\\n[ax-14706632950253180343] link \\\"Read\\\"\\nlistitem \\\"View source\\\"\\n[ax-8368374858871325193] link \\\"View source\\\"\\nlistitem \\\"View history\\\"\\n[ax-4486256376784469681] link \\\"View history\\\"\\nlistitem \\\"Save\\\"\\n[ax-12475603661758479315] link \\\"Save\\\"\\n[ax-12442055074984796116] button \\\"Tools\\\"\\ntext \\\"Appearance\\\"\\n[ax-3409147708385039666] button \\\"Hide Appearance\\\"\\ntext \\\",\\\"\\nheading \\\"Welcome to Wikipedia\\\"\\n[ax-9995488142098671327] link \\\"Wikipedia\\\"\\ntext \\\"the encyclopedia that .\\\"\\n[ax-13101011380448988333] link \\\"free\\\"\\n[ax-9413427219647806019] link \\\"anyone can edit\\\"\\nlistitem \\\"261,656 active editors\\\"\\n[ax-14885586336276038426] link \\\"261,656\\\"\\nlistitem \\\"7,265,106 articles in English\\\"\\n[ax-15839378745023275819] link \\\"7,265,106\\\"\\n[ax-7412598335811975936] link \\\"English\\\"\\nheading \\\"From today's featured article\\\"\\ntext \\\"From today's featured article\\\"\\n[ax-6864917941958148388] link \\\"Mark Satin\\\"\\nparagraph \\\"Mark Satin (born November 16, 1946) is an American political theorist and writer. He contributed to the development of neopacifism in the 1960s, New Age politics in the 1970s and 1980s, and radical ce\\\"\\n[ax-1232584807307640084] link \\\"Mark Satin\\\"\\n[ax-15920596695334579565] link \\\"political theorist\\\"\\n[ax-10009544621497376711] link \\\"neopacifism\\\"\\n[ax-15497873857123699812] link \\\"New Age politics\\\"\\n[ax-18077672642722720385] link \\\"radical centrism\\\"\\n[ax-4617701259728481493] link \\\"Vietnam War\\\"\\n[ax-13935666417166681357] link \\\"simple living\\\"\\n[ax-3813094186839925553] link \\\"decentralism\\\"\\n[ax-7201987606910979123] link \\\"global responsibility\\\"\\n[ax-11178108291608202996] link \\\"New World Alliance\\\"\\n[ax-4683172618985482816] link \\\"Green Party of the United States\\\"\\n[ax-10195901975148497957] link \\\"Full article...\\\"\\ntext \\\"Recently featured:\\\"\\nlistitem \\\"\\\\\\\"Can't Let Go\\\\\\\" (Mariah Carey song)\\\"\\n[ax-6842662597489788431] link \\\"\\\\\\\"Can't Let Go\\\\\\\" (Mariah Carey song)\\\"\\nlistitem \\\"Aucanquilcha\\\"\\n[ax-15974582663096679559] link \\\"Aucanquilcha\\\"\\nlistitem \\\"2022–23 Notts County F.C. season\\\"\\n[ax-10289418229719078390] link \\\"2022–23 Notts County F.C. season\\\"\\nlistitem \\\"Archive\\\"\\n[ax-7695840596774855707] link \\\"Archive\\\"\\nlistitem \\\"By email\\\"\\n[ax-11001195268766797308] link \\\"By email\\\"\\nlistitem \\\"More featured articles\\\"\\n[ax-7121851332298851227] link \\\"More featured articles\\\"\\nlistitem \\\"About\\\"\\n[ax-15540374202949013398] link \\\"About\\\"\\nheading \\\"Did you know ...\\\"\\n[ax-8803865667679067083] link \\\"Wat Choeng Tha\\\"\\ntext \\\"Wat Choeng Tha\\\"\\nlistitem \\\"... that, according to a local tradition, Taksin studied at Wat Choeng Tha (pictured) as a child and later was ordained there as a monk for three years before becoming King of Thonburi?\\\"\\n[ax-5759415617366648196] link \\\"Taksin\\\"\\n[ax-12414222820905250389] link \\\"Wat Choeng Tha\\\"\\n[ax-7674064795531695928] link \\\"Thonburi\\\"\\nlistitem \\\"... that Ms. Rachel recorded five hundred personalized videos to fundraise for a nonprofit that supports children in dangerous locations?\\\"\\n[ax-1028599865637281622] link \\\"Ms. Rachel\\\"\\nlistitem \\\"... that a figure skater maxed out bonus points by putting all her jumps in the second half of an Olympic final, earning a gold medal and a rule patch?\\\"\\n[ax-6731470114864938838] link \\\"an Olympic final\\\"\\nlistitem \\\"... that Emma Waters argues that women should pursue a middle path between tradwife and girlboss archetypes?\\\"\\n[ax-5649801987378756193] link \\\"Emma Waters\\\"\\nlistitem \\\"... that Joe Murray developed Rocko's Modern Life after seeing a wallaby at a zoo in Bay Area, California?\\\"\\n[ax-12411568992279609719] link \\\"Joe Murray\\\"\\n[ax-1725676563979037774] link \\\"Rocko's Modern Life\\\"\\nlistitem \\\"... that Agatha Christie was a major inspiration for Grace Bruxner's Frog Detective?\\\"\\n[ax-10169840590468634856] link \\\"Agatha Christie\\\"\\n[ax-17107498985325884839] link \\\"Grace Bruxner\\\"\\nlistitem \\\"... that critics praised the surrealism of the early Japanese animated film Ginga no Uo Ursa Minor Blue, in which the Milky Way is literally represented as a river of stars?\\\"\\n[ax-5282140258179716687] link \\\"Ginga no Uo Ursa Minor Blue\\\"\\nlistitem \\\"... that the United States Navy once tried operating anti-submarine helicopters from modified container ships?\\\"\\n[ax-16476022044746752826] link \\\"modified container ships\\\"\\nlistitem \\\"... that RuPaul's song \\\\\\\"Sissy That Walk\\\\\\\" was inspired by a phrase used by a child-pageant coach?\\\"\\n[ax-1471366469678646061] link \\\"RuPaul\\\"\\n[ax-4822974961881024055] link \\\"Sissy That Walk\\\"\\n[ax-15615277531194142725] link \\\"child-pageant\\\"\\nlistitem \\\"Archive\\\"\\n[ax-16048720270920369548] link \\\"Archive\\\"\\nlistitem \\\"Start a new article\\\"\\n[ax-17750739137136453224] link \\\"Start a new article\\\"\\nlistitem \\\"Nominate an article\\\"\\n[ax-3354142335213483343] link \\\"Nominate an article\\\"\\nheading \\\"Help us improve this article!\\\"\\n[ax-17488014304129444957] link \\\"Garbage bin with trash on top\\\"\\ntext \\\"Garbage bin with trash on top\\\"\\ntext \\\"This week's article for improvement is , waste material discarded by humans. The words , , , and are generally used interchangeably.\\\"\\n[ax-2465427676729561384] link \\\"garbage\\\"\\nparagraph \\\"You can improve this article by:\\\"\\nlistitem \\\"Expanding the \\\\\\\"Treatment\\\\\\\", \\\\\\\"Disposal\\\\\\\", and \\\\\\\"History\\\\\\\" sections\\\"\\nlistitem \\\"Finding reliable sources about garbage disposal\\\"\\n[ax-8139315205838024892] link \\\"reliable sources\\\"\\nlistitem \\\"Using sources mentioned on the talk page to add content to the article\\\"\\n[ax-3938347489482700656] link \\\"sources mentioned on the talk page\\\"\\nparagraph \\\"You can be bold and start editing the article. Have questions or suggestions? Visit the article's talk page, or post at the Teahouse for general discussion.\\\"\\n[ax-9008579377114624282] link \\\"be bold\\\"\\n[ax-15156406777038151009] link \\\"start editing the article\\\"\\n[ax-14469438002723989648] link \\\"the article's talk page\\\"\\n[ax-4962474719500505833] link \\\"Teahouse\\\"\\nlistitem \\\"For new editors\\\"\\n[ax-849423965505727750] link \\\"For new editors\\\"\\nlistitem \\\"Archive\\\"\\n[ax-2028651744480913490] link \\\"Archive\\\"\\nlistitem \\\"What is this?\\\"\\n[ax-4733118963501818604] link \\\"What is this?\\\"\\nheading \\\"In the news\\\"\\n[ax-13199134939949767796] figure \\\"Jensen Huang\\\"\\n[ax-17043179165093699573] link \\\"Jensen Huang in 2026\\\"\\nlistitem \\\"Nvidia CEO Jensen Huang (pictured) resigns amidst allegations of being targeted by a Chinese spy and of having extramarital affairs.\\\"\\n[ax-10124472815870903056] link \\\"Nvidia\\\"\\n[ax-14029492385863970988] link \\\"Jensen Huang\\\"\\n[ax-16362942055008127758] link \\\"being targeted by a Chinese spy\\\"\\nlistitem \\\"The Salvadoran military intervention in Haiti intensifies with airstrikes on 400 Mawozo's alleged headquarters and a deployment to the Sylvio Cator Stadium.\\\"\\n[ax-15455313689151578570] link \\\"Salvadoran military intervention in Haiti\\\"\\n[ax-11534630656752535142] link \\\"400 Mawozo\\\"\\n[ax-3724943796934156723] link \\\"the Sylvio Cator Stadium\\\"\\nlistitem \\\"American ocean liner SS United States is scuttled in the Gulf of Mexico to create the largest artificial reef.\\\"\\n[ax-3832811154089248192] link \\\"SS United States\\\"\\n[ax-3024676480435617197] link \\\"scuttled\\\"\\n[ax-12623230536698898579] link \\\"artificial reef\\\"\\nlistitem \\\"The End of Everything by M. John Harrison wins the Booker Prize.\\\"\\n[ax-4833763043818169362] link \\\"The End of Everything\\\"\\n[ax-6522270819038600910] link \\\"M. John Harrison\\\"\\n[ax-9462175290329045990] link \\\"Booker Prize\\\"\\ntext \\\":\\\"\\nlistitem \\\"Iran war\\\"\\n[ax-13912778162118885764] link \\\"Iran war\\\"\\nlistitem \\\"Russo-Ukrainian war timeline\\\"\\n[ax-3157604987250057158] link \\\"Russo-Ukrainian war\\\"\\nlistitem \\\"timeline\\\"\\n[ax-9994312373067386813] link \\\"timeline\\\"\\nlistitem \\\"Yemen offensives\\\"\\n[ax-1660365683199331747] link \\\"Yemen offensives\\\"\\n[ax-17241919616073135272] link \\\"Recent deaths\\\"\\ntext \\\":\\\"\\nlistitem \\\"Alexander Darchiev\\\"\\n[ax-10082675196614989380] link \\\"Alexander Darchiev\\\"\\nlistitem \\\"Tom O'Brien\\\"\\n[ax-6202577105205020668] link \\\"Tom O'Brien\\\"\\nlistitem \\\"Antonello Palombi\\\"\\n[ax-10315543327402933782] link \\\"Antonello Palombi\\\"\\nlistitem \\\"Mitsuru Nagai\\\"\\n[ax-15190435218258529636] link \\\"Mitsuru Nagai\\\"\\nlistitem \\\"Tommy Walsh\\\"\\n[ax-11026429092380343668] link \\\"Tommy Walsh\\\"\\nlistitem \\\"Badrul Kamal\\\"\\n[ax-16200004252260713258] link \\\"Badrul Kamal\\\"\\nlistitem \\\"More current events\\\"\\n[ax-16018189200427972406] link \\\"More current events\\\"\\nlistitem \\\"Nominate an article\\\"\\n[ax-2718180955607799351] link \\\"Nominate an article\\\"\\nheading \\\"On this day\\\"\\nparagraph \\\"November 16\\\"\\n[ax-7880222437303463471] link \\\"November 16\\\"\\n[ax-1889549478318461267] link \\\"Vlad the Impaler\\\"\\ntext \\\"Vlad the Impaler\\\"\\nlistitem \\\"1476 – With the help of Stephen III and Stephen Báthory, Vlad the Impaler (pictured) ousted Basarab the Old and became the ruler of Wallachia for the third time.\\\"\\n[ax-6180892565407046656] link \\\"1476\\\"\\n[ax-12103585964288814233] link \\\"Stephen III\\\"\\n[ax-4389543580816511691] link \\\"Stephen Báthory\\\"\\n[ax-5096105322112208475] link \\\"Vlad the Impaler\\\"\\n[ax-14121205916129703449] link \\\"Basarab the Old\\\"\\n[ax-5765419981516889532] link \\\"Wallachia\\\"\\nlistitem \\\"1632 – Gustavus Adolphus, King of Sweden, was killed at the Battle of Lützen during the Thirty Years' War.\\\"\\n[ax-9424066205573733836] link \\\"1632\\\"\\n[ax-8564363714877526645] link \\\"Gustavus Adolphus\\\"\\n[ax-641787436513018028] link \\\"Battle of Lützen\\\"\\n[ax-1027594572046484317] link \\\"Thirty Years' War\\\"\\nlistitem \\\"1776 – American Revolutionary War: A Dutch fort on Sint Eustatius fired The First Salute to the brig Andrew Doria of the Continental Navy, marking the first international recognition of the American f\\\"\\n[ax-11691949245455509655] link \\\"1776\\\"\\n[ax-2753744149471699958] link \\\"American Revolutionary War\\\"\\n[ax-6697855126448376108] link \\\"A Dutch fort\\\"\\n[ax-1526558764592446088] link \\\"Sint Eustatius\\\"\\n[ax-7751569391242101988] link \\\"The First Salute\\\"\\n[ax-4771789601373788458] link \\\"Andrew Doria\\\"\\n[ax-5206426346442883357] link \\\"Continental Navy\\\"\\nlistitem \\\"1992 – The largest hoard of Roman silver and gold in Britain was found in the village of Hoxne in Suffolk.\\\"\\n[ax-7669295828367654086] link \\\"1992\\\"\\n[ax-18030077688801270123] link \\\"largest hoard of Roman silver and gold in Britain\\\"\\n[ax-3646009594439977975] link \\\"Hoxne\\\"\\n[ax-3278461339763267467] link \\\"Suffolk\\\"\\nlistitem \\\"2020 – The El Dorado Fire in California, United States, was extinguished after 71 days, having destroyed 20 structures and killed one firefighter.\\\"\\n[ax-4662782940781898884] link \\\"2020\\\"\\n[ax-9057888228386459880] link \\\"El Dorado Fire\\\"\\nlistitem \\\"Kalākaua (b. 1836)\\\"\\n[ax-8699129058068328766] link \\\"Kalākaua\\\"\\nlistitem \\\"Shirley Waldemar Baker (d. 1903)\\\"\\n[ax-2819611282507395129] link \\\"Shirley Waldemar Baker\\\"\\nlistitem \\\"Panditrao Agashe (d. 1986)\\\"\\n[ax-4526152883423811154] link \\\"Panditrao Agashe\\\"\\nlistitem \\\"Tommy Flanagan (d. 2001)\\\"\\n[ax-12963941089929952190] link \\\"Tommy Flanagan\\\"\\ntext \\\"More anniversaries:\\\"\\nlistitem \\\"November 15\\\"\\n[ax-2499402923098424465] link \\\"November 15\\\"\\nlistitem \\\"November 16\\\"\\n[ax-10105652587466779266] link \\\"November 16\\\"\\nlistitem \\\"November 17\\\"\\n[ax-305348951253086246] link \\\"November 17\\\"\\nlistitem \\\"Archive\\\"\\n[ax-2088826452939261325] link \\\"Archive\\\"\\nlistitem \\\"By email\\\"\\n[ax-11195473714054327291] link \\\"By email\\\"\\nlistitem \\\"List of days of the year\\\"\\n[ax-15048162632638317246] link \\\"List of days of the year\\\"\\nlistitem \\\"About\\\"\\n[ax-12777996471058334749] link \\\"About\\\"\\nheading \\\"From today's featured list\\\"\\n[ax-6129728669533929908] link \\\"Mohamed Muizzu\\\"\\ntext \\\"Mohamed Muizzu\\\"\\nparagraph \\\"There have been eight presidents of the Maldives since 1953. The president of the Maldives is the country's head of state and head of government, and is directly elected by the citizens of the country\\\"\\n[ax-11047185824957980041] link \\\"There have been eight presidents of the Maldives\\\"\\n[ax-14941214506240646122] link \\\"president of the Maldives\\\"\\n[ax-10642785307709358353] link \\\"head of state\\\"\",\"title\":\"Wikipedia, the free encyclopedia\",\"truncated\":true,\"url\":\"https://en.wikipedia.org/wiki/Main_Page\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\",\"Continue with next_offset and revision to read this captured snapshot.\"]}}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 1077.952695,
+      "response_bytes": 14506
+    },
+    {
+      "sequence": 3,
+      "name": "callisto_run",
+      "arguments": {
+        "steps": [
+          {
+            "action": "fill_ref",
+            "ref": "ax-4983346010667195045",
+            "value": "Ada Lovelace"
+          },
+          {
+            "action": "submit_ref",
+            "ref": "ax-4983346010667195045"
+          }
+        ],
+        "snapshot": true
+      },
+      "started_at": "2026-11-16T16:16:01.896Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"completed\":2,\"elapsed_ms\":324,\"snapshot\":{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"navigationStarted\":true,\"next_offset\":220,\"offset\":0,\"order_changed\":false,\"revision\":\"ax-7828543666836273651:1\",\"text\":\"[ax-1457958188236322017] link \\\"Jump to content\\\"\\n[ax-2391279169667281325] button \\\"Main menu\\\"\\n[ax-9103534892450746866] link \\\"\\\"\\n[ax-1284316762855052592] search \\\"Search\\\"\\n[ax-12274132189491346512] searchbox \\\"Search Wikipedia\\\"\\n[ax-16653333054266594561] button \\\"Search\\\"\\nlistitem \\\"Donate\\\"\\n[ax-8167803212405871270] link \\\"Donate\\\"\\nlistitem \\\"Create account\\\"\\n[ax-6625586761801585802] link \\\"Create account\\\"\\nlistitem \\\"Log in\\\"\\n[ax-10444690531510704235] link \\\"Log in\\\"\\nheading \\\"Contents\\\"\\n[ax-6540715423601853429] button \\\"Hide Contents\\\"\\nlistitem \\\"(Top)\\\"\\n[ax-1190561210489572014] link \\\"(Top)\\\"\\nlistitem \\\"Biography Toggle Biography subsection\\\"\\n[ax-1156383973974248512] link \\\"Biography\\\"\\n[ax-12037864277510088230] button \\\"Toggle Biography subsection\\\"\\nlistitem \\\"Work Toggle Work subsection\\\"\\n[ax-13639091749925491100] link \\\"Work\\\"\\n[ax-10314771163177254448] button \\\"Toggle Work subsection\\\"\\nlistitem \\\"Commemoration Toggle Commemoration subsection\\\"\\n[ax-11164176898023487453] link \\\"Commemoration\\\"\\n[ax-9646745824206031317] button \\\"Toggle Commemoration subsection\\\"\\nlistitem \\\"In popular culture Toggle In popular culture subsection\\\"\\n[ax-12996915149189694830] link \\\"In popular culture\\\"\\n[ax-7279221960923885582] button \\\"Toggle In popular culture subsection\\\"\\nlistitem \\\"Publications Toggle Publications subsection\\\"\\n[ax-10630946546998459118] link \\\"Publications\\\"\\n[ax-10719474187836511602] button \\\"Toggle Publications subsection\\\"\\nlistitem \\\"See also\\\"\\n[ax-15845346995232195289] link \\\"See also\\\"\\nlistitem \\\"Explanatory notes\\\"\\n[ax-9591419029863147395] link \\\"Explanatory notes\\\"\\nlistitem \\\"References Toggle References subsection\\\"\\n[ax-6140083060770414855] link \\\"References\\\"\\n[ax-13780508532809483548] button \\\"Toggle References subsection\\\"\\nlistitem \\\"Further reading\\\"\\n[ax-12956916964173388800] link \\\"Further reading\\\"\\nlistitem \\\"External links\\\"\\n[ax-9181679741986388475] link \\\"External links\\\"\\nheading \\\"Ada Lovelace\\\"\\ntext \\\"Ada Lovelace\\\"\\n[ax-10275713569646720501] button \\\"113 languages\\\"\\nlistitem \\\"Article\\\"\\n[ax-9175530257611947788] link \\\"Article\\\"\\nlistitem \\\"Talk\\\"\\n[ax-5164023306184943640] link \\\"Talk\\\"\\nlistitem \\\"Read\\\"\\n[ax-5731960422859712632] link \\\"Read\\\"\\nlistitem \\\"View source\\\"\\n[ax-2669586058390263781] link \\\"View source\\\"\\nlistitem \\\"View history\\\"\\n[ax-11984928256720536402] link \\\"View history\\\"\\nlistitem \\\"Save\\\"\\n[ax-12925857466014447725] link \\\"Save\\\"\\n[ax-8597715050237346710] button \\\"Tools\\\"\\ntext \\\"Appearance\\\"\\n[ax-14086383819065966628] button \\\"Hide Appearance\\\"\\n[ax-15380676561984045487] link \\\"This article is semi-protected.\\\"\\ntext \\\"From Wikipedia, the free encyclopedia\\\"\\n[ax-9421221828808875439] note \\\"For the computer microarchitecture, see Ada Lovelace (microarchitecture).\\\"\\n[ax-9604854093650847484] link \\\"Ada Lovelace (microarchitecture)\\\"\\ncolumnheader \\\"The Right Honourable The Countess of Lovelace\\\"\\n[ax-11226903773240399709] link \\\"The Right Honourable\\\"\\ncell \\\"Daguerreotype of Lovelace (c. 1843)[1]\\\"\\n[ax-17727425335095178510] link \\\"\\\"\\n[ax-9820818426141647160] link \\\"Daguerreotype\\\"\\n[ax-15822769375886716616] link \\\"[1]\\\"\\ncolumnheader \\\"Born\\\"\\ncell \\\"Augusta Ada Byron 10 December 1815 London, England\\\"\\ncolumnheader \\\"Died\\\"\\ncell \\\"27 November 1852 (aged 36) Marylebone, London, England\\\"\\n[ax-12198984636685632087] link \\\"Marylebone\\\"\\ncolumnheader \\\"Resting place\\\"\\ncell \\\"Church of St Mary Magdalene, Hucknall, Nottingham, England\\\"\\n[ax-17074696267624509001] link \\\"Church of St Mary Magdalene, Hucknall\\\"\\ncolumnheader \\\"Known for\\\"\\ncell \\\"Mathematics, computing\\\"\\n[ax-6426507915826806522] link \\\"Mathematics\\\"\\n[ax-12473824110141757708] link \\\"computing\\\"\\ncolumnheader \\\"Spouse\\\"\\ncell \\\"William King-Noel, 1st Earl of Lovelace ​ ​(m. 1835)​\\\"\\n[ax-7641990729802573721] link \\\"William King-Noel, 1st Earl of Lovelace\\\"\\ncolumnheader \\\"Children\\\"\\ncell \\\"Byron King-Noel, Viscount Ockham Anne Blunt, 15th Baroness Wentworth Ralph King-Milbanke, 2nd Earl of Lovelace\\\"\\nlistitem \\\"Byron King-Noel, Viscount Ockham\\\"\\n[ax-18029289582112721567] link \\\"Byron King-Noel, Viscount Ockham\\\"\\nlistitem \\\"Anne Blunt, 15th Baroness Wentworth\\\"\\n[ax-11353033176533658353] link \\\"Anne Blunt, 15th Baroness Wentworth\\\"\\nlistitem \\\"Ralph King-Milbanke, 2nd Earl of Lovelace\\\"\\n[ax-3629248698470655807] link \\\"Ralph King-Milbanke, 2nd Earl of Lovelace\\\"\\ncolumnheader \\\"Parents\\\"\\ncell \\\"George Byron, 6th Baron Byron (father) Anne Isabella Milbanke (mother)\\\"\\nlistitem \\\"George Byron, 6th Baron Byron (father)\\\"\\n[ax-88676129020897841] link \\\"George Byron, 6th Baron Byron\\\"\\nlistitem \\\"Anne Isabella Milbanke (mother)\\\"\\n[ax-365268643489282581] link \\\"Anne Isabella Milbanke\\\"\\ncolumnheader \\\"Signature\\\"\\ncell \\\"\\\"\\n[ax-8402043369715827188] link \\\"\\\"\\nparagraph \\\"Augusta Ada King, Countess of Lovelace (née Byron; 10 December 1815 – 27 November 1852), also known as Ada Lovelace, was an English mathematician and writer chiefly known for work on Charles Babbage's\\\"\\n[ax-4918191369372881089] link \\\"née\\\"\\n[ax-976254004398396633] link \\\"mathematician\\\"\\n[ax-9951647328086703693] link \\\"writer\\\"\\n[ax-2100199952064297772] link \\\"Charles Babbage\\\"\\n[ax-18116199693293536891] link \\\"computer\\\"\\n[ax-12028496810978847113] link \\\"analytical engine\\\"\\n[ax-6696044389536811292] link \\\"computer programmer\\\"\\nparagraph \\\"Lovelace was the only legitimate child of poet Lord Byron and reformer Anne Isabella Milbanke.[2] Lord Byron separated from his wife a month after Ada was born, and died when she was eight. Although o\\\"\\n[ax-8841833721907426832] link \\\"legitimate child\\\"\\n[ax-14250445154025846138] link \\\"Lord Byron\\\"\\n[ax-11948845164036592969] link \\\"Anne Isabella Milbanke\\\"\\n[ax-10572371533893866458] link \\\"[2]\\\"\\n[ax-13402817916629312773] link \\\"assiduously\\\"\\n[ax-17303122062215205210] link \\\"William King\\\"\\n[ax-17489156455993421180] link \\\"Baron\\\"\\n[ax-6916350500310299561] link \\\"Earl of Lovelace\\\"\\n[ax-8557247039342426465] link \\\"Baron Lovelaces\\\"\\n[ax-602298568889046109] link \\\"[3]\\\"\\nparagraph \\\"Lovelace's educational and social exploits brought her into contact with scientists such as Andrew Crosse, Charles Babbage, David Brewster, Charles Wheatstone and Michael Faraday, and the author Charl\\\"\\n[ax-5367614480535752423] link \\\"Andrew Crosse\\\"\\n[ax-1694995523853680857] link \\\"David Brewster\\\"\\n[ax-16628378084499940181] link \\\"Charles Wheatstone\\\"\\n[ax-1720342065911930317] link \\\"Michael Faraday\\\"\\n[ax-6960558159397437105] link \\\"Charles Dickens\\\"\\n[ax-9260175622558065731] link \\\"[4]\\\"\\n[ax-9845694638579435650] link \\\"Metaphysician\\\"\\n[ax-4551964231466479463] link \\\"[5]\\\"\\nparagraph \\\"At age 18, Lovelace's mathematical talents led her to a long working relationship and friendship with fellow British mathematician Charles Babbage. She was particularly interested in Babbage's work on\\\"\\n[ax-5959053408690847809] link \\\"Charles Babbage's Saturday night soirées\\\"\\n[ax-7452004830545178166] link \\\"[6]\\\"\\n[ax-4260960585199694587] link \\\"Mary Somerville\\\"\\n[ax-14153932270463908388] link \\\"Turing-complete\\\"\\n[ax-11000273754662122776] link \\\"an article\\\"\\n[ax-2167451184114603279] link \\\"Luigi Menabrea\\\"\\n[ax-6770680881144299896] link \\\"seven long explanatory notes\\\"\\n[ax-11383091187636347421] link \\\"Bernoulli numbers\\\"\\n[ax-12781487427370480129] link \\\"computer program\\\"\\nparagraph \\\"She developed a vision of the capability of computers to go beyond mere calculating or number-crunching, while many others, including Babbage, focused only on those capabilities.[7] Lovelace was the f\\\"\\n[ax-16797790861880927238] link \\\"calculating\\\"\\n[ax-13805551881543768772] link \\\"[7]\\\"\\n[ax-9039304065956595151] link \\\"arithmetical\\\"\\n[ax-18058812833659896832] link \\\"music\\\"\\n[ax-9220818075767163907] link \\\"[8]\\\"\\n[ax-2787442777271474913] link \\\"programming language\\\"\\nheading \\\"Biography\\\"\\nheading \\\"Childhood\\\"\\nparagraph \\\"Lord Byron expected his child to be a \\\\\\\"glorious boy\\\\\\\" and was disappointed when Lady Byron gave birth to a girl.[9] The child was named after Byron's half-sister, Augusta Leigh, and was called \\\\\\\"Ada\\\\\\\" by\\\"\\n[ax-10618985962784204518] link \\\"Lord Byron\\\"\\n[ax-8123257120028812547] link \\\"Lady Byron\\\"\\n[ax-6823767327702986800] link \\\"[9]\\\"\\n[ax-4741884196846437666] link \\\"Augusta Leigh\\\"\\n[ax-9400129984101698235] link \\\"[10]\\\"\\n[ax-7876710394848277613] link \\\"Kirkby Mallory\\\"\\n[ax-10321501127133829175] link \\\"[9]\\\"\\n[ax-2126254606238337074] link \\\"[11]\\\"\\n[ax-6194006656043150184] link \\\"[12]\\\"\\n[ax-1337002577489376248] link \\\"\\\"\\ntext \\\"Ada Byron, aged four\\\"\\nparagraph \\\"On 21 April, Lord Byron signed the deed of separation, although very reluctantly, and left England for good a few days later.[13] Aside from an acrimonious separation, Lady Byron continued throughout \\\"\\n[ax-18063915159742465908] link \\\"deed of separation\\\"\\n[ax-428585243121415228] link \\\"[13]\\\"\\n[ax-4905421017428273236] link \\\"[14]\\\"\\n[ax-5029042495197901730] link \\\"[15]\\\"\\n[ax-9698617120314324202] link \\\"[16]\\\"\\n[ax-994215101003516515] link \\\"\\\"\\ntext \\\"Ada Byron, aged seven, by , 1822,\\\"\\n[ax-3893972102660299059] link \\\"Alfred d'Orsay\\\"\\n[ax-5144283471014807478] link \\\"Somerville College, Oxford\\\"\\nparagraph \\\"Lovelace did not have a close relationship with her mother. She was often left in the care of her maternal grandmother Judith, Hon. Lady Milbanke, who doted on her. However, because of societal attitu\\\"\\n[ax-3545574053627055163] link \\\"[17]\\\"\\n[ax-14214899622912472413] link \\\"[18]\\\"\\n[ax-11941402588527258632] link \\\"[19]\\\"\\n[ax-12104664481333495895] link \\\"\\\"\\ntext \\\"Ada Byron, aged seventeen, 1832\\\"\\nparagraph \\\"Lovelace was often ill, beginning in early childhood. At the age of eight, she experienced headaches that obscured her vision.[10] In June 1829, she was paralyzed after a bout of measles. She was subj\\\"\\n[ax-15218690722447084539] link \\\"[10]\\\"\\n[ax-17611191846751386515] link \\\"measles\\\"\\nblockquote \\\"When Ada was twelve years old, this future \\\\\\\"Lady Fairy\\\\\\\", as Charles Babbage affectionately called her, decided she wanted to fly. Ada Byron went about the project methodically, thoughtfully, with imag\\\"\\nparagraph \\\"When Ada was twelve years old, this future \\\\\\\"Lady Fairy\\\\\\\", as Charles Babbage affectionately called her, decided she wanted to fly. Ada Byron went about the project methodically, thoughtfully, with imag\\\"\\n[ax-10850041836594224001] link \\\"anatomy of birds\\\"\\n[ax-682584734086722337] link \\\"[8]\\\"\\nparagraph \\\"Ada Byron had an affair with a tutor in early 1833. She tried to elope with him after she was caught, but the tutor's relatives recognised her and contacted her mother. Lady Byron and her friends cove\\\"\\n[ax-4807041634649710589] link \\\"[20]\\\"\\n[ax-13356022824578493989] link \\\"Allegra\\\"\\n[ax-586303772623744328] link \\\"Claire Clairmont\\\"\\n[ax-15875896696692680023] link \\\"Elizabeth Medora Leigh\\\"\\n[ax-15417447752761485138] link \\\"[21]\\\"\\nheading \\\"Adult years\\\"\\n[ax-220837881969898841] link \\\"\\\"\\ntext \\\"Watercolor portrait of Ada Byron, by , c. 1835.\\\"\\n[ax-10495096461120058625] link \\\"Alfred Edward Chalon\\\"\\n[ax-18015924666064529066] link \\\"\\\"\\ntext \\\"Watercolour portrait of Ada King, Countess of Lovelace, , possibly by Alfred Edward Chalon\\\"\\ntext \\\"1840\\\"\\nparagraph \\\"Lovelace became close friends with her tutor Mary Somerville, who introduced her to Charles Babbage in 1833. She had a strong respect and affection for Somerville,[22] and they corresponded for many y\\\"\\n[ax-10494262037341225377] link \\\"Mary Somerville\\\"\\n[ax-14329711392807104882] link \\\"[22]\\\"\\n[ax-17316138924169546070] link \\\"Andrew Crosse\\\"\\n[ax-3705830306623674452] link \\\"Sir David Brewster\\\"\\n[ax-2319852239558043827] link \\\"Charles Wheatstone\\\"\\n[ax-10052128843646107519] link \\\"Michael Faraday\\\"\\n[ax-10092343609479483144] link \\\"Charles Dickens\\\"\\n[ax-5122572522824496555] link \\\"presented at Court\\\"\\n[ax-17679077696783892827] link \\\"[23]\\\"\\n[ax-8653078145377737021] link \\\"John Hobhouse\\\"\\n[ax-7700232695763694516] link \\\"[24]\\\"\\n[ax-12028622985012791735] link \\\"[25]\\\"\\n[ax-13503790479770995958] link \\\"\\\"\\ntext \\\"William King, 1st Earl of Lovelace in uniform\\\"\\nparagraph \\\"On 8 July 1835, she married William, 8th Baron King, becoming Lady King. They had three homes: Ockham Park, Surrey; a Scottish estate on Loch Torridon in Ross-shire; and a house in London. They spent \\\"\\n[ax-17903841359425847048] link \\\"William, 8th Baron King\\\"\\n[ax-834613335500957944] link \\\"Ockham Park\\\"\\n[ax-3631863518885436622] link \\\"Loch Torridon\\\"\\n[ax-446788146281824085] link \\\"Ross-shire\\\"\\n[ax-13398318650612628287] link \\\"Porlock Weir\\\"\\n[ax-2381287746206349994] link \\\"Horsley Towers\\\"\\n[ax-15564661008931568524] link \\\"Tudorbethan\\\"\",\"title\":\"Ada Lovelace - Wikipedia\",\"truncated\":true,\"url\":\"https://en.wikipedia.org/wiki/Ada_Lovelace\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\",\"Continue with next_offset and revision to read this captured snapshot.\"]}}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 1128.0672110000014,
+      "response_bytes": 14410
+    }
+  ]
+}

@@ -62,3 +62,73 @@ and infrastructure-error metadata, never an invented browser-task score. Differe
 native catalogs and observations are retained and disclosed rather than silently
 normalized. Setup, task navigation and evaluator calls are excluded from measured
 agent work. None of the fixtures attaches to a person's existing browser.
+
+## Public-site host-agent comparison
+
+`real-world-agent.mjs` runs fresh signed-in Codex conversations on six anonymous,
+read-only public-site goals: Wikipedia biography, arXiv paper metadata, a GitHub
+issue, PyPI release metadata, Python documentation and a GOV.UK calendar.
+The model chooses its browser actions. No selector recipes or expected answers
+are supplied to it. This is separate from the scripted local fixture suites.
+
+```sh
+cargo build --locked --manifest-path packages/firefox-rs/Cargo.toml --bin callisto-firefox-tab-mcp
+BROWSE_EXTENSION_PATH=/absolute/path/to/browse/extension \
+BENCH_OUTPUT_DIR=/tmp/new-real-world-run \
+xvfb-run -a node eval/agent-comparison/real-world-agent.mjs
+node eval/agent-comparison/real-world-report.mjs /tmp/new-real-world-run
+```
+
+Use the already installed browse extension directory to pin its actual version,
+rather than silently comparing a stale vendored build. Without the override,
+`BrowseFixture` uses `vendor/browse/dist`. Both browser profiles belong to the
+benchmark; no personal tabs, logins or pairing state are used. The owned Zen
+extension pregrants permissions and pairs automatically. This is not a test of
+store installation or permission onboarding.
+
+The default is two repetitions with balanced engine order. `BENCH_TASKS` selects
+comma-separated task IDs, `BENCH_REPETITIONS` accepts 1–3, and
+`BENCH_INPUT_MODE` is `synthetic-dom` by default. `trusted-bidi` is an optional,
+separate configuration. Both engines use `gpt-6.1-sol` at high effort through the
+same Codex host. Each trial is a fresh conversation with browser tools only.
+
+Time includes the model's work, site navigation, waiting, retries and independent
+answer/evidence checking. Setup and neutral-tab reacquisition are separate.
+Every attempt retains usage, tool errors, text size and visible traces; private
+reasoning events are omitted. Billed dollar cost remains unavailable. Exact
+source URLs and quotations must be observed through browser tools; direct
+network/API/file access by the agent is prohibited. API/JSON data used by the
+independent evaluator are saved separately and never shown to the model.
+
+A six-site, two-repeat pilot does not establish a general browser success rate
+or a stable latency/cost advantage. Keep challenge pages, timeouts, cache effects
+and incomplete runs visible; compare successful-task timing only on matched
+same-task/repetition pairs.
+
+`real-world-adjudicate.mjs OUTPUT_DIR` rechecks saved answers and observations
+without rerunning agents. It writes separate reviewed scores and a correction
+audit, preserving raw scores and timings. The calendar checker accepts a shared
+explicit year for both dates. Its positive, negative and evidence checks run
+with `node --test eval/agent-comparison/real-world-tasks.test.mjs`.
+
+If the runner stops at its reported-token session boundary, resume only missing
+trial IDs with the same output directory and settings:
+
+```sh
+BROWSE_EXTENSION_PATH=/absolute/path/to/browse/extension \
+BENCH_OUTPUT_DIR=/tmp/existing-real-world-run \
+BENCH_RESUME=1 BENCH_MAX_REPORTED_TOKENS=5000000 \
+xvfb-run -a node eval/agent-comparison/real-world-agent.mjs
+```
+
+Resume verifies that official answer facts, runtime hashes and exposed catalogs
+are unchanged. It records a new profile phase. The report excludes cross-phase
+pairs from its primary matched latency summary, while retaining every attempt.
+The completed [16 November pilot](../reports/real-world-2026-11-16-run2/README.md)
+includes both harness snapshots, the original guard event and all 24 traces.
+
+```sh
+node eval/agent-comparison/real-world-adjudicate.mjs /tmp/existing-real-world-run
+node eval/agent-comparison/real-world-report.mjs /tmp/existing-real-world-run
+uv run --with matplotlib python eval/agent-comparison/real-world-plot.py /tmp/existing-real-world-run
+```

@@ -1,0 +1,330 @@
+{
+  "schema": "callisto.real-world-trace.v1",
+  "engine": "browse",
+  "task": "wikipedia-biography",
+  "round": 1,
+  "success": true,
+  "outcome": "passed",
+  "answer": {
+    "answer": "Ada Lovelace was born on 10 December 1815 in London, England. Her mother was Anne Isabella Milbanke.",
+    "evidence": [
+      {
+        "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+        "quote": "Born\tAugusta Ada Byron\n10 December 1815\nLondon, England"
+      },
+      {
+        "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+        "quote": "Anne Isabella Milbanke (mother)"
+      }
+    ]
+  },
+  "expected": {
+    "date": "10 December 1815",
+    "place": "London",
+    "mother": "Anne Isabella Milbanke"
+  },
+  "evaluation": {
+    "passed": true,
+    "facts": [
+      {
+        "pattern": "10\\s+December\\s+1815|December\\s+10,?\\s+1815|1815-12-10",
+        "passed": true
+      },
+      {
+        "pattern": "London",
+        "passed": true
+      },
+      {
+        "pattern": "(?:Annabella|Anne?\\s+Isabella)(?:\\s+Noel)?\\s+(?:Milbanke|Byron)",
+        "passed": true
+      }
+    ],
+    "evidence": [
+      {
+        "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+        "quote": "Born\tAugusta Ada Byron\n10 December 1815\nLondon, England",
+        "source_matches": true,
+        "quote_observed": false
+      },
+      {
+        "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+        "quote": "Anne Isabella Milbanke (mother)",
+        "source_matches": true,
+        "quote_observed": true
+      }
+    ],
+    "forbidden_network_or_file_calls": 0
+  },
+  "preparation_ms": 172.20447999995667,
+  "host_elapsed_ms": 30839.667450000066,
+  "verification_ms": 0.43041899998206645,
+  "task_elapsed_ms": 30844.484638000024,
+  "usage": {
+    "input_tokens": 100194,
+    "cached_input_tokens": 74368,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 426,
+    "reasoning_output_tokens": 48
+  },
+  "tool_calls": 3,
+  "tool_failures": 0,
+  "tool_elapsed_ms": 9896.315204999875,
+  "response_bytes": 11276,
+  "response_characters": 10827,
+  "forbidden_host_calls": 0,
+  "cost_usd": null,
+  "timed_out": false,
+  "trace_file": "browse-wikipedia-biography-1.json",
+  "prompt": "Complete this read-only public website task using ONLY the browser MCP tools. You must inspect the live page; do not answer from memory. You choose your own observations, selectors and actions. Do not use HTTP/API clients, fetch, network replay, files, shell, other agents, or non-browser tools. Browser DOM evaluation is allowed for text extraction, but must not make network requests. Do not visit API endpoints. Do not sign in, create accounts, post messages, buy, or change account settings. Do not solve CAPTCHAs or bypass access challenges; report them. You may follow links, use site search and recover from errors. Stay on the task site. Maximum 30 browser calls. Verify all requested facts and finish with JSON {\"answer\":\"concise answer covering every requested fact\",\"evidence\":[{\"url\":\"source page URL\",\"quote\":\"a short exact supporting quote you observed in browser output\"}]}. Evidence quotes must be copied exactly from an observation. Do not claim success when blocked.\nUse browse session callisto-matched-1794845744000. Its execute tool runs Playwright with page. Choose what text to return to yourself, and verify it.\nStart URL: https://en.wikipedia.org/wiki/Main_Page\nTask: Find Ada Lovelace on Wikipedia. Report her full birth date, birthplace and mother’s name. Cite the biography page and a short supporting quote.",
+  "host": {
+    "code": 0,
+    "signal": null,
+    "error": null,
+    "timed_out": false,
+    "elapsed_ms": 30839.667450000066,
+    "usage": {
+      "input_tokens": 100194,
+      "cached_input_tokens": 74368,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 426,
+      "reasoning_output_tokens": 48
+    },
+    "final": "{\"answer\":\"Ada Lovelace was born on 10 December 1815 in London, England. Her mother was Anne Isabella Milbanke.\",\"evidence\":[{\"url\":\"https://en.wikipedia.org/wiki/Ada_Lovelace\",\"quote\":\"Born\\tAugusta Ada Byron\\n10 December 1815\\nLondon, England\"},{\"url\":\"https://en.wikipedia.org/wiki/Ada_Lovelace\",\"quote\":\"Anne Isabella Milbanke (mother)\"}]}",
+    "events": [
+      {
+        "type": "thread.started",
+        "thread_id": "01a1e52d-949d-7373-8f11-81fcc20a6c41"
+      },
+      {
+        "type": "turn.started"
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_0",
+          "type": "agent_message",
+          "text": "I’ll find Ada Lovelace’s biography on Wikipedia and verify the details there."
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_1",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "session": "callisto-matched-1794845744000",
+            "code": "await page.goto('https://en.wikipedia.org/wiki/Main_Page'); console.log(await page.title()); console.log(await page.locator('input[name=\"search\"]').count());"
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_1",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "session": "callisto-matched-1794845744000",
+            "code": "await page.goto('https://en.wikipedia.org/wiki/Main_Page'); console.log(await page.title()); console.log(await page.locator('input[name=\"search\"]').count());"
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "undefined"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_2",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "session": "callisto-matched-1794845744000",
+            "code": "return await snapshot();"
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_2",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "session": "callisto-matched-1794845744000",
+            "code": "return await snapshot();"
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "- searchbox \"Search Wikipedia\" [ref=e119]\n- button \"Search\" [ref=e120]\n  - navigation \"Namespaces\" [2 controls]\n  - navigation \"Views\" [4 controls]\n  - navigation \"Page tools\" [36 controls]\n  - navigation \"Appearance\" [2 controls]\n- heading \"Welcome to Wikipedia\" [level=1]\n  - link \"Wikipedia\" [ref=e121]\n  - list \"List\" [2 items]\n    - link \"261,656\" [ref=e122]\n    - link \"7,265,106\" [ref=e123]\n  - heading \"From today's featured article\" [level=2]\n    - list \"List\" [3 items]\n      - link \"\\\"Can't Let Go\\\" (Mariah Carey song)\" [ref=e124]\n      - link \"Aucanquilcha\" [ref=e125]\n      - link \"2022–23 Notts County F.C. season\" [ref=e126]\n    - list \"List\" [4 items]\n      - link \"Archive\" [ref=e127]\n      - link \"By email\" [ref=e128]\n      - link \"More featured articles\" [ref=e129]\n      - link \"About\" [ref=e130]\n  - heading \"Did you know ...\" [level=2]\n    - list \"List\" [9 items]\n      - link \"Wat Choeng Tha\" [ref=e131]\n      - link \"Ms. Rachel\" [ref=e132]\n      - link \"an Olympic final\" [ref=e133]\n      - link \"Emma Waters\" [ref=e134]\n      - link \"Rocko's Modern Life\" [ref=e135]\n      - link \"Agatha Christie\" [ref=e136]\n      - link \"Ginga no Uo Ursa Minor Blue\" [ref=e137]\n      - link \"modified container ships\" [ref=e138]\n      - link \"Sissy That Walk\" [ref=e139]\n    - list \"List\" [3 items]\n      - link \"Archive\" [ref=e140]\n      - link \"Start a new article\" [ref=e141]\n      - link \"Nominate an article\" [ref=e142]\n  - heading \"Help us improve this article!\" [level=2]\n    - list \"List\" [3 items]\n      - link \"reliable sources\" [ref=e143]\n      - link \"sources mentioned on the talk page\" [ref=e144]\n    - list \"List\" [3 items]\n      - link \"For new editors\" [ref=e145]\n      - link \"Archive\" [ref=e146]\n      - link \"What is this?\" [ref=e147]\n  - heading \"In the news\" [level=2]\n    - list \"List\" [4 items]\n      - link \"being targeted by a Chinese spy\" [ref=e148]\n      - link \"Salvadoran military intervention in Haiti\" [ref=e149]\n      - link \"SS United States\" [ref=e150]\n      - link \"The End of Everything\" [ref=e151]\n    - link \"Iran war\" [ref=e152]\n    - link \"Russo-Ukrainian war\" [ref=e153]\n    - link \"timeline\" [ref=e154]\n    - link \"Yemen offensives\" [ref=e155]\n    - link \"Alexander Darchiev\" [ref=e156]\n    - link \"Tom O'Brien\" [ref=e157]\n    - link \"Antonello Palombi\" [ref=e158]\n    - link \"Mitsuru Nagai\" [ref=e159]\n    - link \"Tommy Walsh\" [ref=e160]\n    - link \"Badrul Kamal\" [ref=e161]\n    - link \"More current events\" [ref=e162]\n    - link \"Nominate an article\" [ref=e163]\n  - heading \"On this day\" [level=2]\n    - link \"Vlad the Impaler\" [ref=e164]\n    - link \"Gustavus Adolphus\" [ref=e165]\n    - link \"American Revolutionary War\" [ref=e166]\n    - link \"largest hoard of Roman silver and gold in Britain\" [ref=e167]\n    - link \"El Dorado Fire\" [ref=e168]\n    - link \"Kalākaua\" [ref=e169]\n    - link \"Shirley Waldemar Baker\" [ref=e170]\n    - link \"Panditrao Agashe\" [ref=e171]\n    - link \"Tommy Flanagan\" [ref=e172]\n    - link \"November 15\" [ref=e173]\n    - link \"November 16\" [ref=e174]\n    - link \"November 17\" [ref=e175]\n    - link \"Archive\" [ref=e176]\n    - link \"By email\" [ref=e177]\n    - link \"List of days of the year\" [ref=e178]\n    - link \"About\" [ref=e179]\n  - heading \"From today's featured list\" [level=2]\n- ... truncated after 80 items"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_3",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "session": "callisto-matched-1794845744000",
+            "code": "await page.getByRole('searchbox', {name:'Search Wikipedia', exact:true}).fill('Ada Lovelace'); await page.getByRole('button', {name:'Search',exact:true}).click(); return {url:page.url(),text:await page.locator('body').innerText()};"
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_3",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "session": "callisto-matched-1794845744000",
+            "code": "await page.getByRole('searchbox', {name:'Search Wikipedia', exact:true}).fill('Ada Lovelace'); await page.getByRole('button', {name:'Search',exact:true}).click(); return {url:page.url(),text:await page.locator('body').innerText()};"
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\n  url: 'https://en.wikipedia.org/wiki/Ada_Lovelace',\n  text: 'Jump to content\\n' +\n    ' Main menu\\n' +\n    'Main menu\\n' +\n    'move to sidebar hide\\n' +\n    'Navigation\\n' +\n    'Main page\\n' +\n    'Contents\\n' +\n    'Current events\\n' +\n    'Random article\\n' +\n    'About Wikipedia\\n' +\n    'Contact us\\n' +\n    'Contribute\\n' +\n    'Help\\n' +\n    'Learn to edit\\n' +\n    'Community portal\\n' +\n    'Recent changes\\n' +\n    'Upload file\\n' +\n    'Special pages\\n' +\n    ' \\n' +\n    'Search\\n' +\n    'Search\\n' +\n    ' Appearance\\n' +\n    'Donate\\n' +\n    'Create account\\n' +\n    'Log in\\n' +\n    ' Personal tools\\n' +\n    'Donate\\n' +\n    'Create account\\n' +\n    'Log in\\n' +\n    'Contents\\n' +\n    'move to sidebar hide\\n' +\n    '(Top)\\n' +\n    '1 Biography\\n' +\n    'Toggle Biography subsection\\n' +\n    '1.1 Childhood\\n' +\n    '1.2 Adult years\\n' +\n    '1.3 Education\\n' +\n    '1.4 Death\\n' +\n    '2 Work\\n' +\n    'Toggle Work subsection\\n' +\n    \"2.1 Babbage's lecture, Menabrea's French transcription, Lovelace's translation and Notes A-G\\n\" +\n    \"2.2 Babbage's preface\\n\" +\n    '2.3 First published computer program\\n' +\n    '2.3.1 Controversy over contribution\\n' +\n    '2.4 Insight into potential of computing devices\\n' +\n    '2.5 Distinction between mechanism and logical structure\\n' +\n    '3 Commemoration\\n' +\n    'Toggle Commemoration subsection\\n' +\n    '3.1 Bicentenary (2015)\\n' +\n    '4 In popular culture\\n' +\n    'Toggle In popular culture subsection\\n' +\n    '4.1 Novels, plays and poetry\\n' +\n    '4.2 Film and television\\n' +\n    '4.3 Games\\n' +\n    '4.4 Computing and STEM\\n' +\n    '4.5 Other\\n' +\n    '5 Publications\\n' +\n    'Toggle Publications subsection\\n' +\n    '5.1 Publication history\\n' +\n    '6 See also\\n' +\n    '7 Explanatory notes\\n' +\n    '8 References\\n' +\n    'Toggle References subsection\\n' +\n    '8.1 Citations\\n' +\n    '8.2 General and cited sources\\n' +\n    '9 Further reading\\n' +\n    '10 External links\\n' +\n    ' Toggle the table of contents\\n' +\n    'Ada Lovelace\\n' +\n    ' 113 languages\\n' +\n    'Afrikaans\\n' +\n    'Alemannisch\\n' +\n    'Aragonés\\n' +\n    'العربية\\n' +\n    'مصرى\\n' +\n    'অসমীয়া\\n' +\n    'Asturianu\\n' +\n    'Azərbaycanca\\n' +\n    'Башҡортса\\n' +\n    'Basa Bali\\n' +\n    'Bikol Central\\n' +\n    'Беларуская\\n' +\n    'Български\\n' +\n    'বাংলা\\n' +\n    'Bosanski\\n' +\n    'Català\\n' +\n    'کوردی\\n' +\n    'Čeština\\n' +\n    'Чӑвашла\\n' +\n    'Cymraeg\\n' +\n    'Dansk\\n' +\n    'Deutsch\\n' +\n    'Ελληνικά\\n' +\n    'Esperanto\\n' +\n    'Español\\n' +\n    'Eesti\\n' +\n    'Euskara\\n' +\n    'Estremeñu\\n' +\n    'فارسی\\n' +\n    'Suomi\\n' +\n    'Français\\n' +\n    'Nordfriisk\\n' +\n    'Gaeilge\\n' +\n    'Galego\\n' +\n    'Gaelg\\n' +\n    'Hausa\\n' +\n    'עברית\\n' +\n    'हिन्दी\\n' +\n    'Hrvatski\\n' +\n    'Kreyòl ayisyen\\n' +\n    'Magyar\\n' +\n    'Հայերեն\\n' +\n    'Interlingua\\n' +\n    'Bahasa Indonesia\\n' +\n    'Igbo\\n' +\n    'Íslenska\\n' +\n    'Italiano\\n' +\n    '日本語\\n' +\n    'La .lojban.\\n' +\n    'ქართული\\n' +\n    'Қазақша\\n' +\n    'ಕನ್ನಡ\\n' +\n    'Yerwa Kanuri\\n' +\n    '한국어\\n' +\n    'Kernowek\\n' +\n    'Кыргызча\\n' +\n    'Latina\\n' +\n    'Lëtzebuergesch\\n' +\n    'Lombard\\n' +\n    'Lietuvių\\n' +\n    'Latviešu\\n' +\n    'मैथिली\\n' +\n    'Malagasy\\n' +\n    'Македонски\\n' +\n    'മലയാളം\\n' +\n    'मराठी\\n' +\n    'Bahasa Melayu\\n' +\n    'Malti\\n' +\n    'नेपाली\\n' +\n    'Nederlands\\n' +\n    'Norsk nynorsk\\n' +\n    'Norsk bokmål\\n' +\n    'Occitan\\n' +\n    'Livvinkarjala\\n' +\n    'ଓଡ଼ିଆ\\n' +\n    'ਪੰਜਾਬੀ\\n' +\n    'Polski\\n' +\n    'Piemontèis\\n' +\n    'پښتو\\n' +\n    'Português\\n' +\n    'Română\\n' +\n    'Русский\\n' +\n    'Саха тыла\\n' +\n    'ᱥᱟᱱᱛᱟᱲᱤ\\n' +\n    'Sicilianu\\n' +\n    'Scots\\n' +\n    'Srpskohrvatski / српскохрватски\\n' +\n    'Simple English\\n' +\n    'Slovenčina\\n' +\n    'سرائیکی\\n' +\n    'Slovenščina\\n' +\n    'Shqip\\n' +\n    'Српски / srpski\\n' +\n    'Svenska\\n' +\n    'Kiswahili\\n' +\n    'தமிழ்\\n' +\n    'తెలుగు\\n' +\n    'Тоҷикӣ\\n' +\n    'ไทย\\n' +\n    'Tagalog\\n' +\n    'Türkçe\\n' +\n    'Татарча / tatarça\\n' +\n    'Тыва дыл\\n' +\n    'Українська\\n' +\n    'اردو\\n' +\n    'Tiếng Việt\\n' +\n    'Winaray\\n' +\n    '吴语\\n' +\n    'მარგალური\\n' +\n    'Yorùbá\\n' +\n    '閩南語 / Bân-lâm-gí\\n' +\n    '粵語\\n' +\n    '中文\\n' +\n    'Edit links\\n' +\n    'Article\\n' +\n    'Talk\\n' +\n    ' English\\n' +\n    'Read\\n' +\n    'View source\\n' +\n    'View history\\n' +\n    'Save\\n' +\n    ' Tools\\n' +\n    'Tools\\n' +\n    'move to sidebar hide\\n' +\n    'Actions\\n' +\n    'Read\\n' +\n    'View source\\n' +\n    'View history\\n' +\n    'Save\\n' +\n    'General\\n' +\n    'What links here\\n' +\n    'Related changes\\n' +\n    'Permanent link\\n' +\n    'Page information\\n' +\n    'Cite this page\\n' +\n    'Get shortened URL\\n' +\n    'Switch to legacy parser\\n' +\n    'Print/export\\n' +\n    'Download as PDF\\n' +\n    'Printable version\\n' +\n    'In other projects\\n' +\n    'Wikimedia Commons\\n' +\n    'Wikiquote\\n' +\n    'Wikisource\\n' +\n    'Wikidata item\\n' +\n    'Appearance\\n' +\n    'move to sidebar hide\\n' +\n    'From Wikipedia, the free encyclopedia\\n' +\n    'For the computer microarchitecture, see Ada Lovelace (microarchitecture).\\n' +\n    '\\n' +\n    'The Right Honourable\\n' +\n    'The Countess of Lovelace\\n' +\n    '\\n' +\n    '\\n' +\n    'Daguerreotype of Lovelace (c. 1843)[1]\\n' +\n    '\\n' +\n    'Born\\tAugusta Ada Byron\\n' +\n    '10 December 1815\\n' +\n    'London, England\\n' +\n    'Died\\t27 November 1852 (aged 36)\\n' +\n    'Marylebone, London, England\\n' +\n    'Resting place\\tChurch of St Mary Magdalene, Hucknall, Nottingham, England\\n' +\n    'Known for\\tMathematics, computing\\n' +\n    'Spouse\\tWilliam King-Noel, 1st Earl of Lovelace\\n' +\n    '​\\n' +\n    '​(m. 1835)​\\n' +\n    'Children\\t\\n' +\n    'Byron King-Noel, Viscount Ockham\\n' +\n    'Anne Blunt, 15th Baroness Wentworth\\n' +\n    'Ralph King-Milbanke, 2nd Earl of Lovelace\\n' +\n    '\\n' +\n    'Parents\\t\\n' +\n    'George Byron, 6th Baron Byron (father)\\n' +\n    'Anne Isabella Milbanke (mother)\\n' +\n    '\\n' +\n    'Signature\\n' +\n    '\\n' +\n    '\\n' +\n    \"Augusta Ada King, Countess of Lovelace (née Byron; 10 December 1815 – 27 November 1852), also known as Ada Lovelace, was an English mathematician and writer chiefly known for work on Charles Babbage's proposed mechanical general-purpose computer, the analytical engine. She was the first to recognise the machine had applications beyond pure calculation. Lovelace is often considered the first computer programmer.\\n\" +\n    '\\n' +\n    'Lovelace was the only legitimate child of poet Lord Byron and reformer Anne Isabella Milbanke.[2] Lord Byron separated from his wife a month after Ada wa'... 37435 more characters\n}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_4",
+          "type": "agent_message",
+          "text": "{\"answer\":\"Ada Lovelace was born on 10 December 1815 in London, England. Her mother was Anne Isabella Milbanke.\",\"evidence\":[{\"url\":\"https://en.wikipedia.org/wiki/Ada_Lovelace\",\"quote\":\"Born\\tAugusta Ada Byron\\n10 December 1815\\nLondon, England\"},{\"url\":\"https://en.wikipedia.org/wiki/Ada_Lovelace\",\"quote\":\"Anne Isabella Milbanke (mother)\"}]}"
+        }
+      },
+      {
+        "type": "turn.completed",
+        "usage": {
+          "input_tokens": 100194,
+          "cached_input_tokens": 74368,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 426,
+          "reasoning_output_tokens": 48
+        }
+      }
+    ],
+    "parse_errors": 0,
+    "diagnostic": null,
+    "configuration": {
+      "model": "gpt-6.1-sol",
+      "effort": "high",
+      "sandbox": "read-only",
+      "shell_tool": false,
+      "web_search": "disabled",
+      "user_config_loaded": false,
+      "project_instructions_loaded": false,
+      "skills_catalog_max_tokens": 1,
+      "automatic_skill_instructions": false,
+      "fixture_tool_approval": "explicit approve",
+      "auth": "existing signed-in Codex host",
+      "mcp_transport": "stdio → private Unix socket → native runtime MCP client"
+    }
+  },
+  "tools": [
+    {
+      "sequence": 1,
+      "name": "execute",
+      "arguments": {
+        "session": "callisto-matched-1794845744000",
+        "code": "await page.goto('https://en.wikipedia.org/wiki/Main_Page'); console.log(await page.title()); console.log(await page.locator('input[name=\"search\"]').count());"
+      },
+      "started_at": "2026-11-16T16:25:39.690Z",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "undefined"
+          }
+        ],
+        "isError": false
+      },
+      "failed": false,
+      "elapsed_ms": 4176.129625999951,
+      "response_bytes": 64
+    },
+    {
+      "sequence": 2,
+      "name": "execute",
+      "arguments": {
+        "session": "callisto-matched-1794845744000",
+        "code": "return await snapshot();"
+      },
+      "started_at": "2026-11-16T16:25:48.296Z",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "- searchbox \"Search Wikipedia\" [ref=e119]\n- button \"Search\" [ref=e120]\n  - navigation \"Namespaces\" [2 controls]\n  - navigation \"Views\" [4 controls]\n  - navigation \"Page tools\" [36 controls]\n  - navigation \"Appearance\" [2 controls]\n- heading \"Welcome to Wikipedia\" [level=1]\n  - link \"Wikipedia\" [ref=e121]\n  - list \"List\" [2 items]\n    - link \"261,656\" [ref=e122]\n    - link \"7,265,106\" [ref=e123]\n  - heading \"From today's featured article\" [level=2]\n    - list \"List\" [3 items]\n      - link \"\\\"Can't Let Go\\\" (Mariah Carey song)\" [ref=e124]\n      - link \"Aucanquilcha\" [ref=e125]\n      - link \"2022–23 Notts County F.C. season\" [ref=e126]\n    - list \"List\" [4 items]\n      - link \"Archive\" [ref=e127]\n      - link \"By email\" [ref=e128]\n      - link \"More featured articles\" [ref=e129]\n      - link \"About\" [ref=e130]\n  - heading \"Did you know ...\" [level=2]\n    - list \"List\" [9 items]\n      - link \"Wat Choeng Tha\" [ref=e131]\n      - link \"Ms. Rachel\" [ref=e132]\n      - link \"an Olympic final\" [ref=e133]\n      - link \"Emma Waters\" [ref=e134]\n      - link \"Rocko's Modern Life\" [ref=e135]\n      - link \"Agatha Christie\" [ref=e136]\n      - link \"Ginga no Uo Ursa Minor Blue\" [ref=e137]\n      - link \"modified container ships\" [ref=e138]\n      - link \"Sissy That Walk\" [ref=e139]\n    - list \"List\" [3 items]\n      - link \"Archive\" [ref=e140]\n      - link \"Start a new article\" [ref=e141]\n      - link \"Nominate an article\" [ref=e142]\n  - heading \"Help us improve this article!\" [level=2]\n    - list \"List\" [3 items]\n      - link \"reliable sources\" [ref=e143]\n      - link \"sources mentioned on the talk page\" [ref=e144]\n    - list \"List\" [3 items]\n      - link \"For new editors\" [ref=e145]\n      - link \"Archive\" [ref=e146]\n      - link \"What is this?\" [ref=e147]\n  - heading \"In the news\" [level=2]\n    - list \"List\" [4 items]\n      - link \"being targeted by a Chinese spy\" [ref=e148]\n      - link \"Salvadoran military intervention in Haiti\" [ref=e149]\n      - link \"SS United States\" [ref=e150]\n      - link \"The End of Everything\" [ref=e151]\n    - link \"Iran war\" [ref=e152]\n    - link \"Russo-Ukrainian war\" [ref=e153]\n    - link \"timeline\" [ref=e154]\n    - link \"Yemen offensives\" [ref=e155]\n    - link \"Alexander Darchiev\" [ref=e156]\n    - link \"Tom O'Brien\" [ref=e157]\n    - link \"Antonello Palombi\" [ref=e158]\n    - link \"Mitsuru Nagai\" [ref=e159]\n    - link \"Tommy Walsh\" [ref=e160]\n    - link \"Badrul Kamal\" [ref=e161]\n    - link \"More current events\" [ref=e162]\n    - link \"Nominate an article\" [ref=e163]\n  - heading \"On this day\" [level=2]\n    - link \"Vlad the Impaler\" [ref=e164]\n    - link \"Gustavus Adolphus\" [ref=e165]\n    - link \"American Revolutionary War\" [ref=e166]\n    - link \"largest hoard of Roman silver and gold in Britain\" [ref=e167]\n    - link \"El Dorado Fire\" [ref=e168]\n    - link \"Kalākaua\" [ref=e169]\n    - link \"Shirley Waldemar Baker\" [ref=e170]\n    - link \"Panditrao Agashe\" [ref=e171]\n    - link \"Tommy Flanagan\" [ref=e172]\n    - link \"November 15\" [ref=e173]\n    - link \"November 16\" [ref=e174]\n    - link \"November 17\" [ref=e175]\n    - link \"Archive\" [ref=e176]\n    - link \"By email\" [ref=e177]\n    - link \"List of days of the year\" [ref=e178]\n    - link \"About\" [ref=e179]\n  - heading \"From today's featured list\" [level=2]\n- ... truncated after 80 items"
+          }
+        ],
+        "isError": false
+      },
+      "failed": false,
+      "elapsed_ms": 84.16514399996959,
+      "response_bytes": 3596
+    },
+    {
+      "sequence": 3,
+      "name": "execute",
+      "arguments": {
+        "session": "callisto-matched-1794845744000",
+        "code": "await page.getByRole('searchbox', {name:'Search Wikipedia', exact:true}).fill('Ada Lovelace'); await page.getByRole('button', {name:'Search',exact:true}).click(); return {url:page.url(),text:await page.locator('body').innerText()};"
+      },
+      "started_at": "2026-11-16T16:25:51.695Z",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  url: 'https://en.wikipedia.org/wiki/Ada_Lovelace',\n  text: 'Jump to content\\n' +\n    ' Main menu\\n' +\n    'Main menu\\n' +\n    'move to sidebar hide\\n' +\n    'Navigation\\n' +\n    'Main page\\n' +\n    'Contents\\n' +\n    'Current events\\n' +\n    'Random article\\n' +\n    'About Wikipedia\\n' +\n    'Contact us\\n' +\n    'Contribute\\n' +\n    'Help\\n' +\n    'Learn to edit\\n' +\n    'Community portal\\n' +\n    'Recent changes\\n' +\n    'Upload file\\n' +\n    'Special pages\\n' +\n    ' \\n' +\n    'Search\\n' +\n    'Search\\n' +\n    ' Appearance\\n' +\n    'Donate\\n' +\n    'Create account\\n' +\n    'Log in\\n' +\n    ' Personal tools\\n' +\n    'Donate\\n' +\n    'Create account\\n' +\n    'Log in\\n' +\n    'Contents\\n' +\n    'move to sidebar hide\\n' +\n    '(Top)\\n' +\n    '1 Biography\\n' +\n    'Toggle Biography subsection\\n' +\n    '1.1 Childhood\\n' +\n    '1.2 Adult years\\n' +\n    '1.3 Education\\n' +\n    '1.4 Death\\n' +\n    '2 Work\\n' +\n    'Toggle Work subsection\\n' +\n    \"2.1 Babbage's lecture, Menabrea's French transcription, Lovelace's translation and Notes A-G\\n\" +\n    \"2.2 Babbage's preface\\n\" +\n    '2.3 First published computer program\\n' +\n    '2.3.1 Controversy over contribution\\n' +\n    '2.4 Insight into potential of computing devices\\n' +\n    '2.5 Distinction between mechanism and logical structure\\n' +\n    '3 Commemoration\\n' +\n    'Toggle Commemoration subsection\\n' +\n    '3.1 Bicentenary (2015)\\n' +\n    '4 In popular culture\\n' +\n    'Toggle In popular culture subsection\\n' +\n    '4.1 Novels, plays and poetry\\n' +\n    '4.2 Film and television\\n' +\n    '4.3 Games\\n' +\n    '4.4 Computing and STEM\\n' +\n    '4.5 Other\\n' +\n    '5 Publications\\n' +\n    'Toggle Publications subsection\\n' +\n    '5.1 Publication history\\n' +\n    '6 See also\\n' +\n    '7 Explanatory notes\\n' +\n    '8 References\\n' +\n    'Toggle References subsection\\n' +\n    '8.1 Citations\\n' +\n    '8.2 General and cited sources\\n' +\n    '9 Further reading\\n' +\n    '10 External links\\n' +\n    ' Toggle the table of contents\\n' +\n    'Ada Lovelace\\n' +\n    ' 113 languages\\n' +\n    'Afrikaans\\n' +\n    'Alemannisch\\n' +\n    'Aragonés\\n' +\n    'العربية\\n' +\n    'مصرى\\n' +\n    'অসমীয়া\\n' +\n    'Asturianu\\n' +\n    'Azərbaycanca\\n' +\n    'Башҡортса\\n' +\n    'Basa Bali\\n' +\n    'Bikol Central\\n' +\n    'Беларуская\\n' +\n    'Български\\n' +\n    'বাংলা\\n' +\n    'Bosanski\\n' +\n    'Català\\n' +\n    'کوردی\\n' +\n    'Čeština\\n' +\n    'Чӑвашла\\n' +\n    'Cymraeg\\n' +\n    'Dansk\\n' +\n    'Deutsch\\n' +\n    'Ελληνικά\\n' +\n    'Esperanto\\n' +\n    'Español\\n' +\n    'Eesti\\n' +\n    'Euskara\\n' +\n    'Estremeñu\\n' +\n    'فارسی\\n' +\n    'Suomi\\n' +\n    'Français\\n' +\n    'Nordfriisk\\n' +\n    'Gaeilge\\n' +\n    'Galego\\n' +\n    'Gaelg\\n' +\n    'Hausa\\n' +\n    'עברית\\n' +\n    'हिन्दी\\n' +\n    'Hrvatski\\n' +\n    'Kreyòl ayisyen\\n' +\n    'Magyar\\n' +\n    'Հայերեն\\n' +\n    'Interlingua\\n' +\n    'Bahasa Indonesia\\n' +\n    'Igbo\\n' +\n    'Íslenska\\n' +\n    'Italiano\\n' +\n    '日本語\\n' +\n    'La .lojban.\\n' +\n    'ქართული\\n' +\n    'Қазақша\\n' +\n    'ಕನ್ನಡ\\n' +\n    'Yerwa Kanuri\\n' +\n    '한국어\\n' +\n    'Kernowek\\n' +\n    'Кыргызча\\n' +\n    'Latina\\n' +\n    'Lëtzebuergesch\\n' +\n    'Lombard\\n' +\n    'Lietuvių\\n' +\n    'Latviešu\\n' +\n    'मैथिली\\n' +\n    'Malagasy\\n' +\n    'Македонски\\n' +\n    'മലയാളം\\n' +\n    'मराठी\\n' +\n    'Bahasa Melayu\\n' +\n    'Malti\\n' +\n    'नेपाली\\n' +\n    'Nederlands\\n' +\n    'Norsk nynorsk\\n' +\n    'Norsk bokmål\\n' +\n    'Occitan\\n' +\n    'Livvinkarjala\\n' +\n    'ଓଡ଼ିଆ\\n' +\n    'ਪੰਜਾਬੀ\\n' +\n    'Polski\\n' +\n    'Piemontèis\\n' +\n    'پښتو\\n' +\n    'Português\\n' +\n    'Română\\n' +\n    'Русский\\n' +\n    'Саха тыла\\n' +\n    'ᱥᱟᱱᱛᱟᱲᱤ\\n' +\n    'Sicilianu\\n' +\n    'Scots\\n' +\n    'Srpskohrvatski / српскохрватски\\n' +\n    'Simple English\\n' +\n    'Slovenčina\\n' +\n    'سرائیکی\\n' +\n    'Slovenščina\\n' +\n    'Shqip\\n' +\n    'Српски / srpski\\n' +\n    'Svenska\\n' +\n    'Kiswahili\\n' +\n    'தமிழ்\\n' +\n    'తెలుగు\\n' +\n    'Тоҷикӣ\\n' +\n    'ไทย\\n' +\n    'Tagalog\\n' +\n    'Türkçe\\n' +\n    'Татарча / tatarça\\n' +\n    'Тыва дыл\\n' +\n    'Українська\\n' +\n    'اردو\\n' +\n    'Tiếng Việt\\n' +\n    'Winaray\\n' +\n    '吴语\\n' +\n    'მარგალური\\n' +\n    'Yorùbá\\n' +\n    '閩南語 / Bân-lâm-gí\\n' +\n    '粵語\\n' +\n    '中文\\n' +\n    'Edit links\\n' +\n    'Article\\n' +\n    'Talk\\n' +\n    ' English\\n' +\n    'Read\\n' +\n    'View source\\n' +\n    'View history\\n' +\n    'Save\\n' +\n    ' Tools\\n' +\n    'Tools\\n' +\n    'move to sidebar hide\\n' +\n    'Actions\\n' +\n    'Read\\n' +\n    'View source\\n' +\n    'View history\\n' +\n    'Save\\n' +\n    'General\\n' +\n    'What links here\\n' +\n    'Related changes\\n' +\n    'Permanent link\\n' +\n    'Page information\\n' +\n    'Cite this page\\n' +\n    'Get shortened URL\\n' +\n    'Switch to legacy parser\\n' +\n    'Print/export\\n' +\n    'Download as PDF\\n' +\n    'Printable version\\n' +\n    'In other projects\\n' +\n    'Wikimedia Commons\\n' +\n    'Wikiquote\\n' +\n    'Wikisource\\n' +\n    'Wikidata item\\n' +\n    'Appearance\\n' +\n    'move to sidebar hide\\n' +\n    'From Wikipedia, the free encyclopedia\\n' +\n    'For the computer microarchitecture, see Ada Lovelace (microarchitecture).\\n' +\n    '\\n' +\n    'The Right Honourable\\n' +\n    'The Countess of Lovelace\\n' +\n    '\\n' +\n    '\\n' +\n    'Daguerreotype of Lovelace (c. 1843)[1]\\n' +\n    '\\n' +\n    'Born\\tAugusta Ada Byron\\n' +\n    '10 December 1815\\n' +\n    'London, England\\n' +\n    'Died\\t27 November 1852 (aged 36)\\n' +\n    'Marylebone, London, England\\n' +\n    'Resting place\\tChurch of St Mary Magdalene, Hucknall, Nottingham, England\\n' +\n    'Known for\\tMathematics, computing\\n' +\n    'Spouse\\tWilliam King-Noel, 1st Earl of Lovelace\\n' +\n    '​\\n' +\n    '​(m. 1835)​\\n' +\n    'Children\\t\\n' +\n    'Byron King-Noel, Viscount Ockham\\n' +\n    'Anne Blunt, 15th Baroness Wentworth\\n' +\n    'Ralph King-Milbanke, 2nd Earl of Lovelace\\n' +\n    '\\n' +\n    'Parents\\t\\n' +\n    'George Byron, 6th Baron Byron (father)\\n' +\n    'Anne Isabella Milbanke (mother)\\n' +\n    '\\n' +\n    'Signature\\n' +\n    '\\n' +\n    '\\n' +\n    \"Augusta Ada King, Countess of Lovelace (née Byron; 10 December 1815 – 27 November 1852), also known as Ada Lovelace, was an English mathematician and writer chiefly known for work on Charles Babbage's proposed mechanical general-purpose computer, the analytical engine. She was the first to recognise the machine had applications beyond pure calculation. Lovelace is often considered the first computer programmer.\\n\" +\n    '\\n' +\n    'Lovelace was the only legitimate child of poet Lord Byron and reformer Anne Isabella Milbanke.[2] Lord Byron separated from his wife a month after Ada wa'... 37435 more characters\n}"
+          }
+        ],
+        "isError": false
+      },
+      "failed": false,
+      "elapsed_ms": 5636.020434999955,
+      "response_bytes": 7616
+    }
+  ]
+}

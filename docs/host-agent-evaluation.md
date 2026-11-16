@@ -14,8 +14,9 @@ For normal use, register this command in the host's MCP configuration:
 }
 ```
 
-Start that MCP entry, load the temporary extension, pair it, and explicitly share
-the intended tab. The host then chooses observations and actions through
+Start that MCP entry, install the [published add-on](published-extension.md)
+(or load a temporary source build for development), pair it, and explicitly
+share the intended tab. The host then chooses observations and actions through
 Callisto's tools. See [getting started](getting-started.md) for setup and
 [trusted input and recovery](zen-advanced-runtime.md) for native input requirements.
 
@@ -95,3 +96,28 @@ sample size visible when interpreting timing and usage.
 The host integration follows the official OpenAI documentation for
 [non-interactive JSON events](https://learn.chatgpt.com/docs/non-interactive-mode)
 and [configuration overrides and MCP tool approval](https://learn.chatgpt.com/docs/config-file/config-reference).
+
+## Public-site comparison — 16 November 2026
+
+The [public-site pilot](../eval/reports/real-world-2026-11-16-run2/README.md)
+runs six read-only goals twice per engine through the same signed-in Codex host:
+Wikipedia biography, arXiv paper lookup, GitHub issue metadata, PyPI releases,
+Python documentation and the GOV.UK bank-holiday calendar. The model chooses
+its own browser observations and actions. This is separate from local scripted
+fixture timing and uses Callisto's default synthetic input mode.
+
+Both browsers completed all 12 trials with correct facts and observed source
+quotes. The report retains real host usage, every tool error and the original
+raw scores. A uniform calendar-format correction accepts an answer that states
+the requested year once for both dates. An internal reported-token guard caused
+a profile restart after 21 trials; only the three missing trials were resumed.
+The cross-phase Python pair is excluded from the matched latency comparison.
+
+For 11 same-phase successful pairs, mean task time was 30.1 seconds on Callisto
+and 54.2 on browse. Across all trials, uncached input was 337,176 versus 298,332
+tokens, and output was 4,716 versus 7,320. Billed cost remains unavailable.
+Six recovered 30-second locator waits contributed substantially to browse's
+elapsed time. These results describe this model, these anonymous sites and this
+small sample; they do not establish general parity or production cost savings.
+
+See [reproduction](../eval/agent-comparison/README.md#public-site-host-agent-comparison).
