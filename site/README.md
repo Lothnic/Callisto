@@ -63,3 +63,9 @@ are not a browse time/cost comparison or a benchmark judge run. The matched
 pilot now runs a signed-in Codex host through native MCP tools; the credit-blocked
 Hy3 API preflight is historical and does not block host-agent use. The alpha guide describes a local
 Linux x64 build, not a published signed extension.
+Mozilla Add-ons now publishes the older 0.1.0 extension at
+<https://addons.mozilla.org/en-US/firefox/addon/callisto/>. Keep that link visible
+while explaining that the newer source features require temporary extension
+0.2.0 and the separately built runtime. Publication of 0.1.0 does not validate
+0.2.0 store upgrades or permanent-install behavior in Zen. See
+`docs/published-extension.md`.

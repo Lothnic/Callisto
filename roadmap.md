@@ -6,12 +6,13 @@ develop and measure it. This is a working plan, not a claim of Playwright or
 browse parity. The [original phased roadmap](docs/history/roadmap-2026.md) is
 preserved for historical context.
 
-## Current focus — 15 November 2026
+## Current focus — 16 November 2026
 
 The current work prioritizes concurrent human/agent use in Zen, alongside input,
 useful observations, recovery and network inspection. The next milestone now includes a Linux alpha, persistent-profile
-recovery and a matched agent pilot. Permanent signed extension distribution is
-still a separate release gate.
+recovery and a matched agent pilot. [AMO publishes extension 0.1.0](docs/published-extension.md).
+Publication of the newer 0.2.0 source and store-upgrade validation remain
+separate release gates.
 
 - The first [background agent-window slice](docs/background-work.md) is in source.
   User preparation may focus it once; execution starts after returning to another

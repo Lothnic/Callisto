@@ -8,7 +8,7 @@ API key. The runtimes and distribution are experimental.
 
 | Path | Browser and session | Setup |
 | --- | --- | --- |
-| Firefox or Zen bridge | Connects to an already open profile and can select an existing tab and its login | Rust bridge plus temporary Firefox extension |
+| Firefox or Zen bridge | Connects to an already open profile and can select an existing tab and its login | Rust bridge plus extension; current features need temporary 0.2.0 |
 | Chromium Mini | Starts a fresh isolated Chromium session by default | Node.js and Chrome/Chromium |
 | Chromium via browse | Opens an agent-owned tab in a Chromium profile paired with browse | Mini plus browse CLI and its extension |
 | Chromium direct CDP | Adopts a specified existing tab in an already debug-enabled local browser | Mini plus an explicit CDP endpoint and target ID |
@@ -84,6 +84,11 @@ for reporting security problems privately.
 
 ## Pair Firefox or Zen
 
+[Mozilla Add-ons offers the older 0.1.0 extension](https://addons.mozilla.org/en-US/firefox/addon/callisto/).
+The steps below load current source version 0.2.0 for newer runtime features.
+See [published add-on and version differences](published-extension.md) before
+choosing a build. Installing the add-on alone does not install the Rust runtime.
+
 1. Open `about:debugging` in the existing browser, choose **This Firefox** →
    **Load Temporary Add-on**, and select
    `packages/firefox-rs/extension/manifest.json` from your checkout.
@@ -101,8 +106,9 @@ for reporting security problems privately.
 
 For navigation in a shared tab, grant **Allow navigation**; it requests access
 to all websites. Built-in browser pages cannot be shared. A temporary add-on is
-removed when the browser exits. Pairing is saved across MCP sessions, but a
-signed permanent add-on and its restart/update experience are not yet shipped.
+removed when the browser exits. Pairing is saved across MCP sessions. The
+permanent AMO add-on is still 0.1.0; store-install and upgrade checks for the
+newer source remain open.
 With sandboxed Zen Flatpak, copy the **entire** extension directory to Downloads
 and load that copy's manifest if the popup is blank.
 

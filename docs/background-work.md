@@ -3,6 +3,8 @@
 The extension can keep a deliberately shared tab in its own agent window while
 you work in another window. This is an experimental source feature. It does not
 enable native input in an inactive tab inside your work window.
+The [published AMO add-on is still 0.1.0](published-extension.md) and does not
+include these controls; load the current 0.2.0 source extension to try them.
 
 ## Start a task
 
