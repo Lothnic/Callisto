@@ -54,6 +54,7 @@ jobs:
           export GECKODRIVER_BINARY="$(command -v geckodriver)"
           node eval/agent-comparison/session-recovery.mjs
           node eval/agent-comparison/fixture-activation.mjs
+          node eval/agent-comparison/full-browser-control.mjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:

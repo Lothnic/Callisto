@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "browser": "zen",
+  "browserVersion": "1.14.9b",
+  "extension": "temporary fixture copy of source 0.3.0",
+  "checks": [
+    "active-tab adoption",
+    "create and auto-share",
+    "input on a newly created tab",
+    "activation without sharing",
+    "hidden-tab activation",
+    "blank-tab navigation",
+    "window creation and sharing",
+    "window and tab cleanup",
+    "disable revokes automatic access"
+  ]
+}

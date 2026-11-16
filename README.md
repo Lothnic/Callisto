@@ -26,6 +26,11 @@ Zen source now supports a user-prepared agent window while you work in another
 window. Preparation may focus it once; background execution pauses if it comes
 forward. See [background work and verified limits](docs/background-work.md).
 
+Source extension 0.3.0 adds [Full browser control](docs/full-browser-control.md):
+opt in once to let agents select, activate, create and attach to website tabs
+without sharing each one manually. The AMO listing remains 0.2.0 until the new
+version is submitted; use the temporary 0.3.0 build to try this mode.
+
 Callisto is experimental. Its Playwright-shaped API is a subset, not a drop-in
 replacement for Playwright. An experimental connection to an existing Chromium
 browser through browse's relay is available with significant limitations below.

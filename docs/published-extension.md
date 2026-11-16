@@ -3,8 +3,9 @@
 [Callisto Bridge (Experimental) is available on Mozilla Add-ons](https://addons.mozilla.org/en-US/firefox/addon/callisto/).
 On 16 November 2026, Mozilla's public API reports version **0.2.0** as public,
 with Firefox 140+ compatibility. The downloaded XPI matches Mozilla's SHA-256
-and contains Mozilla signature files. Its scripts and other assets match the
-current source bytes; its manifest matches after parsing JSON. The add-on ID
+and contains Mozilla signature files. Its scripts and other assets matched
+source revision `ee7bd992172bbea6a0cac4bf9e86ffda458f7ed2`; its manifest
+matched after parsing JSON. The add-on ID
 remains `callisto-tab-bridge@lothnic.dev`.
 
 Version 0.2.0 adds background agent-window controls, trusted-input binding,
@@ -12,6 +13,11 @@ run/extract helpers, snapshot continuation and network/API inspection compared
 with 0.1.0. Check `callisto_capabilities` against the connected extension before
 using new tools. Background concurrency remains experimentally verified only
 on Zen with Linux X11.
+
+Source extension **0.3.0** adds [Full browser control](full-browser-control.md),
+automatic page attachment, hidden-tab activation and blank-tab navigation.
+That update has not been submitted to AMO by this change. Use the temporary
+0.3.0 build and updated runtime to try it; 0.2.0 does not expose the new mode.
 
 ## Install and connect
 

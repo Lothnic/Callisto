@@ -15,6 +15,11 @@ The extension manifest declares website content/activity, browsing activity,
 bookmarks, authentication information and search terms for Firefox's built-in
 data consent. This requires Firefox/Zen based on Firefox 140 or later. Optional
 browser API permissions and explicit tab sharing still control access at runtime.
+Source 0.3.0 also offers [Full browser control](full-browser-control.md): the
+user grants paired agents access across website tabs without a Share gesture
+for each page. It can change browser focus, show hidden tabs and transfer a
+tab from another agent session. The mode turns off on Stop or connection loss;
+underlying browser API permissions remain separately granted.
 There is no claim that sending data to a local process counts as no transmission.
 
 Stop sharing revokes active tabs across all agent sessions. Forget browser

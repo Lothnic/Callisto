@@ -14,6 +14,11 @@ recovery and a matched agent pilot. [AMO publishes extension 0.2.0](docs/publish
 The source installer defaults to the Firefox/Zen bridge and can register an
 MCP host. Broader store-upgrade and platform validation remain release gates.
 
+- Source 0.3.0 adds opt-in [Full browser control](docs/full-browser-control.md),
+  including automatic attachment and activation, hidden tabs, blank tabs and
+  explicit transfer from another agent session. Disposable Firefox integration
+  and UI/revocation tests pass. AMO publication of this update remains open.
+
 - The first [background agent-window slice](docs/background-work.md) is in source.
   User preparation may focus it once; execution starts after returning to another
   window. Pause/View/Take back retain explicit control. A one-minute headful Zen

@@ -76,3 +76,8 @@ while explaining that the extension needs the separately built runtime.
 Publication does not validate all store upgrades or permanent-install behavior
 in Zen. See
 `docs/published-extension.md`.
+
+The installer now pins the 0.3.0 runtime source. Its Full browser control mode
+needs extension 0.3.0, currently a temporary development build. Keep this distinct
+from the AMO 0.2.0 link. The runtime continues negotiating capabilities with
+older extensions. See `docs/full-browser-control.md`.

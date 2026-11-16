@@ -54,6 +54,24 @@ MCP entry or explicitly ask the agent to use `callisto-zen`. Chromium Mini has
 no pairing code for this extension. To install that backend intentionally,
 use `--backend chromium`; it requires npm and a separate Chrome/Chromium browser.
 
+### Full browser control in 0.3.0
+
+For automatic tab attachment and control across website tabs, use the new
+[Full browser control mode](full-browser-control.md). It requires both the
+0.3.0 extension and the updated runtime. The AMO listing is still 0.2.0, so load
+the 0.3.0 temporary build until that update is published. Enable the mode in the
+extension popup and approve hidden-tab management when requested.
+
+To install the updated runtime alongside an existing source installation:
+
+```sh
+curl -fsSL https://callisto.lothnic.dev/install.sh | CALLISTO_INSTALL_DIR="$HOME/.local/share/callisto-zen-0.3.0" bash -s -- --backend zen --host opencode
+```
+
+Run from your OpenCode project; the CLI registers `callisto-zen` using the
+new path. Restart its MCP connection afterward. Other hosts can use their
+printed registration command or the corresponding `--host` option.
+
 ## Build from a checkout
 
 Install Git, Node.js 20+, npm, the selected browser, and Rust/Cargo for Firefox

@@ -95,6 +95,11 @@ and check the flags before relying on newer actions.
 
 The 0.2.0 extension is published; broader store-upgrade validation remains a
 release gate.
+Source extension 0.3.0 adds [Full browser control](../../docs/full-browser-control.md).
+Enable it in the popup for automatic attachment, tab activation across windows,
+hidden-tab management and blank-tab creation/navigation. It requires an updated
+runtime; restart the MCP connection to load `tab_activate`, `tab_navigate` and
+`windows_list`. The new mode is not yet in the AMO 0.2.0 build.
 The agent can call `callisto_status` to check whether the bridge is connected,
 sharing and on the active tab without reading the page.
 
