@@ -111,7 +111,9 @@ if [ "$backend" = chromium ]; then
   printf 'It does not pair with the Firefox/Zen extension. Use --backend zen for existing Firefox/Zen tabs.\n'
 else
   printf '\nInstall Callisto Bridge in Firefox 140+ or a compatible Zen build:\nhttps://addons.mozilla.org/en-US/firefox/addon/callisto/\n'
-  printf 'Restart your agent/MCP connection, ask it to call callisto_pair, then enter the code in the extension and Share this tab.\n'
+  printf 'Restart your agent/MCP connection, ask it to call callisto_pair, then enter the code in the extension and choose Connect runtime.\n'
+  printf 'On a regular website, choose Share this tab, or enable Full browser control to let agents select, activate and create website tabs.\n'
+  printf 'Firefox-protected pages, including addons.mozilla.org and about: pages, remain unavailable.\n'
   printf 'If you previously configured Chromium Mini, disable that old MCP entry or explicitly ask your agent to use callisto-%s.\n' "$backend"
 fi
 printf '\nSetup and troubleshooting: https://github.com/Lothnic/Callisto/blob/main/docs/getting-started.md\n'

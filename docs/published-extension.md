@@ -1,6 +1,6 @@
 # Published Firefox and Zen add-on
 
-[Callisto Bridge (Experimental) is available on Mozilla Add-ons](https://addons.mozilla.org/en-US/firefox/addon/callisto/).
+[Install Callisto Bridge from Mozilla Add-ons](https://addons.mozilla.org/en-US/firefox/addon/callisto/).
 On 16 November 2026, Mozilla's public API reports version **0.3.0** as public,
 with Firefox 140+ compatibility. The downloaded XPI matches Mozilla's SHA-256
 and contains Mozilla signature files. Its scripts and other assets matched
@@ -18,8 +18,10 @@ Published extension **0.3.0** adds [Full browser control](full-browser-control.m
 automatic page attachment, hidden-tab activation and blank-tab navigation.
 Use the updated runtime to enable this mode; 0.2.0 does not expose it.
 
-Source extension **0.3.1** adds the Callisto orbital icons for the toolbar and
-add-on manager. This branding patch has not been submitted to AMO by this change.
+The latest version, **0.3.1**, adds the Callisto orbital icons for the toolbar
+and add-on manager. It has been submitted and is awaiting Mozilla approval.
+Mozilla's public metadata still reports 0.3.0 at the verification above; the
+store listing will offer 0.3.1 once Mozilla publishes it.
 The same icons are available in `assets/brand/` for the store listing.
 
 ## Install and connect

@@ -14,7 +14,9 @@ site/
 ├── index.html   # content and structure
 ├── styles.css   # design system, layout, motion
 ├── main.js      # ticker pacing, walkthrough, stepper, copy buttons
-└── install.sh   # pinned installer served at /install.sh
+├── install.sh   # pinned installer served at /install.sh
+├── favicon.svg  # Callisto orbital icon
+└── apple-touch-icon.png
 ```
 
 ## Preview
@@ -78,6 +80,16 @@ in Zen. See
 `docs/published-extension.md`.
 
 The installer now pins the 0.3.0 runtime source. Its Full browser control mode
-needs extension 0.3.0 or later, available on AMO. Source 0.3.1 adds branded icons.
+needs extension 0.3.0 or later, available on AMO. The latest version, 0.3.1, adds branded icons and is awaiting Mozilla approval.
 The runtime continues negotiating capabilities with
 older extensions. See `docs/full-browser-control.md`.
+
+## Add-on installation flow
+
+The navigation and hero link directly to the public Mozilla listing:
+<https://addons.mozilla.org/en-US/firefox/addon/callisto/>. The setup section
+walks through the add-on, the local bridge and pairing, with links to the
+[documentation index](../docs/README.md) and troubleshooting. Keep the store
+version separate from the repository manifest: check Mozilla's public API
+before changing published-version copy. Full control requires the 0.3.0 or
+later add-on and an updated runtime; protected Firefox pages remain unavailable.

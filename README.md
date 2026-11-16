@@ -2,6 +2,9 @@
 
 **A lean browser runtime for agents you already use.**
 
+[Get the Firefox/Zen add-on](https://addons.mozilla.org/en-US/firefox/addon/callisto/) ·
+[Set up your agent](docs/getting-started.md) · [Documentation](docs/README.md)
+
 Callisto gives an existing host agent browser tools through a local MCP server.
 Its TypeScript engine, `@callisto/mini`, uses the Chrome
 DevTools Protocol and an accessibility snapshot with actionable references.
@@ -28,8 +31,8 @@ forward. See [background work and verified limits](docs/background-work.md).
 
 Extension 0.3.0, available on Mozilla Add-ons, adds [Full browser control](docs/full-browser-control.md):
 opt in once to let agents select, activate, create and attach to website tabs
-without sharing each one manually. Source version 0.3.1 adds the
-[Callisto orbital icons](assets/brand/README.md).
+without sharing each one manually. The latest version, **0.3.1**, adds the
+[Callisto orbital icons](assets/brand/README.md) and is awaiting Mozilla approval.
 
 Callisto is experimental. Its Playwright-shaped API is a subset, not a drop-in
 replacement for Playwright. An experimental connection to an existing Chromium

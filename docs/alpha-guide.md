@@ -7,7 +7,11 @@ Mini, the Firefox/Zen bridge, a launcher, diagnostics and an **unsigned temporar
 extension**. It does not install a browser, alter host configuration or provide a
 permanent signed add-on. Reload the extension after the browser exits.
 
-The target version is `v0.2.0-alpha.1`. Release availability and the tested browser
+For normal use, install the [published add-on](published-extension.md) and
+use the [source bridge installer](getting-started.md#install-the-firefoxzen-bridge).
+Temporary add-on loading is for development and local bundle testing.
+
+The current source package target is `v0.3.1-alpha.1`. Release availability and the tested browser
 matrix are recorded in the release notes; source instructions remain usable
 before that release is published.
 
@@ -19,8 +23,8 @@ this checkout, build to a fresh directory, verify and install it:
 ```sh
 npm --prefix packages/mini ci
 mkdir -p dist/alpha
-node scripts/package-alpha.mjs --version v0.2.0-alpha.1 --out dist/alpha/v0.2.0-alpha.1
-node scripts/install-release.mjs --from-dir dist/alpha/v0.2.0-alpha.1 --prefix "$HOME/.local/share/callisto-alpha"
+node scripts/package-alpha.mjs --version v0.3.1-alpha.1 --out dist/alpha/v0.3.1-alpha.1
+node scripts/install-release.mjs --from-dir dist/alpha/v0.3.1-alpha.1 --prefix "$HOME/.local/share/callisto-alpha"
 node "$HOME/.local/share/callisto-alpha/bin/callisto.mjs" doctor zen
 ```
 
@@ -37,7 +41,7 @@ on [GitHub](https://github.com/Lothnic/Callisto/releases). Verify the checksum w
 `sha256sum -c callisto-install.mjs.sha256`, then install to a dedicated prefix:
 
 ```sh
-node callisto-install.mjs --version v0.2.0-alpha.1 --prefix "$HOME/.local/share/callisto-alpha"
+node callisto-install.mjs --version v0.3.1-alpha.1 --prefix "$HOME/.local/share/callisto-alpha"
 node "$HOME/.local/share/callisto-alpha/bin/callisto.mjs" doctor zen
 ```
 

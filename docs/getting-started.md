@@ -23,6 +23,12 @@ relay currently requires a Unix host; Windows is not supported.
 
 ## Install the Firefox/Zen bridge
 
+First, install [Callisto Bridge from Mozilla Add-ons](https://addons.mozilla.org/en-US/firefox/addon/callisto/)
+in Firefox 140+ or a compatible Zen build. The store add-on stays installed
+across browser restarts. The latest version is **0.3.1**, currently awaiting
+Mozilla approval. The listing will serve it once published. Temporary add-on
+loading is only needed for development.
+
 On Linux or macOS, install Git, Node.js 20+ and Rust/Cargo with a native linker.
 Install your agent host separately. From the project where you use OpenCode:
 
@@ -58,8 +64,11 @@ use `--backend chromium`; it requires npm and a separate Chrome/Chromium browser
 
 For automatic tab attachment and control across website tabs, use the new
 [Full browser control mode](full-browser-control.md). It requires both the
-0.3.0 or later extension from Mozilla Add-ons and the updated runtime. Enable the mode in the
-extension popup and approve hidden-tab management when requested.
+0.3.0 or later extension from Mozilla Add-ons and the updated runtime. Enable
+the mode in the extension popup and approve its website and browser permissions,
+including hidden-tab management. The toolbar badge shows **ALL** while active.
+Agents can then select, activate and create website tabs without a separate
+Share gesture. **Stop sharing** releases agent tabs and disables full control.
 
 To install the updated runtime alongside an existing source installation:
 
@@ -143,7 +152,7 @@ alone does not install the Rust runtime.
    **Load Temporary Add-on**, and select
    `packages/firefox-rs/extension/manifest.json` from your checkout.
 2. Ask the agent to call `callisto_pair`. Open the Callisto extension popup,
-   paste the pairing code into its box, and click **Connect**. Treat the code
+   paste the pairing code into its box, and click **Connect runtime**. Treat the code
    as a secret; enter it only into the extension.
 3. On a regular web page, click **Share this tab**, or right-click the page and
    select **Share this tab with Callisto**. Ask the agent to check
@@ -153,6 +162,10 @@ alone does not install the Rust runtime.
    access to cookies, history, bookmarks, downloads and all website content.
    The agent can then list tabs with `callisto_browser` / `tabs_list` and
    explicitly select one with `tab_select` and its tab ID.
+
+For automatic attachment across website tabs, use **Enable full browser
+control** instead. See [Full browser control](full-browser-control.md) for
+activation, new tabs, permission scope and revocation.
 
 For navigation in a shared tab, grant **Allow navigation**; it requests access
 to all websites. Built-in browser pages cannot be shared. A temporary add-on is
@@ -230,6 +243,36 @@ argument remains accepted for compatibility. A
 banner asks you to complete the step and click **Continue with agent**. The
 agent should take a fresh snapshot afterward; confirmation does not establish
 that the intended action succeeded. See [browser data handling](browser-data.md).
+
+## Troubleshooting
+
+- **No pairing tool or code:** ask the agent to check `callisto_capabilities`.
+  The backend must be `firefox-extension`. Isolated Chromium Mini does not pair
+  with the add-on. Register the Zen/Firefox bridge, select its MCP entry and
+  restart the agent's MCP connection.
+- **Runtime not connected:** confirm the bridge's MCP process is running, then
+  enter its pairing code in the add-on and choose **Connect runtime**. After a
+  restart, wait for connection and share the intended website tab again.
+- **Connected, no tab shared:** open a regular HTTP(S) website and choose
+  **Share this tab**, or enable full browser control. Ask the agent to check
+  `callisto_status`, then take a fresh `callisto_snapshot`.
+- **Missing host permission:** on ordinary websites, approve **Allow navigation**
+  or **Enable browser access** as needed, then share the page again.
+  Firefox-protected pages, including `addons.mozilla.org` and `about:` pages,
+  remain inaccessible under default browser settings even with full control.
+  Complete those steps yourself or use another supported browser automation path.
+- **Full control button or newer tab actions missing:** install the current
+  store add-on, update the local bridge and restart the MCP connection. An old
+  runtime can expose an older tool schema even when the add-on has updated.
+- **Installer says the destination exists:** it preserves existing installations.
+  Set `CALLISTO_INSTALL_DIR` to a new directory, install there, register the new
+  path and restart the MCP connection. See the [parallel-install example](#full-browser-control-in-030).
+- **Some Zen tabs are missing:** Zen may omit inactive workspace tabs from its
+  extension APIs. Open the workspace and list tabs again; full control cannot
+  recover tab IDs the browser does not expose.
+- **Development popup is blank in Zen Flatpak:** copy the entire extension
+  directory into Downloads and load its `manifest.json`, rather than copying
+  the manifest alone. Prefer the store add-on for normal use.
 
 ## Notes for host agents
 

@@ -4,7 +4,7 @@ This is the release plan. A shared launcher, source setup command, packaged
 installer with opt-in runtime updates, packaging workflow and signing workflow
 are implemented in the source tree. The installer has local transaction
 tests and a real local alpha archive installation check. Public runtime assets
-remain unpublished. [AMO publishes extension 0.2.0](published-extension.md);
+remain unpublished. [Install the published Firefox/Zen add-on](published-extension.md);
 the source installer builds its local bridge and can register an MCP host.
 Broader upgrade and platform validation remain open.
 A Linux x64 local alpha build
@@ -31,7 +31,7 @@ browser. Chromium's current connected mode also depends on the installed browse
 CLI and extension, and opens an agent-owned tab rather than adopting an
 existing one. Firefox's temporary add-on is removed on browser exit. The
 current persistent Firefox relay pairing survives MCP and relay restarts, but
-permanent installation is available for AMO 0.2.0. Disposable persistent Firefox/Zen
+permanent installation is available for AMO 0.3.0. Disposable persistent Firefox/Zen
 profiles now cover browser restart and extension reload; Zen also covers a
 forced crash. This is not evidence from personal production profiles.
 

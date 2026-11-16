@@ -58,19 +58,20 @@ absolute path to the built binary:
 }
 ```
 
-To try the prototype, in Firefox or Zen open `about:debugging`, select **This
-Firefox**, choose **Load Temporary Add-on**, and select `extension/manifest.json`
-from this directory. Return to the existing tab you want to use. Ask the agent
-to call `callisto_pair`, enter the returned code in the Callisto extension popup,
-connect, and select **Share this tab**. Keep that tab active while the agent
-works. Use **Stop sharing** to release the tab, or ask the agent to call
-`callisto_close`. Navigation revokes sharing; share the new page again when
-needed, unless the optional navigation permission described below is enabled.
-A temporary add-on is removed when the browser exits. A permanent 0.2.0
-build is [available on Mozilla Add-ons](https://addons.mozilla.org/en-US/firefox/addon/callisto/).
-The instructions above load a temporary development copy instead. Normal users
-can install from AMO and use the [bridge installer](../../docs/getting-started.md).
-See [published add-on details](../../docs/published-extension.md).
+For normal use, install [Callisto Bridge from Mozilla Add-ons](https://addons.mozilla.org/en-US/firefox/addon/callisto/)
+and follow the [bridge installer and host setup](../../docs/getting-started.md).
+The store add-on remains installed across browser restarts. Ask your agent for
+`callisto_pair`, enter the code in the popup and choose **Connect runtime**.
+Open a regular website and choose **Share this tab**, or enable
+[Full browser control](../../docs/full-browser-control.md) for automatic tab
+selection, activation and creation. **Stop sharing** releases agent tabs.
+
+For development, open `about:debugging` → **This Firefox** → **Load Temporary
+Add-on** and select `extension/manifest.json` from this directory. Temporary
+add-ons are removed when the browser exits. The store and development builds
+share an add-on ID; do not treat them as independent installations.
+See [published add-on details](../../docs/published-extension.md) and
+[connection troubleshooting](../../docs/getting-started.md#troubleshooting).
 
 ### Tools at a glance
 
@@ -93,13 +94,13 @@ Shared with the Chromium backend (same names, matching semantics):
 feature returns false for that feature. Reload the extension after upgrading
 and check the flags before relying on newer actions.
 
-The 0.2.0 extension is published; broader store-upgrade validation remains a
+Extension 0.3.0 is published; broader store-upgrade validation remains a
 release gate.
-Source extension 0.3.0 adds [Full browser control](../../docs/full-browser-control.md).
+Version 0.3.0 adds [Full browser control](../../docs/full-browser-control.md).
 Enable it in the popup for automatic attachment, tab activation across windows,
 hidden-tab management and blank-tab creation/navigation. It requires an updated
 runtime; restart the MCP connection to load `tab_activate`, `tab_navigate` and
-`windows_list`. The new mode is not yet in the AMO 0.2.0 build.
+`windows_list`. These features are available in the AMO 0.3.0 build.
 The agent can call `callisto_status` to check whether the bridge is connected,
 sharing and on the active tab without reading the page.
 
