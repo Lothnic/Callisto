@@ -1636,6 +1636,7 @@ footer {
 .setup-panel .btn-primary { background: #3b82f6; color: #06111b; }
 .setup-panel .setup-addon-note { margin-top: 1.5rem; }
 .setup-panel .code-block { margin-bottom: 1.5rem; }
+.setup-panel .copy-btn { opacity: 1; color: var(--paper); font-size: .65rem; padding: .4rem .65rem; }
 .setup-panel .code-block pre { white-space: pre-wrap; overflow-wrap: anywhere; padding-top: 2.8rem; font-size: .8rem; }
 .setup-choices { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 1.5rem; }
 .setup-choices label { display: grid; gap: .65rem; font-size: .9rem; font-weight: 600; color: var(--paper); }
