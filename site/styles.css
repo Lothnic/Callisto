@@ -1646,6 +1646,7 @@ footer {
 .hero-eyebrow, .site-nav-link { color: #061b2a; }
 .hero-docs-btn { color: #061b2a; background: #061b2a; }
 @media (max-width: 360px) {
+  .site-nav-cta { padding: .7rem .75rem; font-size: .7rem; }
   .hero-cta-buttons { flex-direction: column; }
   .hero-cta-buttons a { flex: auto; }
 }
