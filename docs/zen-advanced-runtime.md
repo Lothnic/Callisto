@@ -1,8 +1,8 @@
 # Zen input, observations, network inspection and evidence
 
 These source features are experimental. A Linux x64 alpha is described in the [alpha guide](alpha-guide.md).
-[AMO publishes extension 0.1.0](published-extension.md); the newer features here
-require the temporary source extension 0.2.0 until that update is published. The
+[AMO publishes extension 0.2.0](published-extension.md); install its matching
+local bridge using the [setup guide](getting-started.md). The
 [matched host pilot](host-agent-evaluation.md) connects the signed-in Codex agent
 over MCP; Callisto does not require its own model API credential. The earlier Hy3
 API preflight was credit-blocked and is kept as historical evidence. The extension can now use trusted BiDi input

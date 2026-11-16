@@ -36,10 +36,11 @@ Performance and reliability claims are still being tested.
 For setup with Codex, Claude Code or OpenCode, including a safe first trial and
 existing Zen tabs, start with the [user and agent setup guide](docs/getting-started.md).
 Linux x64 testers can use the [alpha guide](docs/alpha-guide.md); source setup
-remains available. [Mozilla Add-ons publishes extension 0.1.0](https://addons.mozilla.org/en-US/firefox/addon/callisto/).
-The latest source and alpha extension is 0.2.0, unsigned and temporary; newer
-features require that build until the listing is updated. See
-[published add-on and version differences](docs/published-extension.md) and
+remains available. [Mozilla Add-ons publishes extension 0.2.0](https://addons.mozilla.org/en-US/firefox/addon/callisto/).
+The website installer now defaults to building the Firefox/Zen bridge; add
+`--host opencode`, `--host codex` or `--host claude` to register with that host.
+See [setup and migration from the older Chromium installer](docs/getting-started.md#install-the-firefoxzen-bridge),
+[published add-on details](docs/published-extension.md) and
 the [path to 1.0](roadmap.md#path-to-10).
 
 From the repository root, with Node.js 20+ and a Chromium/Chrome binary:
@@ -133,8 +134,8 @@ evidence, and Linux alpha archives have install/diagnostic checks. A
 MCP interfaces and records actual host usage and visible tool traces. The earlier
 Hy3 API preflight was credit-blocked; it is optional and does not affect normal
 host-agent use. Small local fixtures do not establish broad browse parity or
-billed-cost savings. Publishing the newer 0.2.0 extension, validating upgrades
-from the store version and certifying production-profile recovery remain open.
+billed-cost savings. Broad validation of store upgrades and production-profile
+recovery remains open.
 
 Read the [runtime roadmap](roadmap.md), [benchmark index](BENCHMARKS.md), and
 [research index](research/README.md) for current priorities and test caveats.

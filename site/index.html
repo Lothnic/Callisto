@@ -70,7 +70,7 @@
   </svg>
 
   <div class="hero-content">
-    <div class="hero-eyebrow"><span class="blink-dot"></span> v0.1.0 · experimental local MCP runtime</div>
+    <div class="hero-eyebrow"><span class="blink-dot"></span> extension v0.2.0 · experimental local MCP runtime</div>
     <h1>A Browser Runtime<br>For Your Agent</h1>
     <p class="hero-sub">
       Give your existing agent a way to navigate, read, and act on the web.
@@ -475,12 +475,12 @@
       <div class="zen-intro">
         <h2 id="zen-title" class="display">Work In Your<br>Zen Or Firefox Tab.</h2>
         <p>Keep the tab, profile and login you already use. Pair the local bridge and explicitly share a tab with your agent.</p>
-        <p><a href="https://addons.mozilla.org/en-US/firefox/addon/callisto/">Install extension 0.1.0 from Mozilla Add-ons ↗</a>. Newer features below require source extension 0.2.0, currently loaded as a temporary add-on. Build the local bridge separately. Trusted input needs a deliberately debug-enabled browser.</p>
+        <p><a href="https://addons.mozilla.org/en-US/firefox/addon/callisto/">Install extension 0.2.0 from Mozilla Add-ons ↗</a>, then install the local bridge below. Trusted input needs a deliberately debug-enabled browser.</p>
         <a class="zen-guide" href="https://github.com/Lothnic/callisto/blob/main/docs/getting-started.md">Set up Zen or Firefox <span aria-hidden="true">↗</span></a>
       </div>
       <div>
         <dl class="zen-features">
-          <div><dt>Work alongside your agent</dt><dd>From source: prepare a separate agent window, then return to your work. Preparation may focus it once. View pauses the task before showing it; Pause and Take back keep you in control.</dd></div>
+          <div><dt>Work alongside your agent</dt><dd>Prepare a separate agent window, then return to your work. Preparation may focus it once. View pauses the task before showing it; Pause and Take back keep you in control. Concurrent use is verified on Zen with Linux X11.</dd></div>
           <div><dt>Trusted input</dt><dd>Native typing, form controls and pagination under the same sharing controls. Stop sharing revokes new input; an action already sent may finish.</dd></div>
           <div><dt>Useful observations</dt><dd>Scope a snapshot, follow a stable captured revision, or read a compact diff. Open shadow roots and explicitly selected same-origin frames are supported.</dd></div>
           <div><dt>Network &amp; APIs</dt><dd>Inspect scoped traffic, compare requests and export draft OpenAPI. Explicit same-origin GET/HEAD replay uses the page session and refuses redirects.</dd></div>
@@ -609,24 +609,24 @@
         <li>
           <div class="step-number">01 / BUILD</div>
           <h3>Install the engine.</h3>
-          <p>For isolated Chromium, install Git, Node.js 20+ and Chrome or Chromium, then run the installer. For existing Zen or Firefox tabs and other hosts, follow the <a href="https://github.com/Lothnic/Callisto/blob/main/docs/getting-started.md">user and agent setup guide</a>.</p>
-          <p>The installer builds a pinned Chromium revision. For Zen or Firefox, use the source setup in the guide.</p>
+          <p>On Linux or macOS, install Git, Node.js 20+ and Rust/Cargo with a native linker. The installer builds the Firefox/Zen bridge from pinned source. Install <a href="https://addons.mozilla.org/en-US/firefox/addon/callisto/">Callisto Bridge</a> in Firefox 140+ or a compatible Zen build.</p>
+          <p>For isolated Chromium, add <code>--backend chromium</code> and install npm and Chrome/Chromium. <a href="https://github.com/Lothnic/Callisto/blob/main/docs/getting-started.md">Full setup and requirements ↗</a></p>
           <div class="code-block">
-            <button type="button" class="copy-btn" data-copy="curl -fsSL https://callisto.lothnic.dev/install.sh | bash">Copy</button>
-            <pre><code>curl -fsSL https://callisto.lothnic.dev/install.sh | bash</code></pre>
+            <button type="button" class="copy-btn" data-copy="curl -fsSL https://callisto.lothnic.dev/install.sh | bash -s -- --backend zen">Copy</button>
+            <pre><code>curl -fsSL https://callisto.lothnic.dev/install.sh | bash -s -- --backend zen</code></pre>
           </div>
         </li>
         <li>
           <div class="step-number">02 / REGISTER</div>
           <h3>Add the MCP server.</h3>
-          <p>The installer prints your exact command and path. Add it to your MCP host’s configuration; adapt this example for your host.</p>
+          <p>The installer prints your exact command and path. Add <code>--host opencode</code>, <code>--host codex</code> or <code>--host claude</code> to register during installation. OpenCode registration applies to your current project. For manual setup, use the printed configuration; adapt this example for your host.</p>
           <div class="code-block">
-            <button type="button" class="copy-btn" data-copy='{"mcpServers":{"callisto":{"command":"node","args":["/absolute/path/to/callisto/packages/mini/dist/mcp.js"]}}}'>Copy</button>
+            <button type="button" class="copy-btn" data-copy='{"mcpServers":{"callisto-zen":{"command":"node","args":["/absolute/path/to/callisto-zen/scripts/callisto.mjs","zen"]}}}'>Copy</button>
             <pre><code>{
   "mcpServers": {
-    "callisto": {
+    "callisto-zen": {
       "command": "node",
-      "args": ["/absolute/path/to/callisto/packages/mini/dist/mcp.js"]
+      "args": ["/absolute/path/to/callisto-zen/scripts/callisto.mjs", "zen"]
     }
   }
 }</code></pre>
@@ -634,12 +634,12 @@
         </li>
         <li>
           <div class="step-number">03 / ASK</div>
-          <h3>Give it a task.</h3>
-          <p>The first browser call starts an isolated session. Set CHROME_PATH if your browser is not discovered.</p>
+          <h3>Pair and share a tab.</h3>
+          <p>Restart your agent’s MCP connection and ask for <code>callisto_pair</code>. Enter its code in the extension, open a regular website and choose Share this tab. Your agent can now work with that page. If you previously configured Chromium Mini, disable the old entry or explicitly select Callisto Zen.</p>
           <div class="code-block">
-            <button type="button" class="copy-btn" data-copy="Open Hacker News and summarize the top three Show HN posts.">Copy</button>
-            <pre><code>Open Hacker News and summarize
-the top three Show HN posts.</code></pre>
+            <button type="button" class="copy-btn" data-copy="Use Callisto Zen to call callisto_pair so I can connect my extension.">Copy</button>
+            <pre><code>Use Callisto Zen to call callisto_pair
+so I can connect my extension.</code></pre>
           </div>
         </li>
       </ol>
@@ -686,7 +686,7 @@ the top three Show HN posts.</code></pre>
             <span class="faq-question-text">Does it use my browser or my logins?</span>
             <svg class="faq-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 6l5 5 5-5" stroke="currentColor" stroke-width="1.5"/></svg>
           </summary>
-          <div class="faq-answer-wrap"><div class="faq-answer"><p>Mini starts isolated Chromium by default; its experimental browse connection opens an agent-owned tab in your existing profile. The experimental Firefox/Zen bridge shares an existing tab and its login after pairing and permission. <a href="https://addons.mozilla.org/en-US/firefox/addon/callisto/">Mozilla Add-ons offers extension 0.1.0</a>; newer source features need the temporary 0.2.0 extension and local runtime. Optional trusted input follows the same sharing controls and requires a debugging endpoint. <a href="https://github.com/Lothnic/Callisto/blob/main/packages/firefox-rs/README.md">Read Firefox and Zen setup ↗</a></p></div></div>
+          <div class="faq-answer-wrap"><div class="faq-answer"><p>The installer defaults to the Firefox/Zen bridge, which shares an existing tab and its login after pairing and permission. <a href="https://addons.mozilla.org/en-US/firefox/addon/callisto/">Mozilla Add-ons offers extension 0.2.0</a>; the local runtime is installed separately. Optional trusted input follows the same sharing controls and requires a debugging endpoint. Choose <code>--backend chromium</code> for isolated Chromium Mini; that backend does not pair with this extension. <a href="https://github.com/Lothnic/Callisto/blob/main/packages/firefox-rs/README.md">Read Firefox and Zen setup ↗</a></p></div></div>
         </details>
         <details class="faq-item">
           <summary class="faq-question">
@@ -718,7 +718,7 @@ the top three Show HN posts.</code></pre>
             <span class="faq-question-text">What is actually shipped today?</span>
             <svg class="faq-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 6l5 5 5-5" stroke="currentColor" stroke-width="1.5"/></svg>
           </summary>
-          <div class="faq-answer-wrap"><div class="faq-answer"><p>Source includes Chromium Mini and the Firefox/Zen bridge, structured actions, bounded snapshots, batches and evidence tooling. The Zen bridge adds optional trusted input and scoped API inspection. Local Linux alpha packaging and persistent-profile recovery checks are available. The AMO add-on is 0.1.0; publishing the newer 0.2.0 extension, validating store upgrades and production profiles, and full Playwright compatibility remain open. <a href="https://github.com/Lothnic/callisto/blob/main/roadmap.md">Read the roadmap</a>.</p></div></div>
+          <div class="faq-answer-wrap"><div class="faq-answer"><p>Source includes Chromium Mini and the Firefox/Zen bridge, structured actions, bounded snapshots, batches and evidence tooling. The Zen bridge adds optional trusted input and scoped API inspection. Mozilla Add-ons publishes extension 0.2.0, and the source installer builds its local bridge. Local Linux alpha packaging and persistent-profile recovery checks are available. Validating store upgrades and production profiles, Windows support, and full Playwright compatibility remain open. <a href="https://github.com/Lothnic/callisto/blob/main/roadmap.md">Read the roadmap</a>.</p></div></div>
         </details>
       </div>
     </div>

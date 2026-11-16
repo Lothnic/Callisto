@@ -4,8 +4,9 @@ This is the release plan. A shared launcher, source setup command, packaged
 installer with opt-in runtime updates, packaging workflow and signing workflow
 are implemented in the source tree. The installer has local transaction
 tests and a real local alpha archive installation check. Public runtime assets
-remain unpublished. [AMO publishes the older extension 0.1.0](published-extension.md);
-the newer source extension 0.2.0 still needs publication and upgrade validation.
+remain unpublished. [AMO publishes extension 0.2.0](published-extension.md);
+the source installer builds its local bridge and can register an MCP host.
+Broader upgrade and platform validation remain open.
 A Linux x64 local alpha build
 is available through [the alpha guide](alpha-guide.md).
 See [the implementation guide](development-installation.md). Callisto has
@@ -30,7 +31,7 @@ browser. Chromium's current connected mode also depends on the installed browse
 CLI and extension, and opens an agent-owned tab rather than adopting an
 existing one. Firefox's temporary add-on is removed on browser exit. The
 current persistent Firefox relay pairing survives MCP and relay restarts, but
-permanent installation is available for the older AMO build. Disposable persistent Firefox/Zen
+permanent installation is available for AMO 0.2.0. Disposable persistent Firefox/Zen
 profiles now cover browser restart and extension reload; Zen also covers a
 forced crash. This is not evidence from personal production profiles.
 
@@ -54,6 +55,6 @@ forced crash. This is not evidence from personal production profiles.
 - Test fresh installation, upgrade, browser and machine restarts, host restarts,
   reconnect, removal, and real workflows on each supported platform and browser.
 
-Until runtime release packages and the newer extension are published and installation
+Until runtime release packages are published and installation
 and upgrade tests pass, do not describe this as a tested one-click installation
 with automatic updates across both browser families.

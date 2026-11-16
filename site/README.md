@@ -43,29 +43,36 @@ Then visit <http://127.0.0.1:8087/>.
   `packages/mini/src/mcp.ts` and `packages/firefox-rs/src/tab_mcp.rs`, with
   runtime limits in `docs/zen-advanced-runtime.md`. Callisto is experimental, is not a Playwright
   replacement, and is not a sandbox.
-- The installer fetches the explicitly pinned Git revision, builds Mini and
-  prints an MCP configuration; it does not install Chrome or edit host configs.
+- The installer fetches the explicitly pinned Git revision and defaults to
+  building the Firefox/Zen bridge. `--backend chromium` builds Mini instead.
+  It prints configuration unless `--host codex|claude|opencode` is explicitly
+  supplied; only then does the host's CLI register the selected backend.
+  It does not install browsers, Node.js or Rust. OpenCode registration applies
+  to the current project. Zen installs alongside legacy Mini in `callisto-zen`.
   `CALLISTO_INSTALL_DIR` changes the destination, which must not already exist.
   Update the revision only after the corresponding commit is available on GitHub.
+  Run `node --test scripts/site-install.test.mjs` for backend, host registration,
+  path-preservation and failed-build coverage. A real Linux source install and
+  OpenCode registration are recorded in `eval/reports/installer-2026-11-16.md`.
 
 ## Current source capabilities
 
 The Zen/Firefox section describes extension-owned optional trusted input, stable
 snapshot captures, scoped network/API inspection and explicit failure evidence.
-The background agent-window feature is source-only: user preparation may focus
+The background agent-window feature ships in extension 0.2.0: user preparation may focus
 it once, then execution starts after returning to another window. The saved
 concurrent-use check covers headful Zen X11 only; do not imply inactive-tab,
 minimized-window or cross-platform support. See `docs/background-work.md`.
-The Chromium installer remains pinned to its existing revision and does not
-install the Zen bridge. Keep source availability, signed distribution and benchmark
+The installer defaults to the Zen bridge from a pinned revision; Chromium is
+an explicit option. Keep source availability, signed distribution and benchmark
 results distinct. The 15 November persistent-profile checks and observation byte measurements
 are not a browse time/cost comparison or a benchmark judge run. The matched
 pilot now runs a signed-in Codex host through native MCP tools; the credit-blocked
 Hy3 API preflight is historical and does not block host-agent use. The alpha guide describes a local
 Linux x64 build, not a published signed extension.
-Mozilla Add-ons now publishes the older 0.1.0 extension at
+Mozilla Add-ons now publishes extension 0.2.0 at
 <https://addons.mozilla.org/en-US/firefox/addon/callisto/>. Keep that link visible
-while explaining that the newer source features require temporary extension
-0.2.0 and the separately built runtime. Publication of 0.1.0 does not validate
-0.2.0 store upgrades or permanent-install behavior in Zen. See
+while explaining that the extension needs the separately built runtime.
+Publication does not validate all store upgrades or permanent-install behavior
+in Zen. See
 `docs/published-extension.md`.

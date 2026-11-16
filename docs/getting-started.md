@@ -8,7 +8,7 @@ API key. The runtimes and distribution are experimental.
 
 | Path | Browser and session | Setup |
 | --- | --- | --- |
-| Firefox or Zen bridge | Connects to an already open profile and can select an existing tab and its login | Rust bridge plus extension; current features need temporary 0.2.0 |
+| Firefox or Zen bridge | Connects to an already open profile and can select an existing tab and its login | Rust bridge plus published extension 0.2.0 |
 | Chromium Mini | Starts a fresh isolated Chromium session by default | Node.js and Chrome/Chromium |
 | Chromium via browse | Opens an agent-owned tab in a Chromium profile paired with browse | Mini plus browse CLI and its extension |
 | Chromium direct CDP | Adopts a specified existing tab in an already debug-enabled local browser | Mini plus an explicit CDP endpoint and target ID |
@@ -21,7 +21,40 @@ capabilities and setup. See the detailed
 The Firefox/Zen extension targets Firefox 140+ and compatible Zen builds. Its
 relay currently requires a Unix host; Windows is not supported.
 
-## Build and register
+## Install the Firefox/Zen bridge
+
+On Linux or macOS, install Git, Node.js 20+ and Rust/Cargo with a native linker.
+Install your agent host separately. From the project where you use OpenCode:
+
+```sh
+curl -fsSL https://callisto.lothnic.dev/install.sh | bash -s -- --backend zen --host opencode
+```
+
+Use `--host codex` or `--host claude` for those CLIs. Omitting `--host` prints
+configuration without editing the host. OpenCode registration applies to the
+current project; its CLI must support `mcp add <name> -- <command...>`.
+The source installer defaults to `zen`; `--backend firefox` uses the same bridge.
+It fetches a pinned revision and builds only the chosen runtime. Windows is
+not supported by this installer. Rust compilation can take several minutes.
+
+The default Zen installation is `~/.local/share/callisto-zen`, or
+`$XDG_DATA_HOME/callisto-zen` when set. The legacy Chromium installation at
+`~/.local/share/callisto` is preserved. Existing destinations are refused;
+set `CALLISTO_INSTALL_DIR` to a new path to install another copy. This is a
+source installer, not an automatic updater.
+
+After registration, restart the agent's MCP connection. Install
+[Callisto Bridge from Mozilla Add-ons](https://addons.mozilla.org/en-US/firefox/addon/callisto/),
+then follow [pairing](#pair-firefox-or-zen). The add-on and runtime are both required.
+Verify that your agent exposes `callisto_pair` and reports
+`callisto_capabilities.backend` as `firefox-extension` before requesting a code.
+
+If an earlier installer configured isolated Chromium Mini, disable its old
+MCP entry or explicitly ask the agent to use `callisto-zen`. Chromium Mini has
+no pairing code for this extension. To install that backend intentionally,
+use `--backend chromium`; it requires npm and a separate Chrome/Chromium browser.
+
+## Build from a checkout
 
 Install Git, Node.js 20+, npm, the selected browser, and Rust/Cargo for Firefox
 or Zen. Install the Codex or Claude Code CLI if using the matching command
@@ -58,10 +91,9 @@ Replace the example path. The command writes project configuration; add
 [MCP setup reference](https://opencode.ai/docs/mcp-servers) explains its
 configuration and how to inspect connections. Configuration varies by host.
 
-The website's `install.sh` currently builds **only isolated Chromium Mini**
-from a pinned source revision, which can lag the current published branch. Use
-the source checkout above for Zen or Firefox and for the latest published code.
-The packaged installer and opt-in runtime updater require release assets that
+The website's `install.sh` builds the selected backend from a pinned source
+revision; use a source checkout for later development changes.
+The separate packaged installer and opt-in runtime updater require release assets that
 have not yet been published; v0.1.0 is source-only. See
 [installation and release tooling](development-installation.md).
 
@@ -84,12 +116,13 @@ for reporting security problems privately.
 
 ## Pair Firefox or Zen
 
-[Mozilla Add-ons offers the older 0.1.0 extension](https://addons.mozilla.org/en-US/firefox/addon/callisto/).
-The steps below load current source version 0.2.0 for newer runtime features.
-See [published add-on and version differences](published-extension.md) before
-choosing a build. Installing the add-on alone does not install the Rust runtime.
+[Mozilla Add-ons offers extension 0.2.0](https://addons.mozilla.org/en-US/firefox/addon/callisto/).
+Install it for normal use; the temporary source build is useful for development.
+See [published add-on details](published-extension.md). Installing the add-on
+alone does not install the Rust runtime.
 
-1. Open `about:debugging` in the existing browser, choose **This Firefox** →
+1. Install the published add-on. For development instead, open `about:debugging`
+   in the existing browser, choose **This Firefox** →
    **Load Temporary Add-on**, and select
    `packages/firefox-rs/extension/manifest.json` from your checkout.
 2. Ask the agent to call `callisto_pair`. Open the Callisto extension popup,
@@ -107,8 +140,7 @@ choosing a build. Installing the add-on alone does not install the Rust runtime.
 For navigation in a shared tab, grant **Allow navigation**; it requests access
 to all websites. Built-in browser pages cannot be shared. A temporary add-on is
 removed when the browser exits. Pairing is saved across MCP sessions. The
-permanent AMO add-on is still 0.1.0; store-install and upgrade checks for the
-newer source remain open.
+permanent AMO add-on is now 0.2.0; broad store-install and upgrade checks remain open.
 With sandboxed Zen Flatpak, copy the **entire** extension directory to Downloads
 and load that copy's manifest if the popup is blank.
 
@@ -124,14 +156,14 @@ bash scripts/install-local.sh zen codex
 ```
 
 For Claude Code, replace `codex` with `claude`. Restart the host's MCP servers,
-then load and pair the temporary extension using the steps above. Open
+then install and pair the published extension using the steps above. Open
 `https://example.com` yourself in Zen and share that tab. Keep it active, then
 ask the agent: “Use Callisto to check the shared Zen tab and tell me its page
 heading.” The expected heading is “Example Domain.” This first trial does not
 require the optional navigation or browser-wide access permissions.
 
-When finished, click **Stop sharing** in the extension. The temporary extension
-must be loaded again after the browser exits. If the agent cannot connect,
+When finished, click **Stop sharing** in the extension. A temporary development
+copy must be loaded again after the browser exits. If the agent cannot connect,
 check `callisto_status`, confirm the extension is connected and the intended
 tab is shared, and consult the [Firefox/Zen guide](../packages/firefox-rs/README.md).
 

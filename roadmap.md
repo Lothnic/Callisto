@@ -10,9 +10,9 @@ preserved for historical context.
 
 The current work prioritizes concurrent human/agent use in Zen, alongside input,
 useful observations, recovery and network inspection. The next milestone now includes a Linux alpha, persistent-profile
-recovery and a matched agent pilot. [AMO publishes extension 0.1.0](docs/published-extension.md).
-Publication of the newer 0.2.0 source and store-upgrade validation remain
-separate release gates.
+recovery and a matched agent pilot. [AMO publishes extension 0.2.0](docs/published-extension.md).
+The source installer defaults to the Firefox/Zen bridge and can register an
+MCP host. Broader store-upgrade and platform validation remain release gates.
 
 - The first [background agent-window slice](docs/background-work.md) is in source.
   User preparation may focus it once; execution starts after returning to another

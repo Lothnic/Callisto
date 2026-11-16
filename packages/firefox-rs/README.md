@@ -66,10 +66,11 @@ connect, and select **Share this tab**. Keep that tab active while the agent
 works. Use **Stop sharing** to release the tab, or ask the agent to call
 `callisto_close`. Navigation revokes sharing; share the new page again when
 needed, unless the optional navigation permission described below is enabled.
-A temporary add-on is removed when the browser exits. A permanent older 0.1.0
+A temporary add-on is removed when the browser exits. A permanent 0.2.0
 build is [available on Mozilla Add-ons](https://addons.mozilla.org/en-US/firefox/addon/callisto/).
-The instructions above load source 0.2.0 for the latest features. See
-[published add-on and version differences](../../docs/published-extension.md).
+The instructions above load a temporary development copy instead. Normal users
+can install from AMO and use the [bridge installer](../../docs/getting-started.md).
+See [published add-on details](../../docs/published-extension.md).
 
 ### Tools at a glance
 
@@ -92,8 +93,8 @@ Shared with the Chromium backend (same names, matching semantics):
 feature returns false for that feature. Reload the extension after upgrading
 and check the flags before relying on newer actions.
 
-Publishing source 0.2.0 and verifying upgrades from the store version remain
-release gates; publication of 0.1.0 does not ship the newer source features.
+The 0.2.0 extension is published; broader store-upgrade validation remains a
+release gate.
 The agent can call `callisto_status` to check whether the bridge is connected,
 sharing and on the active tab without reading the page.
 
