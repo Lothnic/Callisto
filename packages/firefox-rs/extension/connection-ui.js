@@ -1,17 +1,22 @@
 'use strict';
 (() => {
- const byId=id=>document.getElementById(id);let state=null,busy=false,revision=0,taskRevision='';
+ const byId=id=>document.getElementById(id);let state=null,busy=false,revision=0,taskRevision='',accessIntent=0,requestingFull=false;
  function notice(text,error=false){byId('notice').textContent=text;byId('notice').dataset.error=String(error);}
  function render(){
   if(!state)return;
   const count=state.shared_tabs||0,tasks=state.background_tasks||[];
-  byId('connection-title').textContent=state.connected&&tasks.length?(tasks.every(t=>t.paused)?'Background work paused':'Background control active'):state.connected?(count===1?'One tab shared':count?`${count} tabs shared`:'Connected · no tab shared'):state.reconnecting?'Reconnecting to runtime':'Runtime not connected';
-  byId('connection-copy').textContent=state.connected&&tasks.length?'Task control stays with its agent window. View pauses it first. Sharing or preparing another tab releases current shares.':state.connected?(count?'Sharing or preparing this tab replaces current shares. Foreground shares must stay active in their window.':document.body.dataset.surface==='popup'?'Open the intended page and choose Share this tab.':'Return to the intended page, right-click it and choose Share this tab with Callisto.'):state.paired?'Start the Callisto MCP server. Saved pairing will reconnect; tab access is never restored automatically.':'Start Callisto in your agent, then enter its pairing code below.';
+  byId('connection-title').textContent=state.connected&&state.full_access?'Full browser control active':state.connected&&tasks.length?(tasks.every(t=>t.paused)?'Background work paused':'Background control active'):state.connected?(count===1?'One tab shared':count?`${count} tabs shared`:'Connected · no tab shared'):state.reconnecting?'Reconnecting to runtime':'Runtime not connected';
+  byId('connection-copy').textContent=state.connected&&state.full_access?'Agents can activate, create and control website tabs without asking you to share each one. They may change browser focus. Stop releases pages and turns this mode off.':state.connected&&tasks.length?'Task control stays with its agent window. View pauses it first. Sharing or preparing another tab releases current shares.':state.connected?(count?'Sharing or preparing this tab replaces current shares. Foreground shares must stay active in their window.':document.body.dataset.surface==='popup'?'Share this tab, or enable full browser control below.':'Share a page from its context menu, or enable full browser control below.'):state.paired?'Start the Callisto MCP server. Saved pairing will reconnect; tab access and full browser mode are not restored automatically.':'Start Callisto in your agent, then enter its pairing code below.';
   byId('pair-form').hidden=!!state.paired;
+  byId('full-mode-section').hidden=!state.connected;
   if(byId('share'))byId('share').disabled=!state.connected||busy;
   if(byId('background-start'))byId('background-start').disabled=!state.connected||busy;
   renderTasks(tasks);
-  byId('stop').disabled=!count&&!tasks.length;byId('pair').disabled=busy;byId('forget').disabled=!state.paired||busy;
+  byId('stop').disabled=!count&&!tasks.length&&!state.full_access&&!requestingFull;byId('pair').disabled=busy;byId('forget').disabled=!state.paired||busy;
+  byId('full-mode').disabled=!state.connected||(busy&&!state.full_access);
+  byId('full-mode').textContent=state.full_access?'Disable full browser control':'Enable full browser control';
+  byId('full-mode').setAttribute('aria-pressed',String(!!state.full_access));
+  byId('full-mode-state').textContent=state.full_access?'On · until Stop or connection loss':'Off · share tabs individually';
   for(const key of ['navigation','browser','network','containers'])byId(key+'-state').textContent=state.permissions?.[key]?'Enabled':'Not granted';
  }
  function renderTasks(tasks){
@@ -39,7 +44,18 @@
  byId('background-start')?.addEventListener('click',()=>perform(async()=>{if(!(await browser.permissions.request({permissions:['tabs']})))return {message:'Tab management was not granted. The tab stays where it is.'};return browser.runtime.sendMessage({type:'background-share'});}));
  byId('share')?.addEventListener('click',()=>perform(()=>browser.runtime.sendMessage({type:'share'})));
  // Revocation stays available even while another operation is pending.
- byId('stop').addEventListener('click',async()=>{try{notice((await browser.runtime.sendMessage({type:'stop'})).message);}catch(error){notice(error.message,true);}await refresh();});
+ byId('stop').addEventListener('click',async()=>{accessIntent++;requestingFull=false;try{notice((await browser.runtime.sendMessage({type:'stop'})).message);}catch(error){notice(error.message,true);}await refresh();});
+ byId('full-mode').addEventListener('click',()=>{
+  const intent=++accessIntent;
+  if(state?.full_access){void (async()=>{try{notice((await browser.runtime.sendMessage({type:'full-access',enabled:false})).message);}catch(error){notice(error.message,true);}await refresh();})();return;}
+  requestingFull=true;
+  void perform(async()=>{try{
+   const granted=await browser.permissions.request({origins:['<all_urls>'],permissions:['tabs','cookies','bookmarks','history','downloads','tabHide']});
+   if(intent!==accessIntent)return {message:'Full browser control was cancelled.'};
+   if(!granted)return {message:'Browser access was not granted. Full browser control stays off.'};
+   return await browser.runtime.sendMessage({type:'full-access',enabled:true});
+  }finally{requestingFull=false;}});
+ });
  byId('forget').addEventListener('click',()=>perform(()=>browser.runtime.sendMessage({type:'forget'})));
  byId('settings')?.addEventListener('click',()=>browser.runtime.openOptionsPage());
  function permission(id,request,success){byId(id).addEventListener('click',()=>perform(async()=>{const granted=await browser.permissions.request(request);if(!granted)return {message:'Permission was not granted. Existing access is unchanged.'};return typeof success==='function'?success():{message:success};}));}

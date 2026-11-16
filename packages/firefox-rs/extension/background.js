@@ -8,6 +8,7 @@ let pairAttempt = 0;
 let storageWrites = Promise.resolve();
 let nextLease = 0;
 let sharingIntent = 0;
+let fullBrowserAccess = false;
 const networkInspector = typeof createNetworkInspector === 'function' ? createNetworkInspector(browser) : null;
 function savePairing(code) {
   const write = storageWrites.then(() => code === null ? browser.storage.local.remove('callistoPairing') : browser.storage.local.set({callistoPairing:code}));
@@ -66,11 +67,12 @@ browser.runtime.onMessage.addListener(async message => {
       const [navigation,full,network,settings,background]=await Promise.all([
         browser.permissions.contains({origins:['<all_urls>']}),browser.permissions.contains(fullBrowserPermissions),
         browser.permissions.contains({origins:['<all_urls>'],permissions:['webRequest','webRequestBlocking']}),browser.storage.local.get('callistoAgentContainersEnabled'),browser.permissions.contains({permissions:['tabs']})]);
-      return {connected:paired && socket?.readyState===WebSocket.OPEN,paired:!!rememberedCode,reconnecting:!!rememberedCode && !paired,shared_tabs:shared.length,
+      return {connected:paired && socket?.readyState===WebSocket.OPEN,paired:!!rememberedCode,reconnecting:!!rememberedCode && !paired,shared_tabs:shared.length,full_access:fullBrowserAccess,
         background_tasks:[...new Set(sessions.values())].map(s=>s.background).filter(Boolean),
         permissions:{navigation,browser:full,network,background,containers:settings.callistoAgentContainersEnabled===true}};
     }
     if (message.type === 'pair') { await pair(message.code); return {message:'Connected. Open the desired tab and click Share this tab.'}; }
+    if (message.type === 'full-access') return await setFullBrowserAccess(message.enabled===true);
     if (message.type === 'share') return {message:await share()};
     if(message.type==='background-share'){
       if(!(await browser.permissions.contains({permissions:['tabs']})))throw new Error('Allow background tab management first.');
@@ -105,7 +107,7 @@ browser.runtime.onMessage.addListener(async message => {
 browser.windows?.onFocusChanged?.addListener(id=>{for(const session of new Set(sessions.values()))void session.focusChanged(id).catch(()=>{});});
 browser.tabs.onRemoved.addListener(id=>{for(const session of sessions.values())session.removed(id);});
 browser.tabs.onUpdated.addListener((id,change)=>{for(const session of sessions.values())session.updated(id,change);});
-browser.permissions.onRemoved.addListener(permissions=>{if(permissions.permissions?.some(p=>['webRequest','webRequestBlocking'].includes(p)) || permissions.origins?.includes('<all_urls>'))networkInspector?.revoke();for(const session of sessions.values())session.permissionsRemoved(permissions);});
+browser.permissions.onRemoved.addListener(permissions=>{if(fullBrowserAccess&&(permissions.origins?.includes('<all_urls>')||permissions.permissions?.some(p=>fullControlPermissions.permissions.includes(p))))void stop();if(permissions.permissions?.some(p=>['webRequest','webRequestBlocking'].includes(p)) || permissions.origins?.includes('<all_urls>'))networkInspector?.revoke();for(const session of sessions.values())session.permissionsRemoved(permissions);});
 browser.menus.create({id:'callisto-share', title:'Share this tab with Callisto', contexts:['page']});
 browser.menus.onClicked.addListener(async (info, tab) => {
   if (info.menuItemId !== 'callisto-share' || !tab?.id) return;
@@ -130,13 +132,28 @@ browser.storage.local.get('callistoPairing').then(saved => {
 const sessions = new Map();
 function newManual(){const session=createSession();sessions.set(0,session);return session;}
 newManual();
+async function setFullBrowserAccess(enabled){
+  if(!enabled){await stop();return {message:'Full browser control stopped. Tab access released.'};}
+  const intent=++sharingIntent,connection=socket;
+  if(!paired || connection?.readyState!==WebSocket.OPEN)throw new Error('Connect the runtime first.');
+  if(!(await browser.permissions.contains(fullControlPermissions)))throw new Error('Allow browser access and hidden-tab management before enabling full browser control.');
+  if(intent!==sharingIntent || socket!==connection || !paired)throw new Error('Full browser control was cancelled.');
+  await stop(false,false);
+  if(intent!==sharingIntent || socket!==connection || !paired)throw new Error('Full browser control was cancelled.');
+  fullBrowserAccess=true;
+  await browser.browserAction.setBadgeText({text:'ALL'}).catch(()=>{});
+  if(intent!==sharingIntent || !fullBrowserAccess || socket!==connection || !paired)throw new Error('Full browser control was cancelled.');
+  return {message:'Full browser control enabled. Agents can select, create and control website tabs. Stop turns this mode off.'};
+}
 function status(){
   if(!paired)return 'Not connected.';
+  if(fullBrowserAccess)return 'Full browser control enabled. Agents can select and control website tabs. Stop sharing turns this mode off.';
   const count=[...sessions.values()].filter(session=>session.target!==null).length;
   return count ? `Connected. ${count} tab(s) shared across agent sessions. Stop sharing releases all of them.` : sessions.get(0).status();
 }
 async function stop(reset=false,invalidate=true){
   if(invalidate)sharingIntent++;
+  fullBrowserAccess=false;
   const work=Promise.all([...sessions.values()].map(session=>session.stop()));
   if(reset){sessions.clear();newManual();}
   await work;
@@ -165,7 +182,9 @@ async function executeCommand(request,connection){
     session=createSession();sessions.set(id,session);
   }
   const budget = request.method === 'run' ? 60000 : request.method === 'extract' ? 35000 : 10000;
-  return session.executeCommand(request,connection,Date.now()+budget);
+  const deadline=Date.now()+budget;
+  if(fullBrowserAccess && !session.background && !['status','browser','release','input_validate'].includes(request.method))await session.prepareFullAccess(connection);
+  return session.executeCommand(request,connection,deadline);
 }
 function createSession(){
 let selected = null;
@@ -182,6 +201,27 @@ let backgroundTask=null;
   function assertAvailable(tabId){
     for(const other of sessions.values())if(other!==context && other.target===tabId)throw new Error('Tab is owned by another agent session. Release it before taking control.');
   }
+async function claimTab(tabId,owner){
+  context.guard(owner);
+  for(const other of new Set(sessions.values()))if(other!==context&&other.target===tabId){
+    if(!fullBrowserAccess){assertAvailable(tabId);return;}
+    await other.stop();context.guard(owner);
+  }
+  assertAvailable(tabId);
+}
+async function prepareFullAccess(connection){
+  const owner=ownership;
+  if(!(await browser.permissions.contains(fullControlPermissions)))throw new Error('Full browser permissions were removed.');
+  context.guard(owner);
+  if(!fullBrowserAccess||socket!==connection||!paired)throw new Error('Full browser control stopped.');
+  if(selected===null){
+    const [tab]=await browser.tabs.query({active:true,currentWindow:true});context.guard(owner);
+    if(!tab)throw new Error('No active tab. Use callisto_browser tab_select or tab_create.');
+    await claimTab(tab.id,owner);
+    await activateBrowserTab(tab.id,context,owner);
+    await share(tab.id,owner);
+  }else await activateBrowserTab(selected,context,owner);
+}
 function status() {
   if (!socket || socket.readyState !== WebSocket.OPEN || !paired) return 'Not connected.';
   return selected === null ? 'Connected. Select a tab and click Share this tab.' : ready ? 'Connected. The selected tab is shared.' : 'Connected. Waiting for the shared page to load.';
@@ -193,7 +233,7 @@ async function stop(keepBackground=false) {
   if(socket?.readyState===WebSocket.OPEN && previous!==null)socket.send(JSON.stringify({type:'lease_revoked',lease_id:revoked}));
   selected = null; reserved = null; selectedFrame = 0; frameStale = false; ready = false; continuous = false; generation++; ownership++;
   networkInspector?.release(context);
-  await browser.browserAction.setBadgeText({text:[...sessions.values()].some(s=>s.target!==null)?'ON':''}).catch(() => {});
+  await browser.browserAction.setBadgeText({text:fullBrowserAccess?'ALL':[...sessions.values()].some(s=>s.target!==null)?'ON':''}).catch(() => {});
   if (previous !== null) {
     const frames=await browser.webNavigation.getAllFrames({tabId:previous}).catch(()=>[{frameId:0}]);
     await Promise.all((frames || [{frameId:0}]).map(frame=>browser.tabs.sendMessage(previous,{type:'revoke'},{frameId:frame.frameId}).catch(()=>{})));
@@ -233,7 +273,7 @@ async function share(tabId,expectedOwner,{keepBackground=false}={}) {
   selected = tab.id; reserved = null;
   ready = true;
   continuous = hasSiteAccess;
-  await browser.browserAction.setBadgeText({text:'ON'}).catch(() => {});
+  await browser.browserAction.setBadgeText({text:fullBrowserAccess?'ALL':'ON'}).catch(() => {});
   return 'Connected. This tab is shared; click Stop sharing to revoke access.';
   } catch (error) {
     if (stamp === generation && reserved === tab.id) {
@@ -341,7 +381,7 @@ async function executeCommand(request, connection, deadline = Date.now()+10000) 
   if (request.method === 'status') {
     const target = chosen === null ? null : await browser.tabs.get(chosen);
     const [active] = target ? await browser.tabs.query({active:true,windowId:target.windowId}) : [];
-    return {connected:true,execution:taskStatus()??{mode:'shared-tab',focusPolicy:'user-controlled',paused:false},sharing:chosen !== null,active:chosen !== null && active?.id === chosen,ready,continuous,browserAccess:await browser.permissions.contains(fullBrowserPermissions),capabilities:{trustedInput:false,trustedBinding:true,frames:'same-origin',playwrightExecution:false,run:true,extract:true,snapshotPagination:true,runFormControls:true,selectorWait:true,targetedObservation:true,networkInspection:!!networkInspector,backgroundWindow:true}};
+    return {connected:true,fullAccess:fullBrowserAccess,execution:taskStatus()??{mode:fullBrowserAccess?'full-browser':'shared-tab',focusPolicy:fullBrowserAccess?'agent-controlled':'user-controlled',paused:false},sharing:chosen !== null,active:chosen !== null && active?.id === chosen,ready,continuous,browserAccess:await browser.permissions.contains(fullBrowserPermissions),capabilities:{trustedInput:false,trustedBinding:true,frames:'same-origin',playwrightExecution:false,run:true,extract:true,snapshotPagination:true,runFormControls:true,selectorWait:true,targetedObservation:true,networkInspection:!!networkInspector,backgroundWindow:true,fullBrowserControl:true}};
   }
   if (Date.now() >= deadline) throw new Error('Command deadline exceeded; inspect before retrying.');
   if (request.method === 'browser') {
@@ -556,7 +596,7 @@ async function executeCommand(request, connection, deadline = Date.now()+10000) 
 }
 
   Object.assign(context,{
-    status,stop,share,executeCommand,startBackground,pauseBackground,resumeBackground,viewBackground,checkBackground,
+    status,stop,share,executeCommand,startBackground,pauseBackground,resumeBackground,viewBackground,checkBackground,claimTab,prepareFullAccess,
     async focusChanged(id){
       if(!backgroundTask)return;
       if(!backgroundTask.paused&&backgroundTask.windowId===id)await pauseBackground('viewing');

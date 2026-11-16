@@ -5,7 +5,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 
 function fixture(executeScript = async () => {}, siteAccess = false, saved = {}, clock = Date) {
-  let listener, menuListener, updateListener, domListener, commitListener, focusListener;
+  let listener, menuListener, updateListener, domListener, commitListener, focusListener, permissionListener;
   const messages = [];
   class Socket {
     static OPEN = 1;
@@ -22,7 +22,7 @@ function fixture(executeScript = async () => {}, siteAccess = false, saved = {},
     runtime:{onMessage:{addListener(fn) { listener = fn; }}},
     menus:{create(){},onClicked:{addListener(fn){ menuListener = fn; }}},
     browserAction:{setBadgeText:async () => {}},
-    permissions:{contains:async () => siteAccess,onRemoved:{addListener(){}}},
+    permissions:{contains:async () => siteAccess,onRemoved:{addListener(fn){permissionListener=fn;}}},
     tabs:{
       query:async () => [{id:42,active:true,windowId:1}],
       get:async id=>({id,active:true,windowId:1}),
@@ -35,7 +35,7 @@ function fixture(executeScript = async () => {}, siteAccess = false, saved = {},
   const context = vm.createContext({browser,WebSocket:Socket,setTimeout,clearTimeout,URL,Date:clock});
   vm.runInContext(fs.readFileSync(path.join(__dirname,'../extension/browser-control.js'),'utf8'), context);
   vm.runInContext(fs.readFileSync(path.join(__dirname,'../extension/background.js'),'utf8'), context);
-  return {listener,menuListener,updateListener,domListener,commitListener,Socket,messages,browser,focusChanged:id=>focusListener?.(id)};
+  return {listener,menuListener,updateListener,domListener,commitListener,Socket,messages,browser,focusChanged:id=>focusListener?.(id),permissionsRemoved:p=>permissionListener?.(p)};
 }
 const code = `127.0.0.1:1234#${'a'.repeat(64)}`;
 
@@ -87,7 +87,7 @@ test('pairing requires server confirmation and stop prevents further sharing', a
   assert.match((await connecting).message,/Connected/);
   assert.match((await listener({type:'share'})).message,/shared/);
   await ws.receive({id:1,method:'status'});
-  assert.deepEqual(messages.at(-1).result,{connected:true,execution:{mode:'shared-tab',focusPolicy:'user-controlled',paused:false},sharing:true,active:true,ready:true,continuous:false,browserAccess:false,capabilities:{trustedInput:false,trustedBinding:true,frames:'same-origin',playwrightExecution:false,run:true,extract:true,snapshotPagination:true,runFormControls:true,selectorWait:true,targetedObservation:true,networkInspection:false,backgroundWindow:true}});
+  assert.deepEqual(messages.at(-1).result,{connected:true,fullAccess:false,execution:{mode:'shared-tab',focusPolicy:'user-controlled',paused:false},sharing:true,active:true,ready:true,continuous:false,browserAccess:false,capabilities:{trustedInput:false,trustedBinding:true,frames:'same-origin',playwrightExecution:false,run:true,extract:true,snapshotPagination:true,runFormControls:true,selectorWait:true,targetedObservation:true,networkInspection:false,backgroundWindow:true,fullBrowserControl:true}});
   await listener({type:'stop'});
   assert.match((await listener({type:'status'})).message,/Connected/);
 });
@@ -379,6 +379,126 @@ function backgroundFixture(){
  return {...f,tabs,windows,changes,sent};
 }
 async function pairFixture(f){const pairing=f.listener({type:'pair',code});await new Promise(setImmediate);const ws=f.Socket.last;ws.open();await ws.receive({type:'paired',protocol:2});await pairing;await f.listener({type:'share'});return ws;}
+
+function fullAccessFixture(){
+ const f=backgroundFixture();f.browser.permissions.contains=async()=>true;
+ const updateWindow=f.browser.windows.update;
+ f.browser.windows.update=async(id,options)=>{Object.assign(f.windows.get(id),options);return updateWindow(id,options);};
+ let nextTab=100,nextWindow=10;
+ const query=f.browser.tabs.query;
+ f.browser.tabs.query=async q=>(await query(q)).filter(t=>!q?.currentWindow||f.windows.get(t.windowId)?.focused);
+ f.browser.tabs.show=async id=>{f.changes.push({type:'show',id});f.tabs.get(id).hidden=false;};
+ f.browser.tabs.create=async opts=>{
+  const t={id:nextTab++,windowId:opts.windowId??1,active:true,pinned:false,cookieStoreId:opts.cookieStoreId??'firefox-default',url:opts.url};
+  for(const other of f.tabs.values())if(other.windowId===t.windowId)other.active=false;
+  f.tabs.set(t.id,t);f.changes.push({type:'create-tab',...opts});return {...t};
+ };
+ f.browser.tabs.remove=async id=>{f.tabs.delete(id);};
+ f.browser.windows.getAll=async()=>[...f.windows.values()];
+ f.browser.windows.create=async opts=>{
+  const w={id:nextWindow++,focused:true,state:'normal'};f.windows.set(w.id,w);
+  const tab=await f.browser.tabs.create({url:opts.url,windowId:w.id,active:true,cookieStoreId:opts.cookieStoreId});return {...w,tabs:[tab]};
+ };
+ return f;
+}
+
+test('full browser control requires a connected user grant and cannot be enabled by agent actions',async()=>{
+ const f=fullAccessFixture();
+ assert.match((await f.listener({type:'full-access',enabled:true})).message,/Connect the runtime/);
+ const ws=await pairFixture(f);f.browser.permissions.contains=async()=>false;
+ assert.match((await f.listener({type:'full-access',enabled:true})).message,/Allow browser access/);
+ await ws.receive({id:1,method:'browser',value:JSON.stringify({action:'full-access',enabled:true})});
+ assert.match(f.messages.at(-1).error,/Unsupported browser action/);
+ assert.equal((await f.listener({type:'ui-status'})).full_access,false);
+});
+
+test('full mode adopts the active page, selects pinned hidden tabs and shares new tabs automatically',async()=>{
+ const f=fullAccessFixture(),ws=await pairFixture(f);
+ assert.match((await f.listener({type:'full-access',enabled:true})).message,/enabled/);
+ await ws.receive({id:1,session:101,method:'status'});assert.equal(f.messages.at(-1).result.fullAccess,true);assert.equal(f.messages.at(-1).result.sharing,false);
+ await ws.receive({id:2,session:101,method:'snapshot'});assert.equal(f.messages.at(-1).result.tab,42);
+ f.tabs.get(99).pinned=true;f.tabs.get(99).hidden=true;
+ await ws.receive({id:3,session:101,method:'browser',value:JSON.stringify({action:'tab_select',tab_id:99})});assert.equal(f.messages.at(-1).result.shared,true);
+ await ws.receive({id:4,session:101,method:'snapshot'});assert.equal(f.messages.at(-1).result.tab,99);assert.equal(f.tabs.get(99).hidden,false);
+ f.windows.set(2,{id:2,focused:false,state:'minimized'});
+ await ws.receive({id:5,session:101,method:'browser',value:JSON.stringify({action:'tab_create',window_id:2,url:'https://example.test/new'})});
+ const created=f.messages.at(-1).result;assert.equal(created.shared,true);assert.equal(created.windowId,2);
+ await ws.receive({id:6,session:101,method:'snapshot'});assert.equal(f.messages.at(-1).result.tab,created.id);
+ assert.equal(f.windows.get(2).state,'normal');assert.equal(f.windows.get(2).focused,true);
+ await ws.receive({id:7,session:101,method:'browser',value:JSON.stringify({action:'window_create',url:'https://example.test/window'})});
+ const window=f.messages.at(-1).result;assert.equal(window.shared,true);
+ await ws.receive({id:8,session:101,method:'snapshot'});assert.equal(f.messages.at(-1).result.tab,window.tabs[0].id);
+});
+
+test('full mode reactivates its selected tab after a human switches tabs',async()=>{
+ const f=fullAccessFixture(),ws=await pairFixture(f);await f.listener({type:'full-access',enabled:true});
+ await ws.receive({id:1,session:101,method:'snapshot'});
+ f.tabs.get(42).active=false;f.tabs.get(99).active=true;
+ await ws.receive({id:2,session:101,method:'snapshot'});
+ assert.equal(f.messages.at(-1).result.tab,42);assert.equal(f.tabs.get(42).active,true);
+});
+
+test('full mode creates blank tabs without retaining the previous page as an action target',async()=>{
+ const f=fullAccessFixture(),ws=await pairFixture(f);await f.listener({type:'full-access',enabled:true});
+ await ws.receive({id:1,method:'snapshot'});
+ await ws.receive({id:2,method:'browser',value:JSON.stringify({action:'tab_create'})});
+ const blank=f.messages.at(-1).result;assert.equal(blank.url,'about:blank');assert.equal(blank.shared,false);
+ await ws.receive({id:3,method:'status'});assert.equal(f.messages.at(-1).result.sharing,false);
+ await ws.receive({id:4,method:'browser',value:JSON.stringify({action:'tab_navigate',tab_id:blank.id,url:'https://example.test/loaded'})});assert.equal(f.messages.at(-1).result.shared,true);
+ await ws.receive({id:5,method:'snapshot'});assert.equal(f.messages.at(-1).result.tab,blank.id);
+});
+
+test('activation works for a protected tab without claiming page access',async()=>{
+ const f=fullAccessFixture(),ws=await pairFixture(f);await f.listener({type:'full-access',enabled:true});
+ f.tabs.get(99).url='about:addons';f.browser.tabs.executeScript=async id=>{if(id===99)throw Error('Missing host permission for the tab');};
+ await ws.receive({id:1,method:'browser',value:JSON.stringify({action:'tab_activate',tab_id:99})});
+ assert.equal(f.messages.at(-1).result.id,99);assert.equal(f.messages.at(-1).result.shared,false);
+ await ws.receive({id:2,method:'snapshot'});assert.match(f.messages.at(-1).error,/Missing host permission/);
+ await ws.receive({id:3,method:'browser',value:JSON.stringify({action:'tab_select',tab_id:42})});assert.equal(f.messages.at(-1).result.shared,true);
+});
+
+test('Stop cancels an in-progress automatic attachment and disables later automatic access',async()=>{
+ const f=fullAccessFixture(),ws=await pairFixture(f);await f.listener({type:'full-access',enabled:true});
+ let release,entered;const pending=new Promise(resolve=>{entered=resolve;});
+ f.browser.tabs.executeScript=async()=>{entered();await new Promise(resolve=>{release=resolve;});};
+ const work=ws.receive({id:1,method:'snapshot'});await pending;
+ await f.listener({type:'stop'});release();await work;assert.ok(f.messages.at(-1).error);
+ await ws.receive({id:2,method:'snapshot'});assert.match(f.messages.at(-1).error,/No tab shared/);
+ assert.equal((await f.listener({type:'ui-status'})).full_access,false);
+});
+
+test('Stop during full-mode permission lookup cannot enable access afterward',async()=>{
+ const f=fullAccessFixture();await pairFixture(f);let release,entered;
+ const pending=new Promise(resolve=>{entered=resolve;});
+ f.browser.permissions.contains=async()=>{entered();return new Promise(resolve=>{release=resolve;});};
+ const work=f.listener({type:'full-access',enabled:true});await pending;
+ await f.listener({type:'stop'});release(true);assert.match((await work).message,/cancelled/);
+ f.browser.permissions.contains=async()=>true;assert.equal((await f.listener({type:'ui-status'})).full_access,false);
+});
+
+test('Stop while the full-mode badge updates cannot report a successful grant',async()=>{
+ const f=fullAccessFixture();await pairFixture(f);let release,entered;
+ const pending=new Promise(resolve=>{entered=resolve;});
+ f.browser.browserAction.setBadgeText=async({text})=>{if(text==='ALL'){entered();await new Promise(resolve=>{release=resolve;});}};
+ const work=f.listener({type:'full-access',enabled:true});await pending;
+ await f.listener({type:'stop'});release();assert.match((await work).message,/cancelled/);
+ assert.equal((await f.listener({type:'ui-status'})).full_access,false);
+});
+
+test('full-mode explicit tab selection transfers an existing agent lease before control',async()=>{
+ const f=fullAccessFixture(),ws=await pairFixture(f);await f.listener({type:'full-access',enabled:true});
+ await ws.receive({id:1,session:101,method:'snapshot'});
+ await ws.receive({id:2,session:202,method:'browser',value:JSON.stringify({action:'tab_select',tab_id:42})});assert.equal(f.messages.at(-1).result.shared,true);
+ await ws.receive({id:3,session:101,method:'status'});assert.equal(f.messages.at(-1).result.sharing,false);
+ await ws.receive({id:4,session:202,method:'snapshot'});assert.equal(f.messages.at(-1).result.tab,42);
+});
+
+test('permission removal and disconnect clear full browser mode',async()=>{
+ const f=fullAccessFixture(),ws=await pairFixture(f);await f.listener({type:'full-access',enabled:true});
+ f.permissionsRemoved({permissions:['tabs']});await new Promise(setImmediate);assert.equal((await f.listener({type:'ui-status'})).full_access,false);
+ await f.listener({type:'full-access',enabled:true});ws.close();assert.equal((await f.listener({type:'ui-status'})).full_access,false);
+ await f.listener({type:'forget'});
+});
 
 test('prepared background task preserves the exact tab without requiring cookie/history grants',async()=>{
  const f=backgroundFixture(),ws=await pairFixture(f);

@@ -1,10 +1,24 @@
 'use strict';
 const fullBrowserPermissions = {origins:['<all_urls>'],permissions:['tabs','cookies','bookmarks','history','downloads']};
-const browserActions = ['background','tabs_list','tab_select','tab_create','window_create','window_close','agent_container','tab_close','back','forward','reload','screenshot','cookies_list','cookie_set','cookie_remove','bookmarks_search','history_search','downloads_search','download'];
+const fullControlPermissions = {origins:['<all_urls>'],permissions:[...fullBrowserPermissions.permissions,'tabHide']};
+const browserActions = ['background','tabs_list','windows_list','tab_select','tab_activate','tab_create','tab_navigate','window_create','window_close','agent_container','tab_close','back','forward','reload','screenshot','cookies_list','cookie_set','cookie_remove','bookmarks_search','history_search','downloads_search','download'];
 function webUrl(value) {
   const url = new URL(value);
   if (!['http:','https:'].includes(url.protocol) || url.username || url.password) throw new Error('Expected an HTTP(S) URL without credentials.');
   return url.href;
+}
+function tabUrl(value){return value===undefined||value==='about:blank'?'about:blank':value==='about:newtab'?value:webUrl(value);}
+async function activateBrowserTab(id,session,owner){
+  session.guard(owner);session.assertAvailable(id);
+  let tab=await browser.tabs.get(id);session.guard(owner);
+  if(tab.hidden){
+    if(!browser.tabs.show)throw new Error('Enable Full browser control to show hidden tabs (tabHide permission).');
+    await browser.tabs.show(id);session.guard(owner);
+  }
+  tab=await browser.tabs.update(id,{active:true});session.guard(owner);
+  const window=browser.windows.get?await browser.windows.get(tab.windowId):null;session.guard(owner);
+  await browser.windows.update(tab.windowId,{focused:true,...(window?.state==='minimized'?{state:'normal'}:{})});session.guard(owner);
+  return tab;
 }
 async function browserControl(args, session, owner) {
   if(args.action==='background'){
@@ -15,43 +29,60 @@ async function browserControl(args, session, owner) {
     if(args.operation==='resume')return session.resumeBackground(owner);
     await session.stop();return {released:true,windowPreserved:true};
   }
-  if(session.background && ['tab_select','tab_create','window_create','window_close','tab_close','download'].includes(args.action))throw new Error('needs_attention: This background task cannot select, create, close or raise other tabs/windows or open a save dialog. Take back the task first.');
+  if(session.background && ['tab_select','tab_activate','tab_create','tab_navigate','window_create','window_close','tab_close','download'].includes(args.action))throw new Error('needs_attention: This background task cannot select, create, close or raise other tabs/windows or open a save dialog. Take back the task first.');
   if(session.background&&!['tabs_list','cookies_list','bookmarks_search','history_search','downloads_search'].includes(args.action))await session.checkBackground(owner);
   if (!(await browser.permissions.contains(fullBrowserPermissions))) throw new Error('Choose Enable browser access in the extension and approve its permissions first.');
   session.guard(owner);
   const id = () => { if (!Number.isSafeInteger(args.tab_id) || args.tab_id < 0) throw new Error('tab_id is required.'); return args.tab_id; };
-  const summary = t => ({id:t.id,windowId:t.windowId,url:t.url,title:t.title,active:t.active,cookieStoreId:t.cookieStoreId,pinned:t.pinned});
+  const summary = t => ({id:t.id,windowId:t.windowId,url:t.url,title:t.title,active:t.active,cookieStoreId:t.cookieStoreId,pinned:t.pinned,hidden:!!t.hidden});
   switch (args.action) {
     case 'tabs_list': return {tabs:(await browser.tabs.query({})).map(summary),warning:'Zen may omit tabs from inactive workspaces.'};
+    case 'windows_list': return {windows:await browser.windows.getAll({populate:true})};
+    case 'tab_activate': {
+      await session.claimTab(id(),owner);
+      const tab=await activateBrowserTab(id(),session,owner);
+      await session.stop();return {...summary(tab),shared:false};
+    }
     case 'tab_select': {
-      session.assertAvailable(id());
-      const tab = await browser.tabs.update(id(),{active:true});
-      session.guard(owner);
-      await browser.windows.update(tab.windowId,{focused:true});
-      await session.share(tab.id,owner); return summary(tab);
+      await session.claimTab(id(),owner);
+      const tab=await activateBrowserTab(id(),session,owner);
+      await session.share(tab.id,owner); return {...summary(tab),shared:true};
+    }
+    case 'tab_navigate': {
+      await session.claimTab(id(),owner);
+      const tab=await browser.tabs.update(id(),{url:webUrl(args.url)});session.guard(owner);
+      if(fullBrowserAccess){await activateBrowserTab(tab.id,session,owner);await session.share(tab.id,owner);}
+      return {...summary(tab),shared:fullBrowserAccess};
     }
     case 'window_close': {
       if(!Number.isSafeInteger(args.window_id) || args.window_id<0)throw new Error('window_id is required.');
-      for(const tab of await browser.tabs.query({windowId:args.window_id}))session.assertAvailable(tab.id);
+      for(const tab of await browser.tabs.query({windowId:args.window_id}))await session.claimTab(tab.id,owner);
       session.guard(owner);
       await browser.windows.remove(args.window_id);return {closed:true};
     }
     case 'agent_container': return agentContainer();
     case 'window_create': {
-      const options={url:webUrl(args.url),focused:true,titlePreface:'[Callisto] '};
+      const options={url:tabUrl(args.url),focused:true,titlePreface:'[Callisto] '};
       const store=await creationStore(args, session); if(store)options.cookieStoreId=store;
       session.guard(owner);
       const window=await browser.windows.create(options);
-      return {windowId:window.id,tabs:window.tabs.map(summary)};
+      session.guard(owner);
+      const attach=fullBrowserAccess&&!!window.tabs[0]&&/^https?:/.test(options.url);
+      if(attach)await session.share(window.tabs[0].id,owner);else if(fullBrowserAccess)await session.stop();
+      return {windowId:window.id,tabs:window.tabs.map(summary),shared:attach};
     }
     case 'tab_create': {
-      const options = {url:webUrl(args.url),active:true};
+      const options = {url:tabUrl(args.url),active:true};
+      if(args.window_id!==undefined){if(!Number.isSafeInteger(args.window_id)||args.window_id<0)throw new Error('window_id must be a nonnegative integer.');options.windowId=args.window_id;}
       const store=await creationStore(args, session);if(store)options.cookieStoreId=store;
       session.guard(owner);
       const tab = await browser.tabs.create(options);
-      return summary(tab);
+      session.guard(owner);
+      const attach=fullBrowserAccess&&/^https?:/.test(options.url);
+      if(fullBrowserAccess){await activateBrowserTab(tab.id,session,owner);if(attach)await session.share(tab.id,owner);else await session.stop();}
+      return {...summary(tab),shared:attach};
     }
-    case 'tab_close': session.assertAvailable(id()); await browser.tabs.remove(id()); return {closed:true};
+    case 'tab_close': await session.claimTab(id(),owner);session.guard(owner);await browser.tabs.remove(id()); return {closed:true};
     case 'bookmarks_search': return (await browser.bookmarks.search(String(args.query || '').slice(0,200))).slice(0,100);
     case 'history_search': return browser.history.search({text:String(args.query || '').slice(0,200),maxResults:100,startTime:0});
     case 'downloads_search': return browser.downloads.search({limit:100,query:args.query ? [String(args.query).slice(0,200)] : []});

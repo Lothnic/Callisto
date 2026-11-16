@@ -81,8 +81,8 @@ try:
   for name in os.listdir(ROOT+'extension'):
    data=open(ROOT+'extension/'+name,'rb').read()
    if name=='manifest.json':
-    manifest=json.loads(data);manifest['permissions']=list(dict.fromkeys(manifest['permissions']+['<all_urls>','tabs','cookies','bookmarks','history','downloads','webRequest','webRequestBlocking']));data=json.dumps(manifest).encode()
-   if name=='background.js': data+=('\nsetTimeout(async () => { try { await browser.storage.local.set({callistoAgentContainersEnabled:true}); await pair('+json.dumps(pair)+'); await share(); } catch(e) { console.error(e); } }, 1000);').encode()
+    manifest=json.loads(data);manifest['permissions']=list(dict.fromkeys(manifest['permissions']+['<all_urls>','tabs','tabHide','cookies','bookmarks','history','downloads','webRequest','webRequestBlocking']));data=json.dumps(manifest).encode()
+   if name=='background.js': data+=("\nbrowserActions.push('fixture_full_access','fixture_hide_tab');const originalBrowserControl=browserControl;browserControl=(args,...rest)=>args.action==='fixture_full_access'?setFullBrowserAccess(args.enabled):args.action==='fixture_hide_tab'?browser.tabs.hide(args.tab_id):originalBrowserControl(args,...rest);\n").encode();data+=('\nsetTimeout(async () => { try { await browser.storage.local.set({callistoAgentContainersEnabled:true}); await pair('+json.dumps(pair)+'); await share(); } catch(e) { console.error(e); } }, 1000);').encode()
    z.writestr(name,data)
  if os.environ.get('CALLISTO_TEST_BROWSER')=='zen':
   handle=tempfile.NamedTemporaryFile(prefix='callisto-smoke-',suffix='.xpi',dir=Path.home()/'.var/app/app.zen_browser.zen/cache',delete=False)
@@ -277,6 +277,35 @@ try:
   other.stdin.close();other.wait(timeout=10);p=primary
  assert value(tool('callisto_status'))['sharing']
  print('independent MCP clients keep tab ownership; cross-agent selection and close are refused: verified')
+ value(tool('callisto_browser',{'action':'fixture_full_access','enabled':True}))
+ assert value(tool('callisto_status'))['fullAccess']
+ assert value(tool('callisto_capabilities'))['capabilities']['fullBrowserControl']
+ assert value(tool('callisto_snapshot'))['url']==target
+ full_tab=value(tool('callisto_browser',{'action':'tab_create','url':target+'?full-mode=1'}))
+ assert full_tab['shared'] and value(tool('callisto_snapshot'))['url']==target+'?full-mode=1'
+ value(tool('callisto_browser',{'action':'tab_activate','tab_id':original}))
+ assert not value(tool('callisto_status'))['sharing']
+ assert value(tool('callisto_snapshot'))['url']==target
+ value(tool('callisto_browser',{'action':'fixture_hide_tab','tab_id':full_tab['id']}))
+ assert next(t for t in value(tool('callisto_browser',{'action':'tabs_list'}))['tabs'] if t['id']==full_tab['id'])['hidden']
+ value(tool('callisto_browser',{'action':'tab_select','tab_id':full_tab['id']}))
+ assert value(tool('callisto_snapshot'))['url']==target+'?full-mode=1'
+ assert not next(t for t in value(tool('callisto_browser',{'action':'tabs_list'}))['tabs'] if t['id']==full_tab['id'])['hidden']
+ value(tool('callisto_browser',{'action':'tab_select','tab_id':original}))
+ value(tool('callisto_browser',{'action':'tab_close','tab_id':full_tab['id']}))
+ blank_tab=value(tool('callisto_browser',{'action':'tab_create'}))
+ assert blank_tab['url']=='about:blank' and not blank_tab['shared']
+ value(tool('callisto_browser',{'action':'tab_navigate','tab_id':blank_tab['id'],'url':target+'?blank-navigation=1'}))
+ assert value(tool('callisto_snapshot'))['url']==target+'?blank-navigation=1'
+ value(tool('callisto_browser',{'action':'tab_select','tab_id':original}))
+ value(tool('callisto_browser',{'action':'tab_close','tab_id':blank_tab['id']}))
+ assert value(tool('callisto_browser',{'action':'windows_list'}))['windows']
+ value(tool('callisto_browser',{'action':'fixture_full_access','enabled':False}))
+ status=value(tool('callisto_status'));assert not status['fullAccess'] and not status['sharing']
+ assert tool('callisto_snapshot').get('isError')
+ value(tool('callisto_browser',{'action':'tab_select','tab_id':original}))
+ print('full browser mode: active-tab adoption, creation with automatic sharing, activation and disable verified in Gecko')
+
  value(tool('callisto_navigate',{'url':base+'frame'}))
  value(tool('callisto_snapshot'))
  frame=None
