@@ -1,4 +1,5 @@
 import {observationTextValues as textValues} from './observation-text.mjs';
+import {policyViolations} from './policy-audit.mjs';
 // Public, read-only tasks. Expected answers are evaluator-only, never in prompts.
 export const tasks = [
  {id:'wikipedia-biography',name:'Wikipedia biography',start:'https://en.wikipedia.org/wiki/Main_Page',origins:['https://en.wikipedia.org'],instruction:'Find Ada Lovelace on Wikipedia. Report her full birth date, birthplace and mother’s name. Cite the biography page and a short supporting quote.',expected:{date:'10 December 1815',place:'London',mother:'Anne Isabella Milbanke'},checks:[/10\s+December\s+1815|December\s+10,?\s+1815|1815-12-10/i,/London/i,/(?:Annabella|Anne?\s+Isabella)(?:\s+Noel)?\s+(?:Milbanke|Byron)/i],source:/en\.wikipedia\.org\/wiki\/Ada_Lovelace/i},
@@ -29,6 +30,6 @@ export function evaluate(task,final,events){
  // Check an exact supporting quote against text actually returned to the host.
  const observed=normalize(events.flatMap(e=>textValues(e.result)).join(' '));
  const evidence=sources.map(s=>({url:s.url,quote:s.quote,source_matches:task.source.test(String(s.url)),quote_observed:normalize(s.quote).length>=12&&observed.includes(normalize(s.quote))}));
- const forbidden=events.filter(e=>e.name==='execute'&&/\bfetch\s*\(|\bXMLHttpRequest\b|\b(?:request|files)\s*\.\s*(?:get|post|read|write)\s*\(|\brequire\s*\(|\bimport\s*\(/.test(e.arguments?.code||''));
+ const forbidden=policyViolations(events);
  return {passed:facts.every(f=>f.passed)&&evidence.some(e=>e.source_matches&&e.quote_observed)&&forbidden.length===0,facts,evidence,forbidden_network_or_file_calls:forbidden.length};
 }

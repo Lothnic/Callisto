@@ -251,12 +251,12 @@ export async function runOpenCodeHost({cwd,socket,model=OPENCODE_MODEL,variant=O
 
 export async function runOpenCodePreflight({root,model=OPENCODE_MODEL,variant=OPENCODE_VARIANT,prompt='Reply with exactly: OK',timeout=120000}){
  const home=await prepareOpenCodeHome({root,model,variant});
- const config={...openCodeConfig({model,variant,socket:join(home,'unused.sock'),serverName:'preflight',toolName:'none'})};
+ const config={...openCodeConfig({model,variant,socket:join(home.home,'unused.sock'),serverName:'preflight',toolName:'none'})};
  config.mcp={servers:{}};config.default_agent='build';
  config.permissions=[{action:'*',resource:'*',effect:'deny'}];
  delete config.agents;
  await writeFile(home.config_path,JSON.stringify(config,null,2)+'\n',{mode:0o600});
- const cwd=join(home,'workspace');await mkdir(cwd,{mode:0o700});
+ const cwd=join(home.home,'workspace');await mkdir(cwd,{mode:0o700});
  const started=performance.now();
  const child=spawn('opencode',['run','--standalone','--format','json','--archived','--model',`${model}#${variant}`,'--title','callisto preflight',prompt],{cwd,env:home.environment,stdio:['ignore','pipe','pipe'],detached:true});
  let timedOut=false,stderr='';const stop=signal=>{try{process.kill(-child.pid,signal);}catch{}};

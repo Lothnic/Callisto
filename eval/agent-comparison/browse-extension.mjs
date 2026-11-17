@@ -8,15 +8,14 @@ export async function prepareBrowseExtension(source,destination){
  source=resolve(source);
  const original=await readFile(join(source,'manifest.json'));
  const manifest=JSON.parse(original);
- let path=source,loaded=original;
+ let loaded=original;const identityAdded=!manifest.key;
+ await cp(source,destination,{recursive:true});
  if(!manifest.key){
   const upstream=JSON.parse(await readFile(new URL('../../vendor/browse/public/manifest.json',import.meta.url),'utf8'));
   if(!upstream.key)throw Error('browse upstream development manifest has no public identity key');
   manifest.key=upstream.key;
-  await cp(source,destination,{recursive:true});
   loaded=Buffer.from(JSON.stringify(manifest,null,2)+'\n');
   await writeFile(join(destination,'manifest.json'),loaded);
-  path=destination;
  }
- return {path,metadata:{source_path:source,source_manifest_sha256:digest(original),loaded_manifest_sha256:digest(loaded),unpacked_identity_added:path!==source,identity_source:path!==source?'vendor/browse/public/manifest.json':null}};
+ return {path:destination,metadata:{source_path:source,source_manifest_sha256:digest(original),loaded_manifest_sha256:digest(loaded),copied_to_owned_profile:true,unpacked_identity_added:identityAdded,identity_source:identityAdded?'vendor/browse/public/manifest.json':null}};
 }

@@ -56,3 +56,14 @@ test('decoded observation evidence still refuses direct API answers',()=>{
  s.events[0].result.content[0].text='tab: 123\n\n'+JSON.stringify({text:s.final.answer});
  assert.equal(evaluate(s.task,s.final,[...s.events,{name:'execute',arguments:{code:'return await fetch("https://pypi.org/pypi/httpx/json")'}}]).passed,false);
 });
+
+test('native eval and compact Callisto replay obey the same no-direct-API policy',()=>{
+ const s=sample(...cases[0]);
+ for(const event of [
+  {name:'eval',arguments:{expression:'return await fetch("https://example.com/api")'}},
+  {name:'callisto',arguments:{op:'network',args:{action:'replay',url:'https://example.com'}}},
+  {name:'callisto_network',arguments:{action:'replay',url:'https://example.com'}},
+  {name:'callisto',arguments:{op:'input',args:{action:'disable'}}},
+ ])assert.equal(evaluate(s.task,s.final,[...s.events,event]).passed,false);
+ assert.equal(evaluate(s.task,s.final,[...s.events,{name:'eval',arguments:{expression:'document.body.innerText'}}]).passed,true);
+});

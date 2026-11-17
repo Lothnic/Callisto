@@ -24,13 +24,14 @@ test('store package gets upstream unpacked identity only in an owned copy',async
  }finally{await rm(root,{recursive:true,force:true});}
 });
 
-test('development package retains its existing identity and source path',async()=>{
+test('development package retains its existing identity in a browser-visible owned copy',async()=>{
  const root=await mkdtemp(join(tmpdir(),'browse-identity-'));
  try{
-  await writeFile(join(root,'manifest.json'),JSON.stringify({key:'existing-public-key'}));
-  const prepared=await prepareBrowseExtension(root,join(root,'unused'));
-  assert.equal(prepared.path,root);assert.equal(prepared.metadata.unpacked_identity_added,false);
+  const source=join(root,'source');await mkdir(source);await writeFile(join(source,'manifest.json'),JSON.stringify({key:'existing-public-key'}));
+  const destination=join(root,'owned');const prepared=await prepareBrowseExtension(source,destination);
+  assert.equal(prepared.path,destination);assert.equal(prepared.metadata.unpacked_identity_added,false);
   assert.equal(prepared.metadata.source_manifest_sha256,prepared.metadata.loaded_manifest_sha256);
-  await assert.rejects(stat(join(root,'unused')),e=>e.code==='ENOENT');
+  assert.equal(JSON.parse(await readFile(join(destination,'manifest.json'),'utf8')).key,'existing-public-key');
+  assert.equal(prepared.metadata.copied_to_owned_profile,true);
  }finally{await rm(root,{recursive:true,force:true});}
 });

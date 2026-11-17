@@ -12,21 +12,23 @@ import {until} from './zen-fixture.mjs';
 import {prepareBrowseExtension} from './browse-extension.mjs';
 const exec=promisify(execFile);
 export class BrowseFixture {
+ constructor({binary=process.env.BROWSE_BINARY||'browse',clientInfo={name:'callisto-validation',version:'1'}}={}){this.binary=binary;this.clientInfo=clientInfo;}
  async start(origin){
+  this.binaryPath=(await exec('which',[this.binary])).stdout.trim();
   const base=join(homedir(),'snap/chromium/common');await mkdir(base,{recursive:true});this.directory=await mkdtemp(join(base,'callisto-browse-'));
   const listener=createServer();await new Promise(r=>listener.listen(0,'127.0.0.1',r));this.port=listener.address().port;await new Promise(r=>listener.close(r));
   this.env={...process.env,OPENCODE_BROWSER_HOME:join(this.directory,'relay'),OPENCODE_BROWSER_PORT:String(this.port),OPENCODE_BROWSER_AUTO_UPDATE:'off',OPENCODE_BROWSER_UPDATE_CHECK:'0'};
-  this.relay=spawn('browse',['serve'],{env:this.env,stdio:'ignore'});
+  this.relay=spawn(this.binary,['serve'],{env:this.env,stdio:'ignore'});
   await until(()=>fetch(`http://127.0.0.1:${this.port}/version`).then(r=>r.ok));
-  let pairOutput;try{const result=await exec('browse',['pair','--wait-seconds','1'],{env:this.env,timeout:10000});pairOutput=result.stdout+'\n'+result.stderr;}catch(error){pairOutput=(error.stdout||'')+'\n'+(error.stderr||'');}
+  let pairOutput;try{const result=await exec(this.binary,['pair','--wait-seconds','1'],{env:this.env,timeout:10000});pairOutput=result.stdout+'\n'+result.stderr;}catch(error){pairOutput=(error.stdout||'')+'\n'+(error.stderr||'');}
   const code=pairOutput.match(/\b[0-9A-HJKMNP-TV-Z]{4}-[0-9A-HJKMNP-TV-Z]{4}\b/)?.[0];if(!code)throw Error('Could not create private browse pairing code');
   const prepared=await prepareBrowseExtension(resolve(process.env.BROWSE_EXTENSION_PATH||'vendor/browse/dist'),join(this.directory,'extension'));
   const extension=prepared.path;this.extensionMetadata=prepared.metadata;
   this.browser=await chromium.launchPersistentContext(join(this.directory,'profile'),{executablePath:process.env.CHROMIUM_PATH||'/snap/bin/chromium',headless:false,viewport:{width:1440,height:900},args:['--no-sandbox',`--disable-extensions-except=${extension}`,`--load-extension=${extension}`]});
   const worker=this.browser.serviceWorkers()[0]||await this.browser.waitForEvent('serviceworker',{timeout:15000});
   await worker.evaluate(async({code,port})=>{await chrome.storage.local.set({agentRelayPort:port,agentRelayPairingCode:code.replace('-','')});},{code,port:this.port});
-  await until(async()=>{const result=await exec('browse',['status','--json'],{env:this.env,timeout:5000});const status=JSON.parse(result.stdout);return status.extension?.connected;});
-  this.client=await new MCPClient('browse',['mcp'],this.env).initialize();
+  await until(async()=>{const result=await exec(this.binary,['status','--json'],{env:this.env,timeout:5000});const status=JSON.parse(result.stdout);return status.extension?.connected;});
+  this.client=await new MCPClient(this.binary,['mcp'],this.env).initialize(this.clientInfo);
   const tools=(await this.client.request('tools/list')).tools;
   this.apiMode=tools.some(t=>t.name==='session_new')?'session':'tab';
   if(this.apiMode==='session'){
