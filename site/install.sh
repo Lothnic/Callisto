@@ -2,7 +2,7 @@
 # Install the pinned experimental Callisto MCP runtime from its public repository.
 set -euo pipefail
 
-revision='70f3eef9f20198ec0e14f5432c06b6757b1d284a'
+revision='6ab9ed7a902bb0872e0d508f7b5e9c860ff53358'
 repository='https://github.com/Lothnic/Callisto.git'
 backend='zen'
 host=''

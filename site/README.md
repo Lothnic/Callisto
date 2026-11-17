@@ -79,7 +79,10 @@ Publication does not validate all store upgrades or permanent-install behavior
 in Zen. See
 `docs/published-extension.md`.
 
-The installer now pins the 0.3.0 runtime source. Its Full browser control mode
+The installer pins runtime source with the compact single-tool MCP interface.
+Restart the agent’s MCP connection after installing it; this interface change
+does not require an add-on update. `CALLISTO_TOOL_PROFILE=full` advertises the
+legacy named catalog. See `docs/compact-tools.md`. Full browser control mode
 needs extension 0.3.0 or later, available on AMO. The latest version, 0.3.1, adds branded icons and is awaiting Mozilla approval.
 The runtime continues negotiating capabilities with
 older extensions. See `docs/full-browser-control.md`.
