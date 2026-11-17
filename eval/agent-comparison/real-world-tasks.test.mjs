@@ -39,3 +39,20 @@ test('calendar accepts one explicit year shared by both dates and rejects the wr
  assert.equal(evaluate(s.task,s.final,s.events).passed,true);
  s.final.answer=s.final.answer.replace('2027','2026');assert.equal(evaluate(s.task,s.final,s.events).passed,false);
 });
+
+test('tab-wrapped JSON uses observed page values uniformly for either engine',()=>{
+ const s=sample(...cases[3]);const quote='Requires\n\nPython >=3.8';
+ s.final.evidence[0].quote=quote;
+ const text='tab: 123\n\n'+JSON.stringify({text:quote})+'\n\nPage: 1 navigation';
+ for(const name of ['execute','callisto']){
+  const events=[{name,arguments:{},result:{content:[{type:'text',text}]}}];
+  assert.equal(evaluate(s.task,s.final,events).passed,true);
+  assert.equal(evaluate(s.task,{...s.final,evidence:[{...s.final.evidence[0],quote:'Requires Python >=3.9'}]},events).passed,false);
+ }
+});
+
+test('decoded observation evidence still refuses direct API answers',()=>{
+ const s=sample(...cases[3]);
+ s.events[0].result.content[0].text='tab: 123\n\n'+JSON.stringify({text:s.final.answer});
+ assert.equal(evaluate(s.task,s.final,[...s.events,{name:'execute',arguments:{code:'return await fetch("https://pypi.org/pypi/httpx/json")'}}]).passed,false);
+});

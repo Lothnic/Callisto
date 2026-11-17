@@ -1,3 +1,4 @@
+import {observationTextValues as textValues} from './observation-text.mjs';
 // Public, read-only tasks. Expected answers are evaluator-only, never in prompts.
 export const tasks = [
  {id:'wikipedia-biography',name:'Wikipedia biography',start:'https://en.wikipedia.org/wiki/Main_Page',origins:['https://en.wikipedia.org'],instruction:'Find Ada Lovelace on Wikipedia. Report her full birth date, birthplace and mother’s name. Cite the biography page and a short supporting quote.',expected:{date:'10 December 1815',place:'London',mother:'Anne Isabella Milbanke'},checks:[/10\s+December\s+1815|December\s+10,?\s+1815|1815-12-10/i,/London/i,/(?:Annabella|Anne?\s+Isabella)(?:\s+Noel)?\s+(?:Milbanke|Byron)/i],source:/en\.wikipedia\.org\/wiki\/Ada_Lovelace/i},
@@ -22,7 +23,6 @@ export function applyOracles(oracles){
  }
  return tasks;
 }
-function textValues(value){if(typeof value==='string'){try{const parsed=JSON.parse(value);if(parsed&&typeof parsed==='object')return [value,...textValues(parsed)];}catch{}return [value];}if(Array.isArray(value))return value.flatMap(textValues);if(value&&typeof value==='object')return Object.values(value).flatMap(textValues);return [];}
 export function evaluate(task,final,events){
  const answer=String(final?.answer||'');const sources=Array.isArray(final?.evidence)?final.evidence:[];
  const facts=task.checks.map(check=>({pattern:check.source,passed:check.test(answer)}));

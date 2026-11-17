@@ -1,0 +1,482 @@
+{
+  "schema": "callisto.real-world-agent.v1",
+  "updated_at": "2026-11-17T08:00:28.085Z",
+  "host": "codex",
+  "model": "gpt-6-luna",
+  "reasoning_effort": "high",
+  "model_variant": null,
+  "input_mode": "synthetic-dom",
+  "repetitions": 1,
+  "engines": [
+    "zen",
+    "browse"
+  ],
+  "planned_runs": 2,
+  "completed_runs": 2,
+  "metadata": {
+    "started_at": "2026-11-17T07:59:24.089Z",
+    "source_revision": "2c8cfb5064868b18bf2e69f6be4d9e5f2fb1870d",
+    "source_worktree_dirty": true,
+    "host": "codex",
+    "host_version": "codex-cli 0.166.0",
+    "model": "gpt-6-luna",
+    "model_variant": null,
+    "tool_profile": "compact",
+    "runtime_version": "callisto-firefox-tab-mcp 0.3.1-alpha.1",
+    "runtime_sha256": "e858eb23b15c43090b567e42b315d71a1ce7e3be062657a22a4c350758b9b961",
+    "extension_source_version": "0.3.1",
+    "fixture_extension_version": "0.2.1",
+    "fixture_note": "Owned test extension uses pregranted optional permissions, automatic private pairing and test diagnostics. No task content or answers are injected.",
+    "extension_sources_sha256": {
+      "manifest.json": "86d6aac07f05c5a2d7d8169755da5e406d2d33e56940fa48da26e7e12a9d41aa",
+      "background.js": "0368598de3c6f15cf1e786a7853eb7571951ee580bbdb43fe2776039e612711b",
+      "content.js": "c98f0aad2c17868f510e859dcee1614afaec9c7e152348c679e6e7d66bd0f4de",
+      "browser-control.js": "c0abf50bd136c7989fa5ab3361ae86d7e5619a495bdfd3ceb617c4e61119e080"
+    },
+    "zen_version": "1.14.9b",
+    "zen_profile": "owned temporary persistent profile on Xvfb",
+    "zen_input": {
+      "extensionSharingControls": true,
+      "fallback": false,
+      "leaseBound": false,
+      "mode": "synthetic-dom",
+      "transportConnected": false
+    },
+    "codex_version": "codex-cli 0.166.0",
+    "opencode_version": null,
+    "opencode_model": null,
+    "opencode_variant": null,
+    "opencode_preflight": null,
+    "host_exposed_tools": null,
+    "browse_cli": "0.1.0",
+    "browse_extension_version": "0.0.16",
+    "browse_extension_fixture": {
+      "source_path": "/home/lothnic/browse-extension",
+      "source_manifest_sha256": "f7cafa9778c3fd8b9af29f85064184dee8a210adb564b51a29b521bc0f0c97fd",
+      "loaded_manifest_sha256": "d7856b2f1afed524f8414ca6a65de037719b7c23507b84183d178cc34d9bd2d2",
+      "unpacked_identity_added": true,
+      "identity_source": "vendor/browse/public/manifest.json"
+    },
+    "browse_api_mode": "tab",
+    "browse_origin_allowlist": null,
+    "browse_extension_manifest_sha256": "f7cafa9778c3fd8b9af29f85064184dee8a210adb564b51a29b521bc0f0c97fd",
+    "chromium_version": "157.0.8103.38",
+    "browse_profile": "owned anonymous profile on Xvfb",
+    "setup_elapsed_ms": 13614.819164999999,
+    "catalogs": {
+      "zen": {
+        "native_count": 1,
+        "exposed_count": 1,
+        "exposed_bytes": 940
+      },
+      "browse": {
+        "native_count": 3,
+        "exposed_count": 1,
+        "exposed_bytes": 4113
+      }
+    },
+    "harness_sha256": "51748a5f06c30e2dfab335636a28e1aeafb68e6f6d2fec9a72eb423fa19f3fb3",
+    "harness_files_sha256": {
+      "real-world-agent.mjs": "51748a5f06c30e2dfab335636a28e1aeafb68e6f6d2fec9a72eb423fa19f3fb3",
+      "real-world-tasks.mjs": "63e82610d46063a4f9f7bfd5e42de772d6f3ab6dd0fc1336f7001ad8ebfb4b54",
+      "codex-host.mjs": "bcc8c68240729ef4fb043a2557e76fa96c16f788ec0aef5c83a392dbf691cd5a",
+      "opencode-host.mjs": "e9257d3651b2b73b0553d3a3b305fa0f322a509d4701bb5de549290da9b30307",
+      "host-session.mjs": "cde5776a3e7a080909a34fd6995d7839be63467220560366160632d9e7e83405",
+      "host-mcp-proxy.mjs": "a2675678c3857c3daf922c52de972aeff84a1b147c77e4163cb102e8f3e0777f",
+      "zen-fixture.mjs": "66d210e98b92a6a41993f463d7b073085ea47108f50813b1a783c00dfc77e0c4",
+      "browse-fixture.mjs": "9c203f64ad090512d79ba8f5579521d3d37a2374744bf02ce6e1b9c0312bf539",
+      "browse-extension.mjs": "a97085d0b66fc08b6366a7b5ad1bdccb1adb117c8c7deba3364534c4180dea5d",
+      "mcp-client.mjs": "a0a7d68230241ce1dc5ddf2588620b2dfe4de58472dd0dbf2f8e48ba2dd34c97"
+    }
+  },
+  "phases": [
+    {
+      "id": 0,
+      "metadata": {
+        "started_at": "2026-11-17T07:59:24.089Z",
+        "source_revision": "2c8cfb5064868b18bf2e69f6be4d9e5f2fb1870d",
+        "source_worktree_dirty": true,
+        "host": "codex",
+        "host_version": "codex-cli 0.166.0",
+        "model": "gpt-6-luna",
+        "model_variant": null,
+        "tool_profile": "compact",
+        "runtime_version": "callisto-firefox-tab-mcp 0.3.1-alpha.1",
+        "runtime_sha256": "e858eb23b15c43090b567e42b315d71a1ce7e3be062657a22a4c350758b9b961",
+        "extension_source_version": "0.3.1",
+        "fixture_extension_version": "0.2.1",
+        "fixture_note": "Owned test extension uses pregranted optional permissions, automatic private pairing and test diagnostics. No task content or answers are injected.",
+        "extension_sources_sha256": {
+          "manifest.json": "86d6aac07f05c5a2d7d8169755da5e406d2d33e56940fa48da26e7e12a9d41aa",
+          "background.js": "0368598de3c6f15cf1e786a7853eb7571951ee580bbdb43fe2776039e612711b",
+          "content.js": "c98f0aad2c17868f510e859dcee1614afaec9c7e152348c679e6e7d66bd0f4de",
+          "browser-control.js": "c0abf50bd136c7989fa5ab3361ae86d7e5619a495bdfd3ceb617c4e61119e080"
+        },
+        "zen_version": "1.14.9b",
+        "zen_profile": "owned temporary persistent profile on Xvfb",
+        "zen_input": {
+          "extensionSharingControls": true,
+          "fallback": false,
+          "leaseBound": false,
+          "mode": "synthetic-dom",
+          "transportConnected": false
+        },
+        "codex_version": "codex-cli 0.166.0",
+        "opencode_version": null,
+        "opencode_model": null,
+        "opencode_variant": null,
+        "opencode_preflight": null,
+        "host_exposed_tools": null,
+        "browse_cli": "0.1.0",
+        "browse_extension_version": "0.0.16",
+        "browse_extension_fixture": {
+          "source_path": "/home/lothnic/browse-extension",
+          "source_manifest_sha256": "f7cafa9778c3fd8b9af29f85064184dee8a210adb564b51a29b521bc0f0c97fd",
+          "loaded_manifest_sha256": "d7856b2f1afed524f8414ca6a65de037719b7c23507b84183d178cc34d9bd2d2",
+          "unpacked_identity_added": true,
+          "identity_source": "vendor/browse/public/manifest.json"
+        },
+        "browse_api_mode": "tab",
+        "browse_origin_allowlist": null,
+        "browse_extension_manifest_sha256": "f7cafa9778c3fd8b9af29f85064184dee8a210adb564b51a29b521bc0f0c97fd",
+        "chromium_version": "157.0.8103.38",
+        "browse_profile": "owned anonymous profile on Xvfb",
+        "setup_elapsed_ms": 13614.819164999999,
+        "catalogs": {
+          "zen": {
+            "native_count": 1,
+            "exposed_count": 1,
+            "exposed_bytes": 940
+          },
+          "browse": {
+            "native_count": 3,
+            "exposed_count": 1,
+            "exposed_bytes": 4113
+          }
+        },
+        "harness_sha256": "51748a5f06c30e2dfab335636a28e1aeafb68e6f6d2fec9a72eb423fa19f3fb3",
+        "harness_files_sha256": {
+          "real-world-agent.mjs": "51748a5f06c30e2dfab335636a28e1aeafb68e6f6d2fec9a72eb423fa19f3fb3",
+          "real-world-tasks.mjs": "63e82610d46063a4f9f7bfd5e42de772d6f3ab6dd0fc1336f7001ad8ebfb4b54",
+          "codex-host.mjs": "bcc8c68240729ef4fb043a2557e76fa96c16f788ec0aef5c83a392dbf691cd5a",
+          "opencode-host.mjs": "e9257d3651b2b73b0553d3a3b305fa0f322a509d4701bb5de549290da9b30307",
+          "host-session.mjs": "cde5776a3e7a080909a34fd6995d7839be63467220560366160632d9e7e83405",
+          "host-mcp-proxy.mjs": "a2675678c3857c3daf922c52de972aeff84a1b147c77e4163cb102e8f3e0777f",
+          "zen-fixture.mjs": "66d210e98b92a6a41993f463d7b073085ea47108f50813b1a783c00dfc77e0c4",
+          "browse-fixture.mjs": "9c203f64ad090512d79ba8f5579521d3d37a2374744bf02ce6e1b9c0312bf539",
+          "browse-extension.mjs": "a97085d0b66fc08b6366a7b5ad1bdccb1adb117c8c7deba3364534c4180dea5d",
+          "mcp-client.mjs": "a0a7d68230241ce1dc5ddf2588620b2dfe4de58472dd0dbf2f8e48ba2dd34c97"
+        }
+      }
+    }
+  ],
+  "continuation_note": null,
+  "oracles": {
+    "captured_at": "2026-11-17T07:59:13.852Z",
+    "pypi": {
+      "version": "0.28.1",
+      "requires_python": ">=3.8"
+    },
+    "github": {
+      "title": "Suggestion: 'protected' modifier",
+      "state": "closed",
+      "author": "RyanCavanaugh",
+      "url": "https://github.com/microsoft/TypeScript/issues/1"
+    },
+    "holidays": [
+      {
+        "title": "Summer bank holiday",
+        "date": "2027-08-02",
+        "notes": "",
+        "bunting": true
+      },
+      {
+        "title": "St Andrew’s Day",
+        "date": "2027-11-30",
+        "notes": "",
+        "bunting": true
+      }
+    ],
+    "sources": [
+      "https://pypi.org/pypi/httpx/json",
+      "https://api.github.com/repos/microsoft/TypeScript/issues/1",
+      "https://www.gov.uk/bank-holidays.json"
+    ]
+  },
+  "tasks": [
+    {
+      "id": "wikipedia-biography",
+      "name": "Wikipedia biography",
+      "start": "https://en.wikipedia.org/wiki/Main_Page",
+      "origins": [
+        "https://en.wikipedia.org"
+      ],
+      "instruction": "Find Ada Lovelace on Wikipedia. Report her full birth date, birthplace and mother’s name. Cite the biography page and a short supporting quote.",
+      "expected": {
+        "date": "10 December 1815",
+        "place": "London",
+        "mother": "Anne Isabella Milbanke"
+      },
+      "answer_patterns": [
+        "10\\s+December\\s+1815|December\\s+10,?\\s+1815|1815-12-10",
+        "London",
+        "(?:Annabella|Anne?\\s+Isabella)(?:\\s+Noel)?\\s+(?:Milbanke|Byron)"
+      ],
+      "source_pattern": "en\\.wikipedia\\.org\\/wiki\\/Ada_Lovelace"
+    }
+  ],
+  "catalogs": {
+    "zen": [
+      {
+        "description": "Control Firefox/Zen through its shared tab. Pass operation fields in args. Start with status or pair. Navigate: {op:'navigate',args:{url:'https://example.com'}}. Observe: {op:'snapshot',args:{max_chars:6000}}. Act: {op:'run',args:{steps:[{action:'click_ref',ref:'ax-1'}],snapshot:false}}. Get any operation's parameters with {op:'help',args:{op:'run'}}. Use run for dependent actions and extract for rows. Existing sharing, permissions, input mode and cancellation apply. Inspect after uncertain errors before retrying.",
+        "inputSchema": {
+          "additionalProperties": false,
+          "properties": {
+            "args": {
+              "type": "object"
+            },
+            "op": {
+              "enum": [
+                "help",
+                "press",
+                "frames",
+                "frame",
+                "handoff",
+                "capabilities",
+                "upload",
+                "pair",
+                "status",
+                "browser",
+                "page",
+                "scroll",
+                "screenshot",
+                "find",
+                "submit",
+                "batch",
+                "extract",
+                "run",
+                "input",
+                "network",
+                "trace",
+                "snapshot",
+                "navigate",
+                "click",
+                "fill",
+                "close"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "op"
+          ],
+          "type": "object"
+        },
+        "name": "callisto"
+      }
+    ],
+    "browse": [
+      {
+        "name": "execute",
+        "description": "Run JavaScript that drives the browser: the user's real Chrome-family browser, through the browse extension. The code is an async function body (a single expression is returned; `return` a value to get it back) running in a small sandboxed JavaScript engine on the relay: no Node, no require/import, no fs, process or fetch (fetch belongs to the page: use page.evaluate). Synchronous code stops after about 2 seconds without an await. The result has the returned value (JSON, or the string as is), console output, warnings, and what happened to the page (URL changes, navigations, handoffs, a bot challenge: hand interactive ones to the user with handoff(), never solve or retry-loop them). Return a screenshot (`return await page.screenshot()`) to see it. Tabs are the handle: without `tab`, `page.goto(url)` opens a new tab; the result starts with `tab: <id>`, which you pass as `tab` to the next execute to continue there (with the same `state`). Close tabs you opened when you're done (`page.close()`).",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "description": "JavaScript (an async function body). Globals:\n- page: a Playwright-style Page for the tab passed as `tab`; without one it has no tab until its first goto(url), which opens a new tab. goto(url, {waitUntil, timeout}), url(), title(), content(), evaluate(fn | string, arg), $eval/$$eval, waitForTimeout/Selector/URL/LoadState/Function, click/fill/type/press/hover/selectOption/check/uncheck(selector, ...), locator(selector), getByRole/Text/Label/Placeholder/TestId/AltText/Title, frameLocator, keyboard.press/type, mouse.click/move/wheel, screenshot({path, fullPage}), goBack/goForward/reload, setViewportSize, close(). Locators: click, dblclick, fill, clear, type, pressSequentially, press, hover, check, uncheck, selectOption, setInputFiles, textContent, innerText, innerHTML, inputValue, getAttribute, isVisible/Hidden/Checked/Enabled/Disabled, count, all, first, last, nth, filter, locator, getBy*, waitFor, evaluate, evaluateAll, allTextContents, boundingBox, screenshot, dragTo. Selectors are CSS or Playwright selectors (role=button[name=\"Save\"], text=Sign in, >> nth=0, iframe >> frame >> ...). Locators are strict: one element.\n- context.newPage() (a new tab), context.pages() (the tabs this execute works in and their popups); browser.contexts().\n- snapshot(options?) → a compact outline with refs (options: find, diff, delta, interactive, within, mode: \"aria\"); ref(\"e12\") → a locator for a snapshot ref. Prefer snapshot + ref over guessing selectors.\n- handoff(message, {timeoutMs?, start?}) when only the user can proceed (login, 2FA, captcha, payment); demonstrate(message) to watch the user do a flow.\n- screenshotWithLabels(), screenshotDiff({baseline}), network.start/status/stop/cancel, pageConsole.start/read/stop, webmcp.list/call(name, input).\n- browse.<tool>(args): any browse tool directly (navigate, snapshot, click, fill, type, press, select, hover, drag, scroll, eval, wait_for, dialog, upload, emulate, webmcp, screenshot, screenshot_diff, network, console, recording, tabs, handoff, demonstrate, status, settings); they act in `page`'s tab unless you pass `tab` (browse.navigate without one opens a tab for `page`); returns its JSON and throws its error.\n- files.path(name), files.write(name, data), files.read(name, encoding?) inside the file roots (files.dir, files.roots).\n- state: an object kept with the tab between execute calls that pass it as `tab` (JSON values only).\n- console.log/warn/error (shown in the result), setTimeout/clearTimeout/setInterval/clearInterval."
+            },
+            "timeoutMs": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Overall timeout in milliseconds (paused while handoff waits on the user); default 60000, 0 for none. Includes waiting behind another execute in the same tab."
+            },
+            "tab": {
+              "type": "integer",
+              "description": "The tab `page` stands for: the `tab` an earlier execute (or navigate, tabs) returned. Leave it out to start without a tab; page.goto(url) then opens one."
+            }
+          },
+          "required": [
+            "code"
+          ],
+          "additionalProperties": false
+        }
+      }
+    ]
+  },
+  "cost_usd": null,
+  "cost_note": "Actual CLI usage is retained. Signed-in subscription does not provide per-trial dollar charges.",
+  "measurement": "Fresh host conversation per run. Host elapsed includes startup, model turns, navigation, waits, failures and retries. Task elapsed additionally includes independent answer/evidence validation. Profile setup and neutral-tab reacquisition are separate. Verification is not cut off the timer. Browser output UTF-8 bytes and characters are separate from model input/output/cached tokens.",
+  "scope": "1 public informational workflows, 1 repetition(s), engines zen,browse. Anonymous owned browser profiles; initially the first round is cold per site and the second is warm. A resumed phase resets profiles and is explicitly identified in phase metadata. Fixed gold facts for stable pages; time-stamped official JSON/API oracles for mutable metadata. Native task-tool catalogs differ and are saved. Not a store-install, authenticated-account or production reliability test.",
+  "budget": {
+    "max_browser_calls": 35,
+    "host_timeout_ms": 180000,
+    "stop_before_next_session_at_reported_tokens": 3000000
+  },
+  "results": [
+    {
+      "host": "codex",
+      "engine": "zen",
+      "task": "wikipedia-biography",
+      "round": 0,
+      "phase": 0,
+      "success": true,
+      "outcome": "passed",
+      "answer": {
+        "answer": "Ada Lovelace was born on 10 December 1815 in London, England. Her mother was Anne Isabella Milbanke.",
+        "evidence": [
+          {
+            "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+            "quote": "Augusta Ada Byron 10 December 1815 London, England"
+          },
+          {
+            "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+            "quote": "Anne Isabella Milbanke (mother)"
+          }
+        ]
+      },
+      "expected": {
+        "date": "10 December 1815",
+        "place": "London",
+        "mother": "Anne Isabella Milbanke"
+      },
+      "evaluation": {
+        "passed": true,
+        "facts": [
+          {
+            "pattern": "10\\s+December\\s+1815|December\\s+10,?\\s+1815|1815-12-10",
+            "passed": true
+          },
+          {
+            "pattern": "London",
+            "passed": true
+          },
+          {
+            "pattern": "(?:Annabella|Anne?\\s+Isabella)(?:\\s+Noel)?\\s+(?:Milbanke|Byron)",
+            "passed": true
+          }
+        ],
+        "evidence": [
+          {
+            "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+            "quote": "Augusta Ada Byron 10 December 1815 London, England",
+            "source_matches": true,
+            "quote_observed": true
+          },
+          {
+            "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+            "quote": "Anne Isabella Milbanke (mother)",
+            "source_matches": true,
+            "quote_observed": true
+          }
+        ],
+        "forbidden_network_or_file_calls": 0
+      },
+      "preparation_ms": 61.03625599999941,
+      "host_elapsed_ms": 36189.136555000005,
+      "verification_ms": 1.8106769999940298,
+      "task_elapsed_ms": 36197.945912,
+      "usage": {
+        "input_tokens": 78214,
+        "cached_input_tokens": 37632,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 701,
+        "reasoning_output_tokens": 321
+      },
+      "model_verified": null,
+      "host_error": null,
+      "tool_calls": 4,
+      "tool_failures": 0,
+      "tool_elapsed_ms": 903.9866069999989,
+      "response_bytes": 23775,
+      "response_characters": 23761,
+      "forbidden_host_calls": 0,
+      "reported_cost_usd": null,
+      "cost_usd": null,
+      "timed_out": false,
+      "trace_file": "zen-wikipedia-biography-0.json"
+    },
+    {
+      "host": "codex",
+      "engine": "browse",
+      "task": "wikipedia-biography",
+      "round": 0,
+      "phase": 0,
+      "success": true,
+      "outcome": "passed",
+      "answer": {
+        "answer": "Ada Lovelace was born on 10 December 1815, in London, England. Her mother was Anne Isabella Milbanke.",
+        "evidence": [
+          {
+            "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+            "quote": "10 December 1815\nLondon, England"
+          },
+          {
+            "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+            "quote": "Anne Isabella Milbanke (mother)"
+          }
+        ]
+      },
+      "expected": {
+        "date": "10 December 1815",
+        "place": "London",
+        "mother": "Anne Isabella Milbanke"
+      },
+      "evaluation": {
+        "passed": true,
+        "facts": [
+          {
+            "pattern": "10\\s+December\\s+1815|December\\s+10,?\\s+1815|1815-12-10",
+            "passed": true
+          },
+          {
+            "pattern": "London",
+            "passed": true
+          },
+          {
+            "pattern": "(?:Annabella|Anne?\\s+Isabella)(?:\\s+Noel)?\\s+(?:Milbanke|Byron)",
+            "passed": true
+          }
+        ],
+        "evidence": [
+          {
+            "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+            "quote": "10 December 1815\nLondon, England",
+            "source_matches": true,
+            "quote_observed": false
+          },
+          {
+            "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+            "quote": "Anne Isabella Milbanke (mother)",
+            "source_matches": true,
+            "quote_observed": true
+          }
+        ],
+        "forbidden_network_or_file_calls": 0
+      },
+      "preparation_ms": 43.035753999996814,
+      "host_elapsed_ms": 27604.647122000002,
+      "verification_ms": 0.526865000007092,
+      "task_elapsed_ms": 27610.24214000001,
+      "usage": {
+        "input_tokens": 94606,
+        "cached_input_tokens": 50688,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 735,
+        "reasoning_output_tokens": 303
+      },
+      "model_verified": null,
+      "host_error": null,
+      "tool_calls": 3,
+      "tool_failures": 0,
+      "tool_elapsed_ms": 1983.2510019999972,
+      "response_bytes": 5583,
+      "response_characters": 5566,
+      "forbidden_host_calls": 0,
+      "reported_cost_usd": null,
+      "cost_usd": null,
+      "timed_out": false,
+      "trace_file": "browse-wikipedia-biography-0.json"
+    }
+  ]
+}

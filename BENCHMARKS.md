@@ -6,6 +6,7 @@ with the associated notes.
 
 | Comparison | What it measures | Results |
 | --- | --- | --- |
+| [GPT-6 Luna public-site pilot](eval/reports/luna-real-world-2026-11-17/README.md) | Current compact Zen and browse tab API, six goals twice per engine | Both 12/12 after uniform JSON-observation scoring correction; profile restart disclosed; token usage is not billed cost |
 | [Compact Zen interface](eval/reports/compact-interface-2026-11-17/README.md) | Serialized catalog size and six public-site functional trials | 25 tools / 14,490 bytes to 1 / 940 bytes; 6/6 goals passed, no matched cost claim |
 | [Public-site host-agent pilot](eval/reports/real-world-2026-11-16-run2/README.md) | Six public informational tasks, two repetitions per engine, fresh model conversations and real host usage | Both 12/12 after a documented date-format scoring correction; small sample, profile restart disclosed |
 | [Runtime upgrade follow-up](research/2026-11-runtime-upgrade-comparison.md) | Same-origin frames, batching and bounded snapshots | Current exploratory run; small sample |

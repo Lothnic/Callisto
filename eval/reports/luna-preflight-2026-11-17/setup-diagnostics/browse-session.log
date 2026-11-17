@@ -1,0 +1,10 @@
+file:///home/lothnic/Desktop/Projects/callisto/eval/agent-comparison/browse-fixture.mjs:30
+  const result=await this.client.callTool({name:'session_new',arguments:{id:this.session,allowedOrigins:[origin]}});if(result.isError)throw Error('Private browse session could not start: '+JSON.stringify(result));
+                                                                                                                                            ^
+
+Error: Private browse session could not start: {"content":[{"type":"text","text":"session_new failed: relay answered 404: Unknown tool: session_new"}],"isError":true}
+    at BrowseFixture.start (file:///home/lothnic/Desktop/Projects/callisto/eval/agent-comparison/browse-fixture.mjs:30:141)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async file:///home/lothnic/Desktop/Projects/callisto/eval/agent-comparison/browse-fixture.mjs:36:76
+
+Node.js v26.5.0

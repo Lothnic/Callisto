@@ -1,0 +1,886 @@
+{
+  "complete": true,
+  "planned_runs": 24,
+  "completed_runs": 24,
+  "host": "codex",
+  "model": "gpt-6-luna",
+  "effort": "high",
+  "all_attempts": {
+    "zen": {
+      "attempted": 12,
+      "passed": 12,
+      "outcomes": {
+        "passed": 12
+      },
+      "usage_runs": 12,
+      "mean_seconds": 42.796796990833336,
+      "median_seconds": 38.61842105299998,
+      "total_seconds": 513.56156389,
+      "input_tokens": 2288632,
+      "cached_input_tokens": 1868672,
+      "cache_write_input_tokens": 0,
+      "uncached_input_tokens": 419960,
+      "output_tokens": 14920,
+      "reasoning_output_tokens": 7474,
+      "browser_calls": 105,
+      "tool_errors": 6,
+      "failed_call_seconds": 0.05521983799991722,
+      "response_bytes": 350364,
+      "help_calls": 15,
+      "help_response_bytes": 17227,
+      "operations": {
+        "snapshot": 37,
+        "navigate": 15,
+        "run": 16,
+        "help": 15,
+        "status": 4,
+        "find": 11,
+        "click": 2,
+        "fill": 2,
+        "press": 1,
+        "submit": 1,
+        "extract": 1
+      }
+    },
+    "browse": {
+      "attempted": 12,
+      "passed": 12,
+      "outcomes": {
+        "passed": 12
+      },
+      "usage_runs": 12,
+      "mean_seconds": 52.77037747541666,
+      "median_seconds": 40.206965857,
+      "total_seconds": 633.2445297049999,
+      "input_tokens": 1714667,
+      "cached_input_tokens": 1356288,
+      "cache_write_input_tokens": 0,
+      "uncached_input_tokens": 358379,
+      "output_tokens": 13971,
+      "reasoning_output_tokens": 4950,
+      "browser_calls": 74,
+      "tool_errors": 9,
+      "failed_call_seconds": 80.5853872920001,
+      "response_bytes": 233694,
+      "help_calls": 0,
+      "help_response_bytes": 0,
+      "operations": {}
+    }
+  },
+  "matched_successful_pairs": 12,
+  "successful_pairs": 12,
+  "cross_phase_pairs_excluded": [],
+  "matched": {
+    "zen": {
+      "attempted": 12,
+      "passed": 12,
+      "outcomes": {
+        "passed": 12
+      },
+      "usage_runs": 12,
+      "mean_seconds": 42.796796990833336,
+      "median_seconds": 38.61842105299998,
+      "total_seconds": 513.56156389,
+      "input_tokens": 2288632,
+      "cached_input_tokens": 1868672,
+      "cache_write_input_tokens": 0,
+      "uncached_input_tokens": 419960,
+      "output_tokens": 14920,
+      "reasoning_output_tokens": 7474,
+      "browser_calls": 105,
+      "tool_errors": 6,
+      "failed_call_seconds": 0.05521983799991722,
+      "response_bytes": 350364,
+      "help_calls": 15,
+      "help_response_bytes": 17227,
+      "operations": {
+        "snapshot": 37,
+        "navigate": 15,
+        "run": 16,
+        "help": 15,
+        "status": 4,
+        "find": 11,
+        "click": 2,
+        "fill": 2,
+        "press": 1,
+        "submit": 1,
+        "extract": 1
+      }
+    },
+    "browse": {
+      "attempted": 12,
+      "passed": 12,
+      "outcomes": {
+        "passed": 12
+      },
+      "usage_runs": 12,
+      "mean_seconds": 52.77037747541666,
+      "median_seconds": 40.206965857,
+      "total_seconds": 633.2445297049999,
+      "input_tokens": 1714667,
+      "cached_input_tokens": 1356288,
+      "cache_write_input_tokens": 0,
+      "uncached_input_tokens": 358379,
+      "output_tokens": 13971,
+      "reasoning_output_tokens": 4950,
+      "browser_calls": 74,
+      "tool_errors": 9,
+      "failed_call_seconds": 80.5853872920001,
+      "response_bytes": 233694,
+      "help_calls": 0,
+      "help_response_bytes": 0,
+      "operations": {}
+    }
+  },
+  "cost_usd": null,
+  "tool_errors": [
+    {
+      "engine": "zen",
+      "task": "wikipedia-biography",
+      "round": 0,
+      "name": "callisto",
+      "arguments": {
+        "op": "run",
+        "args": {
+          "steps": [
+            {
+              "action": "fill",
+              "ref": "ax-17096866063308173953",
+              "text": "Ada Lovelace"
+            },
+            {
+              "action": "press",
+              "key": "Enter"
+            }
+          ],
+          "snapshot": false
+        }
+      },
+      "elapsed_ms": 1.8814689999999246,
+      "result": {
+        "content": [
+          {
+            "text": "Run stopped at step 1 (fill); earlier steps may have completed: Unsupported run step.",
+            "type": "text"
+          }
+        ],
+        "isError": true
+      }
+    },
+    {
+      "engine": "zen",
+      "task": "wikipedia-biography",
+      "round": 0,
+      "name": "callisto",
+      "arguments": {
+        "op": "run",
+        "args": {
+          "steps": [
+            {
+              "action": "fill_ref",
+              "ref": "ax-17096866063308173953",
+              "text": "Ada Lovelace"
+            },
+            {
+              "action": "submit_ref",
+              "ref": "ax-17096866063308173953"
+            }
+          ],
+          "snapshot": false
+        }
+      },
+      "elapsed_ms": 31.790594999998575,
+      "result": {
+        "content": [
+          {
+            "text": "Run stopped at step 1 (fill_ref); earlier steps may have completed: Invalid value.",
+            "type": "text"
+          }
+        ],
+        "isError": true
+      }
+    },
+    {
+      "engine": "browse",
+      "task": "arxiv-paper",
+      "round": 0,
+      "name": "execute",
+      "arguments": {
+        "tab": 1665732680,
+        "code": "return await page.snapshot({interactive:true})"
+      },
+      "elapsed_ms": 5.722822000010638,
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "tab: 1665732680\n\nTypeError: not a function\n    at <anonymous> (execute.js:1:248)\n\nWarnings:\n- Unhandled promise rejection: not a function (await or catch every promise)"
+          }
+        ],
+        "isError": true
+      }
+    },
+    {
+      "engine": "browse",
+      "task": "arxiv-paper",
+      "round": 0,
+      "name": "execute",
+      "arguments": {
+        "tab": 1665732680,
+        "code": "await page.getByPlaceholder('Search papers by title, author, abstract, or ID...').fill('Attention Is All You Need'); await page.getByRole('button',{name:'Search'}).first().click(); await page.waitForLoadState('domcontentloaded'); return {url:await page.url(),title:await page.title(),text:(await page.locator('body').innerText()).slice(0,5000)}"
+      },
+      "elapsed_ms": 10018.106215000007,
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "tab: 1665732680\n\nTimeoutError: textbox \"Search arXiv\" is not visible; waited 10000 ms\n    at <anonymous> (execute.js:1:312)"
+          }
+        ],
+        "isError": true
+      }
+    },
+    {
+      "engine": "browse",
+      "task": "pypi-metadata",
+      "round": 0,
+      "name": "execute",
+      "arguments": {
+        "tab": 1665732680,
+        "code": "const links = await page.locator('a').evaluateAll(as=>as.map(a=>({text:a.innerText,href:a.href})).filter(x=>x.text.includes('Release history'))); await page.getByRole('link',{name:'Release history'}).click(); await page.waitForLoadState('domcontentloaded'); return {links,url:page.url(),title:await page.title(),text:(await page.locator('body').innerText()).slice(0,9000)}"
+      },
+      "elapsed_ms": 10072.628251000016,
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "tab: 1665732680\n\nTimeoutError: No element matches selector \"internal:role=link[name=\\\"Release history\\\"i]\" (waited 9999 ms)\n    at <anonymous> (execute.js:1:430)"
+          }
+        ],
+        "isError": true
+      }
+    },
+    {
+      "engine": "zen",
+      "task": "python-json",
+      "round": 0,
+      "name": "callisto",
+      "arguments": {
+        "op": "snapshot",
+        "args": {
+          "offset": 10800,
+          "max_chars": 6000
+        }
+      },
+      "elapsed_ms": 0.5655960000003688,
+      "result": {
+        "content": [
+          {
+            "text": "Invalid snapshot offset",
+            "type": "text"
+          }
+        ],
+        "isError": true
+      }
+    },
+    {
+      "engine": "browse",
+      "task": "govuk-calendar",
+      "round": 0,
+      "name": "execute",
+      "arguments": {
+        "tab": 1665732680,
+        "code": "await page.getByRole('link',{name:'Scotland', exact:true}).click(); return {url:page.url(), title:await page.title(), text:(await page.locator('body').innerText()).slice(0,5000)};"
+      },
+      "elapsed_ms": 10060.456134000036,
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "tab: 1665732680\n\nTimeoutError: No element matches selector \"internal:role=link[name=\\\"Scotland\\\"s]\" (waited 9999 ms)\n    at <anonymous> (execute.js:1:289)"
+          }
+        ],
+        "isError": true
+      }
+    },
+    {
+      "engine": "zen",
+      "task": "wikipedia-biography",
+      "round": 1,
+      "name": "callisto",
+      "arguments": {
+        "op": "run",
+        "args": {
+          "steps": [
+            {
+              "action": "fill",
+              "ref": "ax-17205407050180510230",
+              "value": "Ada Lovelace"
+            },
+            {
+              "action": "press",
+              "key": "ENTER"
+            }
+          ],
+          "snapshot": false
+        }
+      },
+      "elapsed_ms": 1.4649189999327064,
+      "result": {
+        "content": [
+          {
+            "text": "Run stopped at step 1 (fill); earlier steps may have completed: Unsupported run step.",
+            "type": "text"
+          }
+        ],
+        "isError": true
+      }
+    },
+    {
+      "engine": "zen",
+      "task": "arxiv-paper",
+      "round": 1,
+      "name": "callisto",
+      "arguments": {
+        "op": "fill",
+        "args": {
+          "ref": "ax-16975237819663619763",
+          "text": "\"Attention Is All You Need\""
+        }
+      },
+      "elapsed_ms": 0.5520900000119582,
+      "result": {
+        "content": [
+          {
+            "text": "value is required",
+            "type": "text"
+          }
+        ],
+        "isError": true
+      }
+    },
+    {
+      "engine": "zen",
+      "task": "arxiv-paper",
+      "round": 1,
+      "name": "callisto",
+      "arguments": {
+        "op": "run",
+        "args": {
+          "steps": [
+            {
+              "action": "select_ref",
+              "ref": "ax-12868986032157942812",
+              "value": "Title"
+            }
+          ],
+          "snapshot": false
+        }
+      },
+      "elapsed_ms": 18.965168999973685,
+      "result": {
+        "content": [
+          {
+            "text": "Run stopped at step 1 (select_ref); earlier steps may have completed: No enabled option with that value.",
+            "type": "text"
+          }
+        ],
+        "isError": true
+      }
+    },
+    {
+      "engine": "browse",
+      "task": "arxiv-paper",
+      "round": 1,
+      "name": "execute",
+      "arguments": {
+        "tab": 1665732680,
+        "code": "await page.getByPlaceholder('Search papers by title, author, abstract, or ID...').fill('Attention Is All You Need'); await page.locator('form[action=\"https://arxiv.org/search\"] input[type=\"submit\"]').click(); await page.waitForLoadState('domcontentloaded'); return {url:page.url(),text:(await page.locator('body').innerText()).slice(0,5000)}"
+      },
+      "elapsed_ms": 10042.616201000055,
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "tab: 1665732680\n\nTimeoutError: textbox \"Search arXiv\" is not visible; waited 10000 ms\n    at <anonymous> (execute.js:1:312)"
+          }
+        ],
+        "isError": true
+      }
+    },
+    {
+      "engine": "browse",
+      "task": "arxiv-paper",
+      "round": 1,
+      "name": "execute",
+      "arguments": {
+        "tab": 1665732680,
+        "code": "const f=page.locator('form[action=\"https://arxiv.org/search/\"]').first(); await f.locator('select[name=\"searchtype\"]').selectOption('title'); await f.locator('input[name=\"query\"]').fill('Attention Is All You Need'); await f.locator('button[type=\"submit\"]').click(); await page.waitForLoadState('domcontentloaded'); return {url:page.url(),text:(await page.locator('body').innerText()).slice(0,3000)}"
+      },
+      "elapsed_ms": 10011.276886999956,
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "tab: 1665732680\n\nTimeoutError: No element matches selector \"form[action=\\\"https://arxiv.org/search/\\\"] >> nth=0 >> select[name=\\\"searchtype\\\"]\" (waited 10000 ms)\n    at <anonymous> (execute.js:1:349)"
+          }
+        ],
+        "isError": true
+      }
+    },
+    {
+      "engine": "browse",
+      "task": "arxiv-paper",
+      "round": 1,
+      "name": "execute",
+      "arguments": {
+        "tab": 1665732680,
+        "code": "const f=page.locator('form').nth(1); await f.locator('select[name=\"searchtype\"]').selectOption('title'); await f.locator('input[name=\"query\"]').fill('Attention Is All You Need'); await f.locator('button[type=\"submit\"]').click(); await page.waitForLoadState('domcontentloaded'); return {url:page.url(),text:(await page.locator('body').innerText()).slice(0,4000)}"
+      },
+      "elapsed_ms": 10258.453619000036,
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "tab: 1665732680\n\nTimeoutError: No element matches selector \"form >> nth=1 >> button[type=\\\"submit\\\"]\" (waited 9999 ms)\n    at <anonymous> (execute.js:1:450)"
+          }
+        ],
+        "isError": true
+      }
+    },
+    {
+      "engine": "browse",
+      "task": "pypi-metadata",
+      "round": 1,
+      "name": "execute",
+      "arguments": {
+        "tab": 1906276004,
+        "code": "await page.getByRole('link', {name:'Release history'}).click(); await page.waitForTimeout(700); return {url: await page.url(), text:(await page.locator('body').innerText()).slice(0,7000)}"
+      },
+      "elapsed_ms": 10041.457959000007,
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "tab: 1906276004\n\nTimeoutError: No element matches selector \"internal:role=link[name=\\\"Release history\\\"i]\" (waited 9999 ms)\n    at <anonymous> (execute.js:1:285)"
+          }
+        ],
+        "isError": true
+      }
+    },
+    {
+      "engine": "browse",
+      "task": "govuk-calendar",
+      "round": 1,
+      "name": "execute",
+      "arguments": {
+        "tab": 1906276004,
+        "code": "await page.getByRole('link',{name:'Scotland', exact:true}).click(); await page.waitForLoadState('domcontentloaded'); return {url:page.url(), title:await page.title(), text:(await page.locator('body').innerText()).slice(0,6500)}"
+      },
+      "elapsed_ms": 10074.669203999976,
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "tab: 1906276004\n\nTimeoutError: No element matches selector \"internal:role=link[name=\\\"Scotland\\\"s]\" (waited 9999 ms)\n    at <anonymous> (execute.js:1:289)"
+          }
+        ],
+        "isError": true
+      }
+    }
+  ],
+  "scoring_correction": {
+    "at": "2026-11-17T08:23:35.206Z",
+    "reason": "Decode JSON values inside the native tab-header wrapper before exact-quote matching. The old reader could parse plain JSON but missed the same page text when browse prefixed it with a tab ID and page metadata. Apply the correction uniformly to every saved trial on both engines. Requested facts, source checks, no-direct-fetch checks, raw answers, timings, usage and traces are unchanged.",
+    "changed_trials": [
+      {
+        "engine": "browse",
+        "task": "pypi-metadata",
+        "round": 0,
+        "before": "agent_failure",
+        "after": "passed"
+      },
+      {
+        "engine": "browse",
+        "task": "govuk-calendar",
+        "round": 0,
+        "before": "agent_failure",
+        "after": "passed"
+      },
+      {
+        "engine": "browse",
+        "task": "arxiv-paper",
+        "round": 1,
+        "before": "agent_failure",
+        "after": "passed"
+      },
+      {
+        "engine": "browse",
+        "task": "github-issue",
+        "round": 1,
+        "before": "agent_failure",
+        "after": "passed"
+      },
+      {
+        "engine": "browse",
+        "task": "pypi-metadata",
+        "round": 1,
+        "before": "agent_failure",
+        "after": "passed"
+      },
+      {
+        "engine": "browse",
+        "task": "govuk-calendar",
+        "round": 1,
+        "before": "agent_failure",
+        "after": "passed"
+      }
+    ],
+    "scorer_sha256": "4a25821b37f22e77ba903e1896da5dad290332606165c3b0534052a8647028bc",
+    "offline_scoring_ms": 38.484656,
+    "scorer_support_sha256": "56088198f7c3135bca37bad8e859aa2c342bacd697ca44594609de5f8676f66e"
+  },
+  "raw_passed": {
+    "zen": 12,
+    "browse": 6
+  },
+  "per_task": {
+    "wikipedia-biography": {
+      "zen": {
+        "attempted": 2,
+        "passed": 2,
+        "outcomes": {
+          "passed": 2
+        },
+        "usage_runs": 2,
+        "mean_seconds": 43.71327440400003,
+        "median_seconds": 43.71327440400003,
+        "total_seconds": 87.42654880800006,
+        "input_tokens": 304572,
+        "cached_input_tokens": 223616,
+        "cache_write_input_tokens": 0,
+        "uncached_input_tokens": 80956,
+        "output_tokens": 2311,
+        "reasoning_output_tokens": 955,
+        "browser_calls": 18,
+        "tool_errors": 3,
+        "failed_call_seconds": 0.035136982999931204,
+        "response_bytes": 47103,
+        "help_calls": 3,
+        "help_response_bytes": 3835,
+        "operations": {
+          "snapshot": 8,
+          "navigate": 2,
+          "run": 5,
+          "help": 3
+        }
+      },
+      "browse": {
+        "attempted": 2,
+        "passed": 2,
+        "outcomes": {
+          "passed": 2
+        },
+        "usage_runs": 2,
+        "mean_seconds": 33.44554159450001,
+        "median_seconds": 33.44554159450001,
+        "total_seconds": 66.89108318900001,
+        "input_tokens": 224190,
+        "cached_input_tokens": 172288,
+        "cache_write_input_tokens": 0,
+        "uncached_input_tokens": 51902,
+        "output_tokens": 2098,
+        "reasoning_output_tokens": 979,
+        "browser_calls": 9,
+        "tool_errors": 0,
+        "failed_call_seconds": 0,
+        "response_bytes": 19217,
+        "help_calls": 0,
+        "help_response_bytes": 0,
+        "operations": {}
+      }
+    },
+    "arxiv-paper": {
+      "zen": {
+        "attempted": 2,
+        "passed": 2,
+        "outcomes": {
+          "passed": 2
+        },
+        "usage_runs": 2,
+        "mean_seconds": 74.59867010000002,
+        "median_seconds": 74.59867010000002,
+        "total_seconds": 149.19734020000004,
+        "input_tokens": 940977,
+        "cached_input_tokens": 818688,
+        "cache_write_input_tokens": 0,
+        "uncached_input_tokens": 122289,
+        "output_tokens": 4222,
+        "reasoning_output_tokens": 1841,
+        "browser_calls": 37,
+        "tool_errors": 2,
+        "failed_call_seconds": 0.019517258999985642,
+        "response_bytes": 135562,
+        "help_calls": 6,
+        "help_response_bytes": 7562,
+        "operations": {
+          "navigate": 3,
+          "snapshot": 15,
+          "run": 5,
+          "help": 6,
+          "status": 1,
+          "click": 2,
+          "fill": 2,
+          "press": 1,
+          "submit": 1,
+          "extract": 1
+        }
+      },
+      "browse": {
+        "attempted": 2,
+        "passed": 2,
+        "outcomes": {
+          "passed": 2
+        },
+        "usage_runs": 2,
+        "mean_seconds": 139.56670118,
+        "median_seconds": 139.56670118,
+        "total_seconds": 279.13340236,
+        "input_tokens": 622879,
+        "cached_input_tokens": 532352,
+        "cache_write_input_tokens": 0,
+        "uncached_input_tokens": 90527,
+        "output_tokens": 4918,
+        "reasoning_output_tokens": 1436,
+        "browser_calls": 31,
+        "tool_errors": 5,
+        "failed_call_seconds": 40.336175744000066,
+        "response_bytes": 55945,
+        "help_calls": 0,
+        "help_response_bytes": 0,
+        "operations": {}
+      }
+    },
+    "github-issue": {
+      "zen": {
+        "attempted": 2,
+        "passed": 2,
+        "outcomes": {
+          "passed": 2
+        },
+        "usage_runs": 2,
+        "mean_seconds": 23.854940882499992,
+        "median_seconds": 23.854940882499992,
+        "total_seconds": 47.709881764999984,
+        "input_tokens": 122445,
+        "cached_input_tokens": 80512,
+        "cache_write_input_tokens": 0,
+        "uncached_input_tokens": 41933,
+        "output_tokens": 1363,
+        "reasoning_output_tokens": 742,
+        "browser_calls": 6,
+        "tool_errors": 0,
+        "failed_call_seconds": 0,
+        "response_bytes": 25982,
+        "help_calls": 0,
+        "help_response_bytes": 0,
+        "operations": {
+          "navigate": 3,
+          "snapshot": 3
+        }
+      },
+      "browse": {
+        "attempted": 2,
+        "passed": 2,
+        "outcomes": {
+          "passed": 2
+        },
+        "usage_runs": 2,
+        "mean_seconds": 22.227259556999975,
+        "median_seconds": 22.227259556999975,
+        "total_seconds": 44.45451911399995,
+        "input_tokens": 81859,
+        "cached_input_tokens": 48256,
+        "cache_write_input_tokens": 0,
+        "uncached_input_tokens": 33603,
+        "output_tokens": 1092,
+        "reasoning_output_tokens": 536,
+        "browser_calls": 2,
+        "tool_errors": 0,
+        "failed_call_seconds": 0,
+        "response_bytes": 15492,
+        "help_calls": 0,
+        "help_response_bytes": 0,
+        "operations": {}
+      }
+    },
+    "pypi-metadata": {
+      "zen": {
+        "attempted": 2,
+        "passed": 2,
+        "outcomes": {
+          "passed": 2
+        },
+        "usage_runs": 2,
+        "mean_seconds": 28.9679762695,
+        "median_seconds": 28.9679762695,
+        "total_seconds": 57.935952539,
+        "input_tokens": 190246,
+        "cached_input_tokens": 150528,
+        "cache_write_input_tokens": 0,
+        "uncached_input_tokens": 39718,
+        "output_tokens": 1557,
+        "reasoning_output_tokens": 726,
+        "browser_calls": 10,
+        "tool_errors": 0,
+        "failed_call_seconds": 0,
+        "response_bytes": 35515,
+        "help_calls": 0,
+        "help_response_bytes": 0,
+        "operations": {
+          "status": 2,
+          "navigate": 2,
+          "snapshot": 4,
+          "run": 2
+        }
+      },
+      "browse": {
+        "attempted": 2,
+        "passed": 2,
+        "outcomes": {
+          "passed": 2
+        },
+        "usage_runs": 2,
+        "mean_seconds": 42.597074491499974,
+        "median_seconds": 42.597074491499974,
+        "total_seconds": 85.19414898299995,
+        "input_tokens": 222753,
+        "cached_input_tokens": 153984,
+        "cache_write_input_tokens": 0,
+        "uncached_input_tokens": 68769,
+        "output_tokens": 1956,
+        "reasoning_output_tokens": 749,
+        "browser_calls": 9,
+        "tool_errors": 2,
+        "failed_call_seconds": 20.114086210000025,
+        "response_bytes": 66993,
+        "help_calls": 0,
+        "help_response_bytes": 0,
+        "operations": {}
+      }
+    },
+    "python-json": {
+      "zen": {
+        "attempted": 2,
+        "passed": 2,
+        "outcomes": {
+          "passed": 2
+        },
+        "usage_runs": 2,
+        "mean_seconds": 40.155252447999985,
+        "median_seconds": 40.155252447999985,
+        "total_seconds": 80.31050489599997,
+        "input_tokens": 421912,
+        "cached_input_tokens": 350592,
+        "cache_write_input_tokens": 0,
+        "uncached_input_tokens": 71320,
+        "output_tokens": 2120,
+        "reasoning_output_tokens": 824,
+        "browser_calls": 20,
+        "tool_errors": 1,
+        "failed_call_seconds": 0.0005655960000003688,
+        "response_bytes": 51840,
+        "help_calls": 3,
+        "help_response_bytes": 2587,
+        "operations": {
+          "navigate": 3,
+          "snapshot": 4,
+          "help": 3,
+          "find": 8,
+          "run": 2
+        }
+      },
+      "browse": {
+        "attempted": 2,
+        "passed": 2,
+        "outcomes": {
+          "passed": 2
+        },
+        "usage_runs": 2,
+        "mean_seconds": 37.919642600999985,
+        "median_seconds": 37.919642600999985,
+        "total_seconds": 75.83928520199997,
+        "input_tokens": 315617,
+        "cached_input_tokens": 246784,
+        "cache_write_input_tokens": 0,
+        "uncached_input_tokens": 68833,
+        "output_tokens": 2328,
+        "reasoning_output_tokens": 816,
+        "browser_calls": 13,
+        "tool_errors": 0,
+        "failed_call_seconds": 0,
+        "response_bytes": 49606,
+        "help_calls": 0,
+        "help_response_bytes": 0,
+        "operations": {}
+      }
+    },
+    "govuk-calendar": {
+      "zen": {
+        "attempted": 2,
+        "passed": 2,
+        "outcomes": {
+          "passed": 2
+        },
+        "usage_runs": 2,
+        "mean_seconds": 45.490667840999976,
+        "median_seconds": 45.490667840999976,
+        "total_seconds": 90.98133568199995,
+        "input_tokens": 308480,
+        "cached_input_tokens": 244736,
+        "cache_write_input_tokens": 0,
+        "uncached_input_tokens": 63744,
+        "output_tokens": 3347,
+        "reasoning_output_tokens": 2386,
+        "browser_calls": 14,
+        "tool_errors": 0,
+        "failed_call_seconds": 0,
+        "response_bytes": 54362,
+        "help_calls": 3,
+        "help_response_bytes": 3243,
+        "operations": {
+          "navigate": 2,
+          "snapshot": 3,
+          "run": 2,
+          "status": 1,
+          "help": 3,
+          "find": 3
+        }
+      },
+      "browse": {
+        "attempted": 2,
+        "passed": 2,
+        "outcomes": {
+          "passed": 2
+        },
+        "usage_runs": 2,
+        "mean_seconds": 40.866045428500016,
+        "median_seconds": 40.866045428500016,
+        "total_seconds": 81.73209085700003,
+        "input_tokens": 247369,
+        "cached_input_tokens": 202624,
+        "cache_write_input_tokens": 0,
+        "uncached_input_tokens": 44745,
+        "output_tokens": 1579,
+        "reasoning_output_tokens": 434,
+        "browser_calls": 10,
+        "tool_errors": 2,
+        "failed_call_seconds": 20.135125338000012,
+        "response_bytes": 26441,
+        "help_calls": 0,
+        "help_response_bytes": 0,
+        "operations": {}
+      }
+    }
+  }
+}

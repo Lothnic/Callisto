@@ -71,6 +71,26 @@ issue, PyPI release metadata, Python documentation and a GOV.UK calendar.
 The model chooses its browser actions. No selector recipes or expected answers
 are supplied to it. This is separate from the scripted local fixture suites.
 
+For an explicit Codex model, set `BENCH_HOST_MODEL` and `BENCH_HOST_EFFORT`.
+The defaults remain `gpt-6.1-sol` and `high`. A Luna comparison uses
+`BENCH_HOST_MODEL=gpt-6-luna BENCH_HOST_EFFORT=high` for both engines.
+Use `BENCH_TASKS=wikipedia-biography BENCH_REPETITIONS=1` for a small paired
+preflight, then a fresh directory without `BENCH_TASKS` for the full matrix.
+Unknown task IDs reject the entire selection before provisioning or model access.
+The [17 November Luna pilot](../reports/luna-real-world-2026-11-17/README.md)
+retains all 24 trials, its separate preflight, a token-guard continuation and
+the uniform JSON-wrapper scoring correction with unchanged raw scores.
+
+The public-site fixture discovers browse's native API. Legacy builds use
+sessions and their origin allowlist; the installed 0.1.0 CLI exposes tab-based
+execute instead. That path preserves native `tab` arguments and has no session
+origin allowlist; the same-site task policy and transcript checks still apply.
+Both modes use only owned disposable profiles. When loading a store extension
+package unpacked, the fixture adds browse's upstream public development key to
+an owned copy so its identity matches the relay's trusted unpacked build.
+Extension code and installed files are unchanged. Both source and loaded manifest
+hashes, API mode and identity preparation are recorded in runtime metadata.
+
 ### OpenCode host
 
 Set `BENCH_HOST=opencode` to run the same six tasks through fresh OpenCode
@@ -149,6 +169,10 @@ without rerunning agents. It writes separate reviewed scores and a correction
 audit, preserving raw scores and timings. The calendar checker accepts a shared
 explicit year for both dates. Its positive, negative and evidence checks run
 with `node --test eval/agent-comparison/real-world-tasks.test.mjs`.
+The reader also decodes JSON values inside native `tab: <id>` wrappers before
+matching exact quotes, uniformly for both engines. An optional third CLI argument
+records the specific correction reason; scorer/support hashes and offline
+re-scoring time accompany the separate reviewed results. Raw trials stay intact.
 
 If the runner stops at its reported-token session boundary, resume only missing
 trial IDs with the same output directory and settings:

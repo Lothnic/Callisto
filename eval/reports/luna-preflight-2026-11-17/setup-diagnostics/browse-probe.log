@@ -1,0 +1,28 @@
+failure Fixture deadline exceeded
+worker chrome-extension://nmpcppiajpeadahggppcfjjkidmmdlkh/background.js
+storage keys [
+  'agentRelayAttached',
+  'agentRelayPairingCode',
+  'agentRelayPort',
+  'tabCleanup'
+]
+diagnostics browse diagnostics
+extension: 0.0.16 (nmpcppiajpeadahggppcfjjkidmmdlkh)
+browser: Mozilla/5.0 (X11; Ubuntu; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36
+relay: ws://127.0.0.1:42039/extension, protocol 3
+pairing: code
+status: offline
+reconnect attempts: 5 (retry scheduled)
+cdp commands: 0 (0 failed)
+agent tabs: none
+generated: 2026-11-17T07:50:58.137Z
+
+log (last 8):
+2026-11-17T07:50:43.031Z pairing.changed
+2026-11-17T07:50:43.035Z connect host=127.0.0.1 port=42039 attempt=0 reason=pairing generation=1
+2026-11-17T07:50:43.035Z worker.start restoredTabs=0
+2026-11-17T07:50:43.037Z close code=1006 meaning="abnormal (no relay, or the connection dropped)" clean=false opened=false
+2026-11-17T07:50:43.038Z retry ms=490 attempt=1
+2026-11-17T07:50:43.529Z connect host=127.0.0.1 port=42039 attempt=1 reason=backoff generation=2
+2026-11-17T07:50:43.530Z close code=1006 meaning="abnormal (no relay, or the connection dropped)" clean=false opened=false
+2026-11-17T07:50:43.530Z retry ms=1132 attempt=2

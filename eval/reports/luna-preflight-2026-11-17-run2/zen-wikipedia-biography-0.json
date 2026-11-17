@@ -1,0 +1,448 @@
+{
+  "schema": "callisto.real-world-trace.v1",
+  "host": {
+    "code": 0,
+    "signal": null,
+    "error": null,
+    "timed_out": false,
+    "elapsed_ms": 36189.136555000005,
+    "usage": {
+      "input_tokens": 78214,
+      "cached_input_tokens": 37632,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 701,
+      "reasoning_output_tokens": 321
+    },
+    "final": "{\"answer\":\"Ada Lovelace was born on 10 December 1815 in London, England. Her mother was Anne Isabella Milbanke.\",\"evidence\":[{\"url\":\"https://en.wikipedia.org/wiki/Ada_Lovelace\",\"quote\":\"Augusta Ada Byron 10 December 1815 London, England\"},{\"url\":\"https://en.wikipedia.org/wiki/Ada_Lovelace\",\"quote\":\"Anne Isabella Milbanke (mother)\"}]}",
+    "events": [
+      {
+        "type": "thread.started",
+        "thread_id": "01a1e884-90f5-72d3-b4ea-28dab00f6ca2"
+      },
+      {
+        "type": "turn.started"
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_0",
+          "type": "agent_message",
+          "text": "I’ll open Wikipedia’s live page in the owned Zen tab, find Ada Lovelace’s biography, and verify the requested details from the page itself."
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_1",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "navigate",
+            "args": {
+              "url": "https://en.wikipedia.org/wiki/Main_Page"
+            }
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_1",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "navigate",
+            "args": {
+              "url": "https://en.wikipedia.org/wiki/Main_Page"
+            }
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"navigationStarted\":true}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_2",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "snapshot",
+            "args": {
+              "max_chars": 6000
+            }
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_2",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "snapshot",
+            "args": {
+              "max_chars": 6000
+            }
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"next_offset\":122,\"offset\":0,\"order_changed\":false,\"revision\":\"ax-15579965644245713874:1\",\"text\":\"[ax-1102826527624794033] link \\\"Jump to content\\\"\\n[ax-5906447188452069655] button \\\"Main menu\\\"\\n[ax-16306709107301672213] link \\\"\\\"\\n[ax-13753972527513162736] search \\\"Search\\\"\\n[ax-17352614208630021911] searchbox \\\"Search Wikipedia\\\"\\n[ax-5716131948051860255] button \\\"Search\\\"\\nlistitem \\\"Donate\\\"\\n[ax-17870255830017154116] link \\\"Donate\\\"\\nlistitem \\\"Create account\\\"\\n[ax-4329349637285643856] link \\\"Create account\\\"\\nlistitem \\\"Log in\\\"\\n[ax-11658490869382469104] link \\\"Log in\\\"\\n[ax-607168644483136492] link \\\"Wiki Loves Food 2026 in India Documenting India's vibrant culinary heritage and food traditions.\\\"\\nparagraph \\\"Wiki Loves Food 2026 in India Documenting India's vibrant culinary heritage and food traditions.\\\"\\n[ax-11820603692214358312] link \\\"Hide\\\"\\nlistitem \\\"Main Page\\\"\\n[ax-16640106290645765714] link \\\"Main Page\\\"\\nlistitem \\\"Talk\\\"\\n[ax-12141497865281354525] link \\\"Talk\\\"\\nlistitem \\\"Read\\\"\\n[ax-1963308819252310030] link \\\"Read\\\"\\nlistitem \\\"View source\\\"\\n[ax-15302683248880753533] link \\\"View source\\\"\\nlistitem \\\"View history\\\"\\n[ax-10169072517083301397] link \\\"View history\\\"\\nlistitem \\\"Save\\\"\\n[ax-7899945630993185377] link \\\"Save\\\"\\n[ax-10467298089738470551] button \\\"Tools\\\"\\ntext \\\"Appearance\\\"\\n[ax-9793880209597678876] button \\\"Hide Appearance\\\"\\ntext \\\"Text\\\"\\nlistitem \\\"Small Standard Large\\\"\\n[ax-16881901246189862188] radio \\\"Small\\\"\\n[ax-1399389950635417436] radio \\\"Standard\\\"\\n[ax-17274459414179604960] radio \\\"Large\\\"\\ntext \\\"Width\\\"\\nlistitem \\\"Standard Wide\\\"\\n[ax-1648967512230918140] radio \\\"Standard\\\"\\n[ax-13928773284376120700] radio \\\"Wide\\\"\\ntext \\\"Color\\\"\\nlistitem \\\"Automatic Light Dark\\\"\\n[ax-4693884903134735667] radio \\\"Automatic\\\"\\n[ax-10055298994257402599] radio \\\"Light\\\"\\n[ax-825207266394877831] radio \\\"Dark\\\"\\ntext \\\",\\\"\\nheading \\\"Welcome to Wikipedia\\\"\\n[ax-15137657015963891670] link \\\"Wikipedia\\\"\\ntext \\\"the encyclopedia that .\\\"\\n[ax-4293278563295613488] link \\\"free\\\"\\n[ax-14649665467787070357] link \\\"anyone can edit\\\"\\nlistitem \\\"261,656 active editors\\\"\\n[ax-11046362826343271659] link \\\"261,656\\\"\\nlistitem \\\"7,265,442 articles in English\\\"\\n[ax-7937599380355006422] link \\\"7,265,442\\\"\\n[ax-4583385459624671606] link \\\"English\\\"\\nheading \\\"From today's featured article\\\"\\ntext \\\"From today's featured article\\\"\\n[ax-11903453953741042256] link \\\"Dividing the Light was one of the installation artworks that inspired the game.\\\"\\ntext \\\"was one of the installation artworks that inspired the game.\\\"\\n[ax-737784157985318525] link \\\"Dividing the Light\\\"\\nparagraph \\\"Islands: Non-Places is an abstract art game developed and published by Carl Burton. It was released on November 17, 2016, and consists of a series of anonymous, liminal environments, each rendered in \\\"\\n[ax-11210351287559771152] link \\\"Islands: Non-Places\\\"\\n[ax-10812988412638459913] link \\\"art game\\\"\\n[ax-315292503552283374] link \\\"liminal\\\"\\n[ax-2534392881881683315] link \\\"Marc Augé\\\"\\n[ax-8948341078729454086] link \\\"installation art\\\"\\n[ax-17762019110624602999] link \\\"James Turrell\\\"\\n[ax-3677119753909632831] link \\\"field recordings\\\"\\n[ax-13891225890704448021] link \\\"Chris Watson\\\"\\n[ax-16759482912775493962] link \\\"Nuovo Award\\\"\\n[ax-12358760691793599911] link \\\"Independent Games Festival\\\"\\n[ax-10095712933659265952] link \\\"Full article...\\\"\\ntext \\\"Recently featured:\\\"\\nlistitem \\\"Mark Satin\\\"\\n[ax-13422127064521087934] link \\\"Mark Satin\\\"\\nlistitem \\\"\\\\\\\"Can't Let Go\\\\\\\" (Mariah Carey song)\\\"\\n[ax-15480066461216386850] link \\\"\\\\\\\"Can't Let Go\\\\\\\" (Mariah Carey song)\\\"\\nlistitem \\\"Aucanquilcha\\\"\\n[ax-9523692308231112510] link \\\"Aucanquilcha\\\"\\nlistitem \\\"Archive\\\"\\n[ax-172515708846179751] link \\\"Archive\\\"\\nlistitem \\\"By email\\\"\\n[ax-13988034532091234974] link \\\"By email\\\"\\nlistitem \\\"More featured articles\\\"\\n[ax-2942730391116323247] link \\\"More featured articles\\\"\\nlistitem \\\"About\\\"\\n[ax-3062860775267201095] link \\\"About\\\"\\nheading \\\"Did you know ...\\\"\\n[ax-14934184385579710767] link \\\"Verity\\\"\\ntext \\\"Verity\\\"\\nlistitem \\\"... that USA Today compared a Generation Alpha meme (pictured) to a Lovecraftian monster used as a metaphor for AI?\\\"\\n[ax-12854473767048642917] link \\\"a Generation Alpha meme\\\"\\nlistitem \\\"... that Julian Aguon has argued that some legal cases revolve around the \\\\\\\"right to culture\\\\\\\"?\\\"\\n[ax-6752705890683590387] link \\\"Julian Aguon\\\"\\nlistitem \\\"... that Netflix experienced an outage because numerous Stranger Things fans checked whether a secret episode of the series had been released?\\\"\\n[ax-12129802639382236041] link \\\"a secret episode\\\"\\nlistitem \\\"... that Swiss painter Alois Lichtsteiner signs his works as \\\\\\\"OHMSTAL\\\\\\\" because he finds it \\\\\\\"a beautiful word\\\\\\\"?\\\"\\n[ax-8209209688928664474] link \\\"Alois Lichtsteiner\\\"\\nlistitem \\\"... that a dangerous stretch of Interstate 24 in Tennessee inspired a Johnny Cash song?\\\"\\n[ax-17478735818711446573] link \\\"Interstate 24 in Tennessee\\\"\\nlistitem \\\"... that a 2023 study found that iCloud Private Relay made speed-test downloads up to ten times slower, but improved network performance in some cases?\\\"\\n[ax-3529929589713627241] link \\\"iCloud Private Relay\\\"\\nlistitem \\\"... that when the Dyckman House in New York City opened as a museum, its backyard had a military hut?\\\"\\n[ax-16771900444275862417] link \\\"Dyckman House\\\"\\nlistitem \\\"... that \\\\\\\"Consideration\\\\\\\" by Rihanna was originally meant to be included on featured artist SZA's debut album?\\\"\\n[ax-12418084544511472986] link \\\"Consideration\\\"\\nlistitem \\\"... that Nannie Washburn and her sister faced the death penalty for handing out leaflets?\\\"\\n[ax-15439058464815901293] link \\\"Nannie Washburn\\\"\\nlistitem \\\"Archive\\\"\\n[ax-11083007294307671336] link \\\"Archive\\\"\\nlistitem \\\"Start a new article\\\"\\n[ax-758373974596165223] link \\\"Start a new article\\\"\\nlistitem \\\"Nominate an article\\\"\\n[ax-9883890885128988359] link \\\"Nominate an article\\\"\\nheading \\\"Help us improve this article!\\\"\\n[ax-10155629916440086264] link \\\"Garbage bin with trash on top\\\"\\ntext \\\"Garbage bin with trash on top\\\"\\ntext \\\"This week's article for improvement is , waste material discarded by humans. The words , , , and are generally used interchangeably.\\\"\\n[ax-17233854364963014718] link \\\"garbage\\\"\\nparagraph \\\"You can improve this article by:\\\"\\nlistitem \\\"Expanding the \\\\\\\"History\\\\\\\" and \\\\\\\"Treatment\\\\\\\" sections\\\"\\n[ax-18429094137869951543] link \\\"History\\\"\",\"title\":\"Wikipedia, the free encyclopedia\",\"truncated\":true,\"url\":\"https://en.wikipedia.org/wiki/Main_Page\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\",\"Continue with next_offset and revision to read this captured snapshot.\"]}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_3",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "help",
+            "args": {
+              "op": "run"
+            }
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_3",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "help",
+            "args": {
+              "op": "run"
+            }
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"args_schema\":{\"properties\":{\"snapshot\":{\"type\":\"boolean\"},\"steps\":{\"items\":{\"properties\":{\"action\":{\"enum\":[\"navigate\",\"click_ref\",\"click_role\",\"fill_ref\",\"fill_role\",\"submit_ref\",\"submit_role\",\"select_ref\",\"select_role\",\"check_ref\",\"check_role\",\"hover_ref\",\"hover_role\",\"press\",\"scroll\",\"wait\",\"wait_for\",\"extract\"],\"type\":\"string\"},\"checked\":{\"type\":\"boolean\"},\"delta_x\":{\"type\":\"number\"},\"delta_y\":{\"type\":\"number\"},\"key\":{\"type\":\"string\"},\"ms\":{\"maximum\":5000,\"minimum\":1,\"type\":\"integer\"},\"name\":{\"type\":\"string\"},\"ref\":{\"type\":\"string\"},\"role\":{\"type\":\"string\"},\"selector\":{\"maxLength\":500,\"minLength\":1,\"type\":\"string\"},\"spec\":{\"type\":\"object\"},\"state\":{\"enum\":[\"visible\",\"hidden\",\"attached\",\"detached\"],\"type\":\"string\"},\"text\":{\"maxLength\":500,\"minLength\":1,\"type\":\"string\"},\"timeout_ms\":{\"maximum\":20000,\"minimum\":100,\"type\":\"integer\"},\"url\":{\"type\":\"string\"},\"value\":{\"type\":\"string\"}},\"required\":[\"action\"],\"type\":\"object\"},\"maxItems\":40,\"minItems\":1,\"type\":\"array\"}},\"required\":[\"steps\"],\"type\":\"object\"},\"description\":\"Run 1–40 dependent steps in one call: navigate; click/fill/submit/select/check/hover by ref or exact role; press; scroll; wait; wait_for text or CSS selector state; extract rows. Use submit instead of synthetic Enter for forms. Returns the last extraction and an optional final snapshot. Stops at the first failure within a 60-second budget; earlier steps are not rolled back. Input uses the explicitly selected input mode.\",\"op\":\"run\"}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_4",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "run",
+            "args": {
+              "steps": [
+                {
+                  "action": "fill_ref",
+                  "ref": "ax-17352614208630021911",
+                  "value": "Ada Lovelace"
+                },
+                {
+                  "action": "submit_ref",
+                  "ref": "ax-17352614208630021911"
+                }
+              ],
+              "snapshot": true
+            }
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_4",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "run",
+            "args": {
+              "steps": [
+                {
+                  "action": "fill_ref",
+                  "ref": "ax-17352614208630021911",
+                  "value": "Ada Lovelace"
+                },
+                {
+                  "action": "submit_ref",
+                  "ref": "ax-17352614208630021911"
+                }
+              ],
+              "snapshot": true
+            }
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"completed\":2,\"elapsed_ms\":82,\"snapshot\":{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"navigationStarted\":true,\"next_offset\":220,\"offset\":0,\"order_changed\":false,\"revision\":\"ax-3075422366567396245:1\",\"text\":\"[ax-10571973832982952772] link \\\"Jump to content\\\"\\n[ax-18231394593513459215] button \\\"Main menu\\\"\\n[ax-2866853868126267534] link \\\"\\\"\\n[ax-1367833082503089343] search \\\"Search\\\"\\n[ax-2917857743897477736] searchbox \\\"Search Wikipedia\\\"\\n[ax-12573177111896449775] button \\\"Search\\\"\\nlistitem \\\"Donate\\\"\\n[ax-3732295816220881685] link \\\"Donate\\\"\\nlistitem \\\"Create account\\\"\\n[ax-2421729363750842803] link \\\"Create account\\\"\\nlistitem \\\"Log in\\\"\\n[ax-17255497008421568136] link \\\"Log in\\\"\\nheading \\\"Contents\\\"\\n[ax-3426060171968105861] button \\\"Hide Contents\\\"\\nlistitem \\\"(Top)\\\"\\n[ax-4500048894333292822] link \\\"(Top)\\\"\\nlistitem \\\"Biography Toggle Biography subsection\\\"\\n[ax-2660793088970449657] link \\\"Biography\\\"\\n[ax-5416886269885732547] button \\\"Toggle Biography subsection\\\"\\nlistitem \\\"Work Toggle Work subsection\\\"\\n[ax-6262785438327678] link \\\"Work\\\"\\n[ax-16389864022637178099] button \\\"Toggle Work subsection\\\"\\nlistitem \\\"Commemoration Toggle Commemoration subsection\\\"\\n[ax-15235304280370778946] link \\\"Commemoration\\\"\\n[ax-9160559090248128137] button \\\"Toggle Commemoration subsection\\\"\\nlistitem \\\"In popular culture Toggle In popular culture subsection\\\"\\n[ax-6748937278658490408] link \\\"In popular culture\\\"\\n[ax-9065048003233783020] button \\\"Toggle In popular culture subsection\\\"\\nlistitem \\\"Publications Toggle Publications subsection\\\"\\n[ax-6081540518470436985] link \\\"Publications\\\"\\n[ax-8131246100627083654] button \\\"Toggle Publications subsection\\\"\\nlistitem \\\"See also\\\"\\n[ax-10159566303455346576] link \\\"See also\\\"\\nlistitem \\\"Explanatory notes\\\"\\n[ax-7627774484078401750] link \\\"Explanatory notes\\\"\\nlistitem \\\"References Toggle References subsection\\\"\\n[ax-13818181518650545412] link \\\"References\\\"\\n[ax-14942725266110922440] button \\\"Toggle References subsection\\\"\\nlistitem \\\"Further reading\\\"\\n[ax-501510609969270514] link \\\"Further reading\\\"\\nlistitem \\\"External links\\\"\\n[ax-6604424784562543956] link \\\"External links\\\"\\nheading \\\"Ada Lovelace\\\"\\ntext \\\"Ada Lovelace\\\"\\n[ax-10132335052305857107] button \\\"113 languages\\\"\\nlistitem \\\"Article\\\"\\n[ax-4337749436816580444] link \\\"Article\\\"\\nlistitem \\\"Talk\\\"\\n[ax-15780209930404807917] link \\\"Talk\\\"\\nlistitem \\\"Read\\\"\\n[ax-17322305207107524951] link \\\"Read\\\"\\nlistitem \\\"View source\\\"\\n[ax-13906719385236421638] link \\\"View source\\\"\\nlistitem \\\"View history\\\"\\n[ax-2622369294836791583] link \\\"View history\\\"\\nlistitem \\\"Save\\\"\\n[ax-2555201378849548302] link \\\"Save\\\"\\n[ax-956170114080783738] button \\\"Tools\\\"\\ntext \\\"Appearance\\\"\\n[ax-12301630708040634982] button \\\"Hide Appearance\\\"\\n[ax-7829632825664804789] link \\\"This article is semi-protected.\\\"\\ntext \\\"From Wikipedia, the free encyclopedia\\\"\\n[ax-9129887537292205724] note \\\"For the computer microarchitecture, see Ada Lovelace (microarchitecture).\\\"\\n[ax-17676061454626834794] link \\\"Ada Lovelace (microarchitecture)\\\"\\ncolumnheader \\\"The Right Honourable The Countess of Lovelace\\\"\\n[ax-4497872668708799175] link \\\"The Right Honourable\\\"\\ncell \\\"Daguerreotype of Lovelace (c. 1843)[1]\\\"\\n[ax-2139704650105273314] link \\\"\\\"\\n[ax-373949758445344068] link \\\"Daguerreotype\\\"\\n[ax-8383263731414767802] link \\\"[1]\\\"\\ncolumnheader \\\"Born\\\"\\ncell \\\"Augusta Ada Byron 10 December 1815 London, England\\\"\\ncolumnheader \\\"Died\\\"\\ncell \\\"27 November 1852 (aged 36) Marylebone, London, England\\\"\\n[ax-13257963971996989397] link \\\"Marylebone\\\"\\ncolumnheader \\\"Resting place\\\"\\ncell \\\"Church of St Mary Magdalene, Hucknall, Nottingham, England\\\"\\n[ax-17794445984512536370] link \\\"Church of St Mary Magdalene, Hucknall\\\"\\ncolumnheader \\\"Known for\\\"\\ncell \\\"Mathematics, computing\\\"\\n[ax-4089828033678623766] link \\\"Mathematics\\\"\\n[ax-13004983477775387412] link \\\"computing\\\"\\ncolumnheader \\\"Spouse\\\"\\ncell \\\"William King-Noel, 1st Earl of Lovelace ​ ​(m. 1835)​\\\"\\n[ax-16173678685576623639] link \\\"William King-Noel, 1st Earl of Lovelace\\\"\\ncolumnheader \\\"Children\\\"\\ncell \\\"Byron King-Noel, Viscount Ockham Anne Blunt, 15th Baroness Wentworth Ralph King-Milbanke, 2nd Earl of Lovelace\\\"\\nlistitem \\\"Byron King-Noel, Viscount Ockham\\\"\\n[ax-12310817608995524450] link \\\"Byron King-Noel, Viscount Ockham\\\"\\nlistitem \\\"Anne Blunt, 15th Baroness Wentworth\\\"\\n[ax-3827636056124277617] link \\\"Anne Blunt, 15th Baroness Wentworth\\\"\\nlistitem \\\"Ralph King-Milbanke, 2nd Earl of Lovelace\\\"\\n[ax-13418494483084774435] link \\\"Ralph King-Milbanke, 2nd Earl of Lovelace\\\"\\ncolumnheader \\\"Parents\\\"\\ncell \\\"George Byron, 6th Baron Byron (father) Anne Isabella Milbanke (mother)\\\"\\nlistitem \\\"George Byron, 6th Baron Byron (father)\\\"\\n[ax-16328370697202631207] link \\\"George Byron, 6th Baron Byron\\\"\\nlistitem \\\"Anne Isabella Milbanke (mother)\\\"\\n[ax-18412435939201203603] link \\\"Anne Isabella Milbanke\\\"\\ncolumnheader \\\"Signature\\\"\\ncell \\\"\\\"\\n[ax-8804018924477962179] link \\\"\\\"\\nparagraph \\\"Augusta Ada King, Countess of Lovelace (née Byron; 10 December 1815 – 27 November 1852), also known as Ada Lovelace, was an English mathematician and writer chiefly known for work on Charles Babbage's\\\"\\n[ax-15756332671426334097] link \\\"née\\\"\\n[ax-12335572568325406532] link \\\"mathematician\\\"\\n[ax-350504081876228212] link \\\"writer\\\"\\n[ax-10461852582735642676] link \\\"Charles Babbage\\\"\\n[ax-6678457671560591085] link \\\"computer\\\"\\n[ax-7844603735954208044] link \\\"analytical engine\\\"\\n[ax-5516174406089272064] link \\\"computer programmer\\\"\\nparagraph \\\"Lovelace was the only legitimate child of poet Lord Byron and reformer Anne Isabella Milbanke.[2] Lord Byron separated from his wife a month after Ada was born, and died when she was eight. Although o\\\"\\n[ax-14425044403093797589] link \\\"legitimate child\\\"\\n[ax-8896657881171517860] link \\\"Lord Byron\\\"\\n[ax-729502029652007720] link \\\"Anne Isabella Milbanke\\\"\\n[ax-10059402773187264776] link \\\"[2]\\\"\\n[ax-10755597550038234975] link \\\"assiduously\\\"\\n[ax-3699094519649550905] link \\\"William King\\\"\\n[ax-7174237055290537163] link \\\"Baron\\\"\\n[ax-7940173185822128051] link \\\"Earl of Lovelace\\\"\\n[ax-6091454819673082979] link \\\"Baron Lovelaces\\\"\\n[ax-46359056141988979] link \\\"[3]\\\"\\nparagraph \\\"Lovelace's educational and social exploits brought her into contact with scientists such as Andrew Crosse, Charles Babbage, David Brewster, Charles Wheatstone and Michael Faraday, and the author Charl\\\"\\n[ax-13641330324611071775] link \\\"Andrew Crosse\\\"\\n[ax-4904467294033215749] link \\\"David Brewster\\\"\\n[ax-17165177262904612244] link \\\"Charles Wheatstone\\\"\\n[ax-16671862004492568746] link \\\"Michael Faraday\\\"\\n[ax-16973857293177938433] link \\\"Charles Dickens\\\"\\n[ax-8029886913398868315] link \\\"[4]\\\"\\n[ax-12606669585799006184] link \\\"Metaphysician\\\"\\n[ax-15114946293325750476] link \\\"[5]\\\"\\nparagraph \\\"At age 18, Lovelace's mathematical talents led her to a long working relationship and friendship with fellow British mathematician Charles Babbage. She was particularly interested in Babbage's work on\\\"\\n[ax-8039471006054954938] link \\\"Charles Babbage's Saturday night soirées\\\"\\n[ax-1397130258515063338] link \\\"[6]\\\"\\n[ax-5836946083417998012] link \\\"Mary Somerville\\\"\\n[ax-14362544077977127419] link \\\"Turing-complete\\\"\\n[ax-8168386715809304829] link \\\"an article\\\"\\n[ax-14947664184219229965] link \\\"Luigi Menabrea\\\"\\n[ax-16725683674702467388] link \\\"seven long explanatory notes\\\"\\n[ax-9751960578340401539] link \\\"Bernoulli numbers\\\"\\n[ax-4780792938747819384] link \\\"computer program\\\"\\nparagraph \\\"She developed a vision of the capability of computers to go beyond mere calculating or number-crunching, while many others, including Babbage, focused only on those capabilities.[7] Lovelace was the f\\\"\\n[ax-14006493902682833983] link \\\"calculating\\\"\\n[ax-10410118025673154467] link \\\"[7]\\\"\\n[ax-3226799085635211982] link \\\"arithmetical\\\"\\n[ax-14925420800171585325] link \\\"music\\\"\\n[ax-13594732457079524587] link \\\"[8]\\\"\\n[ax-3521010516248837210] link \\\"programming language\\\"\\nheading \\\"Biography\\\"\\nheading \\\"Childhood\\\"\\nparagraph \\\"Lord Byron expected his child to be a \\\\\\\"glorious boy\\\\\\\" and was disappointed when Lady Byron gave birth to a girl.[9] The child was named after Byron's half-sister, Augusta Leigh, and was called \\\\\\\"Ada\\\\\\\" by\\\"\\n[ax-13795362839865773203] link \\\"Lord Byron\\\"\\n[ax-261375943286394547] link \\\"Lady Byron\\\"\\n[ax-9313300715207507120] link \\\"[9]\\\"\\n[ax-12024227063963182161] link \\\"Augusta Leigh\\\"\\n[ax-11887249800966827075] link \\\"[10]\\\"\\n[ax-13196449308953054704] link \\\"Kirkby Mallory\\\"\\n[ax-6860000617637455695] link \\\"[9]\\\"\\n[ax-9222316628774458042] link \\\"[11]\\\"\\n[ax-6859906747000724255] link \\\"[12]\\\"\\n[ax-2277856306763183037] link \\\"\\\"\\ntext \\\"Ada Byron, aged four\\\"\\nparagraph \\\"On 21 April, Lord Byron signed the deed of separation, although very reluctantly, and left England for good a few days later.[13] Aside from an acrimonious separation, Lady Byron continued throughout \\\"\\n[ax-14101351987037355692] link \\\"deed of separation\\\"\\n[ax-13548996040210554218] link \\\"[13]\\\"\\n[ax-3746405561294350035] link \\\"[14]\\\"\\n[ax-360550653887746298] link \\\"[15]\\\"\\n[ax-16134879118856039249] link \\\"[16]\\\"\\n[ax-8489518439147409799] link \\\"\\\"\\ntext \\\"Ada Byron, aged seven, by , 1822,\\\"\\n[ax-13969965671333078104] link \\\"Alfred d'Orsay\\\"\\n[ax-14432954423636437484] link \\\"Somerville College, Oxford\\\"\\nparagraph \\\"Lovelace did not have a close relationship with her mother. She was often left in the care of her maternal grandmother Judith, Hon. Lady Milbanke, who doted on her. However, because of societal attitu\\\"\\n[ax-7136231181354662293] link \\\"[17]\\\"\\n[ax-5359959434370420794] link \\\"[18]\\\"\\n[ax-8676458382100000023] link \\\"[19]\\\"\\n[ax-5441933339283123856] link \\\"\\\"\\ntext \\\"Ada Byron, aged seventeen, 1832\\\"\\nparagraph \\\"Lovelace was often ill, beginning in early childhood. At the age of eight, she experienced headaches that obscured her vision.[10] In June 1829, she was paralyzed after a bout of measles. She was subj\\\"\\n[ax-17513556272495412663] link \\\"[10]\\\"\\n[ax-1259557823541174863] link \\\"measles\\\"\\nblockquote \\\"When Ada was twelve years old, this future \\\\\\\"Lady Fairy\\\\\\\", as Charles Babbage affectionately called her, decided she wanted to fly. Ada Byron went about the project methodically, thoughtfully, with imag\\\"\\nparagraph \\\"When Ada was twelve years old, this future \\\\\\\"Lady Fairy\\\\\\\", as Charles Babbage affectionately called her, decided she wanted to fly. Ada Byron went about the project methodically, thoughtfully, with imag\\\"\\n[ax-910274962276643157] link \\\"anatomy of birds\\\"\\n[ax-8117928138172721525] link \\\"[8]\\\"\\nparagraph \\\"Ada Byron had an affair with a tutor in early 1833. She tried to elope with him after she was caught, but the tutor's relatives recognised her and contacted her mother. Lady Byron and her friends cove\\\"\\n[ax-11979731776522131906] link \\\"[20]\\\"\\n[ax-14012575674604117339] link \\\"Allegra\\\"\\n[ax-7154439254673800441] link \\\"Claire Clairmont\\\"\\n[ax-4653336689229160371] link \\\"Elizabeth Medora Leigh\\\"\\n[ax-7421256995737562992] link \\\"[21]\\\"\\nheading \\\"Adult years\\\"\\n[ax-15060746441996069679] link \\\"\\\"\\ntext \\\"Watercolor portrait of Ada Byron, by , c. 1835.\\\"\\n[ax-16258710430131654521] link \\\"Alfred Edward Chalon\\\"\\n[ax-3123467027124897007] link \\\"\\\"\\ntext \\\"Watercolour portrait of Ada King, Countess of Lovelace, , possibly by Alfred Edward Chalon\\\"\\ntext \\\"1840\\\"\\nparagraph \\\"Lovelace became close friends with her tutor Mary Somerville, who introduced her to Charles Babbage in 1833. She had a strong respect and affection for Somerville,[22] and they corresponded for many y\\\"\\n[ax-15267973313126215582] link \\\"Mary Somerville\\\"\\n[ax-6466506550706348853] link \\\"[22]\\\"\\n[ax-6622966318927645562] link \\\"Andrew Crosse\\\"\\n[ax-7593560435261131875] link \\\"Sir David Brewster\\\"\\n[ax-14565422878270433939] link \\\"Charles Wheatstone\\\"\\n[ax-5486268385449642696] link \\\"Michael Faraday\\\"\\n[ax-17369553523215324087] link \\\"Charles Dickens\\\"\\n[ax-15402775334985738024] link \\\"presented at Court\\\"\\n[ax-8774679074666888858] link \\\"[23]\\\"\\n[ax-7404202230351593876] link \\\"John Hobhouse\\\"\\n[ax-6988398433777348200] link \\\"[24]\\\"\\n[ax-15063937601493053740] link \\\"[25]\\\"\\n[ax-13809516422731745912] link \\\"\\\"\\ntext \\\"William King, 1st Earl of Lovelace in uniform\\\"\\nparagraph \\\"On 8 July 1835, she married William, 8th Baron King, becoming Lady King. They had three homes: Ockham Park, Surrey; a Scottish estate on Loch Torridon in Ross-shire; and a house in London. They spent \\\"\\n[ax-12256004618670136766] link \\\"William, 8th Baron King\\\"\\n[ax-9867332480476901047] link \\\"Ockham Park\\\"\\n[ax-10096349680909092653] link \\\"Loch Torridon\\\"\\n[ax-15123183190799510201] link \\\"Ross-shire\\\"\\n[ax-8418324486450234875] link \\\"Porlock Weir\\\"\\n[ax-374052057577094490] link \\\"Horsley Towers\\\"\\n[ax-10728570478400802797] link \\\"Tudorbethan\\\"\",\"title\":\"Ada Lovelace - Wikipedia\",\"truncated\":true,\"url\":\"https://en.wikipedia.org/wiki/Ada_Lovelace\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\",\"Continue with next_offset and revision to read this captured snapshot.\"]}}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_5",
+          "type": "agent_message",
+          "text": "{\"answer\":\"Ada Lovelace was born on 10 December 1815 in London, England. Her mother was Anne Isabella Milbanke.\",\"evidence\":[{\"url\":\"https://en.wikipedia.org/wiki/Ada_Lovelace\",\"quote\":\"Augusta Ada Byron 10 December 1815 London, England\"},{\"url\":\"https://en.wikipedia.org/wiki/Ada_Lovelace\",\"quote\":\"Anne Isabella Milbanke (mother)\"}]}"
+        }
+      },
+      {
+        "type": "turn.completed",
+        "usage": {
+          "input_tokens": 78214,
+          "cached_input_tokens": 37632,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 701,
+          "reasoning_output_tokens": 321
+        }
+      }
+    ],
+    "parse_errors": 0,
+    "diagnostic": null,
+    "configuration": {
+      "model": "gpt-6-luna",
+      "effort": "high",
+      "sandbox": "read-only",
+      "shell_tool": false,
+      "web_search": "disabled",
+      "user_config_loaded": false,
+      "project_instructions_loaded": false,
+      "skills_catalog_max_tokens": 1,
+      "automatic_skill_instructions": false,
+      "fixture_tool_approval": "explicit approve",
+      "auth": "existing signed-in Codex host",
+      "mcp_transport": "stdio → private Unix socket → native runtime MCP client"
+    }
+  },
+  "engine": "zen",
+  "task": "wikipedia-biography",
+  "round": 0,
+  "phase": 0,
+  "success": true,
+  "outcome": "passed",
+  "answer": {
+    "answer": "Ada Lovelace was born on 10 December 1815 in London, England. Her mother was Anne Isabella Milbanke.",
+    "evidence": [
+      {
+        "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+        "quote": "Augusta Ada Byron 10 December 1815 London, England"
+      },
+      {
+        "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+        "quote": "Anne Isabella Milbanke (mother)"
+      }
+    ]
+  },
+  "expected": {
+    "date": "10 December 1815",
+    "place": "London",
+    "mother": "Anne Isabella Milbanke"
+  },
+  "evaluation": {
+    "passed": true,
+    "facts": [
+      {
+        "pattern": "10\\s+December\\s+1815|December\\s+10,?\\s+1815|1815-12-10",
+        "passed": true
+      },
+      {
+        "pattern": "London",
+        "passed": true
+      },
+      {
+        "pattern": "(?:Annabella|Anne?\\s+Isabella)(?:\\s+Noel)?\\s+(?:Milbanke|Byron)",
+        "passed": true
+      }
+    ],
+    "evidence": [
+      {
+        "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+        "quote": "Augusta Ada Byron 10 December 1815 London, England",
+        "source_matches": true,
+        "quote_observed": true
+      },
+      {
+        "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+        "quote": "Anne Isabella Milbanke (mother)",
+        "source_matches": true,
+        "quote_observed": true
+      }
+    ],
+    "forbidden_network_or_file_calls": 0
+  },
+  "preparation_ms": 61.03625599999941,
+  "host_elapsed_ms": 36189.136555000005,
+  "verification_ms": 1.8106769999940298,
+  "task_elapsed_ms": 36197.945912,
+  "usage": {
+    "input_tokens": 78214,
+    "cached_input_tokens": 37632,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 701,
+    "reasoning_output_tokens": 321
+  },
+  "model_verified": null,
+  "host_error": null,
+  "tool_calls": 4,
+  "tool_failures": 0,
+  "tool_elapsed_ms": 903.9866069999989,
+  "response_bytes": 23775,
+  "response_characters": 23761,
+  "forbidden_host_calls": 0,
+  "reported_cost_usd": null,
+  "cost_usd": null,
+  "timed_out": false,
+  "trace_file": "zen-wikipedia-biography-0.json",
+  "prompt": "Complete this read-only public website task using ONLY the browser MCP tools. You must inspect the live page; do not answer from memory. You choose your own observations, selectors and actions. Do not use HTTP/API clients, fetch, network replay, files, shell, other agents, or non-browser tools. Browser DOM evaluation is allowed for text extraction, but must not make network requests. Do not visit API endpoints. Do not sign in, create accounts, post messages, buy, or change account settings. Do not solve CAPTCHAs or bypass access challenges; report them. You may follow links, use site search and recover from errors. Stay on the task site. Maximum 30 browser calls. Verify all requested facts and finish with JSON {\"answer\":\"concise answer covering every requested fact\",\"evidence\":[{\"url\":\"source page URL\",\"quote\":\"a short exact supporting quote you observed in browser output\"}]}. Evidence quotes must be copied exactly from an observation. Do not claim success when blocked.\nYou control the owned Zen tab using Callisto in synthetic-dom input mode. Navigation starts loading; read a fresh snapshot before using refs. You may use run, batches, targeted observations, extraction and supported explicit waits. Do not enable or change input mode. Use the callisto tool with op and args. op=help returns one operation contract on demand.\nStart URL: https://en.wikipedia.org/wiki/Main_Page\nTask: Find Ada Lovelace on Wikipedia. Report her full birth date, birthplace and mother’s name. Cite the biography page and a short supporting quote.",
+  "tools": [
+    {
+      "sequence": 1,
+      "name": "callisto",
+      "arguments": {
+        "op": "navigate",
+        "args": {
+          "url": "https://en.wikipedia.org/wiki/Main_Page"
+        }
+      },
+      "started_at": "2026-11-17T07:59:33.086Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"navigationStarted\":true}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 7.108968000000459,
+      "response_bytes": 67
+    },
+    {
+      "sequence": 2,
+      "name": "callisto",
+      "arguments": {
+        "op": "snapshot",
+        "args": {
+          "max_chars": 6000
+        }
+      },
+      "started_at": "2026-11-17T07:59:36.394Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"next_offset\":122,\"offset\":0,\"order_changed\":false,\"revision\":\"ax-15579965644245713874:1\",\"text\":\"[ax-1102826527624794033] link \\\"Jump to content\\\"\\n[ax-5906447188452069655] button \\\"Main menu\\\"\\n[ax-16306709107301672213] link \\\"\\\"\\n[ax-13753972527513162736] search \\\"Search\\\"\\n[ax-17352614208630021911] searchbox \\\"Search Wikipedia\\\"\\n[ax-5716131948051860255] button \\\"Search\\\"\\nlistitem \\\"Donate\\\"\\n[ax-17870255830017154116] link \\\"Donate\\\"\\nlistitem \\\"Create account\\\"\\n[ax-4329349637285643856] link \\\"Create account\\\"\\nlistitem \\\"Log in\\\"\\n[ax-11658490869382469104] link \\\"Log in\\\"\\n[ax-607168644483136492] link \\\"Wiki Loves Food 2026 in India Documenting India's vibrant culinary heritage and food traditions.\\\"\\nparagraph \\\"Wiki Loves Food 2026 in India Documenting India's vibrant culinary heritage and food traditions.\\\"\\n[ax-11820603692214358312] link \\\"Hide\\\"\\nlistitem \\\"Main Page\\\"\\n[ax-16640106290645765714] link \\\"Main Page\\\"\\nlistitem \\\"Talk\\\"\\n[ax-12141497865281354525] link \\\"Talk\\\"\\nlistitem \\\"Read\\\"\\n[ax-1963308819252310030] link \\\"Read\\\"\\nlistitem \\\"View source\\\"\\n[ax-15302683248880753533] link \\\"View source\\\"\\nlistitem \\\"View history\\\"\\n[ax-10169072517083301397] link \\\"View history\\\"\\nlistitem \\\"Save\\\"\\n[ax-7899945630993185377] link \\\"Save\\\"\\n[ax-10467298089738470551] button \\\"Tools\\\"\\ntext \\\"Appearance\\\"\\n[ax-9793880209597678876] button \\\"Hide Appearance\\\"\\ntext \\\"Text\\\"\\nlistitem \\\"Small Standard Large\\\"\\n[ax-16881901246189862188] radio \\\"Small\\\"\\n[ax-1399389950635417436] radio \\\"Standard\\\"\\n[ax-17274459414179604960] radio \\\"Large\\\"\\ntext \\\"Width\\\"\\nlistitem \\\"Standard Wide\\\"\\n[ax-1648967512230918140] radio \\\"Standard\\\"\\n[ax-13928773284376120700] radio \\\"Wide\\\"\\ntext \\\"Color\\\"\\nlistitem \\\"Automatic Light Dark\\\"\\n[ax-4693884903134735667] radio \\\"Automatic\\\"\\n[ax-10055298994257402599] radio \\\"Light\\\"\\n[ax-825207266394877831] radio \\\"Dark\\\"\\ntext \\\",\\\"\\nheading \\\"Welcome to Wikipedia\\\"\\n[ax-15137657015963891670] link \\\"Wikipedia\\\"\\ntext \\\"the encyclopedia that .\\\"\\n[ax-4293278563295613488] link \\\"free\\\"\\n[ax-14649665467787070357] link \\\"anyone can edit\\\"\\nlistitem \\\"261,656 active editors\\\"\\n[ax-11046362826343271659] link \\\"261,656\\\"\\nlistitem \\\"7,265,442 articles in English\\\"\\n[ax-7937599380355006422] link \\\"7,265,442\\\"\\n[ax-4583385459624671606] link \\\"English\\\"\\nheading \\\"From today's featured article\\\"\\ntext \\\"From today's featured article\\\"\\n[ax-11903453953741042256] link \\\"Dividing the Light was one of the installation artworks that inspired the game.\\\"\\ntext \\\"was one of the installation artworks that inspired the game.\\\"\\n[ax-737784157985318525] link \\\"Dividing the Light\\\"\\nparagraph \\\"Islands: Non-Places is an abstract art game developed and published by Carl Burton. It was released on November 17, 2016, and consists of a series of anonymous, liminal environments, each rendered in \\\"\\n[ax-11210351287559771152] link \\\"Islands: Non-Places\\\"\\n[ax-10812988412638459913] link \\\"art game\\\"\\n[ax-315292503552283374] link \\\"liminal\\\"\\n[ax-2534392881881683315] link \\\"Marc Augé\\\"\\n[ax-8948341078729454086] link \\\"installation art\\\"\\n[ax-17762019110624602999] link \\\"James Turrell\\\"\\n[ax-3677119753909632831] link \\\"field recordings\\\"\\n[ax-13891225890704448021] link \\\"Chris Watson\\\"\\n[ax-16759482912775493962] link \\\"Nuovo Award\\\"\\n[ax-12358760691793599911] link \\\"Independent Games Festival\\\"\\n[ax-10095712933659265952] link \\\"Full article...\\\"\\ntext \\\"Recently featured:\\\"\\nlistitem \\\"Mark Satin\\\"\\n[ax-13422127064521087934] link \\\"Mark Satin\\\"\\nlistitem \\\"\\\\\\\"Can't Let Go\\\\\\\" (Mariah Carey song)\\\"\\n[ax-15480066461216386850] link \\\"\\\\\\\"Can't Let Go\\\\\\\" (Mariah Carey song)\\\"\\nlistitem \\\"Aucanquilcha\\\"\\n[ax-9523692308231112510] link \\\"Aucanquilcha\\\"\\nlistitem \\\"Archive\\\"\\n[ax-172515708846179751] link \\\"Archive\\\"\\nlistitem \\\"By email\\\"\\n[ax-13988034532091234974] link \\\"By email\\\"\\nlistitem \\\"More featured articles\\\"\\n[ax-2942730391116323247] link \\\"More featured articles\\\"\\nlistitem \\\"About\\\"\\n[ax-3062860775267201095] link \\\"About\\\"\\nheading \\\"Did you know ...\\\"\\n[ax-14934184385579710767] link \\\"Verity\\\"\\ntext \\\"Verity\\\"\\nlistitem \\\"... that USA Today compared a Generation Alpha meme (pictured) to a Lovecraftian monster used as a metaphor for AI?\\\"\\n[ax-12854473767048642917] link \\\"a Generation Alpha meme\\\"\\nlistitem \\\"... that Julian Aguon has argued that some legal cases revolve around the \\\\\\\"right to culture\\\\\\\"?\\\"\\n[ax-6752705890683590387] link \\\"Julian Aguon\\\"\\nlistitem \\\"... that Netflix experienced an outage because numerous Stranger Things fans checked whether a secret episode of the series had been released?\\\"\\n[ax-12129802639382236041] link \\\"a secret episode\\\"\\nlistitem \\\"... that Swiss painter Alois Lichtsteiner signs his works as \\\\\\\"OHMSTAL\\\\\\\" because he finds it \\\\\\\"a beautiful word\\\\\\\"?\\\"\\n[ax-8209209688928664474] link \\\"Alois Lichtsteiner\\\"\\nlistitem \\\"... that a dangerous stretch of Interstate 24 in Tennessee inspired a Johnny Cash song?\\\"\\n[ax-17478735818711446573] link \\\"Interstate 24 in Tennessee\\\"\\nlistitem \\\"... that a 2023 study found that iCloud Private Relay made speed-test downloads up to ten times slower, but improved network performance in some cases?\\\"\\n[ax-3529929589713627241] link \\\"iCloud Private Relay\\\"\\nlistitem \\\"... that when the Dyckman House in New York City opened as a museum, its backyard had a military hut?\\\"\\n[ax-16771900444275862417] link \\\"Dyckman House\\\"\\nlistitem \\\"... that \\\\\\\"Consideration\\\\\\\" by Rihanna was originally meant to be included on featured artist SZA's debut album?\\\"\\n[ax-12418084544511472986] link \\\"Consideration\\\"\\nlistitem \\\"... that Nannie Washburn and her sister faced the death penalty for handing out leaflets?\\\"\\n[ax-15439058464815901293] link \\\"Nannie Washburn\\\"\\nlistitem \\\"Archive\\\"\\n[ax-11083007294307671336] link \\\"Archive\\\"\\nlistitem \\\"Start a new article\\\"\\n[ax-758373974596165223] link \\\"Start a new article\\\"\\nlistitem \\\"Nominate an article\\\"\\n[ax-9883890885128988359] link \\\"Nominate an article\\\"\\nheading \\\"Help us improve this article!\\\"\\n[ax-10155629916440086264] link \\\"Garbage bin with trash on top\\\"\\ntext \\\"Garbage bin with trash on top\\\"\\ntext \\\"This week's article for improvement is , waste material discarded by humans. The words , , , and are generally used interchangeably.\\\"\\n[ax-17233854364963014718] link \\\"garbage\\\"\\nparagraph \\\"You can improve this article by:\\\"\\nlistitem \\\"Expanding the \\\\\\\"History\\\\\\\" and \\\\\\\"Treatment\\\\\\\" sections\\\"\\n[ax-18429094137869951543] link \\\"History\\\"\",\"title\":\"Wikipedia, the free encyclopedia\",\"truncated\":true,\"url\":\"https://en.wikipedia.org/wiki/Main_Page\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\",\"Continue with next_offset and revision to read this captured snapshot.\"]}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 35.736447999999655,
+      "response_bytes": 7583
+    },
+    {
+      "sequence": 3,
+      "name": "callisto",
+      "arguments": {
+        "op": "help",
+        "args": {
+          "op": "run"
+        }
+      },
+      "started_at": "2026-11-17T07:59:41.698Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"args_schema\":{\"properties\":{\"snapshot\":{\"type\":\"boolean\"},\"steps\":{\"items\":{\"properties\":{\"action\":{\"enum\":[\"navigate\",\"click_ref\",\"click_role\",\"fill_ref\",\"fill_role\",\"submit_ref\",\"submit_role\",\"select_ref\",\"select_role\",\"check_ref\",\"check_role\",\"hover_ref\",\"hover_role\",\"press\",\"scroll\",\"wait\",\"wait_for\",\"extract\"],\"type\":\"string\"},\"checked\":{\"type\":\"boolean\"},\"delta_x\":{\"type\":\"number\"},\"delta_y\":{\"type\":\"number\"},\"key\":{\"type\":\"string\"},\"ms\":{\"maximum\":5000,\"minimum\":1,\"type\":\"integer\"},\"name\":{\"type\":\"string\"},\"ref\":{\"type\":\"string\"},\"role\":{\"type\":\"string\"},\"selector\":{\"maxLength\":500,\"minLength\":1,\"type\":\"string\"},\"spec\":{\"type\":\"object\"},\"state\":{\"enum\":[\"visible\",\"hidden\",\"attached\",\"detached\"],\"type\":\"string\"},\"text\":{\"maxLength\":500,\"minLength\":1,\"type\":\"string\"},\"timeout_ms\":{\"maximum\":20000,\"minimum\":100,\"type\":\"integer\"},\"url\":{\"type\":\"string\"},\"value\":{\"type\":\"string\"}},\"required\":[\"action\"],\"type\":\"object\"},\"maxItems\":40,\"minItems\":1,\"type\":\"array\"}},\"required\":[\"steps\"],\"type\":\"object\"},\"description\":\"Run 1–40 dependent steps in one call: navigate; click/fill/submit/select/check/hover by ref or exact role; press; scroll; wait; wait_for text or CSS selector state; extract rows. Use submit instead of synthetic Enter for forms. Returns the last extraction and an optional final snapshot. Stops at the first failure within a 60-second budget; earlier steps are not rolled back. Input uses the explicitly selected input mode.\",\"op\":\"run\"}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 0.6495360000008077,
+      "response_bytes": 1719
+    },
+    {
+      "sequence": 4,
+      "name": "callisto",
+      "arguments": {
+        "op": "run",
+        "args": {
+          "steps": [
+            {
+              "action": "fill_ref",
+              "ref": "ax-17352614208630021911",
+              "value": "Ada Lovelace"
+            },
+            {
+              "action": "submit_ref",
+              "ref": "ax-17352614208630021911"
+            }
+          ],
+          "snapshot": true
+        }
+      },
+      "started_at": "2026-11-17T07:59:48.676Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"completed\":2,\"elapsed_ms\":82,\"snapshot\":{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"navigationStarted\":true,\"next_offset\":220,\"offset\":0,\"order_changed\":false,\"revision\":\"ax-3075422366567396245:1\",\"text\":\"[ax-10571973832982952772] link \\\"Jump to content\\\"\\n[ax-18231394593513459215] button \\\"Main menu\\\"\\n[ax-2866853868126267534] link \\\"\\\"\\n[ax-1367833082503089343] search \\\"Search\\\"\\n[ax-2917857743897477736] searchbox \\\"Search Wikipedia\\\"\\n[ax-12573177111896449775] button \\\"Search\\\"\\nlistitem \\\"Donate\\\"\\n[ax-3732295816220881685] link \\\"Donate\\\"\\nlistitem \\\"Create account\\\"\\n[ax-2421729363750842803] link \\\"Create account\\\"\\nlistitem \\\"Log in\\\"\\n[ax-17255497008421568136] link \\\"Log in\\\"\\nheading \\\"Contents\\\"\\n[ax-3426060171968105861] button \\\"Hide Contents\\\"\\nlistitem \\\"(Top)\\\"\\n[ax-4500048894333292822] link \\\"(Top)\\\"\\nlistitem \\\"Biography Toggle Biography subsection\\\"\\n[ax-2660793088970449657] link \\\"Biography\\\"\\n[ax-5416886269885732547] button \\\"Toggle Biography subsection\\\"\\nlistitem \\\"Work Toggle Work subsection\\\"\\n[ax-6262785438327678] link \\\"Work\\\"\\n[ax-16389864022637178099] button \\\"Toggle Work subsection\\\"\\nlistitem \\\"Commemoration Toggle Commemoration subsection\\\"\\n[ax-15235304280370778946] link \\\"Commemoration\\\"\\n[ax-9160559090248128137] button \\\"Toggle Commemoration subsection\\\"\\nlistitem \\\"In popular culture Toggle In popular culture subsection\\\"\\n[ax-6748937278658490408] link \\\"In popular culture\\\"\\n[ax-9065048003233783020] button \\\"Toggle In popular culture subsection\\\"\\nlistitem \\\"Publications Toggle Publications subsection\\\"\\n[ax-6081540518470436985] link \\\"Publications\\\"\\n[ax-8131246100627083654] button \\\"Toggle Publications subsection\\\"\\nlistitem \\\"See also\\\"\\n[ax-10159566303455346576] link \\\"See also\\\"\\nlistitem \\\"Explanatory notes\\\"\\n[ax-7627774484078401750] link \\\"Explanatory notes\\\"\\nlistitem \\\"References Toggle References subsection\\\"\\n[ax-13818181518650545412] link \\\"References\\\"\\n[ax-14942725266110922440] button \\\"Toggle References subsection\\\"\\nlistitem \\\"Further reading\\\"\\n[ax-501510609969270514] link \\\"Further reading\\\"\\nlistitem \\\"External links\\\"\\n[ax-6604424784562543956] link \\\"External links\\\"\\nheading \\\"Ada Lovelace\\\"\\ntext \\\"Ada Lovelace\\\"\\n[ax-10132335052305857107] button \\\"113 languages\\\"\\nlistitem \\\"Article\\\"\\n[ax-4337749436816580444] link \\\"Article\\\"\\nlistitem \\\"Talk\\\"\\n[ax-15780209930404807917] link \\\"Talk\\\"\\nlistitem \\\"Read\\\"\\n[ax-17322305207107524951] link \\\"Read\\\"\\nlistitem \\\"View source\\\"\\n[ax-13906719385236421638] link \\\"View source\\\"\\nlistitem \\\"View history\\\"\\n[ax-2622369294836791583] link \\\"View history\\\"\\nlistitem \\\"Save\\\"\\n[ax-2555201378849548302] link \\\"Save\\\"\\n[ax-956170114080783738] button \\\"Tools\\\"\\ntext \\\"Appearance\\\"\\n[ax-12301630708040634982] button \\\"Hide Appearance\\\"\\n[ax-7829632825664804789] link \\\"This article is semi-protected.\\\"\\ntext \\\"From Wikipedia, the free encyclopedia\\\"\\n[ax-9129887537292205724] note \\\"For the computer microarchitecture, see Ada Lovelace (microarchitecture).\\\"\\n[ax-17676061454626834794] link \\\"Ada Lovelace (microarchitecture)\\\"\\ncolumnheader \\\"The Right Honourable The Countess of Lovelace\\\"\\n[ax-4497872668708799175] link \\\"The Right Honourable\\\"\\ncell \\\"Daguerreotype of Lovelace (c. 1843)[1]\\\"\\n[ax-2139704650105273314] link \\\"\\\"\\n[ax-373949758445344068] link \\\"Daguerreotype\\\"\\n[ax-8383263731414767802] link \\\"[1]\\\"\\ncolumnheader \\\"Born\\\"\\ncell \\\"Augusta Ada Byron 10 December 1815 London, England\\\"\\ncolumnheader \\\"Died\\\"\\ncell \\\"27 November 1852 (aged 36) Marylebone, London, England\\\"\\n[ax-13257963971996989397] link \\\"Marylebone\\\"\\ncolumnheader \\\"Resting place\\\"\\ncell \\\"Church of St Mary Magdalene, Hucknall, Nottingham, England\\\"\\n[ax-17794445984512536370] link \\\"Church of St Mary Magdalene, Hucknall\\\"\\ncolumnheader \\\"Known for\\\"\\ncell \\\"Mathematics, computing\\\"\\n[ax-4089828033678623766] link \\\"Mathematics\\\"\\n[ax-13004983477775387412] link \\\"computing\\\"\\ncolumnheader \\\"Spouse\\\"\\ncell \\\"William King-Noel, 1st Earl of Lovelace ​ ​(m. 1835)​\\\"\\n[ax-16173678685576623639] link \\\"William King-Noel, 1st Earl of Lovelace\\\"\\ncolumnheader \\\"Children\\\"\\ncell \\\"Byron King-Noel, Viscount Ockham Anne Blunt, 15th Baroness Wentworth Ralph King-Milbanke, 2nd Earl of Lovelace\\\"\\nlistitem \\\"Byron King-Noel, Viscount Ockham\\\"\\n[ax-12310817608995524450] link \\\"Byron King-Noel, Viscount Ockham\\\"\\nlistitem \\\"Anne Blunt, 15th Baroness Wentworth\\\"\\n[ax-3827636056124277617] link \\\"Anne Blunt, 15th Baroness Wentworth\\\"\\nlistitem \\\"Ralph King-Milbanke, 2nd Earl of Lovelace\\\"\\n[ax-13418494483084774435] link \\\"Ralph King-Milbanke, 2nd Earl of Lovelace\\\"\\ncolumnheader \\\"Parents\\\"\\ncell \\\"George Byron, 6th Baron Byron (father) Anne Isabella Milbanke (mother)\\\"\\nlistitem \\\"George Byron, 6th Baron Byron (father)\\\"\\n[ax-16328370697202631207] link \\\"George Byron, 6th Baron Byron\\\"\\nlistitem \\\"Anne Isabella Milbanke (mother)\\\"\\n[ax-18412435939201203603] link \\\"Anne Isabella Milbanke\\\"\\ncolumnheader \\\"Signature\\\"\\ncell \\\"\\\"\\n[ax-8804018924477962179] link \\\"\\\"\\nparagraph \\\"Augusta Ada King, Countess of Lovelace (née Byron; 10 December 1815 – 27 November 1852), also known as Ada Lovelace, was an English mathematician and writer chiefly known for work on Charles Babbage's\\\"\\n[ax-15756332671426334097] link \\\"née\\\"\\n[ax-12335572568325406532] link \\\"mathematician\\\"\\n[ax-350504081876228212] link \\\"writer\\\"\\n[ax-10461852582735642676] link \\\"Charles Babbage\\\"\\n[ax-6678457671560591085] link \\\"computer\\\"\\n[ax-7844603735954208044] link \\\"analytical engine\\\"\\n[ax-5516174406089272064] link \\\"computer programmer\\\"\\nparagraph \\\"Lovelace was the only legitimate child of poet Lord Byron and reformer Anne Isabella Milbanke.[2] Lord Byron separated from his wife a month after Ada was born, and died when she was eight. Although o\\\"\\n[ax-14425044403093797589] link \\\"legitimate child\\\"\\n[ax-8896657881171517860] link \\\"Lord Byron\\\"\\n[ax-729502029652007720] link \\\"Anne Isabella Milbanke\\\"\\n[ax-10059402773187264776] link \\\"[2]\\\"\\n[ax-10755597550038234975] link \\\"assiduously\\\"\\n[ax-3699094519649550905] link \\\"William King\\\"\\n[ax-7174237055290537163] link \\\"Baron\\\"\\n[ax-7940173185822128051] link \\\"Earl of Lovelace\\\"\\n[ax-6091454819673082979] link \\\"Baron Lovelaces\\\"\\n[ax-46359056141988979] link \\\"[3]\\\"\\nparagraph \\\"Lovelace's educational and social exploits brought her into contact with scientists such as Andrew Crosse, Charles Babbage, David Brewster, Charles Wheatstone and Michael Faraday, and the author Charl\\\"\\n[ax-13641330324611071775] link \\\"Andrew Crosse\\\"\\n[ax-4904467294033215749] link \\\"David Brewster\\\"\\n[ax-17165177262904612244] link \\\"Charles Wheatstone\\\"\\n[ax-16671862004492568746] link \\\"Michael Faraday\\\"\\n[ax-16973857293177938433] link \\\"Charles Dickens\\\"\\n[ax-8029886913398868315] link \\\"[4]\\\"\\n[ax-12606669585799006184] link \\\"Metaphysician\\\"\\n[ax-15114946293325750476] link \\\"[5]\\\"\\nparagraph \\\"At age 18, Lovelace's mathematical talents led her to a long working relationship and friendship with fellow British mathematician Charles Babbage. She was particularly interested in Babbage's work on\\\"\\n[ax-8039471006054954938] link \\\"Charles Babbage's Saturday night soirées\\\"\\n[ax-1397130258515063338] link \\\"[6]\\\"\\n[ax-5836946083417998012] link \\\"Mary Somerville\\\"\\n[ax-14362544077977127419] link \\\"Turing-complete\\\"\\n[ax-8168386715809304829] link \\\"an article\\\"\\n[ax-14947664184219229965] link \\\"Luigi Menabrea\\\"\\n[ax-16725683674702467388] link \\\"seven long explanatory notes\\\"\\n[ax-9751960578340401539] link \\\"Bernoulli numbers\\\"\\n[ax-4780792938747819384] link \\\"computer program\\\"\\nparagraph \\\"She developed a vision of the capability of computers to go beyond mere calculating or number-crunching, while many others, including Babbage, focused only on those capabilities.[7] Lovelace was the f\\\"\\n[ax-14006493902682833983] link \\\"calculating\\\"\\n[ax-10410118025673154467] link \\\"[7]\\\"\\n[ax-3226799085635211982] link \\\"arithmetical\\\"\\n[ax-14925420800171585325] link \\\"music\\\"\\n[ax-13594732457079524587] link \\\"[8]\\\"\\n[ax-3521010516248837210] link \\\"programming language\\\"\\nheading \\\"Biography\\\"\\nheading \\\"Childhood\\\"\\nparagraph \\\"Lord Byron expected his child to be a \\\\\\\"glorious boy\\\\\\\" and was disappointed when Lady Byron gave birth to a girl.[9] The child was named after Byron's half-sister, Augusta Leigh, and was called \\\\\\\"Ada\\\\\\\" by\\\"\\n[ax-13795362839865773203] link \\\"Lord Byron\\\"\\n[ax-261375943286394547] link \\\"Lady Byron\\\"\\n[ax-9313300715207507120] link \\\"[9]\\\"\\n[ax-12024227063963182161] link \\\"Augusta Leigh\\\"\\n[ax-11887249800966827075] link \\\"[10]\\\"\\n[ax-13196449308953054704] link \\\"Kirkby Mallory\\\"\\n[ax-6860000617637455695] link \\\"[9]\\\"\\n[ax-9222316628774458042] link \\\"[11]\\\"\\n[ax-6859906747000724255] link \\\"[12]\\\"\\n[ax-2277856306763183037] link \\\"\\\"\\ntext \\\"Ada Byron, aged four\\\"\\nparagraph \\\"On 21 April, Lord Byron signed the deed of separation, although very reluctantly, and left England for good a few days later.[13] Aside from an acrimonious separation, Lady Byron continued throughout \\\"\\n[ax-14101351987037355692] link \\\"deed of separation\\\"\\n[ax-13548996040210554218] link \\\"[13]\\\"\\n[ax-3746405561294350035] link \\\"[14]\\\"\\n[ax-360550653887746298] link \\\"[15]\\\"\\n[ax-16134879118856039249] link \\\"[16]\\\"\\n[ax-8489518439147409799] link \\\"\\\"\\ntext \\\"Ada Byron, aged seven, by , 1822,\\\"\\n[ax-13969965671333078104] link \\\"Alfred d'Orsay\\\"\\n[ax-14432954423636437484] link \\\"Somerville College, Oxford\\\"\\nparagraph \\\"Lovelace did not have a close relationship with her mother. She was often left in the care of her maternal grandmother Judith, Hon. Lady Milbanke, who doted on her. However, because of societal attitu\\\"\\n[ax-7136231181354662293] link \\\"[17]\\\"\\n[ax-5359959434370420794] link \\\"[18]\\\"\\n[ax-8676458382100000023] link \\\"[19]\\\"\\n[ax-5441933339283123856] link \\\"\\\"\\ntext \\\"Ada Byron, aged seventeen, 1832\\\"\\nparagraph \\\"Lovelace was often ill, beginning in early childhood. At the age of eight, she experienced headaches that obscured her vision.[10] In June 1829, she was paralyzed after a bout of measles. She was subj\\\"\\n[ax-17513556272495412663] link \\\"[10]\\\"\\n[ax-1259557823541174863] link \\\"measles\\\"\\nblockquote \\\"When Ada was twelve years old, this future \\\\\\\"Lady Fairy\\\\\\\", as Charles Babbage affectionately called her, decided she wanted to fly. Ada Byron went about the project methodically, thoughtfully, with imag\\\"\\nparagraph \\\"When Ada was twelve years old, this future \\\\\\\"Lady Fairy\\\\\\\", as Charles Babbage affectionately called her, decided she wanted to fly. Ada Byron went about the project methodically, thoughtfully, with imag\\\"\\n[ax-910274962276643157] link \\\"anatomy of birds\\\"\\n[ax-8117928138172721525] link \\\"[8]\\\"\\nparagraph \\\"Ada Byron had an affair with a tutor in early 1833. She tried to elope with him after she was caught, but the tutor's relatives recognised her and contacted her mother. Lady Byron and her friends cove\\\"\\n[ax-11979731776522131906] link \\\"[20]\\\"\\n[ax-14012575674604117339] link \\\"Allegra\\\"\\n[ax-7154439254673800441] link \\\"Claire Clairmont\\\"\\n[ax-4653336689229160371] link \\\"Elizabeth Medora Leigh\\\"\\n[ax-7421256995737562992] link \\\"[21]\\\"\\nheading \\\"Adult years\\\"\\n[ax-15060746441996069679] link \\\"\\\"\\ntext \\\"Watercolor portrait of Ada Byron, by , c. 1835.\\\"\\n[ax-16258710430131654521] link \\\"Alfred Edward Chalon\\\"\\n[ax-3123467027124897007] link \\\"\\\"\\ntext \\\"Watercolour portrait of Ada King, Countess of Lovelace, , possibly by Alfred Edward Chalon\\\"\\ntext \\\"1840\\\"\\nparagraph \\\"Lovelace became close friends with her tutor Mary Somerville, who introduced her to Charles Babbage in 1833. She had a strong respect and affection for Somerville,[22] and they corresponded for many y\\\"\\n[ax-15267973313126215582] link \\\"Mary Somerville\\\"\\n[ax-6466506550706348853] link \\\"[22]\\\"\\n[ax-6622966318927645562] link \\\"Andrew Crosse\\\"\\n[ax-7593560435261131875] link \\\"Sir David Brewster\\\"\\n[ax-14565422878270433939] link \\\"Charles Wheatstone\\\"\\n[ax-5486268385449642696] link \\\"Michael Faraday\\\"\\n[ax-17369553523215324087] link \\\"Charles Dickens\\\"\\n[ax-15402775334985738024] link \\\"presented at Court\\\"\\n[ax-8774679074666888858] link \\\"[23]\\\"\\n[ax-7404202230351593876] link \\\"John Hobhouse\\\"\\n[ax-6988398433777348200] link \\\"[24]\\\"\\n[ax-15063937601493053740] link \\\"[25]\\\"\\n[ax-13809516422731745912] link \\\"\\\"\\ntext \\\"William King, 1st Earl of Lovelace in uniform\\\"\\nparagraph \\\"On 8 July 1835, she married William, 8th Baron King, becoming Lady King. They had three homes: Ockham Park, Surrey; a Scottish estate on Loch Torridon in Ross-shire; and a house in London. They spent \\\"\\n[ax-12256004618670136766] link \\\"William, 8th Baron King\\\"\\n[ax-9867332480476901047] link \\\"Ockham Park\\\"\\n[ax-10096349680909092653] link \\\"Loch Torridon\\\"\\n[ax-15123183190799510201] link \\\"Ross-shire\\\"\\n[ax-8418324486450234875] link \\\"Porlock Weir\\\"\\n[ax-374052057577094490] link \\\"Horsley Towers\\\"\\n[ax-10728570478400802797] link \\\"Tudorbethan\\\"\",\"title\":\"Ada Lovelace - Wikipedia\",\"truncated\":true,\"url\":\"https://en.wikipedia.org/wiki/Ada_Lovelace\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\",\"Continue with next_offset and revision to read this captured snapshot.\"]}}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 860.491654999998,
+      "response_bytes": 14406
+    }
+  ]
+}

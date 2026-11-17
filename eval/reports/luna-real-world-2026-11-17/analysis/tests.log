@@ -1,0 +1,28 @@
+✔ store package gets upstream unpacked identity only in an owned copy (8.889593ms)
+✔ development package retains its existing identity and source path (1.563378ms)
+✔ legacy fresh sessions create before any replacement deletion (1.042762ms)
+✔ tab mode never calls removed session tools and resets its owned tab (0.199787ms)
+✔ real stdio host transport preserves the owned lease, schema and result; refuses other tools (80.764458ms)
+✔ native wrapped JSON retains exact decoded page quotes and original output (0.903027ms)
+✔ plain JSON, arrays and unwrapped strings keep existing observation behavior (0.574974ms)
+✔ arbitrary prose, malformed wrappers and error text are not decoded (0.188275ms)
+✔ unknown task IDs reject the whole selection before provisioning or model access (262.652341ms)
+✔ wikipedia-biography: facts, canonical source and a quote decoded from an MCP observation (5.362745ms)
+✔ arxiv-paper: facts, canonical source and a quote decoded from an MCP observation (0.401206ms)
+✔ github-issue: facts, canonical source and a quote decoded from an MCP observation (0.340665ms)
+✔ pypi-metadata: facts, canonical source and a quote decoded from an MCP observation (0.200759ms)
+✔ python-json: facts, canonical source and a quote decoded from an MCP observation (0.316ms)
+✔ govuk-calendar: facts, canonical source and a quote decoded from an MCP observation (1.130763ms)
+✔ known correct facts cannot bypass the browser with a direct request (0.357395ms)
+✔ calendar rejects the wrong date even with an observed source quote (0.173508ms)
+✔ calendar accepts one explicit year shared by both dates and rejects the wrong year (0.235432ms)
+✔ tab-wrapped JSON uses observed page values uniformly for either engine (1.092685ms)
+✔ decoded observation evidence still refuses direct API answers (0.193324ms)
+ℹ tests 20
+ℹ suites 0
+ℹ pass 20
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3160.184311

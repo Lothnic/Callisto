@@ -63,7 +63,7 @@ ax.set_yticks([0, 1], [labels[e] for e in engines]); ax.invert_yaxis()
 ax.set_xlim(0, ax.get_xlim()[1]*1.25); ax.set_xlabel('Reported uncached model input tokens (thousands)')
 ax.set_title('New model input across all attempts', loc='left', fontsize=11, pad=14)
 ax.tick_params(axis='y', length=0); ax.grid(axis='x', alpha=.15); ax.set_axisbelow(True)
-fig.text(.03, .025, 'Source: saved native MCP traces and Codex CLI usage · '+data['metadata']['started_at'][:10]+'\nCircles: initial profiles. Squares: resumed profiles. Cached/output tokens are in the report. Dollar charges unavailable.',
+fig.text(.03, .025, 'Source: saved native MCP traces and Codex CLI usage · '+data['metadata']['started_at'][:10]+'\nCircles: initial profiles. Squares: resumed profiles. Cached/output tokens are in the report. Dollar charges unavailable.' + ('\nScores include a uniform native-JSON observation correction; raw scores and audit are in the report.' if data.get('scoring_correction') else ''),
          fontsize=8, color='#475569', va='bottom')
 fig.savefig(root/'comparison.png', dpi=180)
 fig.savefig(root/'comparison.svg')

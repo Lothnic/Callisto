@@ -1,0 +1,912 @@
+{
+  "schema": "callisto.real-world-trace.v1",
+  "host": {
+    "code": 0,
+    "signal": null,
+    "error": null,
+    "timed_out": false,
+    "elapsed_ms": 41073.027592,
+    "usage": {
+      "input_tokens": 165001,
+      "cached_input_tokens": 129024,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 1338,
+      "reasoning_output_tokens": 633
+    },
+    "final": "{\"answer\":\"Ada Lovelace was born on 10 December 1815 in London, England. Her mother was Anne Isabella Milbanke.\",\"evidence\":[{\"url\":\"https://en.wikipedia.org/wiki/Ada_Lovelace\",\"quote\":\"Augusta Ada Byron 10 December 1815 London, England\"},{\"url\":\"https://en.wikipedia.org/wiki/Ada_Lovelace\",\"quote\":\"George Byron, 6th Baron Byron (father) Anne Isabella Milbanke (mother)\"}]}",
+    "events": [
+      {
+        "type": "thread.started",
+        "thread_id": "01a1e886-5921-70c3-8a90-4d686c485e9b"
+      },
+      {
+        "type": "turn.started"
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_0",
+          "type": "agent_message",
+          "text": "I’ll use the browser tool to inspect Wikipedia live and verify each detail from Ada Lovelace’s biography page."
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_1",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "snapshot",
+            "args": {
+              "max_chars": 6000
+            }
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_1",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "snapshot",
+            "args": {
+              "max_chars": 6000
+            }
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"next_offset\":null,\"offset\":0,\"order_changed\":false,\"revision\":\"ax-8001377517532909904:2\",\"text\":\"heading \\\"Ready for a public-site task\\\"\",\"title\":\"Browser benchmark start\",\"truncated\":false,\"url\":\"http://127.0.0.1:40183/\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\"]}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_2",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "navigate",
+            "args": {
+              "url": "https://en.wikipedia.org/wiki/Main_Page"
+            }
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_2",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "navigate",
+            "args": {
+              "url": "https://en.wikipedia.org/wiki/Main_Page"
+            }
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"navigationStarted\":true}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_3",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "snapshot",
+            "args": {
+              "max_chars": 6000
+            }
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_3",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "snapshot",
+            "args": {
+              "max_chars": 6000
+            }
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"next_offset\":122,\"offset\":0,\"order_changed\":false,\"revision\":\"ax-5588331686602994832:1\",\"text\":\"[ax-3746137650509628303] link \\\"Jump to content\\\"\\n[ax-17803828223113906497] button \\\"Main menu\\\"\\n[ax-12020220561566111283] link \\\"\\\"\\n[ax-7516957960254026414] search \\\"Search\\\"\\n[ax-17096866063308173953] searchbox \\\"Search Wikipedia\\\"\\n[ax-7374257128797107695] button \\\"Search\\\"\\nlistitem \\\"Donate\\\"\\n[ax-12375820463105849004] link \\\"Donate\\\"\\nlistitem \\\"Create account\\\"\\n[ax-9229378277727370496] link \\\"Create account\\\"\\nlistitem \\\"Log in\\\"\\n[ax-115888844729656431] link \\\"Log in\\\"\\n[ax-2122500534319003447] link \\\"Wiki Loves Food 2026 in India Documenting India's vibrant culinary heritage and food traditions.\\\"\\nparagraph \\\"Wiki Loves Food 2026 in India Documenting India's vibrant culinary heritage and food traditions.\\\"\\n[ax-1869349580417722543] link \\\"Hide\\\"\\nlistitem \\\"Main Page\\\"\\n[ax-15884136534382525176] link \\\"Main Page\\\"\\nlistitem \\\"Talk\\\"\\n[ax-12247693021629383060] link \\\"Talk\\\"\\nlistitem \\\"Read\\\"\\n[ax-1527096152371881813] link \\\"Read\\\"\\nlistitem \\\"View source\\\"\\n[ax-5334463861370984387] link \\\"View source\\\"\\nlistitem \\\"View history\\\"\\n[ax-13510453565016067361] link \\\"View history\\\"\\nlistitem \\\"Save\\\"\\n[ax-9092863989690559213] link \\\"Save\\\"\\n[ax-11849759583704356090] button \\\"Tools\\\"\\ntext \\\"Appearance\\\"\\n[ax-2627732837497906715] button \\\"Hide Appearance\\\"\\ntext \\\"Text\\\"\\nlistitem \\\"Small Standard Large\\\"\\n[ax-6720180939012133801] radio \\\"Small\\\"\\n[ax-8165328552208994133] radio \\\"Standard\\\"\\n[ax-9600184472890928489] radio \\\"Large\\\"\\ntext \\\"Width\\\"\\nlistitem \\\"Standard Wide\\\"\\n[ax-8562774943164858970] radio \\\"Standard\\\"\\n[ax-9810748598947366852] radio \\\"Wide\\\"\\ntext \\\"Color\\\"\\nlistitem \\\"Automatic Light Dark\\\"\\n[ax-15550254100244940983] radio \\\"Automatic\\\"\\n[ax-1308069493165500291] radio \\\"Light\\\"\\n[ax-6552193596220645058] radio \\\"Dark\\\"\\ntext \\\",\\\"\\nheading \\\"Welcome to Wikipedia\\\"\\n[ax-7587123624909856077] link \\\"Wikipedia\\\"\\ntext \\\"the encyclopedia that .\\\"\\n[ax-13782729199342278423] link \\\"free\\\"\\n[ax-9970071687009857549] link \\\"anyone can edit\\\"\\nlistitem \\\"261,656 active editors\\\"\\n[ax-9018212452182684748] link \\\"261,656\\\"\\nlistitem \\\"7,265,442 articles in English\\\"\\n[ax-8060832655182055458] link \\\"7,265,442\\\"\\n[ax-13466130839769904950] link \\\"English\\\"\\nheading \\\"From today's featured article\\\"\\ntext \\\"From today's featured article\\\"\\n[ax-2584905606733824050] link \\\"Dividing the Light was one of the installation artworks that inspired the game.\\\"\\ntext \\\"was one of the installation artworks that inspired the game.\\\"\\n[ax-2688902170623299367] link \\\"Dividing the Light\\\"\\nparagraph \\\"Islands: Non-Places is an abstract art game developed and published by Carl Burton. It was released on November 17, 2016, and consists of a series of anonymous, liminal environments, each rendered in \\\"\\n[ax-16675846530800614246] link \\\"Islands: Non-Places\\\"\\n[ax-890791732324710450] link \\\"art game\\\"\\n[ax-14868831977413717424] link \\\"liminal\\\"\\n[ax-6034588548050108847] link \\\"Marc Augé\\\"\\n[ax-9172584891861446249] link \\\"installation art\\\"\\n[ax-5067121361714981157] link \\\"James Turrell\\\"\\n[ax-5513284531101176261] link \\\"field recordings\\\"\\n[ax-1555178272784048045] link \\\"Chris Watson\\\"\\n[ax-5737663695064424095] link \\\"Nuovo Award\\\"\\n[ax-17316200366026508069] link \\\"Independent Games Festival\\\"\\n[ax-2743701020753450107] link \\\"Full article...\\\"\\ntext \\\"Recently featured:\\\"\\nlistitem \\\"Mark Satin\\\"\\n[ax-727507105197852578] link \\\"Mark Satin\\\"\\nlistitem \\\"\\\\\\\"Can't Let Go\\\\\\\" (Mariah Carey song)\\\"\\n[ax-15431126581218692391] link \\\"\\\\\\\"Can't Let Go\\\\\\\" (Mariah Carey song)\\\"\\nlistitem \\\"Aucanquilcha\\\"\\n[ax-12678825228423011023] link \\\"Aucanquilcha\\\"\\nlistitem \\\"Archive\\\"\\n[ax-11382597638830468817] link \\\"Archive\\\"\\nlistitem \\\"By email\\\"\\n[ax-13055617254250232967] link \\\"By email\\\"\\nlistitem \\\"More featured articles\\\"\\n[ax-6683707360661673453] link \\\"More featured articles\\\"\\nlistitem \\\"About\\\"\\n[ax-17634516774147628382] link \\\"About\\\"\\nheading \\\"Did you know ...\\\"\\n[ax-5281235023541931862] link \\\"Verity\\\"\\ntext \\\"Verity\\\"\\nlistitem \\\"... that USA Today compared a Generation Alpha meme (pictured) to a Lovecraftian monster used as a metaphor for AI?\\\"\\n[ax-10126727251710649682] link \\\"a Generation Alpha meme\\\"\\nlistitem \\\"... that Julian Aguon has argued that some legal cases revolve around the \\\\\\\"right to culture\\\\\\\"?\\\"\\n[ax-9094364038552802569] link \\\"Julian Aguon\\\"\\nlistitem \\\"... that Netflix experienced an outage because numerous Stranger Things fans checked whether a secret episode of the series had been released?\\\"\\n[ax-3113991736023843713] link \\\"a secret episode\\\"\\nlistitem \\\"... that Swiss painter Alois Lichtsteiner signs his works as \\\\\\\"OHMSTAL\\\\\\\" because he finds it \\\\\\\"a beautiful word\\\\\\\"?\\\"\\n[ax-562592624758885530] link \\\"Alois Lichtsteiner\\\"\\nlistitem \\\"... that a dangerous stretch of Interstate 24 in Tennessee inspired a Johnny Cash song?\\\"\\n[ax-3333789772200505576] link \\\"Interstate 24 in Tennessee\\\"\\nlistitem \\\"... that a 2023 study found that iCloud Private Relay made speed-test downloads up to ten times slower, but improved network performance in some cases?\\\"\\n[ax-3778180085257314251] link \\\"iCloud Private Relay\\\"\\nlistitem \\\"... that when the Dyckman House in New York City opened as a museum, its backyard had a military hut?\\\"\\n[ax-11751764559349405148] link \\\"Dyckman House\\\"\\nlistitem \\\"... that \\\\\\\"Consideration\\\\\\\" by Rihanna was originally meant to be included on featured artist SZA's debut album?\\\"\\n[ax-954368134436260199] link \\\"Consideration\\\"\\nlistitem \\\"... that Nannie Washburn and her sister faced the death penalty for handing out leaflets?\\\"\\n[ax-12948877096486641142] link \\\"Nannie Washburn\\\"\\nlistitem \\\"Archive\\\"\\n[ax-10425123980514070224] link \\\"Archive\\\"\\nlistitem \\\"Start a new article\\\"\\n[ax-12258658614124423432] link \\\"Start a new article\\\"\\nlistitem \\\"Nominate an article\\\"\\n[ax-14703756797159794133] link \\\"Nominate an article\\\"\\nheading \\\"Help us improve this article!\\\"\\n[ax-17142688756850835359] link \\\"Garbage bin with trash on top\\\"\\ntext \\\"Garbage bin with trash on top\\\"\\ntext \\\"This week's article for improvement is , waste material discarded by humans. The words , , , and are generally used interchangeably.\\\"\\n[ax-861703722719386085] link \\\"garbage\\\"\\nparagraph \\\"You can improve this article by:\\\"\\nlistitem \\\"Expanding the \\\\\\\"History\\\\\\\" and \\\\\\\"Treatment\\\\\\\" sections\\\"\\n[ax-7807452022859692731] link \\\"History\\\"\",\"title\":\"Wikipedia, the free encyclopedia\",\"truncated\":true,\"url\":\"https://en.wikipedia.org/wiki/Main_Page\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\",\"Continue with next_offset and revision to read this captured snapshot.\"]}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_4",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "run",
+            "args": {
+              "steps": [
+                {
+                  "action": "fill",
+                  "ref": "ax-17096866063308173953",
+                  "text": "Ada Lovelace"
+                },
+                {
+                  "action": "press",
+                  "key": "Enter"
+                }
+              ],
+              "snapshot": false
+            }
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_4",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "run",
+            "args": {
+              "steps": [
+                {
+                  "action": "fill",
+                  "ref": "ax-17096866063308173953",
+                  "text": "Ada Lovelace"
+                },
+                {
+                  "action": "press",
+                  "key": "Enter"
+                }
+              ],
+              "snapshot": false
+            }
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "Run stopped at step 1 (fill); earlier steps may have completed: Unsupported run step."
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "failed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_5",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "help",
+            "args": {
+              "op": "run"
+            }
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_5",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "help",
+            "args": {
+              "op": "run"
+            }
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"args_schema\":{\"properties\":{\"snapshot\":{\"type\":\"boolean\"},\"steps\":{\"items\":{\"properties\":{\"action\":{\"enum\":[\"navigate\",\"click_ref\",\"click_role\",\"fill_ref\",\"fill_role\",\"submit_ref\",\"submit_role\",\"select_ref\",\"select_role\",\"check_ref\",\"check_role\",\"hover_ref\",\"hover_role\",\"press\",\"scroll\",\"wait\",\"wait_for\",\"extract\"],\"type\":\"string\"},\"checked\":{\"type\":\"boolean\"},\"delta_x\":{\"type\":\"number\"},\"delta_y\":{\"type\":\"number\"},\"key\":{\"type\":\"string\"},\"ms\":{\"maximum\":5000,\"minimum\":1,\"type\":\"integer\"},\"name\":{\"type\":\"string\"},\"ref\":{\"type\":\"string\"},\"role\":{\"type\":\"string\"},\"selector\":{\"maxLength\":500,\"minLength\":1,\"type\":\"string\"},\"spec\":{\"type\":\"object\"},\"state\":{\"enum\":[\"visible\",\"hidden\",\"attached\",\"detached\"],\"type\":\"string\"},\"text\":{\"maxLength\":500,\"minLength\":1,\"type\":\"string\"},\"timeout_ms\":{\"maximum\":20000,\"minimum\":100,\"type\":\"integer\"},\"url\":{\"type\":\"string\"},\"value\":{\"type\":\"string\"}},\"required\":[\"action\"],\"type\":\"object\"},\"maxItems\":40,\"minItems\":1,\"type\":\"array\"}},\"required\":[\"steps\"],\"type\":\"object\"},\"description\":\"Run 1–40 dependent steps in one call: navigate; click/fill/submit/select/check/hover by ref or exact role; press; scroll; wait; wait_for text or CSS selector state; extract rows. Use submit instead of synthetic Enter for forms. Returns the last extraction and an optional final snapshot. Stops at the first failure within a 60-second budget; earlier steps are not rolled back. Input uses the explicitly selected input mode.\",\"op\":\"run\"}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_6",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "run",
+            "args": {
+              "steps": [
+                {
+                  "action": "fill_ref",
+                  "ref": "ax-17096866063308173953",
+                  "text": "Ada Lovelace"
+                },
+                {
+                  "action": "submit_ref",
+                  "ref": "ax-17096866063308173953"
+                }
+              ],
+              "snapshot": false
+            }
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_6",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "run",
+            "args": {
+              "steps": [
+                {
+                  "action": "fill_ref",
+                  "ref": "ax-17096866063308173953",
+                  "text": "Ada Lovelace"
+                },
+                {
+                  "action": "submit_ref",
+                  "ref": "ax-17096866063308173953"
+                }
+              ],
+              "snapshot": false
+            }
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "Run stopped at step 1 (fill_ref); earlier steps may have completed: Invalid value."
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "failed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_7",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "help",
+            "args": {
+              "op": "fill"
+            }
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_7",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "help",
+            "args": {
+              "op": "fill"
+            }
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"args_schema\":{\"properties\":{\"ref\":{\"pattern\":\"^ax-[0-9]+$\",\"type\":\"string\"},\"value\":{\"maxLength\":100000,\"type\":\"string\"}},\"required\":[\"ref\",\"value\"],\"type\":\"object\"},\"description\":\"Fill a ref from the latest snapshot in the shared tab using synthetic input events. Some websites reject synthetic input.\",\"op\":\"fill\"}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_8",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "snapshot",
+            "args": {
+              "max_chars": 2000
+            }
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_8",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "snapshot",
+            "args": {
+              "max_chars": 2000
+            }
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"next_offset\":54,\"offset\":0,\"order_changed\":false,\"revision\":\"ax-5588331686602994832:2\",\"text\":\"[ax-3746137650509628303] link \\\"Jump to content\\\"\\n[ax-17803828223113906497] button \\\"Main menu\\\"\\n[ax-12020220561566111283] link \\\"\\\"\\n[ax-7516957960254026414] search \\\"Search\\\"\\n[ax-17096866063308173953] searchbox \\\"Search Wikipedia\\\"\\n[ax-7374257128797107695] button \\\"Search\\\"\\nlistitem \\\"Donate\\\"\\n[ax-12375820463105849004] link \\\"Donate\\\"\\nlistitem \\\"Create account\\\"\\n[ax-9229378277727370496] link \\\"Create account\\\"\\nlistitem \\\"Log in\\\"\\n[ax-115888844729656431] link \\\"Log in\\\"\\n[ax-2122500534319003447] link \\\"Wiki Loves Food 2026 in India Documenting India's vibrant culinary heritage and food traditions.\\\"\\nparagraph \\\"Wiki Loves Food 2026 in India Documenting India's vibrant culinary heritage and food traditions.\\\"\\n[ax-1869349580417722543] link \\\"Hide\\\"\\nlistitem \\\"Main Page\\\"\\n[ax-15884136534382525176] link \\\"Main Page\\\"\\nlistitem \\\"Talk\\\"\\n[ax-12247693021629383060] link \\\"Talk\\\"\\nlistitem \\\"Read\\\"\\n[ax-1527096152371881813] link \\\"Read\\\"\\nlistitem \\\"View source\\\"\\n[ax-5334463861370984387] link \\\"View source\\\"\\nlistitem \\\"View history\\\"\\n[ax-13510453565016067361] link \\\"View history\\\"\\nlistitem \\\"Save\\\"\\n[ax-9092863989690559213] link \\\"Save\\\"\\n[ax-11849759583704356090] button \\\"Tools\\\"\\ntext \\\"Appearance\\\"\\n[ax-2627732837497906715] button \\\"Hide Appearance\\\"\\ntext \\\"Text\\\"\\nlistitem \\\"Small Standard Large\\\"\\n[ax-6720180939012133801] radio \\\"Small\\\"\\n[ax-8165328552208994133] radio \\\"Standard\\\"\\n[ax-9600184472890928489] radio \\\"Large\\\"\\ntext \\\"Width\\\"\\nlistitem \\\"Standard Wide\\\"\\n[ax-8562774943164858970] radio \\\"Standard\\\"\\n[ax-9810748598947366852] radio \\\"Wide\\\"\\ntext \\\"Color\\\"\\nlistitem \\\"Automatic Light Dark\\\"\\n[ax-15550254100244940983] radio \\\"Automatic\\\"\\n[ax-1308069493165500291] radio \\\"Light\\\"\\n[ax-6552193596220645058] radio \\\"Dark\\\"\\ntext \\\",\\\"\\nheading \\\"Welcome to Wikipedia\\\"\\n[ax-7587123624909856077] link \\\"Wikipedia\\\"\\ntext \\\"the encyclopedia that .\\\"\\n[ax-13782729199342278423] link \\\"free\\\"\\n[ax-9970071687009857549] link \\\"anyone can edit\\\"\\nlistitem \\\"261,656 active editors\\\"\\n[ax-9018212452182684748] link \\\"261,656\\\"\\nlistitem \\\"7,265,442 articles in English\\\"\\n[ax-8060832655182055458] link \\\"7,265,442\\\"\",\"title\":\"Wikipedia, the free encyclopedia\",\"truncated\":true,\"url\":\"https://en.wikipedia.org/wiki/Main_Page\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\",\"Continue with next_offset and revision to read this captured snapshot.\"]}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_9",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "run",
+            "args": {
+              "steps": [
+                {
+                  "action": "fill_ref",
+                  "ref": "ax-17096866063308173953",
+                  "value": "Ada Lovelace"
+                },
+                {
+                  "action": "submit_ref",
+                  "ref": "ax-17096866063308173953"
+                }
+              ],
+              "snapshot": false
+            }
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_9",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "run",
+            "args": {
+              "steps": [
+                {
+                  "action": "fill_ref",
+                  "ref": "ax-17096866063308173953",
+                  "value": "Ada Lovelace"
+                },
+                {
+                  "action": "submit_ref",
+                  "ref": "ax-17096866063308173953"
+                }
+              ],
+              "snapshot": false
+            }
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"completed\":2,\"elapsed_ms\":64}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_10",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "snapshot",
+            "args": {
+              "max_chars": 5000
+            }
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_10",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "snapshot",
+            "args": {
+              "max_chars": 5000
+            }
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"next_offset\":113,\"offset\":0,\"order_changed\":false,\"revision\":\"ax-8763412085193621282:1\",\"text\":\"[ax-773455356380287089] link \\\"Jump to content\\\"\\n[ax-3226671556988993272] button \\\"Main menu\\\"\\n[ax-15267612364475932030] link \\\"\\\"\\n[ax-14870759960394211909] search \\\"Search\\\"\\n[ax-18143992269345936290] searchbox \\\"Search Wikipedia\\\"\\n[ax-7145602274955807752] button \\\"Search\\\"\\nlistitem \\\"Donate\\\"\\n[ax-8790742729221350234] link \\\"Donate\\\"\\nlistitem \\\"Create account\\\"\\n[ax-6988108321191858979] link \\\"Create account\\\"\\nlistitem \\\"Log in\\\"\\n[ax-10102084006544666147] link \\\"Log in\\\"\\n[ax-10032008692086012390] link \\\"Wiki Loves Food 2026 in India Documenting India's vibrant culinary heritage and food traditions.\\\"\\nparagraph \\\"Wiki Loves Food 2026 in India Documenting India's vibrant culinary heritage and food traditions.\\\"\\n[ax-16116555683034097119] link \\\"Hide\\\"\\nheading \\\"Contents\\\"\\n[ax-5690766718376283545] button \\\"Hide Contents\\\"\\nlistitem \\\"(Top)\\\"\\n[ax-4150513451807378721] link \\\"(Top)\\\"\\nlistitem \\\"Biography Toggle Biography subsection\\\"\\n[ax-15364100567148695815] link \\\"Biography\\\"\\n[ax-3766870589864674260] button \\\"Toggle Biography subsection\\\"\\nlistitem \\\"Work Toggle Work subsection\\\"\\n[ax-188733796896330863] link \\\"Work\\\"\\n[ax-5549506379273848792] button \\\"Toggle Work subsection\\\"\\nlistitem \\\"Commemoration Toggle Commemoration subsection\\\"\\n[ax-7374461994463157237] link \\\"Commemoration\\\"\\n[ax-3813527361603777689] button \\\"Toggle Commemoration subsection\\\"\\nlistitem \\\"In popular culture Toggle In popular culture subsection\\\"\\n[ax-999232002036445483] link \\\"In popular culture\\\"\\n[ax-9874051589935642828] button \\\"Toggle In popular culture subsection\\\"\\nlistitem \\\"Publications Toggle Publications subsection\\\"\\n[ax-443747068441164044] link \\\"Publications\\\"\\n[ax-16388638358460284240] button \\\"Toggle Publications subsection\\\"\\nlistitem \\\"See also\\\"\\n[ax-12188635485108535211] link \\\"See also\\\"\\nlistitem \\\"Explanatory notes\\\"\\n[ax-13582144177321355592] link \\\"Explanatory notes\\\"\\nlistitem \\\"References Toggle References subsection\\\"\\n[ax-11819352959731211510] link \\\"References\\\"\\n[ax-43057149998892619] button \\\"Toggle References subsection\\\"\\nlistitem \\\"Further reading\\\"\\n[ax-8695602159805190909] link \\\"Further reading\\\"\\nlistitem \\\"External links\\\"\\n[ax-13703267293226416804] link \\\"External links\\\"\\nheading \\\"Ada Lovelace\\\"\\ntext \\\"Ada Lovelace\\\"\\n[ax-16513736594925264432] button \\\"113 languages\\\"\\nlistitem \\\"Article\\\"\\n[ax-12388510023324943314] link \\\"Article\\\"\\nlistitem \\\"Talk\\\"\\n[ax-1994682291281030416] link \\\"Talk\\\"\\nlistitem \\\"Read\\\"\\n[ax-18122937401516809116] link \\\"Read\\\"\\nlistitem \\\"View source\\\"\\n[ax-18225958463179416098] link \\\"View source\\\"\\nlistitem \\\"View history\\\"\\n[ax-10047051595544990781] link \\\"View history\\\"\\nlistitem \\\"Save\\\"\\n[ax-1503754050261499827] link \\\"Save\\\"\\n[ax-11260175829698043397] button \\\"Tools\\\"\\ntext \\\"Appearance\\\"\\n[ax-17346815315583035165] button \\\"Hide Appearance\\\"\\ntext \\\"Text\\\"\\nlistitem \\\"Small Standard Large\\\"\\n[ax-2578386300956681914] radio \\\"Small\\\"\\n[ax-12786163750909011182] radio \\\"Standard\\\"\\n[ax-5979265698174100339] radio \\\"Large\\\"\\ntext \\\"Width\\\"\\nlistitem \\\"Standard Wide\\\"\\n[ax-5633719613416013107] radio \\\"Standard\\\"\\n[ax-15156925543100736608] radio \\\"Wide\\\"\\ntext \\\"Color\\\"\\nlistitem \\\"Automatic Light Dark\\\"\\n[ax-935181191763752181] radio \\\"Automatic\\\"\\n[ax-16663198849390497687] radio \\\"Light\\\"\\n[ax-550688240278364234] radio \\\"Dark\\\"\\n[ax-1127038681543541362] link \\\"This article is semi-protected.\\\"\\ntext \\\"From Wikipedia, the free encyclopedia\\\"\\n[ax-12524842032333834687] note \\\"For the computer microarchitecture, see Ada Lovelace (microarchitecture).\\\"\\n[ax-6983139605138990697] link \\\"Ada Lovelace (microarchitecture)\\\"\\ncolumnheader \\\"The Right Honourable The Countess of Lovelace\\\"\\n[ax-5784651913962425473] link \\\"The Right Honourable\\\"\\ncell \\\"Daguerreotype of Lovelace (c. 1843)[1]\\\"\\n[ax-5757568914086856316] link \\\"\\\"\\n[ax-16883087861852836136] link \\\"Daguerreotype\\\"\\n[ax-13597299407853250639] link \\\"[1]\\\"\\ncolumnheader \\\"Born\\\"\\ncell \\\"Augusta Ada Byron 10 December 1815 London, England\\\"\\ncolumnheader \\\"Died\\\"\\ncell \\\"27 November 1852 (aged 36) Marylebone, London, England\\\"\\n[ax-18297022273221682876] link \\\"Marylebone\\\"\\ncolumnheader \\\"Resting place\\\"\\ncell \\\"Church of St Mary Magdalene, Hucknall, Nottingham, England\\\"\\n[ax-11308776562496052242] link \\\"Church of St Mary Magdalene, Hucknall\\\"\\ncolumnheader \\\"Known for\\\"\\ncell \\\"Mathematics, computing\\\"\\n[ax-9172208081745481562] link \\\"Mathematics\\\"\\n[ax-6696986416020612148] link \\\"computing\\\"\\ncolumnheader \\\"Spouse\\\"\\ncell \\\"William King-Noel, 1st Earl of Lovelace ​ ​(m. 1835)​\\\"\\n[ax-7820644195616420019] link \\\"William King-Noel, 1st Earl of Lovelace\\\"\\ncolumnheader \\\"Children\\\"\\ncell \\\"Byron King-Noel, Viscount Ockham Anne Blunt, 15th Baroness Wentworth Ralph King-Milbanke, 2nd Earl of Lovelace\\\"\\nlistitem \\\"Byron King-Noel, Viscount Ockham\\\"\\n[ax-3467883621229695220] link \\\"Byron King-Noel, Viscount Ockham\\\"\\nlistitem \\\"Anne Blunt, 15th Baroness Wentworth\\\"\\n[ax-15169915227473448980] link \\\"Anne Blunt, 15th Baroness Wentworth\\\"\\nlistitem \\\"Ralph King-Milbanke, 2nd Earl of Lovelace\\\"\\n[ax-4733316395212435998] link \\\"Ralph King-Milbanke, 2nd Earl of Lovelace\\\"\\ncolumnheader \\\"Parents\\\"\\ncell \\\"George Byron, 6th Baron Byron (father) Anne Isabella Milbanke (mother)\\\"\\nlistitem \\\"George Byron, 6th Baron Byron (father)\\\"\",\"title\":\"Ada Lovelace - Wikipedia\",\"truncated\":true,\"url\":\"https://en.wikipedia.org/wiki/Ada_Lovelace\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\",\"Continue with next_offset and revision to read this captured snapshot.\"]}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_11",
+          "type": "agent_message",
+          "text": "{\"answer\":\"Ada Lovelace was born on 10 December 1815 in London, England. Her mother was Anne Isabella Milbanke.\",\"evidence\":[{\"url\":\"https://en.wikipedia.org/wiki/Ada_Lovelace\",\"quote\":\"Augusta Ada Byron 10 December 1815 London, England\"},{\"url\":\"https://en.wikipedia.org/wiki/Ada_Lovelace\",\"quote\":\"George Byron, 6th Baron Byron (father) Anne Isabella Milbanke (mother)\"}]}"
+        }
+      },
+      {
+        "type": "turn.completed",
+        "usage": {
+          "input_tokens": 165001,
+          "cached_input_tokens": 129024,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 1338,
+          "reasoning_output_tokens": 633
+        }
+      }
+    ],
+    "parse_errors": 0,
+    "diagnostic": null,
+    "configuration": {
+      "model": "gpt-6-luna",
+      "effort": "high",
+      "sandbox": "read-only",
+      "shell_tool": false,
+      "web_search": "disabled",
+      "user_config_loaded": false,
+      "project_instructions_loaded": false,
+      "skills_catalog_max_tokens": 1,
+      "automatic_skill_instructions": false,
+      "fixture_tool_approval": "explicit approve",
+      "auth": "existing signed-in Codex host",
+      "mcp_transport": "stdio → private Unix socket → native runtime MCP client"
+    }
+  },
+  "engine": "zen",
+  "task": "wikipedia-biography",
+  "round": 0,
+  "phase": 0,
+  "success": true,
+  "outcome": "passed",
+  "answer": {
+    "answer": "Ada Lovelace was born on 10 December 1815 in London, England. Her mother was Anne Isabella Milbanke.",
+    "evidence": [
+      {
+        "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+        "quote": "Augusta Ada Byron 10 December 1815 London, England"
+      },
+      {
+        "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+        "quote": "George Byron, 6th Baron Byron (father) Anne Isabella Milbanke (mother)"
+      }
+    ]
+  },
+  "expected": {
+    "date": "10 December 1815",
+    "place": "London",
+    "mother": "Anne Isabella Milbanke"
+  },
+  "evaluation": {
+    "passed": true,
+    "facts": [
+      {
+        "pattern": "10\\s+December\\s+1815|December\\s+10,?\\s+1815|1815-12-10",
+        "passed": true
+      },
+      {
+        "pattern": "London",
+        "passed": true
+      },
+      {
+        "pattern": "(?:Annabella|Anne?\\s+Isabella)(?:\\s+Noel)?\\s+(?:Milbanke|Byron)",
+        "passed": true
+      }
+    ],
+    "evidence": [
+      {
+        "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+        "quote": "Augusta Ada Byron 10 December 1815 London, England",
+        "source_matches": true,
+        "quote_observed": true
+      },
+      {
+        "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+        "quote": "George Byron, 6th Baron Byron (father) Anne Isabella Milbanke (mother)",
+        "source_matches": true,
+        "quote_observed": true
+      }
+    ],
+    "forbidden_network_or_file_calls": 0
+  },
+  "preparation_ms": 60.04852700000083,
+  "host_elapsed_ms": 41073.027592,
+  "verification_ms": 1.4230339999994612,
+  "task_elapsed_ms": 41080.659458,
+  "usage": {
+    "input_tokens": 165001,
+    "cached_input_tokens": 129024,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 1338,
+    "reasoning_output_tokens": 633
+  },
+  "model_verified": null,
+  "host_error": null,
+  "tool_calls": 10,
+  "tool_failures": 2,
+  "tool_elapsed_ms": 316.9736960000082,
+  "response_bytes": 19951,
+  "response_characters": 19942,
+  "forbidden_host_calls": 0,
+  "reported_cost_usd": null,
+  "cost_usd": null,
+  "timed_out": false,
+  "trace_file": "zen-wikipedia-biography-0.json",
+  "prompt": "Complete this read-only public website task using ONLY the browser MCP tools. You must inspect the live page; do not answer from memory. You choose your own observations, selectors and actions. Do not use HTTP/API clients, fetch, network replay, files, shell, other agents, or non-browser tools. Browser DOM evaluation is allowed for text extraction, but must not make network requests. Do not visit API endpoints. Do not sign in, create accounts, post messages, buy, or change account settings. Do not solve CAPTCHAs or bypass access challenges; report them. You may follow links, use site search and recover from errors. Stay on the task site. Maximum 30 browser calls. Verify all requested facts and finish with JSON {\"answer\":\"concise answer covering every requested fact\",\"evidence\":[{\"url\":\"source page URL\",\"quote\":\"a short exact supporting quote you observed in browser output\"}]}. Evidence quotes must be copied exactly from an observation. Do not claim success when blocked.\nYou control the owned Zen tab using Callisto in synthetic-dom input mode. Navigation starts loading; read a fresh snapshot before using refs. You may use run, batches, targeted observations, extraction and supported explicit waits. Do not enable or change input mode. Use the callisto tool with op and args. op=help returns one operation contract on demand.\nStart URL: https://en.wikipedia.org/wiki/Main_Page\nTask: Find Ada Lovelace on Wikipedia. Report her full birth date, birthplace and mother’s name. Cite the biography page and a short supporting quote.",
+  "tools": [
+    {
+      "sequence": 1,
+      "name": "callisto",
+      "arguments": {
+        "op": "snapshot",
+        "args": {
+          "max_chars": 6000
+        }
+      },
+      "started_at": "2026-11-17T08:01:31.876Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"next_offset\":null,\"offset\":0,\"order_changed\":false,\"revision\":\"ax-8001377517532909904:2\",\"text\":\"heading \\\"Ready for a public-site task\\\"\",\"title\":\"Browser benchmark start\",\"truncated\":false,\"url\":\"http://127.0.0.1:40183/\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\"]}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 5.678121000000829,
+      "response_bytes": 477
+    },
+    {
+      "sequence": 2,
+      "name": "callisto",
+      "arguments": {
+        "op": "navigate",
+        "args": {
+          "url": "https://en.wikipedia.org/wiki/Main_Page"
+        }
+      },
+      "started_at": "2026-11-17T08:01:34.355Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"navigationStarted\":true}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 4.8030910000015865,
+      "response_bytes": 67
+    },
+    {
+      "sequence": 3,
+      "name": "callisto",
+      "arguments": {
+        "op": "snapshot",
+        "args": {
+          "max_chars": 6000
+        }
+      },
+      "started_at": "2026-11-17T08:01:36.078Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"next_offset\":122,\"offset\":0,\"order_changed\":false,\"revision\":\"ax-5588331686602994832:1\",\"text\":\"[ax-3746137650509628303] link \\\"Jump to content\\\"\\n[ax-17803828223113906497] button \\\"Main menu\\\"\\n[ax-12020220561566111283] link \\\"\\\"\\n[ax-7516957960254026414] search \\\"Search\\\"\\n[ax-17096866063308173953] searchbox \\\"Search Wikipedia\\\"\\n[ax-7374257128797107695] button \\\"Search\\\"\\nlistitem \\\"Donate\\\"\\n[ax-12375820463105849004] link \\\"Donate\\\"\\nlistitem \\\"Create account\\\"\\n[ax-9229378277727370496] link \\\"Create account\\\"\\nlistitem \\\"Log in\\\"\\n[ax-115888844729656431] link \\\"Log in\\\"\\n[ax-2122500534319003447] link \\\"Wiki Loves Food 2026 in India Documenting India's vibrant culinary heritage and food traditions.\\\"\\nparagraph \\\"Wiki Loves Food 2026 in India Documenting India's vibrant culinary heritage and food traditions.\\\"\\n[ax-1869349580417722543] link \\\"Hide\\\"\\nlistitem \\\"Main Page\\\"\\n[ax-15884136534382525176] link \\\"Main Page\\\"\\nlistitem \\\"Talk\\\"\\n[ax-12247693021629383060] link \\\"Talk\\\"\\nlistitem \\\"Read\\\"\\n[ax-1527096152371881813] link \\\"Read\\\"\\nlistitem \\\"View source\\\"\\n[ax-5334463861370984387] link \\\"View source\\\"\\nlistitem \\\"View history\\\"\\n[ax-13510453565016067361] link \\\"View history\\\"\\nlistitem \\\"Save\\\"\\n[ax-9092863989690559213] link \\\"Save\\\"\\n[ax-11849759583704356090] button \\\"Tools\\\"\\ntext \\\"Appearance\\\"\\n[ax-2627732837497906715] button \\\"Hide Appearance\\\"\\ntext \\\"Text\\\"\\nlistitem \\\"Small Standard Large\\\"\\n[ax-6720180939012133801] radio \\\"Small\\\"\\n[ax-8165328552208994133] radio \\\"Standard\\\"\\n[ax-9600184472890928489] radio \\\"Large\\\"\\ntext \\\"Width\\\"\\nlistitem \\\"Standard Wide\\\"\\n[ax-8562774943164858970] radio \\\"Standard\\\"\\n[ax-9810748598947366852] radio \\\"Wide\\\"\\ntext \\\"Color\\\"\\nlistitem \\\"Automatic Light Dark\\\"\\n[ax-15550254100244940983] radio \\\"Automatic\\\"\\n[ax-1308069493165500291] radio \\\"Light\\\"\\n[ax-6552193596220645058] radio \\\"Dark\\\"\\ntext \\\",\\\"\\nheading \\\"Welcome to Wikipedia\\\"\\n[ax-7587123624909856077] link \\\"Wikipedia\\\"\\ntext \\\"the encyclopedia that .\\\"\\n[ax-13782729199342278423] link \\\"free\\\"\\n[ax-9970071687009857549] link \\\"anyone can edit\\\"\\nlistitem \\\"261,656 active editors\\\"\\n[ax-9018212452182684748] link \\\"261,656\\\"\\nlistitem \\\"7,265,442 articles in English\\\"\\n[ax-8060832655182055458] link \\\"7,265,442\\\"\\n[ax-13466130839769904950] link \\\"English\\\"\\nheading \\\"From today's featured article\\\"\\ntext \\\"From today's featured article\\\"\\n[ax-2584905606733824050] link \\\"Dividing the Light was one of the installation artworks that inspired the game.\\\"\\ntext \\\"was one of the installation artworks that inspired the game.\\\"\\n[ax-2688902170623299367] link \\\"Dividing the Light\\\"\\nparagraph \\\"Islands: Non-Places is an abstract art game developed and published by Carl Burton. It was released on November 17, 2016, and consists of a series of anonymous, liminal environments, each rendered in \\\"\\n[ax-16675846530800614246] link \\\"Islands: Non-Places\\\"\\n[ax-890791732324710450] link \\\"art game\\\"\\n[ax-14868831977413717424] link \\\"liminal\\\"\\n[ax-6034588548050108847] link \\\"Marc Augé\\\"\\n[ax-9172584891861446249] link \\\"installation art\\\"\\n[ax-5067121361714981157] link \\\"James Turrell\\\"\\n[ax-5513284531101176261] link \\\"field recordings\\\"\\n[ax-1555178272784048045] link \\\"Chris Watson\\\"\\n[ax-5737663695064424095] link \\\"Nuovo Award\\\"\\n[ax-17316200366026508069] link \\\"Independent Games Festival\\\"\\n[ax-2743701020753450107] link \\\"Full article...\\\"\\ntext \\\"Recently featured:\\\"\\nlistitem \\\"Mark Satin\\\"\\n[ax-727507105197852578] link \\\"Mark Satin\\\"\\nlistitem \\\"\\\\\\\"Can't Let Go\\\\\\\" (Mariah Carey song)\\\"\\n[ax-15431126581218692391] link \\\"\\\\\\\"Can't Let Go\\\\\\\" (Mariah Carey song)\\\"\\nlistitem \\\"Aucanquilcha\\\"\\n[ax-12678825228423011023] link \\\"Aucanquilcha\\\"\\nlistitem \\\"Archive\\\"\\n[ax-11382597638830468817] link \\\"Archive\\\"\\nlistitem \\\"By email\\\"\\n[ax-13055617254250232967] link \\\"By email\\\"\\nlistitem \\\"More featured articles\\\"\\n[ax-6683707360661673453] link \\\"More featured articles\\\"\\nlistitem \\\"About\\\"\\n[ax-17634516774147628382] link \\\"About\\\"\\nheading \\\"Did you know ...\\\"\\n[ax-5281235023541931862] link \\\"Verity\\\"\\ntext \\\"Verity\\\"\\nlistitem \\\"... that USA Today compared a Generation Alpha meme (pictured) to a Lovecraftian monster used as a metaphor for AI?\\\"\\n[ax-10126727251710649682] link \\\"a Generation Alpha meme\\\"\\nlistitem \\\"... that Julian Aguon has argued that some legal cases revolve around the \\\\\\\"right to culture\\\\\\\"?\\\"\\n[ax-9094364038552802569] link \\\"Julian Aguon\\\"\\nlistitem \\\"... that Netflix experienced an outage because numerous Stranger Things fans checked whether a secret episode of the series had been released?\\\"\\n[ax-3113991736023843713] link \\\"a secret episode\\\"\\nlistitem \\\"... that Swiss painter Alois Lichtsteiner signs his works as \\\\\\\"OHMSTAL\\\\\\\" because he finds it \\\\\\\"a beautiful word\\\\\\\"?\\\"\\n[ax-562592624758885530] link \\\"Alois Lichtsteiner\\\"\\nlistitem \\\"... that a dangerous stretch of Interstate 24 in Tennessee inspired a Johnny Cash song?\\\"\\n[ax-3333789772200505576] link \\\"Interstate 24 in Tennessee\\\"\\nlistitem \\\"... that a 2023 study found that iCloud Private Relay made speed-test downloads up to ten times slower, but improved network performance in some cases?\\\"\\n[ax-3778180085257314251] link \\\"iCloud Private Relay\\\"\\nlistitem \\\"... that when the Dyckman House in New York City opened as a museum, its backyard had a military hut?\\\"\\n[ax-11751764559349405148] link \\\"Dyckman House\\\"\\nlistitem \\\"... that \\\\\\\"Consideration\\\\\\\" by Rihanna was originally meant to be included on featured artist SZA's debut album?\\\"\\n[ax-954368134436260199] link \\\"Consideration\\\"\\nlistitem \\\"... that Nannie Washburn and her sister faced the death penalty for handing out leaflets?\\\"\\n[ax-12948877096486641142] link \\\"Nannie Washburn\\\"\\nlistitem \\\"Archive\\\"\\n[ax-10425123980514070224] link \\\"Archive\\\"\\nlistitem \\\"Start a new article\\\"\\n[ax-12258658614124423432] link \\\"Start a new article\\\"\\nlistitem \\\"Nominate an article\\\"\\n[ax-14703756797159794133] link \\\"Nominate an article\\\"\\nheading \\\"Help us improve this article!\\\"\\n[ax-17142688756850835359] link \\\"Garbage bin with trash on top\\\"\\ntext \\\"Garbage bin with trash on top\\\"\\ntext \\\"This week's article for improvement is , waste material discarded by humans. The words , , , and are generally used interchangeably.\\\"\\n[ax-861703722719386085] link \\\"garbage\\\"\\nparagraph \\\"You can improve this article by:\\\"\\nlistitem \\\"Expanding the \\\\\\\"History\\\\\\\" and \\\\\\\"Treatment\\\\\\\" sections\\\"\\n[ax-7807452022859692731] link \\\"History\\\"\",\"title\":\"Wikipedia, the free encyclopedia\",\"truncated\":true,\"url\":\"https://en.wikipedia.org/wiki/Main_Page\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\",\"Continue with next_offset and revision to read this captured snapshot.\"]}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 71.37317199999961,
+      "response_bytes": 7568
+    },
+    {
+      "sequence": 4,
+      "name": "callisto",
+      "arguments": {
+        "op": "run",
+        "args": {
+          "steps": [
+            {
+              "action": "fill",
+              "ref": "ax-17096866063308173953",
+              "text": "Ada Lovelace"
+            },
+            {
+              "action": "press",
+              "key": "Enter"
+            }
+          ],
+          "snapshot": false
+        }
+      },
+      "started_at": "2026-11-17T08:01:39.499Z",
+      "result": {
+        "content": [
+          {
+            "text": "Run stopped at step 1 (fill); earlier steps may have completed: Unsupported run step.",
+            "type": "text"
+          }
+        ],
+        "isError": true
+      },
+      "failed": true,
+      "elapsed_ms": 1.8814689999999246,
+      "response_bytes": 139
+    },
+    {
+      "sequence": 5,
+      "name": "callisto",
+      "arguments": {
+        "op": "help",
+        "args": {
+          "op": "run"
+        }
+      },
+      "started_at": "2026-11-17T08:01:41.450Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"args_schema\":{\"properties\":{\"snapshot\":{\"type\":\"boolean\"},\"steps\":{\"items\":{\"properties\":{\"action\":{\"enum\":[\"navigate\",\"click_ref\",\"click_role\",\"fill_ref\",\"fill_role\",\"submit_ref\",\"submit_role\",\"select_ref\",\"select_role\",\"check_ref\",\"check_role\",\"hover_ref\",\"hover_role\",\"press\",\"scroll\",\"wait\",\"wait_for\",\"extract\"],\"type\":\"string\"},\"checked\":{\"type\":\"boolean\"},\"delta_x\":{\"type\":\"number\"},\"delta_y\":{\"type\":\"number\"},\"key\":{\"type\":\"string\"},\"ms\":{\"maximum\":5000,\"minimum\":1,\"type\":\"integer\"},\"name\":{\"type\":\"string\"},\"ref\":{\"type\":\"string\"},\"role\":{\"type\":\"string\"},\"selector\":{\"maxLength\":500,\"minLength\":1,\"type\":\"string\"},\"spec\":{\"type\":\"object\"},\"state\":{\"enum\":[\"visible\",\"hidden\",\"attached\",\"detached\"],\"type\":\"string\"},\"text\":{\"maxLength\":500,\"minLength\":1,\"type\":\"string\"},\"timeout_ms\":{\"maximum\":20000,\"minimum\":100,\"type\":\"integer\"},\"url\":{\"type\":\"string\"},\"value\":{\"type\":\"string\"}},\"required\":[\"action\"],\"type\":\"object\"},\"maxItems\":40,\"minItems\":1,\"type\":\"array\"}},\"required\":[\"steps\"],\"type\":\"object\"},\"description\":\"Run 1–40 dependent steps in one call: navigate; click/fill/submit/select/check/hover by ref or exact role; press; scroll; wait; wait_for text or CSS selector state; extract rows. Use submit instead of synthetic Enter for forms. Returns the last extraction and an optional final snapshot. Stops at the first failure within a 60-second budget; earlier steps are not rolled back. Input uses the explicitly selected input mode.\",\"op\":\"run\"}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 0.5779399999992165,
+      "response_bytes": 1719
+    },
+    {
+      "sequence": 6,
+      "name": "callisto",
+      "arguments": {
+        "op": "run",
+        "args": {
+          "steps": [
+            {
+              "action": "fill_ref",
+              "ref": "ax-17096866063308173953",
+              "text": "Ada Lovelace"
+            },
+            {
+              "action": "submit_ref",
+              "ref": "ax-17096866063308173953"
+            }
+          ],
+          "snapshot": false
+        }
+      },
+      "started_at": "2026-11-17T08:01:44.261Z",
+      "result": {
+        "content": [
+          {
+            "text": "Run stopped at step 1 (fill_ref); earlier steps may have completed: Invalid value.",
+            "type": "text"
+          }
+        ],
+        "isError": true
+      },
+      "failed": true,
+      "elapsed_ms": 31.790594999998575,
+      "response_bytes": 136
+    },
+    {
+      "sequence": 7,
+      "name": "callisto",
+      "arguments": {
+        "op": "help",
+        "args": {
+          "op": "fill"
+        }
+      },
+      "started_at": "2026-11-17T08:01:46.323Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"args_schema\":{\"properties\":{\"ref\":{\"pattern\":\"^ax-[0-9]+$\",\"type\":\"string\"},\"value\":{\"maxLength\":100000,\"type\":\"string\"}},\"required\":[\"ref\",\"value\"],\"type\":\"object\"},\"description\":\"Fill a ref from the latest snapshot in the shared tab using synthetic input events. Some websites reject synthetic input.\",\"op\":\"fill\"}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 0.653693000000203,
+      "response_bytes": 397
+    },
+    {
+      "sequence": 8,
+      "name": "callisto",
+      "arguments": {
+        "op": "snapshot",
+        "args": {
+          "max_chars": 2000
+        }
+      },
+      "started_at": "2026-11-17T08:01:48.709Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"next_offset\":54,\"offset\":0,\"order_changed\":false,\"revision\":\"ax-5588331686602994832:2\",\"text\":\"[ax-3746137650509628303] link \\\"Jump to content\\\"\\n[ax-17803828223113906497] button \\\"Main menu\\\"\\n[ax-12020220561566111283] link \\\"\\\"\\n[ax-7516957960254026414] search \\\"Search\\\"\\n[ax-17096866063308173953] searchbox \\\"Search Wikipedia\\\"\\n[ax-7374257128797107695] button \\\"Search\\\"\\nlistitem \\\"Donate\\\"\\n[ax-12375820463105849004] link \\\"Donate\\\"\\nlistitem \\\"Create account\\\"\\n[ax-9229378277727370496] link \\\"Create account\\\"\\nlistitem \\\"Log in\\\"\\n[ax-115888844729656431] link \\\"Log in\\\"\\n[ax-2122500534319003447] link \\\"Wiki Loves Food 2026 in India Documenting India's vibrant culinary heritage and food traditions.\\\"\\nparagraph \\\"Wiki Loves Food 2026 in India Documenting India's vibrant culinary heritage and food traditions.\\\"\\n[ax-1869349580417722543] link \\\"Hide\\\"\\nlistitem \\\"Main Page\\\"\\n[ax-15884136534382525176] link \\\"Main Page\\\"\\nlistitem \\\"Talk\\\"\\n[ax-12247693021629383060] link \\\"Talk\\\"\\nlistitem \\\"Read\\\"\\n[ax-1527096152371881813] link \\\"Read\\\"\\nlistitem \\\"View source\\\"\\n[ax-5334463861370984387] link \\\"View source\\\"\\nlistitem \\\"View history\\\"\\n[ax-13510453565016067361] link \\\"View history\\\"\\nlistitem \\\"Save\\\"\\n[ax-9092863989690559213] link \\\"Save\\\"\\n[ax-11849759583704356090] button \\\"Tools\\\"\\ntext \\\"Appearance\\\"\\n[ax-2627732837497906715] button \\\"Hide Appearance\\\"\\ntext \\\"Text\\\"\\nlistitem \\\"Small Standard Large\\\"\\n[ax-6720180939012133801] radio \\\"Small\\\"\\n[ax-8165328552208994133] radio \\\"Standard\\\"\\n[ax-9600184472890928489] radio \\\"Large\\\"\\ntext \\\"Width\\\"\\nlistitem \\\"Standard Wide\\\"\\n[ax-8562774943164858970] radio \\\"Standard\\\"\\n[ax-9810748598947366852] radio \\\"Wide\\\"\\ntext \\\"Color\\\"\\nlistitem \\\"Automatic Light Dark\\\"\\n[ax-15550254100244940983] radio \\\"Automatic\\\"\\n[ax-1308069493165500291] radio \\\"Light\\\"\\n[ax-6552193596220645058] radio \\\"Dark\\\"\\ntext \\\",\\\"\\nheading \\\"Welcome to Wikipedia\\\"\\n[ax-7587123624909856077] link \\\"Wikipedia\\\"\\ntext \\\"the encyclopedia that .\\\"\\n[ax-13782729199342278423] link \\\"free\\\"\\n[ax-9970071687009857549] link \\\"anyone can edit\\\"\\nlistitem \\\"261,656 active editors\\\"\\n[ax-9018212452182684748] link \\\"261,656\\\"\\nlistitem \\\"7,265,442 articles in English\\\"\\n[ax-8060832655182055458] link \\\"7,265,442\\\"\",\"title\":\"Wikipedia, the free encyclopedia\",\"truncated\":true,\"url\":\"https://en.wikipedia.org/wiki/Main_Page\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\",\"Continue with next_offset and revision to read this captured snapshot.\"]}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 31.59258100000443,
+      "response_bytes": 2959
+    },
+    {
+      "sequence": 9,
+      "name": "callisto",
+      "arguments": {
+        "op": "run",
+        "args": {
+          "steps": [
+            {
+              "action": "fill_ref",
+              "ref": "ax-17096866063308173953",
+              "value": "Ada Lovelace"
+            },
+            {
+              "action": "submit_ref",
+              "ref": "ax-17096866063308173953"
+            }
+          ],
+          "snapshot": false
+        }
+      },
+      "started_at": "2026-11-17T08:01:51.590Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"completed\":2,\"elapsed_ms\":64}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 66.05509300000267,
+      "response_bytes": 74
+    },
+    {
+      "sequence": 10,
+      "name": "callisto",
+      "arguments": {
+        "op": "snapshot",
+        "args": {
+          "max_chars": 5000
+        }
+      },
+      "started_at": "2026-11-17T08:01:53.443Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"next_offset\":113,\"offset\":0,\"order_changed\":false,\"revision\":\"ax-8763412085193621282:1\",\"text\":\"[ax-773455356380287089] link \\\"Jump to content\\\"\\n[ax-3226671556988993272] button \\\"Main menu\\\"\\n[ax-15267612364475932030] link \\\"\\\"\\n[ax-14870759960394211909] search \\\"Search\\\"\\n[ax-18143992269345936290] searchbox \\\"Search Wikipedia\\\"\\n[ax-7145602274955807752] button \\\"Search\\\"\\nlistitem \\\"Donate\\\"\\n[ax-8790742729221350234] link \\\"Donate\\\"\\nlistitem \\\"Create account\\\"\\n[ax-6988108321191858979] link \\\"Create account\\\"\\nlistitem \\\"Log in\\\"\\n[ax-10102084006544666147] link \\\"Log in\\\"\\n[ax-10032008692086012390] link \\\"Wiki Loves Food 2026 in India Documenting India's vibrant culinary heritage and food traditions.\\\"\\nparagraph \\\"Wiki Loves Food 2026 in India Documenting India's vibrant culinary heritage and food traditions.\\\"\\n[ax-16116555683034097119] link \\\"Hide\\\"\\nheading \\\"Contents\\\"\\n[ax-5690766718376283545] button \\\"Hide Contents\\\"\\nlistitem \\\"(Top)\\\"\\n[ax-4150513451807378721] link \\\"(Top)\\\"\\nlistitem \\\"Biography Toggle Biography subsection\\\"\\n[ax-15364100567148695815] link \\\"Biography\\\"\\n[ax-3766870589864674260] button \\\"Toggle Biography subsection\\\"\\nlistitem \\\"Work Toggle Work subsection\\\"\\n[ax-188733796896330863] link \\\"Work\\\"\\n[ax-5549506379273848792] button \\\"Toggle Work subsection\\\"\\nlistitem \\\"Commemoration Toggle Commemoration subsection\\\"\\n[ax-7374461994463157237] link \\\"Commemoration\\\"\\n[ax-3813527361603777689] button \\\"Toggle Commemoration subsection\\\"\\nlistitem \\\"In popular culture Toggle In popular culture subsection\\\"\\n[ax-999232002036445483] link \\\"In popular culture\\\"\\n[ax-9874051589935642828] button \\\"Toggle In popular culture subsection\\\"\\nlistitem \\\"Publications Toggle Publications subsection\\\"\\n[ax-443747068441164044] link \\\"Publications\\\"\\n[ax-16388638358460284240] button \\\"Toggle Publications subsection\\\"\\nlistitem \\\"See also\\\"\\n[ax-12188635485108535211] link \\\"See also\\\"\\nlistitem \\\"Explanatory notes\\\"\\n[ax-13582144177321355592] link \\\"Explanatory notes\\\"\\nlistitem \\\"References Toggle References subsection\\\"\\n[ax-11819352959731211510] link \\\"References\\\"\\n[ax-43057149998892619] button \\\"Toggle References subsection\\\"\\nlistitem \\\"Further reading\\\"\\n[ax-8695602159805190909] link \\\"Further reading\\\"\\nlistitem \\\"External links\\\"\\n[ax-13703267293226416804] link \\\"External links\\\"\\nheading \\\"Ada Lovelace\\\"\\ntext \\\"Ada Lovelace\\\"\\n[ax-16513736594925264432] button \\\"113 languages\\\"\\nlistitem \\\"Article\\\"\\n[ax-12388510023324943314] link \\\"Article\\\"\\nlistitem \\\"Talk\\\"\\n[ax-1994682291281030416] link \\\"Talk\\\"\\nlistitem \\\"Read\\\"\\n[ax-18122937401516809116] link \\\"Read\\\"\\nlistitem \\\"View source\\\"\\n[ax-18225958463179416098] link \\\"View source\\\"\\nlistitem \\\"View history\\\"\\n[ax-10047051595544990781] link \\\"View history\\\"\\nlistitem \\\"Save\\\"\\n[ax-1503754050261499827] link \\\"Save\\\"\\n[ax-11260175829698043397] button \\\"Tools\\\"\\ntext \\\"Appearance\\\"\\n[ax-17346815315583035165] button \\\"Hide Appearance\\\"\\ntext \\\"Text\\\"\\nlistitem \\\"Small Standard Large\\\"\\n[ax-2578386300956681914] radio \\\"Small\\\"\\n[ax-12786163750909011182] radio \\\"Standard\\\"\\n[ax-5979265698174100339] radio \\\"Large\\\"\\ntext \\\"Width\\\"\\nlistitem \\\"Standard Wide\\\"\\n[ax-5633719613416013107] radio \\\"Standard\\\"\\n[ax-15156925543100736608] radio \\\"Wide\\\"\\ntext \\\"Color\\\"\\nlistitem \\\"Automatic Light Dark\\\"\\n[ax-935181191763752181] radio \\\"Automatic\\\"\\n[ax-16663198849390497687] radio \\\"Light\\\"\\n[ax-550688240278364234] radio \\\"Dark\\\"\\n[ax-1127038681543541362] link \\\"This article is semi-protected.\\\"\\ntext \\\"From Wikipedia, the free encyclopedia\\\"\\n[ax-12524842032333834687] note \\\"For the computer microarchitecture, see Ada Lovelace (microarchitecture).\\\"\\n[ax-6983139605138990697] link \\\"Ada Lovelace (microarchitecture)\\\"\\ncolumnheader \\\"The Right Honourable The Countess of Lovelace\\\"\\n[ax-5784651913962425473] link \\\"The Right Honourable\\\"\\ncell \\\"Daguerreotype of Lovelace (c. 1843)[1]\\\"\\n[ax-5757568914086856316] link \\\"\\\"\\n[ax-16883087861852836136] link \\\"Daguerreotype\\\"\\n[ax-13597299407853250639] link \\\"[1]\\\"\\ncolumnheader \\\"Born\\\"\\ncell \\\"Augusta Ada Byron 10 December 1815 London, England\\\"\\ncolumnheader \\\"Died\\\"\\ncell \\\"27 November 1852 (aged 36) Marylebone, London, England\\\"\\n[ax-18297022273221682876] link \\\"Marylebone\\\"\\ncolumnheader \\\"Resting place\\\"\\ncell \\\"Church of St Mary Magdalene, Hucknall, Nottingham, England\\\"\\n[ax-11308776562496052242] link \\\"Church of St Mary Magdalene, Hucknall\\\"\\ncolumnheader \\\"Known for\\\"\\ncell \\\"Mathematics, computing\\\"\\n[ax-9172208081745481562] link \\\"Mathematics\\\"\\n[ax-6696986416020612148] link \\\"computing\\\"\\ncolumnheader \\\"Spouse\\\"\\ncell \\\"William King-Noel, 1st Earl of Lovelace ​ ​(m. 1835)​\\\"\\n[ax-7820644195616420019] link \\\"William King-Noel, 1st Earl of Lovelace\\\"\\ncolumnheader \\\"Children\\\"\\ncell \\\"Byron King-Noel, Viscount Ockham Anne Blunt, 15th Baroness Wentworth Ralph King-Milbanke, 2nd Earl of Lovelace\\\"\\nlistitem \\\"Byron King-Noel, Viscount Ockham\\\"\\n[ax-3467883621229695220] link \\\"Byron King-Noel, Viscount Ockham\\\"\\nlistitem \\\"Anne Blunt, 15th Baroness Wentworth\\\"\\n[ax-15169915227473448980] link \\\"Anne Blunt, 15th Baroness Wentworth\\\"\\nlistitem \\\"Ralph King-Milbanke, 2nd Earl of Lovelace\\\"\\n[ax-4733316395212435998] link \\\"Ralph King-Milbanke, 2nd Earl of Lovelace\\\"\\ncolumnheader \\\"Parents\\\"\\ncell \\\"George Byron, 6th Baron Byron (father) Anne Isabella Milbanke (mother)\\\"\\nlistitem \\\"George Byron, 6th Baron Byron (father)\\\"\",\"title\":\"Ada Lovelace - Wikipedia\",\"truncated\":true,\"url\":\"https://en.wikipedia.org/wiki/Ada_Lovelace\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\",\"Continue with next_offset and revision to read this captured snapshot.\"]}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 102.56794100000116,
+      "response_bytes": 6415
+    }
+  ]
+}

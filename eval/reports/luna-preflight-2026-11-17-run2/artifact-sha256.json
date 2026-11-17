@@ -1,0 +1,17 @@
+{
+  "results.json": "8bd4c48efca5ff4c7af10856fab089b2553771b49f6e0e464f5885aa7baa7402",
+  "browse-wikipedia-biography-0.json": "77634ef63db237a8d5815cf04a9db950b8b7dc4c6762c2f79d4ed5b876a79a81",
+  "harness-sha256.json": "9bed4ac506e02d3f76722742f979761ef3f2c89dc2e20f33c02b92eab26fe6e6",
+  "README.md": "ea9ba9bcf5c4c1070c8dbf8004ac8dab8f3549aa428a59146cd9175820be6ca7",
+  "zen-wikipedia-biography-0.json": "48ddb8b1c0d7735f46ac74853a906a127b76097f2f99eac53bb601799a646a90",
+  "harness/host-session.mjs": "cde5776a3e7a080909a34fd6995d7839be63467220560366160632d9e7e83405",
+  "harness/codex-host.mjs": "bcc8c68240729ef4fb043a2557e76fa96c16f788ec0aef5c83a392dbf691cd5a",
+  "harness/browse-fixture.mjs": "9c203f64ad090512d79ba8f5579521d3d37a2374744bf02ce6e1b9c0312bf539",
+  "harness/real-world-agent.mjs": "51748a5f06c30e2dfab335636a28e1aeafb68e6f6d2fec9a72eb423fa19f3fb3",
+  "harness/real-world-tasks.mjs": "63e82610d46063a4f9f7bfd5e42de772d6f3ab6dd0fc1336f7001ad8ebfb4b54",
+  "harness/opencode-host.mjs": "e9257d3651b2b73b0553d3a3b305fa0f322a509d4701bb5de549290da9b30307",
+  "harness/host-mcp-proxy.mjs": "a2675678c3857c3daf922c52de972aeff84a1b147c77e4163cb102e8f3e0777f",
+  "harness/mcp-client.mjs": "a0a7d68230241ce1dc5ddf2588620b2dfe4de58472dd0dbf2f8e48ba2dd34c97",
+  "harness/browse-extension.mjs": "a97085d0b66fc08b6366a7b5ad1bdccb1adb117c8c7deba3364534c4180dea5d",
+  "harness/zen-fixture.mjs": "66d210e98b92a6a41993f463d7b073085ea47108f50813b1a783c00dfc77e0c4"
+}

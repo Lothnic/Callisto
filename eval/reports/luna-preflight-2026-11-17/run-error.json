@@ -1,0 +1,5 @@
+{
+  "at": "2026-11-17T07:49:36.570Z",
+  "message": "Fixture deadline exceeded",
+  "stack": "Error: Fixture deadline exceeded\n    at until (file:///home/lothnic/Desktop/Projects/callisto/eval/agent-comparison/zen-fixture.mjs:12:216)\n    at async BrowseFixture.start (file:///home/lothnic/Desktop/Projects/callisto/eval/agent-comparison/browse-fixture.mjs:25:3)\n    at async file:///home/lothnic/Desktop/Projects/callisto/eval/agent-comparison/real-world-agent.mjs:107:30"
+}

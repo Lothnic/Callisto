@@ -1,0 +1,51 @@
+{
+  "at": "2026-11-17T08:23:35.206Z",
+  "reason": "Decode JSON values inside the native tab-header wrapper before exact-quote matching. The old reader could parse plain JSON but missed the same page text when browse prefixed it with a tab ID and page metadata. Apply the correction uniformly to every saved trial on both engines. Requested facts, source checks, no-direct-fetch checks, raw answers, timings, usage and traces are unchanged.",
+  "changed_trials": [
+    {
+      "engine": "browse",
+      "task": "pypi-metadata",
+      "round": 0,
+      "before": "agent_failure",
+      "after": "passed"
+    },
+    {
+      "engine": "browse",
+      "task": "govuk-calendar",
+      "round": 0,
+      "before": "agent_failure",
+      "after": "passed"
+    },
+    {
+      "engine": "browse",
+      "task": "arxiv-paper",
+      "round": 1,
+      "before": "agent_failure",
+      "after": "passed"
+    },
+    {
+      "engine": "browse",
+      "task": "github-issue",
+      "round": 1,
+      "before": "agent_failure",
+      "after": "passed"
+    },
+    {
+      "engine": "browse",
+      "task": "pypi-metadata",
+      "round": 1,
+      "before": "agent_failure",
+      "after": "passed"
+    },
+    {
+      "engine": "browse",
+      "task": "govuk-calendar",
+      "round": 1,
+      "before": "agent_failure",
+      "after": "passed"
+    }
+  ],
+  "scorer_sha256": "4a25821b37f22e77ba903e1896da5dad290332606165c3b0534052a8647028bc",
+  "offline_scoring_ms": 38.484656,
+  "scorer_support_sha256": "56088198f7c3135bca37bad8e859aa2c342bacd697ca44594609de5f8676f66e"
+}

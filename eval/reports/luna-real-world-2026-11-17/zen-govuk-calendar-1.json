@@ -1,0 +1,907 @@
+{
+  "schema": "callisto.real-world-trace.v1",
+  "host": {
+    "code": 0,
+    "signal": null,
+    "error": null,
+    "timed_out": false,
+    "elapsed_ms": 59602.51951200003,
+    "usage": {
+      "input_tokens": 236373,
+      "cached_input_tokens": 219264,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 2174,
+      "reasoning_output_tokens": 1498
+    },
+    "final": "{\"answer\":\"In Scotland in 2027, the summer bank holiday is Monday 2 August, and St Andrew’s Day is Tuesday 30 November.\",\"evidence\":[{\"url\":\"https://www.gov.uk/bank-holidays#scotland\",\"quote\":\"Upcoming bank holidays in Scotland\\\\n2027\\\\nDate\\\\tDay of the week\\\\tBank holiday\\\\n1 January\\\\tFriday\\\\tNew Year’s Day\"},{\"url\":\"https://www.gov.uk/bank-holidays#scotland\",\"quote\":\"2 August\\\\tMonday\\\\tSummer bank holiday\\\\n30 November\\\\tTuesday\\\\tSt Andrew’s Day\"}]}",
+    "events": [
+      {
+        "type": "thread.started",
+        "thread_id": "01a1e897-ef52-7853-a57d-827dea9f8d2c"
+      },
+      {
+        "type": "turn.started"
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_0",
+          "type": "agent_message",
+          "text": "I’ll inspect the live GOV.UK calendar in the owned browser tab and capture the Scotland 2027 entries directly."
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_1",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "status",
+            "args": {}
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_1",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "status",
+            "args": {}
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"active\":true,\"browserAccess\":true,\"capabilities\":{\"backgroundWindow\":true,\"extract\":true,\"frames\":\"same-origin\",\"fullBrowserControl\":true,\"networkInspection\":true,\"playwrightExecution\":false,\"run\":true,\"runFormControls\":true,\"selectorWait\":true,\"snapshotPagination\":true,\"targetedObservation\":true,\"trustedBinding\":true,\"trustedInput\":false},\"connected\":true,\"continuous\":true,\"execution\":{\"focusPolicy\":\"user-controlled\",\"mode\":\"shared-tab\",\"paused\":false},\"fullAccess\":false,\"input\":{\"extensionSharingControls\":true,\"fallback\":false,\"leaseBound\":false,\"mode\":\"synthetic-dom\",\"transportConnected\":false},\"ready\":true,\"sharing\":true}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_2",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "snapshot",
+            "args": {
+              "max_chars": 6000
+            }
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_2",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "snapshot",
+            "args": {
+              "max_chars": 6000
+            }
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"next_offset\":null,\"offset\":0,\"order_changed\":false,\"revision\":\"ax-17754883165941017147:2\",\"text\":\"heading \\\"Ready for a public-site task\\\"\",\"title\":\"Browser benchmark start\",\"truncated\":false,\"url\":\"http://127.0.0.1:40641/\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\"]}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_3",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "navigate",
+            "args": {
+              "url": "https://www.gov.uk/bank-holidays"
+            }
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_3",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "navigate",
+            "args": {
+              "url": "https://www.gov.uk/bank-holidays"
+            }
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"navigationStarted\":true}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_4",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "snapshot",
+            "args": {
+              "max_chars": 6000
+            }
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_4",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "snapshot",
+            "args": {
+              "max_chars": 6000
+            }
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"next_offset\":198,\"offset\":0,\"order_changed\":false,\"revision\":\"ax-15365296672128235565:1\",\"text\":\"region \\\"Cookies on GOV.UK\\\"\\nheading \\\"Cookies on GOV.UK\\\"\\nparagraph \\\"We use some essential cookies to make this website work.\\\"\\nparagraph \\\"We’d like to set additional cookies to understand how you use GOV.UK, remember your settings and improve government services.\\\"\\nparagraph \\\"We also use cookies set by other sites to help us deliver content from their services.\\\"\\n[ax-8203943224327970506] button \\\"Accept additional cookies\\\"\\n[ax-6326927018358547546] button \\\"Reject additional cookies\\\"\\n[ax-10367654336852524280] link \\\"View cookies\\\"\\n[ax-15087118735093155474] link \\\"Skip to main content\\\"\\n[ax-11405313339417666029] link \\\"Go to the GOV.UK homepage\\\"\\n[ax-12927742784061533536] img \\\"GOV.UK\\\"\\nheading \\\"Navigation menu\\\"\\n[ax-14531268304928264995] button \\\"Show navigation menu\\\"\\n[ax-11247043900529361527] button \\\"Show search menu\\\"\\nlistitem \\\"Home\\\"\\n[ax-11971204590966575892] link \\\"Home\\\"\\nlistitem \\\"Working, jobs and pensions\\\"\\n[ax-14390031844144373233] link \\\"Working, jobs and pensions\\\"\\nlistitem \\\"Holidays, time off, sick leave, maternity and paternity leave\\\"\\n[ax-7820541368629850071] link \\\"Holidays, time off, sick leave, maternity and paternity leave\\\"\\nheading \\\"UK bank holidays\\\"\\n[ax-7867860467289150227] article \\\"England and Wales Scotland Northern Ireland The next bank holiday in England and Wales is 25 December Christmas Day Upcoming bank holidays in England and Wales Upcoming bank holidays in England and Wa\\\"\\n[ax-223775077845702035] tablist \\\"England and Wales Scotland Northern Ireland\\\"\\npresentation \\\"England and Wales\\\"\\n[ax-1384547013878159833] tab \\\"England and Wales\\\"\\npresentation \\\"Scotland\\\"\\n[ax-9848946303170334094] tab \\\"Scotland\\\"\\npresentation \\\"Northern Ireland\\\"\\n[ax-1859400794741209380] tab \\\"Northern Ireland\\\"\\n[ax-6924702685988559259] tabpanel \\\"England and Wales\\\"\\nheading \\\"The next bank holiday in England and Wales is 25 December Christmas Day\\\"\\nheading \\\"Upcoming bank holidays in England and Wales\\\"\\ncolumnheader \\\"Date\\\"\\ncolumnheader \\\"Day of the week\\\"\\ncolumnheader \\\"Bank holiday\\\"\\ncolumnheader \\\"25 December\\\"\\ncell \\\"Friday\\\"\\ncell \\\"Christmas Day\\\"\\ncolumnheader \\\"28 December\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Boxing Day (substitute day)\\\"\\ncolumnheader \\\"Date\\\"\\ncolumnheader \\\"Day of the week\\\"\\ncolumnheader \\\"Bank holiday\\\"\\ncolumnheader \\\"1 January\\\"\\ncell \\\"Friday\\\"\\ncell \\\"New Year’s Day\\\"\\ncolumnheader \\\"26 March\\\"\\ncell \\\"Friday\\\"\\ncell \\\"Good Friday\\\"\\ncolumnheader \\\"29 March\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Easter Monday\\\"\\ncolumnheader \\\"3 May\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Early May bank holiday\\\"\\ncolumnheader \\\"31 May\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Spring bank holiday\\\"\\ncolumnheader \\\"30 August\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Summer bank holiday\\\"\\ncolumnheader \\\"27 December\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Christmas Day (substitute day)\\\"\\ncolumnheader \\\"28 December\\\"\\ncell \\\"Tuesday\\\"\\ncell \\\"Boxing Day (substitute day)\\\"\\ncolumnheader \\\"Date\\\"\\ncolumnheader \\\"Day of the week\\\"\\ncolumnheader \\\"Bank holiday\\\"\\ncolumnheader \\\"3 January\\\"\\ncell \\\"Monday\\\"\\ncell \\\"New Year’s Day (substitute day)\\\"\\ncolumnheader \\\"14 April\\\"\\ncell \\\"Friday\\\"\\ncell \\\"Good Friday\\\"\\ncolumnheader \\\"17 April\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Easter Monday\\\"\\ncolumnheader \\\"1 May\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Early May bank holiday\\\"\\ncolumnheader \\\"29 May\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Spring bank holiday\\\"\\ncolumnheader \\\"28 August\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Summer bank holiday\\\"\\ncolumnheader \\\"25 December\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Christmas Day\\\"\\ncolumnheader \\\"26 December\\\"\\ncell \\\"Tuesday\\\"\\ncell \\\"Boxing Day\\\"\\nparagraph \\\"If a bank holiday is on a weekend, a ‘substitute’ weekday becomes a bank holiday, normally the following Monday.\\\"\\nparagraph \\\"Your employer does not have to give you paid leave on bank or public holidays.\\\"\\n[ax-13971019347257456775] link \\\"paid leave on bank or public holidays\\\"\\nparagraph \\\"Bank holidays might affect how and when your benefits are paid.\\\"\\n[ax-15589489719741390089] link \\\"how and when your benefits are paid\\\"\\n[ax-13243374372526929300] link \\\"in Welsh (Cymraeg)\\\"\\n[ax-12170545807473402296] link \\\"Add bank holidays for England and Wales to your calendar (ICS, 14KB)\\\"\\nheading \\\"Past bank holidays in England and Wales\\\"\\ncolumnheader \\\"Date\\\"\\ncolumnheader \\\"Day of the week\\\"\\ncolumnheader \\\"Bank holiday\\\"\\ncolumnheader \\\"31 August\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Summer bank holiday\\\"\\ncolumnheader \\\"25 May\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Spring bank holiday\\\"\\ncolumnheader \\\"4 May\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Early May bank holiday\\\"\\ncolumnheader \\\"6 April\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Easter Monday\\\"\\ncolumnheader \\\"3 April\\\"\\ncell \\\"Friday\\\"\\ncell \\\"Good Friday\\\"\\ncolumnheader \\\"1 January\\\"\\ncell \\\"Thursday\\\"\\ncell \\\"New Year’s Day\\\"\\ncolumnheader \\\"Date\\\"\\ncolumnheader \\\"Day of the week\\\"\\ncolumnheader \\\"Bank holiday\\\"\\ncolumnheader \\\"26 December\\\"\\ncell \\\"Friday\\\"\\ncell \\\"Boxing Day\\\"\\ncolumnheader \\\"25 December\\\"\\ncell \\\"Thursday\\\"\\ncell \\\"Christmas Day\\\"\\ncolumnheader \\\"25 August\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Summer bank holiday\\\"\\ncolumnheader \\\"26 May\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Spring bank holiday\\\"\\ncolumnheader \\\"5 May\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Early May bank holiday\\\"\\ncolumnheader \\\"21 April\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Easter Monday\\\"\\ncolumnheader \\\"18 April\\\"\\ncell \\\"Friday\\\"\\ncell \\\"Good Friday\\\"\\ncolumnheader \\\"1 January\\\"\\ncell \\\"Wednesday\\\"\\ncell \\\"New Year’s Day\\\"\\ncolumnheader \\\"Date\\\"\\ncolumnheader \\\"Day of the week\\\"\\ncolumnheader \\\"Bank holiday\\\"\\ncolumnheader \\\"26 December\\\"\\ncell \\\"Thursday\\\"\\ncell \\\"Boxing Day\\\"\\ncolumnheader \\\"25 December\\\"\\ncell \\\"Wednesday\\\"\\ncell \\\"Christmas Day\\\"\\ncolumnheader \\\"26 August\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Summer bank holiday\\\"\\ncolumnheader \\\"27 May\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Spring bank holiday\\\"\\ncolumnheader \\\"6 May\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Early May bank holiday\\\"\\ncolumnheader \\\"1 April\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Easter Monday\\\"\\ncolumnheader \\\"29 March\\\"\\ncell \\\"Friday\\\"\\ncell \\\"Good Friday\\\"\\ncolumnheader \\\"1 January\\\"\\ncell \\\"Monday\\\"\\ncell \\\"New Year’s Day\\\"\\ncolumnheader \\\"Date\\\"\\ncolumnheader \\\"Day of the week\\\"\\ncolumnheader \\\"Bank holiday\\\"\\ncolumnheader \\\"26 December\\\"\\ncell \\\"Tuesday\\\"\\ncell \\\"Boxing Day\\\"\\ncolumnheader \\\"25 December\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Christmas Day\\\"\\ncolumnheader \\\"28 August\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Summer bank holiday\\\"\\ncolumnheader \\\"29 May\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Spring bank holiday\\\"\\ncolumnheader \\\"8 May\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Bank holiday for the coronation of King Charles III\\\"\\ncolumnheader \\\"1 May\\\"\\ncell \\\"Monday\\\"\",\"title\":\"UK bank holidays - GOV.UK\",\"truncated\":true,\"url\":\"https://www.gov.uk/bank-holidays\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\",\"Continue with next_offset and revision to read this captured snapshot.\"]}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_5",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "run",
+            "args": {
+              "steps": [
+                {
+                  "action": "click_ref",
+                  "ref": "ax-9848946303170334094"
+                }
+              ],
+              "snapshot": true
+            }
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_5",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "run",
+            "args": {
+              "steps": [
+                {
+                  "action": "click_ref",
+                  "ref": "ax-9848946303170334094"
+                }
+              ],
+              "snapshot": true
+            }
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"completed\":1,\"elapsed_ms\":5,\"snapshot\":{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"next_offset\":411,\"offset\":0,\"order_changed\":false,\"revision\":\"ax-15365296672128235565:2\",\"text\":\"region \\\"Cookies on GOV.UK\\\"\\nheading \\\"Cookies on GOV.UK\\\"\\nparagraph \\\"We use some essential cookies to make this website work.\\\"\\nparagraph \\\"We’d like to set additional cookies to understand how you use GOV.UK, remember your settings and improve government services.\\\"\\nparagraph \\\"We also use cookies set by other sites to help us deliver content from their services.\\\"\\n[ax-8203943224327970506] button \\\"Accept additional cookies\\\"\\n[ax-6326927018358547546] button \\\"Reject additional cookies\\\"\\n[ax-10367654336852524280] link \\\"View cookies\\\"\\n[ax-15087118735093155474] link \\\"Skip to main content\\\"\\n[ax-11405313339417666029] link \\\"Go to the GOV.UK homepage\\\"\\n[ax-12927742784061533536] img \\\"GOV.UK\\\"\\nheading \\\"Navigation menu\\\"\\n[ax-14531268304928264995] button \\\"Show navigation menu\\\"\\n[ax-11247043900529361527] button \\\"Show search menu\\\"\\nlistitem \\\"Home\\\"\\n[ax-11971204590966575892] link \\\"Home\\\"\\nlistitem \\\"Working, jobs and pensions\\\"\\n[ax-14390031844144373233] link \\\"Working, jobs and pensions\\\"\\nlistitem \\\"Holidays, time off, sick leave, maternity and paternity leave\\\"\\n[ax-7820541368629850071] link \\\"Holidays, time off, sick leave, maternity and paternity leave\\\"\\nheading \\\"UK bank holidays\\\"\\n[ax-7867860467289150227] article \\\"England and Wales Scotland Northern Ireland The next bank holiday in Scotland is 30 November St Andrew’s Day Upcoming bank holidays in Scotland Upcoming bank holidays in Scotland 2026 Date Day of the \\\"\\n[ax-223775077845702035] tablist \\\"England and Wales Scotland Northern Ireland\\\"\\npresentation \\\"England and Wales\\\"\\n[ax-1384547013878159833] tab \\\"England and Wales\\\"\\npresentation \\\"Scotland\\\"\\n[ax-9848946303170334094] tab \\\"Scotland\\\"\\npresentation \\\"Northern Ireland\\\"\\n[ax-1859400794741209380] tab \\\"Northern Ireland\\\"\\n[ax-10546974768922589430] tabpanel \\\"Scotland\\\"\\nheading \\\"The next bank holiday in Scotland is 30 November St Andrew’s Day\\\"\\nheading \\\"Upcoming bank holidays in Scotland\\\"\\ncolumnheader \\\"Date\\\"\\ncolumnheader \\\"Day of the week\\\"\\ncolumnheader \\\"Bank holiday\\\"\\ncolumnheader \\\"30 November\\\"\\ncell \\\"Monday\\\"\\ncell \\\"St Andrew’s Day\\\"\\ncolumnheader \\\"25 December\\\"\\ncell \\\"Friday\\\"\\ncell \\\"Christmas Day\\\"\\ncolumnheader \\\"28 December\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Boxing Day (substitute day)\\\"\\ncolumnheader \\\"Date\\\"\\ncolumnheader \\\"Day of the week\\\"\\ncolumnheader \\\"Bank holiday\\\"\\ncolumnheader \\\"1 January\\\"\\ncell \\\"Friday\\\"\\ncell \\\"New Year’s Day\\\"\\ncolumnheader \\\"4 January\\\"\\ncell \\\"Monday\\\"\\ncell \\\"2nd January (substitute day)\\\"\\ncolumnheader \\\"26 March\\\"\\ncell \\\"Friday\\\"\\ncell \\\"Good Friday\\\"\\ncolumnheader \\\"3 May\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Early May bank holiday\\\"\\ncolumnheader \\\"31 May\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Spring bank holiday\\\"\\ncolumnheader \\\"2 August\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Summer bank holiday\\\"\\ncolumnheader \\\"30 November\\\"\\ncell \\\"Tuesday\\\"\\ncell \\\"St Andrew’s Day\\\"\\ncolumnheader \\\"27 December\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Christmas Day (substitute day)\\\"\\ncolumnheader \\\"28 December\\\"\\ncell \\\"Tuesday\\\"\\ncell \\\"Boxing Day (substitute day)\\\"\\ncolumnheader \\\"Date\\\"\\ncolumnheader \\\"Day of the week\\\"\\ncolumnheader \\\"Bank holiday\\\"\\ncolumnheader \\\"3 January\\\"\\ncell \\\"Monday\\\"\\ncell \\\"New Year’s Day (substitute day)\\\"\\ncolumnheader \\\"4 January\\\"\\ncell \\\"Tuesday\\\"\\ncell \\\"2nd January (substitute day)\\\"\\ncolumnheader \\\"14 April\\\"\\ncell \\\"Friday\\\"\\ncell \\\"Good Friday\\\"\\ncolumnheader \\\"1 May\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Early May bank holiday\\\"\\ncolumnheader \\\"29 May\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Spring bank holiday\\\"\\ncolumnheader \\\"7 August\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Summer bank holiday\\\"\\ncolumnheader \\\"30 November\\\"\\ncell \\\"Thursday\\\"\\ncell \\\"St Andrew’s Day\\\"\\ncolumnheader \\\"25 December\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Christmas Day\\\"\\ncolumnheader \\\"26 December\\\"\\ncell \\\"Tuesday\\\"\\ncell \\\"Boxing Day\\\"\\nparagraph \\\"If a bank holiday is on a weekend, a ‘substitute’ weekday becomes a bank holiday, normally the following Monday.\\\"\\nparagraph \\\"Your employer does not have to give you paid leave on bank or public holidays.\\\"\\n[ax-15266961189178084444] link \\\"paid leave on bank or public holidays\\\"\\nparagraph \\\"Bank holidays might affect how and when your benefits are paid.\\\"\\n[ax-5626153119143767041] link \\\"how and when your benefits are paid\\\"\\n[ax-11210719236277204033] link \\\"in Welsh (Cymraeg)\\\"\\n[ax-6838045446076421912] link \\\"Add bank holidays for Scotland to your calendar (ICS, 14KB)\\\"\\nheading \\\"Past bank holidays in Scotland\\\"\\ncolumnheader \\\"Date\\\"\\ncolumnheader \\\"Day of the week\\\"\\ncolumnheader \\\"Bank holiday\\\"\\ncolumnheader \\\"3 August\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Summer bank holiday\\\"\\ncolumnheader \\\"15 June\\\"\\ncell \\\"Monday\\\"\\ncell \\\"World Cup bank holiday\\\"\\ncolumnheader \\\"25 May\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Spring bank holiday\\\"\\ncolumnheader \\\"4 May\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Early May bank holiday\\\"\\ncolumnheader \\\"3 April\\\"\\ncell \\\"Friday\\\"\\ncell \\\"Good Friday\\\"\\ncolumnheader \\\"2 January\\\"\\ncell \\\"Friday\\\"\\ncell \\\"2nd January\\\"\\ncolumnheader \\\"1 January\\\"\\ncell \\\"Thursday\\\"\\ncell \\\"New Year’s Day\\\"\\ncolumnheader \\\"Date\\\"\\ncolumnheader \\\"Day of the week\\\"\\ncolumnheader \\\"Bank holiday\\\"\\ncolumnheader \\\"26 December\\\"\\ncell \\\"Friday\\\"\\ncell \\\"Boxing Day\\\"\\ncolumnheader \\\"25 December\\\"\\ncell \\\"Thursday\\\"\\ncell \\\"Christmas Day\\\"\\ncolumnheader \\\"1 December\\\"\\ncell \\\"Monday\\\"\\ncell \\\"St Andrew’s Day (substitute day)\\\"\\ncolumnheader \\\"4 August\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Summer bank holiday\\\"\\ncolumnheader \\\"26 May\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Spring bank holiday\\\"\\ncolumnheader \\\"5 May\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Early May bank holiday\\\"\\ncolumnheader \\\"18 April\\\"\\ncell \\\"Friday\\\"\\ncell \\\"Good Friday\\\"\\ncolumnheader \\\"2 January\\\"\\ncell \\\"Thursday\\\"\\ncell \\\"2nd January\\\"\\ncolumnheader \\\"1 January\\\"\\ncell \\\"Wednesday\\\"\\ncell \\\"New Year’s Day\\\"\\ncolumnheader \\\"Date\\\"\\ncolumnheader \\\"Day of the week\\\"\\ncolumnheader \\\"Bank holiday\\\"\\ncolumnheader \\\"26 December\\\"\\ncell \\\"Thursday\\\"\\ncell \\\"Boxing Day\\\"\\ncolumnheader \\\"25 December\\\"\\ncell \\\"Wednesday\\\"\\ncell \\\"Christmas Day\\\"\\ncolumnheader \\\"2 December\\\"\\ncell \\\"Monday\\\"\\ncell \\\"St Andrew’s Day (substitute day)\\\"\\ncolumnheader \\\"5 August\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Summer bank holiday\\\"\\ncolumnheader \\\"27 May\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Spring bank holiday\\\"\\ncolumnheader \\\"6 May\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Early May bank holiday\\\"\\ncolumnheader \\\"29 March\\\"\\ncell \\\"Friday\\\"\\ncell \\\"Good Friday\\\"\\ncolumnheader \\\"2 January\\\"\\ncell \\\"Tuesday\\\"\\ncell \\\"2nd January\\\"\\ncolumnheader \\\"1 January\\\"\\ncell \\\"Monday\\\"\\ncell \\\"New Year’s Day\\\"\\ncolumnheader \\\"Date\\\"\\ncolumnheader \\\"Day of the week\\\"\\ncolumnheader \\\"Bank holiday\\\"\\ncolumnheader \\\"26 December\\\"\\ncell \\\"Tuesday\\\"\\ncell \\\"Boxing Day\\\"\\ncolumnheader \\\"25 December\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Christmas Day\\\"\\ncolumnheader \\\"30 November\\\"\\ncell \\\"Thursday\\\"\\ncell \\\"St Andrew’s Day\\\"\\ncolumnheader \\\"7 August\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Summer bank holiday\\\"\\ncolumnheader \\\"29 May\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Spring bank holiday\\\"\\ncolumnheader \\\"8 May\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Bank holiday for the coronation of King Charles III\\\"\\ncolumnheader \\\"1 May\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Early May bank holiday\\\"\\ncolumnheader \\\"7 April\\\"\\ncell \\\"Friday\\\"\\ncell \\\"Good Friday\\\"\\ncolumnheader \\\"3 January\\\"\\ncell \\\"Tuesday\\\"\\ncell \\\"2nd January (substitute day)\\\"\\ncolumnheader \\\"2 January\\\"\\ncell \\\"Monday\\\"\\ncell \\\"New Year’s Day (substitute day)\\\"\\ncolumnheader \\\"Date\\\"\\ncolumnheader \\\"Day of the week\\\"\\ncolumnheader \\\"Bank holiday\\\"\\ncolumnheader \\\"27 December\\\"\\ncell \\\"Tuesday\\\"\\ncell \\\"Christmas Day (substitute day)\\\"\\ncolumnheader \\\"26 December\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Boxing Day\\\"\\ncolumnheader \\\"30 November\\\"\\ncell \\\"Wednesday\\\"\\ncell \\\"St Andrew’s Day\\\"\\ncolumnheader \\\"19 September\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Bank Holiday for the State Funeral of Queen Elizabeth II\\\"\\ncolumnheader \\\"1 August\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Summer bank holiday\\\"\\ncolumnheader \\\"3 June\\\"\\ncell \\\"Friday\\\"\\ncell \\\"Platinum Jubilee bank holiday\\\"\\ncolumnheader \\\"2 June\\\"\\ncell \\\"Thursday\\\"\\ncell \\\"Spring bank holiday\\\"\\ncolumnheader \\\"2 May\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Early May bank holiday\\\"\\ncolumnheader \\\"15 April\\\"\\ncell \\\"Friday\\\"\\ncell \\\"Good Friday\\\"\\ncolumnheader \\\"4 January\\\"\\ncell \\\"Tuesday\\\"\\ncell \\\"2nd January (substitute day)\\\"\\ncolumnheader \\\"3 January\\\"\\ncell \\\"Monday\\\"\\ncell \\\"New Year’s Day (substitute day)\\\"\\ncolumnheader \\\"Date\\\"\\ncolumnheader \\\"Day of the week\\\"\\ncolumnheader \\\"Bank holiday\\\"\\ncolumnheader \\\"28 December\\\"\\ncell \\\"Tuesday\\\"\\ncell \\\"Boxing Day (substitute day)\\\"\\ncolumnheader \\\"27 December\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Christmas Day (substitute day)\\\"\\ncolumnheader \\\"30 November\\\"\\ncell \\\"Tuesday\\\"\\ncell \\\"St Andrew’s Day\\\"\\ncolumnheader \\\"2 August\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Summer bank holiday\\\"\\ncolumnheader \\\"31 May\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Spring bank holiday\\\"\\ncolumnheader \\\"3 May\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Early May bank holiday\\\"\\ncolumnheader \\\"2 April\\\"\\ncell \\\"Friday\\\"\\ncell \\\"Good Friday\\\"\\ncolumnheader \\\"4 January\\\"\\ncell \\\"Monday\\\"\\ncell \\\"2nd January (substitute day)\\\"\\ncolumnheader \\\"1 January\\\"\\ncell \\\"Friday\\\"\\ncell \\\"New Year’s Day\\\"\\ncolumnheader \\\"Date\\\"\\ncolumnheader \\\"Day of the week\\\"\\ncolumnheader \\\"Bank holiday\\\"\\ncolumnheader \\\"28 December\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Boxing Day (substitute day)\\\"\\ncolumnheader \\\"25 December\\\"\\ncell \\\"Friday\\\"\\ncell \\\"Christmas Day\\\"\\ncolumnheader \\\"30 November\\\"\\ncell \\\"Monday\\\"\\ncell \\\"St Andrew’s Day\\\"\\ncolumnheader \\\"3 August\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Summer bank holiday\\\"\\ncolumnheader \\\"25 May\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Spring bank holiday\\\"\\ncolumnheader \\\"8 May\\\"\\ncell \\\"Friday\\\"\\ncell \\\"Early May bank holiday (VE day)\\\"\\ncolumnheader \\\"10 April\\\"\\ncell \\\"Friday\\\"\\ncell \\\"Good Friday\\\"\\ncolumnheader \\\"2 January\\\"\\ncell \\\"Thursday\\\"\\ncell \\\"2nd January\\\"\\ncolumnheader \\\"1 January\\\"\\ncell \\\"Wednesday\\\"\\ncell \\\"New Year’s Day\\\"\\ncolumnheader \\\"Date\\\"\\ncolumnheader \\\"Day of the week\\\"\\ncolumnheader \\\"Bank holiday\\\"\\ncolumnheader \\\"26 December\\\"\\ncell \\\"Thursday\\\"\\ncell \\\"Boxing Day\\\"\\ncolumnheader \\\"25 December\\\"\\ncell \\\"Wednesday\\\"\\ncell \\\"Christmas Day\\\"\\ncolumnheader \\\"2 December\\\"\\ncell \\\"Monday\\\"\\ncell \\\"St Andrew’s Day (substitute day)\\\"\\ncolumnheader \\\"5 August\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Summer bank holiday\\\"\\ncolumnheader \\\"27 May\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Spring bank holiday\\\"\\ncolumnheader \\\"6 May\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Early May bank holiday\\\"\\ncolumnheader \\\"19 April\\\"\\ncell \\\"Friday\\\"\\ncell \\\"Good Friday\\\"\\ncolumnheader \\\"2 January\\\"\\ncell \\\"Wednesday\\\"\\ncell \\\"2nd January\\\"\\ncolumnheader \\\"1 January\\\"\\ncell \\\"Tuesday\\\"\\ncell \\\"New Year’s Day\\\"\\nterm \\\"Last updated:\\\"\\ndefinition \\\"24 November 2025\\\"\\nheading \\\"Related content\\\"\\nlistitem \\\"Holiday entitlement\\\"\\n[ax-6880898333754246828] link \\\"Holiday entitlement\\\"\\nlistitem \\\"School term and holiday dates\\\"\\n[ax-12406247976478772372] link \\\"School term and holiday dates\\\"\\nheading \\\"Is this page useful?\\\"\\nlistitem \\\"Yes this page is useful\\\"\\n[ax-17250479499541864049] button \\\"Yes this page is useful\\\"\\nlistitem \\\"No this page is not useful\\\"\\n[ax-4315855208852703942] button \\\"No this page is not useful\\\"\\n[ax-11456392512856726087] button \\\"Report a problem with this page\\\"\\npresentation \\\"\\\"\\nheading \\\"Services and information\\\"\\nlistitem \\\"Benefits\\\"\\n[ax-12710370215812464008] link \\\"Benefits\\\"\\nlistitem \\\"Births, death, marriages and care\\\"\\n[ax-1733543086247087979] link \\\"Births, death, marriages and care\\\"\\nlistitem \\\"Business and self-employed\\\"\\n[ax-16965479687384056595] link \\\"Business and self-employed\\\"\\nlistitem \\\"Childcare and parenting\\\"\\n[ax-16505751451064806963] link \\\"Childcare and parenting\\\"\\nlistitem \\\"Citizenship and living in the UK\\\"\\n[ax-16304372292277968935] link \\\"Citizenship and living in the UK\\\"\\nlistitem \\\"Crime, justice and the law\\\"\\n[ax-15530860410895846934] link \\\"Crime, justice and the law\\\"\\nlistitem \\\"Disabled people\\\"\\n[ax-13928543286647217873] link \\\"Disabled people\\\"\\nlistitem \\\"Driving and transport\\\"\\n[ax-13329444825126139860] link \\\"Driving and transport\\\"\\nlistitem \\\"Education and learning\\\"\\n[ax-6247739151502288112] link \\\"Education and learning\\\"\\nlistitem \\\"Employing people\\\"\\n[ax-6714301097357367758] link \\\"Employing people\\\"\\nlistitem \\\"Environment and countryside\\\"\\n[ax-10740768792872719481] link \\\"Environment and countryside\\\"\\nlistitem \\\"Housing and local services\\\"\\n[ax-15250689105286555718] link \\\"Housing and local services\\\"\\nlistitem \\\"Money and tax\\\"\\n[ax-9143874668125348133] link \\\"Money and tax\\\"\\nlistitem \\\"Passports, travel and living abroad\\\"\\n[ax-5613232335642077770] link \\\"Passports, travel and living abroad\\\"\\nlistitem \\\"Visas and immigration\\\"\\n[ax-18184149038205932759] link \\\"Visas and immigration\\\"\\nlistitem \\\"Working, jobs and pensions\\\"\\n[ax-13634016178037304010] link \\\"Working, jobs and pensions\\\"\\nheading \\\"Government activity\\\"\\nlistitem \\\"Departments\\\"\\n[ax-37492400785477002] link \\\"Departments\\\"\\nlistitem \\\"News\\\"\\n[ax-17282426906800664418] link \\\"News\\\"\\nlistitem \\\"Guidance and regulation\\\"\\n[ax-1450496256411723596] link \\\"Guidance and regulation\\\"\\nlistitem \\\"Research and statistics\\\"\\n[ax-4296481930229222474] link \\\"Research and statistics\\\"\",\"title\":\"UK bank holidays - GOV.UK\",\"truncated\":true,\"url\":\"https://www.gov.uk/bank-holidays#scotland\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\",\"Continue with next_offset and revision to read this captured snapshot.\"]}}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_6",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "help",
+            "args": {
+              "op": "extract"
+            }
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_6",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "help",
+            "args": {
+              "op": "extract"
+            }
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"args_schema\":{\"properties\":{\"fields\":{\"additionalProperties\":{\"anyOf\":[{\"type\":\"string\"},{\"properties\":{\"attribute\":{\"type\":\"string\"},\"selector\":{\"type\":\"string\"},\"type\":{\"enum\":[\"text\",\"number\"],\"type\":\"string\"}},\"type\":\"object\"}]},\"maxProperties\":20,\"minProperties\":1,\"type\":\"object\"},\"include_text\":{\"type\":\"boolean\"},\"limit\":{\"maximum\":1000,\"minimum\":1,\"type\":\"integer\"},\"paginate\":{\"properties\":{\"max_pages\":{\"maximum\":25,\"minimum\":1,\"type\":\"integer\"},\"next\":{\"maxLength\":500,\"minLength\":1,\"type\":\"string\"}},\"required\":[\"next\"],\"type\":\"object\"},\"selector\":{\"maxLength\":500,\"minLength\":1,\"type\":\"string\"}},\"required\":[\"selector\",\"fields\"],\"type\":\"object\"},\"description\":\"Read structured rows from the shared page using CSS selectors: a row selector plus a field map. Optionally follow a next-page control and merge pages. Returns typed rows, not a snapshot, so counting and aggregation need one call.\",\"op\":\"extract\"}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_7",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "help",
+            "args": {
+              "op": "run"
+            }
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_7",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "help",
+            "args": {
+              "op": "run"
+            }
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"args_schema\":{\"properties\":{\"snapshot\":{\"type\":\"boolean\"},\"steps\":{\"items\":{\"properties\":{\"action\":{\"enum\":[\"navigate\",\"click_ref\",\"click_role\",\"fill_ref\",\"fill_role\",\"submit_ref\",\"submit_role\",\"select_ref\",\"select_role\",\"check_ref\",\"check_role\",\"hover_ref\",\"hover_role\",\"press\",\"scroll\",\"wait\",\"wait_for\",\"extract\"],\"type\":\"string\"},\"checked\":{\"type\":\"boolean\"},\"delta_x\":{\"type\":\"number\"},\"delta_y\":{\"type\":\"number\"},\"key\":{\"type\":\"string\"},\"ms\":{\"maximum\":5000,\"minimum\":1,\"type\":\"integer\"},\"name\":{\"type\":\"string\"},\"ref\":{\"type\":\"string\"},\"role\":{\"type\":\"string\"},\"selector\":{\"maxLength\":500,\"minLength\":1,\"type\":\"string\"},\"spec\":{\"type\":\"object\"},\"state\":{\"enum\":[\"visible\",\"hidden\",\"attached\",\"detached\"],\"type\":\"string\"},\"text\":{\"maxLength\":500,\"minLength\":1,\"type\":\"string\"},\"timeout_ms\":{\"maximum\":20000,\"minimum\":100,\"type\":\"integer\"},\"url\":{\"type\":\"string\"},\"value\":{\"type\":\"string\"}},\"required\":[\"action\"],\"type\":\"object\"},\"maxItems\":40,\"minItems\":1,\"type\":\"array\"}},\"required\":[\"steps\"],\"type\":\"object\"},\"description\":\"Run 1–40 dependent steps in one call: navigate; click/fill/submit/select/check/hover by ref or exact role; press; scroll; wait; wait_for text or CSS selector state; extract rows. Use submit instead of synthetic Enter for forms. Returns the last extraction and an optional final snapshot. Stops at the first failure within a 60-second budget; earlier steps are not rolled back. Input uses the explicitly selected input mode.\",\"op\":\"run\"}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_8",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "help",
+            "args": {
+              "op": "find"
+            }
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_8",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "help",
+            "args": {
+              "op": "find"
+            }
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"args_schema\":{\"properties\":{\"max_matches\":{\"default\":5,\"maximum\":10,\"minimum\":1,\"type\":\"integer\"},\"query\":{\"maxLength\":200,\"minLength\":1,\"type\":\"string\"}},\"required\":[\"query\"],\"type\":\"object\"},\"description\":\"Search visible page text and return bounded matching snippets. Unlike Chromium accessibility search, this uses rendered DOM text.\",\"op\":\"find\"}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_9",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "find",
+            "args": {
+              "query": "2027",
+              "max_matches": 5
+            }
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_9",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "find",
+            "args": {
+              "query": "2027",
+              "max_matches": 5
+            }
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"matches\":[{\"offset\":896,\"text\":\" Day\\n25 December\\tFriday\\tChristmas Day\\n28 December\\tMonday\\tBoxing Day (substitute day)\\nUpcoming bank holidays in Scotland\\n2027\\nDate\\tDay of the week\\tBank holiday\\n1 January\\tFriday\\tNew Year’s Day\\n4 January\\tMonday\\t2nd January (substitute day)\\n26 Marc\"}]}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_10",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "find",
+            "args": {
+              "query": "2 August",
+              "max_matches": 5
+            }
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_10",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "find",
+            "args": {
+              "query": "2 August",
+              "max_matches": 5
+            }
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"matches\":[{\"offset\":1111,\"text\":\"uary (substitute day)\\n26 March\\tFriday\\tGood Friday\\n3 May\\tMonday\\tEarly May bank holiday\\n31 May\\tMonday\\tSpring bank holiday\\n2 August\\tMonday\\tSummer bank holiday\\n30 November\\tTuesday\\tSt Andrew’s Day\\n27 December\\tMonday\\tChristmas Day (substitute day)\\n28 Dec\"},{\"offset\":4372,\"text\":\"esday\\tBoxing Day (substitute day)\\n27 December\\tMonday\\tChristmas Day (substitute day)\\n30 November\\tTuesday\\tSt Andrew’s Day\\n2 August\\tMonday\\tSummer bank holiday\\n31 May\\tMonday\\tSpring bank holiday\\n3 May\\tMonday\\tEarly May bank holiday\\n2 April\\tFriday\\tGood Fr\"}]}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_11",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "find",
+            "args": {
+              "query": "30 November",
+              "max_matches": 2
+            }
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_11",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "find",
+            "args": {
+              "query": "30 November",
+              "max_matches": 2
+            }
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"matches\":[{\"offset\":609,\"text\":\"y and paternity leave\\nUK bank holidays\\nEngland and Wales\\nScotland\\nNorthern Ireland\\nThe next bank holiday in Scotland is\\n30 November\\nSt Andrew’s Day\\nUpcoming bank holidays in Scotland\\nUpcoming bank holidays in Scotland\\n2026\\nDate\\tDay of the week\\tBank ho\"},{\"offset\":746,\"text\":\"drew’s Day\\nUpcoming bank holidays in Scotland\\nUpcoming bank holidays in Scotland\\n2026\\nDate\\tDay of the week\\tBank holiday\\n30 November\\tMonday\\tSt Andrew’s Day\\n25 December\\tFriday\\tChristmas Day\\n28 December\\tMonday\\tBoxing Day (substitute day)\\nUpcoming bank ho\"}]}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_12",
+          "type": "agent_message",
+          "text": "{\"answer\":\"In Scotland in 2027, the summer bank holiday is Monday 2 August, and St Andrew’s Day is Tuesday 30 November.\",\"evidence\":[{\"url\":\"https://www.gov.uk/bank-holidays#scotland\",\"quote\":\"Upcoming bank holidays in Scotland\\\\n2027\\\\nDate\\\\tDay of the week\\\\tBank holiday\\\\n1 January\\\\tFriday\\\\tNew Year’s Day\"},{\"url\":\"https://www.gov.uk/bank-holidays#scotland\",\"quote\":\"2 August\\\\tMonday\\\\tSummer bank holiday\\\\n30 November\\\\tTuesday\\\\tSt Andrew’s Day\"}]}"
+        }
+      },
+      {
+        "type": "turn.completed",
+        "usage": {
+          "input_tokens": 236373,
+          "cached_input_tokens": 219264,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 2174,
+          "reasoning_output_tokens": 1498
+        }
+      }
+    ],
+    "parse_errors": 0,
+    "diagnostic": null,
+    "configuration": {
+      "model": "gpt-6-luna",
+      "effort": "high",
+      "sandbox": "read-only",
+      "shell_tool": false,
+      "web_search": "disabled",
+      "user_config_loaded": false,
+      "project_instructions_loaded": false,
+      "skills_catalog_max_tokens": 1,
+      "automatic_skill_instructions": false,
+      "fixture_tool_approval": "explicit approve",
+      "auth": "existing signed-in Codex host",
+      "mcp_transport": "stdio → private Unix socket → native runtime MCP client"
+    }
+  },
+  "engine": "zen",
+  "task": "govuk-calendar",
+  "round": 1,
+  "phase": 1,
+  "success": true,
+  "outcome": "passed",
+  "answer": {
+    "answer": "In Scotland in 2027, the summer bank holiday is Monday 2 August, and St Andrew’s Day is Tuesday 30 November.",
+    "evidence": [
+      {
+        "url": "https://www.gov.uk/bank-holidays#scotland",
+        "quote": "Upcoming bank holidays in Scotland\\n2027\\nDate\\tDay of the week\\tBank holiday\\n1 January\\tFriday\\tNew Year’s Day"
+      },
+      {
+        "url": "https://www.gov.uk/bank-holidays#scotland",
+        "quote": "2 August\\tMonday\\tSummer bank holiday\\n30 November\\tTuesday\\tSt Andrew’s Day"
+      }
+    ]
+  },
+  "expected": [
+    {
+      "title": "Summer bank holiday",
+      "date": "2027-08-02",
+      "notes": "",
+      "bunting": true
+    },
+    {
+      "title": "St Andrew’s Day",
+      "date": "2027-11-30",
+      "notes": "",
+      "bunting": true
+    }
+  ],
+  "evaluation": {
+    "passed": true,
+    "facts": [
+      {
+        "pattern": "\\b2027\\b",
+        "passed": true
+      },
+      {
+        "pattern": "\\b2(?:st|nd|rd|th)?\\b\\s+August\\b(?:\\s+2027\\b)?|\\bAugust\\s+\\b2(?:st|nd|rd|th)?\\b(?:,?\\s+2027\\b)?|\\b2027-08-02\\b",
+        "passed": true
+      },
+      {
+        "pattern": "\\b30(?:st|nd|rd|th)?\\b\\s+November\\b(?:\\s+2027\\b)?|\\bNovember\\s+\\b30(?:st|nd|rd|th)?\\b(?:,?\\s+2027\\b)?|\\b2027-11-30\\b",
+        "passed": true
+      }
+    ],
+    "evidence": [
+      {
+        "url": "https://www.gov.uk/bank-holidays#scotland",
+        "quote": "Upcoming bank holidays in Scotland\\n2027\\nDate\\tDay of the week\\tBank holiday\\n1 January\\tFriday\\tNew Year’s Day",
+        "source_matches": true,
+        "quote_observed": true
+      },
+      {
+        "url": "https://www.gov.uk/bank-holidays#scotland",
+        "quote": "2 August\\tMonday\\tSummer bank holiday\\n30 November\\tTuesday\\tSt Andrew’s Day",
+        "source_matches": true,
+        "quote_observed": true
+      }
+    ],
+    "forbidden_network_or_file_calls": 0
+  },
+  "preparation_ms": 55.07919399999082,
+  "host_elapsed_ms": 59602.51951200003,
+  "verification_ms": 2.817523999954574,
+  "task_elapsed_ms": 59609.15285300001,
+  "usage": {
+    "input_tokens": 236373,
+    "cached_input_tokens": 219264,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 2174,
+    "reasoning_output_tokens": 1498
+  },
+  "model_verified": null,
+  "host_error": null,
+  "tool_calls": 11,
+  "tool_failures": 0,
+  "tool_elapsed_ms": 82.28171199993812,
+  "response_bytes": 30292,
+  "response_characters": 30212,
+  "forbidden_host_calls": 0,
+  "reported_cost_usd": null,
+  "cost_usd": null,
+  "timed_out": false,
+  "trace_file": "zen-govuk-calendar-1.json",
+  "prompt": "Complete this read-only public website task using ONLY the browser MCP tools. You must inspect the live page; do not answer from memory. You choose your own observations, selectors and actions. Do not use HTTP/API clients, fetch, network replay, files, shell, other agents, or non-browser tools. Browser DOM evaluation is allowed for text extraction, but must not make network requests. Do not visit API endpoints. Do not sign in, create accounts, post messages, buy, or change account settings. Do not solve CAPTCHAs or bypass access challenges; report them. You may follow links, use site search and recover from errors. Stay on the task site. Maximum 30 browser calls. Verify all requested facts and finish with JSON {\"answer\":\"concise answer covering every requested fact\",\"evidence\":[{\"url\":\"source page URL\",\"quote\":\"a short exact supporting quote you observed in browser output\"}]}. Evidence quotes must be copied exactly from an observation. Do not claim success when blocked.\nYou control the owned Zen tab using Callisto in synthetic-dom input mode. Navigation starts loading; read a fresh snapshot before using refs. You may use run, batches, targeted observations, extraction and supported explicit waits. Do not enable or change input mode. Use the callisto tool with op and args. op=help returns one operation contract on demand.\nStart URL: https://www.gov.uk/bank-holidays\nTask: Use the GOV.UK bank holiday calendar for Scotland in 2027. Report the dates of the summer bank holiday and St Andrew’s Day. Cite the calendar page and a short supporting quote.",
+  "tools": [
+    {
+      "sequence": 1,
+      "name": "callisto",
+      "arguments": {
+        "op": "status",
+        "args": {}
+      },
+      "started_at": "2026-11-17T08:20:41.229Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"active\":true,\"browserAccess\":true,\"capabilities\":{\"backgroundWindow\":true,\"extract\":true,\"frames\":\"same-origin\",\"fullBrowserControl\":true,\"networkInspection\":true,\"playwrightExecution\":false,\"run\":true,\"runFormControls\":true,\"selectorWait\":true,\"snapshotPagination\":true,\"targetedObservation\":true,\"trustedBinding\":true,\"trustedInput\":false},\"connected\":true,\"continuous\":true,\"execution\":{\"focusPolicy\":\"user-controlled\",\"mode\":\"shared-tab\",\"paused\":false},\"fullAccess\":false,\"input\":{\"extensionSharingControls\":true,\"fallback\":false,\"leaseBound\":false,\"mode\":\"synthetic-dom\",\"transportConnected\":false},\"ready\":true,\"sharing\":true}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 3.305842000001576,
+      "response_bytes": 744
+    },
+    {
+      "sequence": 2,
+      "name": "callisto",
+      "arguments": {
+        "op": "snapshot",
+        "args": {
+          "max_chars": 6000
+        }
+      },
+      "started_at": "2026-11-17T08:20:43.337Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"next_offset\":null,\"offset\":0,\"order_changed\":false,\"revision\":\"ax-17754883165941017147:2\",\"text\":\"heading \\\"Ready for a public-site task\\\"\",\"title\":\"Browser benchmark start\",\"truncated\":false,\"url\":\"http://127.0.0.1:40641/\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\"]}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 3.885162999999011,
+      "response_bytes": 478
+    },
+    {
+      "sequence": 3,
+      "name": "callisto",
+      "arguments": {
+        "op": "navigate",
+        "args": {
+          "url": "https://www.gov.uk/bank-holidays"
+        }
+      },
+      "started_at": "2026-11-17T08:20:45.397Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"navigationStarted\":true}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 3.4562869999790564,
+      "response_bytes": 67
+    },
+    {
+      "sequence": 4,
+      "name": "callisto",
+      "arguments": {
+        "op": "snapshot",
+        "args": {
+          "max_chars": 6000
+        }
+      },
+      "started_at": "2026-11-17T08:20:47.399Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"next_offset\":198,\"offset\":0,\"order_changed\":false,\"revision\":\"ax-15365296672128235565:1\",\"text\":\"region \\\"Cookies on GOV.UK\\\"\\nheading \\\"Cookies on GOV.UK\\\"\\nparagraph \\\"We use some essential cookies to make this website work.\\\"\\nparagraph \\\"We’d like to set additional cookies to understand how you use GOV.UK, remember your settings and improve government services.\\\"\\nparagraph \\\"We also use cookies set by other sites to help us deliver content from their services.\\\"\\n[ax-8203943224327970506] button \\\"Accept additional cookies\\\"\\n[ax-6326927018358547546] button \\\"Reject additional cookies\\\"\\n[ax-10367654336852524280] link \\\"View cookies\\\"\\n[ax-15087118735093155474] link \\\"Skip to main content\\\"\\n[ax-11405313339417666029] link \\\"Go to the GOV.UK homepage\\\"\\n[ax-12927742784061533536] img \\\"GOV.UK\\\"\\nheading \\\"Navigation menu\\\"\\n[ax-14531268304928264995] button \\\"Show navigation menu\\\"\\n[ax-11247043900529361527] button \\\"Show search menu\\\"\\nlistitem \\\"Home\\\"\\n[ax-11971204590966575892] link \\\"Home\\\"\\nlistitem \\\"Working, jobs and pensions\\\"\\n[ax-14390031844144373233] link \\\"Working, jobs and pensions\\\"\\nlistitem \\\"Holidays, time off, sick leave, maternity and paternity leave\\\"\\n[ax-7820541368629850071] link \\\"Holidays, time off, sick leave, maternity and paternity leave\\\"\\nheading \\\"UK bank holidays\\\"\\n[ax-7867860467289150227] article \\\"England and Wales Scotland Northern Ireland The next bank holiday in England and Wales is 25 December Christmas Day Upcoming bank holidays in England and Wales Upcoming bank holidays in England and Wa\\\"\\n[ax-223775077845702035] tablist \\\"England and Wales Scotland Northern Ireland\\\"\\npresentation \\\"England and Wales\\\"\\n[ax-1384547013878159833] tab \\\"England and Wales\\\"\\npresentation \\\"Scotland\\\"\\n[ax-9848946303170334094] tab \\\"Scotland\\\"\\npresentation \\\"Northern Ireland\\\"\\n[ax-1859400794741209380] tab \\\"Northern Ireland\\\"\\n[ax-6924702685988559259] tabpanel \\\"England and Wales\\\"\\nheading \\\"The next bank holiday in England and Wales is 25 December Christmas Day\\\"\\nheading \\\"Upcoming bank holidays in England and Wales\\\"\\ncolumnheader \\\"Date\\\"\\ncolumnheader \\\"Day of the week\\\"\\ncolumnheader \\\"Bank holiday\\\"\\ncolumnheader \\\"25 December\\\"\\ncell \\\"Friday\\\"\\ncell \\\"Christmas Day\\\"\\ncolumnheader \\\"28 December\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Boxing Day (substitute day)\\\"\\ncolumnheader \\\"Date\\\"\\ncolumnheader \\\"Day of the week\\\"\\ncolumnheader \\\"Bank holiday\\\"\\ncolumnheader \\\"1 January\\\"\\ncell \\\"Friday\\\"\\ncell \\\"New Year’s Day\\\"\\ncolumnheader \\\"26 March\\\"\\ncell \\\"Friday\\\"\\ncell \\\"Good Friday\\\"\\ncolumnheader \\\"29 March\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Easter Monday\\\"\\ncolumnheader \\\"3 May\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Early May bank holiday\\\"\\ncolumnheader \\\"31 May\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Spring bank holiday\\\"\\ncolumnheader \\\"30 August\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Summer bank holiday\\\"\\ncolumnheader \\\"27 December\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Christmas Day (substitute day)\\\"\\ncolumnheader \\\"28 December\\\"\\ncell \\\"Tuesday\\\"\\ncell \\\"Boxing Day (substitute day)\\\"\\ncolumnheader \\\"Date\\\"\\ncolumnheader \\\"Day of the week\\\"\\ncolumnheader \\\"Bank holiday\\\"\\ncolumnheader \\\"3 January\\\"\\ncell \\\"Monday\\\"\\ncell \\\"New Year’s Day (substitute day)\\\"\\ncolumnheader \\\"14 April\\\"\\ncell \\\"Friday\\\"\\ncell \\\"Good Friday\\\"\\ncolumnheader \\\"17 April\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Easter Monday\\\"\\ncolumnheader \\\"1 May\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Early May bank holiday\\\"\\ncolumnheader \\\"29 May\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Spring bank holiday\\\"\\ncolumnheader \\\"28 August\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Summer bank holiday\\\"\\ncolumnheader \\\"25 December\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Christmas Day\\\"\\ncolumnheader \\\"26 December\\\"\\ncell \\\"Tuesday\\\"\\ncell \\\"Boxing Day\\\"\\nparagraph \\\"If a bank holiday is on a weekend, a ‘substitute’ weekday becomes a bank holiday, normally the following Monday.\\\"\\nparagraph \\\"Your employer does not have to give you paid leave on bank or public holidays.\\\"\\n[ax-13971019347257456775] link \\\"paid leave on bank or public holidays\\\"\\nparagraph \\\"Bank holidays might affect how and when your benefits are paid.\\\"\\n[ax-15589489719741390089] link \\\"how and when your benefits are paid\\\"\\n[ax-13243374372526929300] link \\\"in Welsh (Cymraeg)\\\"\\n[ax-12170545807473402296] link \\\"Add bank holidays for England and Wales to your calendar (ICS, 14KB)\\\"\\nheading \\\"Past bank holidays in England and Wales\\\"\\ncolumnheader \\\"Date\\\"\\ncolumnheader \\\"Day of the week\\\"\\ncolumnheader \\\"Bank holiday\\\"\\ncolumnheader \\\"31 August\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Summer bank holiday\\\"\\ncolumnheader \\\"25 May\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Spring bank holiday\\\"\\ncolumnheader \\\"4 May\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Early May bank holiday\\\"\\ncolumnheader \\\"6 April\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Easter Monday\\\"\\ncolumnheader \\\"3 April\\\"\\ncell \\\"Friday\\\"\\ncell \\\"Good Friday\\\"\\ncolumnheader \\\"1 January\\\"\\ncell \\\"Thursday\\\"\\ncell \\\"New Year’s Day\\\"\\ncolumnheader \\\"Date\\\"\\ncolumnheader \\\"Day of the week\\\"\\ncolumnheader \\\"Bank holiday\\\"\\ncolumnheader \\\"26 December\\\"\\ncell \\\"Friday\\\"\\ncell \\\"Boxing Day\\\"\\ncolumnheader \\\"25 December\\\"\\ncell \\\"Thursday\\\"\\ncell \\\"Christmas Day\\\"\\ncolumnheader \\\"25 August\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Summer bank holiday\\\"\\ncolumnheader \\\"26 May\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Spring bank holiday\\\"\\ncolumnheader \\\"5 May\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Early May bank holiday\\\"\\ncolumnheader \\\"21 April\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Easter Monday\\\"\\ncolumnheader \\\"18 April\\\"\\ncell \\\"Friday\\\"\\ncell \\\"Good Friday\\\"\\ncolumnheader \\\"1 January\\\"\\ncell \\\"Wednesday\\\"\\ncell \\\"New Year’s Day\\\"\\ncolumnheader \\\"Date\\\"\\ncolumnheader \\\"Day of the week\\\"\\ncolumnheader \\\"Bank holiday\\\"\\ncolumnheader \\\"26 December\\\"\\ncell \\\"Thursday\\\"\\ncell \\\"Boxing Day\\\"\\ncolumnheader \\\"25 December\\\"\\ncell \\\"Wednesday\\\"\\ncell \\\"Christmas Day\\\"\\ncolumnheader \\\"26 August\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Summer bank holiday\\\"\\ncolumnheader \\\"27 May\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Spring bank holiday\\\"\\ncolumnheader \\\"6 May\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Early May bank holiday\\\"\\ncolumnheader \\\"1 April\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Easter Monday\\\"\\ncolumnheader \\\"29 March\\\"\\ncell \\\"Friday\\\"\\ncell \\\"Good Friday\\\"\\ncolumnheader \\\"1 January\\\"\\ncell \\\"Monday\\\"\\ncell \\\"New Year’s Day\\\"\\ncolumnheader \\\"Date\\\"\\ncolumnheader \\\"Day of the week\\\"\\ncolumnheader \\\"Bank holiday\\\"\\ncolumnheader \\\"26 December\\\"\\ncell \\\"Tuesday\\\"\\ncell \\\"Boxing Day\\\"\\ncolumnheader \\\"25 December\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Christmas Day\\\"\\ncolumnheader \\\"28 August\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Summer bank holiday\\\"\\ncolumnheader \\\"29 May\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Spring bank holiday\\\"\\ncolumnheader \\\"8 May\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Bank holiday for the coronation of King Charles III\\\"\\ncolumnheader \\\"1 May\\\"\\ncell \\\"Monday\\\"\",\"title\":\"UK bank holidays - GOV.UK\",\"truncated\":true,\"url\":\"https://www.gov.uk/bank-holidays\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\",\"Continue with next_offset and revision to read this captured snapshot.\"]}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 24.410791000002064,
+      "response_bytes": 8112
+    },
+    {
+      "sequence": 5,
+      "name": "callisto",
+      "arguments": {
+        "op": "run",
+        "args": {
+          "steps": [
+            {
+              "action": "click_ref",
+              "ref": "ax-9848946303170334094"
+            }
+          ],
+          "snapshot": true
+        }
+      },
+      "started_at": "2026-11-17T08:20:51.025Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"completed\":1,\"elapsed_ms\":5,\"snapshot\":{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"next_offset\":411,\"offset\":0,\"order_changed\":false,\"revision\":\"ax-15365296672128235565:2\",\"text\":\"region \\\"Cookies on GOV.UK\\\"\\nheading \\\"Cookies on GOV.UK\\\"\\nparagraph \\\"We use some essential cookies to make this website work.\\\"\\nparagraph \\\"We’d like to set additional cookies to understand how you use GOV.UK, remember your settings and improve government services.\\\"\\nparagraph \\\"We also use cookies set by other sites to help us deliver content from their services.\\\"\\n[ax-8203943224327970506] button \\\"Accept additional cookies\\\"\\n[ax-6326927018358547546] button \\\"Reject additional cookies\\\"\\n[ax-10367654336852524280] link \\\"View cookies\\\"\\n[ax-15087118735093155474] link \\\"Skip to main content\\\"\\n[ax-11405313339417666029] link \\\"Go to the GOV.UK homepage\\\"\\n[ax-12927742784061533536] img \\\"GOV.UK\\\"\\nheading \\\"Navigation menu\\\"\\n[ax-14531268304928264995] button \\\"Show navigation menu\\\"\\n[ax-11247043900529361527] button \\\"Show search menu\\\"\\nlistitem \\\"Home\\\"\\n[ax-11971204590966575892] link \\\"Home\\\"\\nlistitem \\\"Working, jobs and pensions\\\"\\n[ax-14390031844144373233] link \\\"Working, jobs and pensions\\\"\\nlistitem \\\"Holidays, time off, sick leave, maternity and paternity leave\\\"\\n[ax-7820541368629850071] link \\\"Holidays, time off, sick leave, maternity and paternity leave\\\"\\nheading \\\"UK bank holidays\\\"\\n[ax-7867860467289150227] article \\\"England and Wales Scotland Northern Ireland The next bank holiday in Scotland is 30 November St Andrew’s Day Upcoming bank holidays in Scotland Upcoming bank holidays in Scotland 2026 Date Day of the \\\"\\n[ax-223775077845702035] tablist \\\"England and Wales Scotland Northern Ireland\\\"\\npresentation \\\"England and Wales\\\"\\n[ax-1384547013878159833] tab \\\"England and Wales\\\"\\npresentation \\\"Scotland\\\"\\n[ax-9848946303170334094] tab \\\"Scotland\\\"\\npresentation \\\"Northern Ireland\\\"\\n[ax-1859400794741209380] tab \\\"Northern Ireland\\\"\\n[ax-10546974768922589430] tabpanel \\\"Scotland\\\"\\nheading \\\"The next bank holiday in Scotland is 30 November St Andrew’s Day\\\"\\nheading \\\"Upcoming bank holidays in Scotland\\\"\\ncolumnheader \\\"Date\\\"\\ncolumnheader \\\"Day of the week\\\"\\ncolumnheader \\\"Bank holiday\\\"\\ncolumnheader \\\"30 November\\\"\\ncell \\\"Monday\\\"\\ncell \\\"St Andrew’s Day\\\"\\ncolumnheader \\\"25 December\\\"\\ncell \\\"Friday\\\"\\ncell \\\"Christmas Day\\\"\\ncolumnheader \\\"28 December\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Boxing Day (substitute day)\\\"\\ncolumnheader \\\"Date\\\"\\ncolumnheader \\\"Day of the week\\\"\\ncolumnheader \\\"Bank holiday\\\"\\ncolumnheader \\\"1 January\\\"\\ncell \\\"Friday\\\"\\ncell \\\"New Year’s Day\\\"\\ncolumnheader \\\"4 January\\\"\\ncell \\\"Monday\\\"\\ncell \\\"2nd January (substitute day)\\\"\\ncolumnheader \\\"26 March\\\"\\ncell \\\"Friday\\\"\\ncell \\\"Good Friday\\\"\\ncolumnheader \\\"3 May\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Early May bank holiday\\\"\\ncolumnheader \\\"31 May\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Spring bank holiday\\\"\\ncolumnheader \\\"2 August\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Summer bank holiday\\\"\\ncolumnheader \\\"30 November\\\"\\ncell \\\"Tuesday\\\"\\ncell \\\"St Andrew’s Day\\\"\\ncolumnheader \\\"27 December\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Christmas Day (substitute day)\\\"\\ncolumnheader \\\"28 December\\\"\\ncell \\\"Tuesday\\\"\\ncell \\\"Boxing Day (substitute day)\\\"\\ncolumnheader \\\"Date\\\"\\ncolumnheader \\\"Day of the week\\\"\\ncolumnheader \\\"Bank holiday\\\"\\ncolumnheader \\\"3 January\\\"\\ncell \\\"Monday\\\"\\ncell \\\"New Year’s Day (substitute day)\\\"\\ncolumnheader \\\"4 January\\\"\\ncell \\\"Tuesday\\\"\\ncell \\\"2nd January (substitute day)\\\"\\ncolumnheader \\\"14 April\\\"\\ncell \\\"Friday\\\"\\ncell \\\"Good Friday\\\"\\ncolumnheader \\\"1 May\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Early May bank holiday\\\"\\ncolumnheader \\\"29 May\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Spring bank holiday\\\"\\ncolumnheader \\\"7 August\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Summer bank holiday\\\"\\ncolumnheader \\\"30 November\\\"\\ncell \\\"Thursday\\\"\\ncell \\\"St Andrew’s Day\\\"\\ncolumnheader \\\"25 December\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Christmas Day\\\"\\ncolumnheader \\\"26 December\\\"\\ncell \\\"Tuesday\\\"\\ncell \\\"Boxing Day\\\"\\nparagraph \\\"If a bank holiday is on a weekend, a ‘substitute’ weekday becomes a bank holiday, normally the following Monday.\\\"\\nparagraph \\\"Your employer does not have to give you paid leave on bank or public holidays.\\\"\\n[ax-15266961189178084444] link \\\"paid leave on bank or public holidays\\\"\\nparagraph \\\"Bank holidays might affect how and when your benefits are paid.\\\"\\n[ax-5626153119143767041] link \\\"how and when your benefits are paid\\\"\\n[ax-11210719236277204033] link \\\"in Welsh (Cymraeg)\\\"\\n[ax-6838045446076421912] link \\\"Add bank holidays for Scotland to your calendar (ICS, 14KB)\\\"\\nheading \\\"Past bank holidays in Scotland\\\"\\ncolumnheader \\\"Date\\\"\\ncolumnheader \\\"Day of the week\\\"\\ncolumnheader \\\"Bank holiday\\\"\\ncolumnheader \\\"3 August\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Summer bank holiday\\\"\\ncolumnheader \\\"15 June\\\"\\ncell \\\"Monday\\\"\\ncell \\\"World Cup bank holiday\\\"\\ncolumnheader \\\"25 May\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Spring bank holiday\\\"\\ncolumnheader \\\"4 May\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Early May bank holiday\\\"\\ncolumnheader \\\"3 April\\\"\\ncell \\\"Friday\\\"\\ncell \\\"Good Friday\\\"\\ncolumnheader \\\"2 January\\\"\\ncell \\\"Friday\\\"\\ncell \\\"2nd January\\\"\\ncolumnheader \\\"1 January\\\"\\ncell \\\"Thursday\\\"\\ncell \\\"New Year’s Day\\\"\\ncolumnheader \\\"Date\\\"\\ncolumnheader \\\"Day of the week\\\"\\ncolumnheader \\\"Bank holiday\\\"\\ncolumnheader \\\"26 December\\\"\\ncell \\\"Friday\\\"\\ncell \\\"Boxing Day\\\"\\ncolumnheader \\\"25 December\\\"\\ncell \\\"Thursday\\\"\\ncell \\\"Christmas Day\\\"\\ncolumnheader \\\"1 December\\\"\\ncell \\\"Monday\\\"\\ncell \\\"St Andrew’s Day (substitute day)\\\"\\ncolumnheader \\\"4 August\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Summer bank holiday\\\"\\ncolumnheader \\\"26 May\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Spring bank holiday\\\"\\ncolumnheader \\\"5 May\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Early May bank holiday\\\"\\ncolumnheader \\\"18 April\\\"\\ncell \\\"Friday\\\"\\ncell \\\"Good Friday\\\"\\ncolumnheader \\\"2 January\\\"\\ncell \\\"Thursday\\\"\\ncell \\\"2nd January\\\"\\ncolumnheader \\\"1 January\\\"\\ncell \\\"Wednesday\\\"\\ncell \\\"New Year’s Day\\\"\\ncolumnheader \\\"Date\\\"\\ncolumnheader \\\"Day of the week\\\"\\ncolumnheader \\\"Bank holiday\\\"\\ncolumnheader \\\"26 December\\\"\\ncell \\\"Thursday\\\"\\ncell \\\"Boxing Day\\\"\\ncolumnheader \\\"25 December\\\"\\ncell \\\"Wednesday\\\"\\ncell \\\"Christmas Day\\\"\\ncolumnheader \\\"2 December\\\"\\ncell \\\"Monday\\\"\\ncell \\\"St Andrew’s Day (substitute day)\\\"\\ncolumnheader \\\"5 August\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Summer bank holiday\\\"\\ncolumnheader \\\"27 May\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Spring bank holiday\\\"\\ncolumnheader \\\"6 May\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Early May bank holiday\\\"\\ncolumnheader \\\"29 March\\\"\\ncell \\\"Friday\\\"\\ncell \\\"Good Friday\\\"\\ncolumnheader \\\"2 January\\\"\\ncell \\\"Tuesday\\\"\\ncell \\\"2nd January\\\"\\ncolumnheader \\\"1 January\\\"\\ncell \\\"Monday\\\"\\ncell \\\"New Year’s Day\\\"\\ncolumnheader \\\"Date\\\"\\ncolumnheader \\\"Day of the week\\\"\\ncolumnheader \\\"Bank holiday\\\"\\ncolumnheader \\\"26 December\\\"\\ncell \\\"Tuesday\\\"\\ncell \\\"Boxing Day\\\"\\ncolumnheader \\\"25 December\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Christmas Day\\\"\\ncolumnheader \\\"30 November\\\"\\ncell \\\"Thursday\\\"\\ncell \\\"St Andrew’s Day\\\"\\ncolumnheader \\\"7 August\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Summer bank holiday\\\"\\ncolumnheader \\\"29 May\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Spring bank holiday\\\"\\ncolumnheader \\\"8 May\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Bank holiday for the coronation of King Charles III\\\"\\ncolumnheader \\\"1 May\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Early May bank holiday\\\"\\ncolumnheader \\\"7 April\\\"\\ncell \\\"Friday\\\"\\ncell \\\"Good Friday\\\"\\ncolumnheader \\\"3 January\\\"\\ncell \\\"Tuesday\\\"\\ncell \\\"2nd January (substitute day)\\\"\\ncolumnheader \\\"2 January\\\"\\ncell \\\"Monday\\\"\\ncell \\\"New Year’s Day (substitute day)\\\"\\ncolumnheader \\\"Date\\\"\\ncolumnheader \\\"Day of the week\\\"\\ncolumnheader \\\"Bank holiday\\\"\\ncolumnheader \\\"27 December\\\"\\ncell \\\"Tuesday\\\"\\ncell \\\"Christmas Day (substitute day)\\\"\\ncolumnheader \\\"26 December\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Boxing Day\\\"\\ncolumnheader \\\"30 November\\\"\\ncell \\\"Wednesday\\\"\\ncell \\\"St Andrew’s Day\\\"\\ncolumnheader \\\"19 September\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Bank Holiday for the State Funeral of Queen Elizabeth II\\\"\\ncolumnheader \\\"1 August\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Summer bank holiday\\\"\\ncolumnheader \\\"3 June\\\"\\ncell \\\"Friday\\\"\\ncell \\\"Platinum Jubilee bank holiday\\\"\\ncolumnheader \\\"2 June\\\"\\ncell \\\"Thursday\\\"\\ncell \\\"Spring bank holiday\\\"\\ncolumnheader \\\"2 May\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Early May bank holiday\\\"\\ncolumnheader \\\"15 April\\\"\\ncell \\\"Friday\\\"\\ncell \\\"Good Friday\\\"\\ncolumnheader \\\"4 January\\\"\\ncell \\\"Tuesday\\\"\\ncell \\\"2nd January (substitute day)\\\"\\ncolumnheader \\\"3 January\\\"\\ncell \\\"Monday\\\"\\ncell \\\"New Year’s Day (substitute day)\\\"\\ncolumnheader \\\"Date\\\"\\ncolumnheader \\\"Day of the week\\\"\\ncolumnheader \\\"Bank holiday\\\"\\ncolumnheader \\\"28 December\\\"\\ncell \\\"Tuesday\\\"\\ncell \\\"Boxing Day (substitute day)\\\"\\ncolumnheader \\\"27 December\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Christmas Day (substitute day)\\\"\\ncolumnheader \\\"30 November\\\"\\ncell \\\"Tuesday\\\"\\ncell \\\"St Andrew’s Day\\\"\\ncolumnheader \\\"2 August\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Summer bank holiday\\\"\\ncolumnheader \\\"31 May\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Spring bank holiday\\\"\\ncolumnheader \\\"3 May\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Early May bank holiday\\\"\\ncolumnheader \\\"2 April\\\"\\ncell \\\"Friday\\\"\\ncell \\\"Good Friday\\\"\\ncolumnheader \\\"4 January\\\"\\ncell \\\"Monday\\\"\\ncell \\\"2nd January (substitute day)\\\"\\ncolumnheader \\\"1 January\\\"\\ncell \\\"Friday\\\"\\ncell \\\"New Year’s Day\\\"\\ncolumnheader \\\"Date\\\"\\ncolumnheader \\\"Day of the week\\\"\\ncolumnheader \\\"Bank holiday\\\"\\ncolumnheader \\\"28 December\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Boxing Day (substitute day)\\\"\\ncolumnheader \\\"25 December\\\"\\ncell \\\"Friday\\\"\\ncell \\\"Christmas Day\\\"\\ncolumnheader \\\"30 November\\\"\\ncell \\\"Monday\\\"\\ncell \\\"St Andrew’s Day\\\"\\ncolumnheader \\\"3 August\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Summer bank holiday\\\"\\ncolumnheader \\\"25 May\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Spring bank holiday\\\"\\ncolumnheader \\\"8 May\\\"\\ncell \\\"Friday\\\"\\ncell \\\"Early May bank holiday (VE day)\\\"\\ncolumnheader \\\"10 April\\\"\\ncell \\\"Friday\\\"\\ncell \\\"Good Friday\\\"\\ncolumnheader \\\"2 January\\\"\\ncell \\\"Thursday\\\"\\ncell \\\"2nd January\\\"\\ncolumnheader \\\"1 January\\\"\\ncell \\\"Wednesday\\\"\\ncell \\\"New Year’s Day\\\"\\ncolumnheader \\\"Date\\\"\\ncolumnheader \\\"Day of the week\\\"\\ncolumnheader \\\"Bank holiday\\\"\\ncolumnheader \\\"26 December\\\"\\ncell \\\"Thursday\\\"\\ncell \\\"Boxing Day\\\"\\ncolumnheader \\\"25 December\\\"\\ncell \\\"Wednesday\\\"\\ncell \\\"Christmas Day\\\"\\ncolumnheader \\\"2 December\\\"\\ncell \\\"Monday\\\"\\ncell \\\"St Andrew’s Day (substitute day)\\\"\\ncolumnheader \\\"5 August\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Summer bank holiday\\\"\\ncolumnheader \\\"27 May\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Spring bank holiday\\\"\\ncolumnheader \\\"6 May\\\"\\ncell \\\"Monday\\\"\\ncell \\\"Early May bank holiday\\\"\\ncolumnheader \\\"19 April\\\"\\ncell \\\"Friday\\\"\\ncell \\\"Good Friday\\\"\\ncolumnheader \\\"2 January\\\"\\ncell \\\"Wednesday\\\"\\ncell \\\"2nd January\\\"\\ncolumnheader \\\"1 January\\\"\\ncell \\\"Tuesday\\\"\\ncell \\\"New Year’s Day\\\"\\nterm \\\"Last updated:\\\"\\ndefinition \\\"24 November 2025\\\"\\nheading \\\"Related content\\\"\\nlistitem \\\"Holiday entitlement\\\"\\n[ax-6880898333754246828] link \\\"Holiday entitlement\\\"\\nlistitem \\\"School term and holiday dates\\\"\\n[ax-12406247976478772372] link \\\"School term and holiday dates\\\"\\nheading \\\"Is this page useful?\\\"\\nlistitem \\\"Yes this page is useful\\\"\\n[ax-17250479499541864049] button \\\"Yes this page is useful\\\"\\nlistitem \\\"No this page is not useful\\\"\\n[ax-4315855208852703942] button \\\"No this page is not useful\\\"\\n[ax-11456392512856726087] button \\\"Report a problem with this page\\\"\\npresentation \\\"\\\"\\nheading \\\"Services and information\\\"\\nlistitem \\\"Benefits\\\"\\n[ax-12710370215812464008] link \\\"Benefits\\\"\\nlistitem \\\"Births, death, marriages and care\\\"\\n[ax-1733543086247087979] link \\\"Births, death, marriages and care\\\"\\nlistitem \\\"Business and self-employed\\\"\\n[ax-16965479687384056595] link \\\"Business and self-employed\\\"\\nlistitem \\\"Childcare and parenting\\\"\\n[ax-16505751451064806963] link \\\"Childcare and parenting\\\"\\nlistitem \\\"Citizenship and living in the UK\\\"\\n[ax-16304372292277968935] link \\\"Citizenship and living in the UK\\\"\\nlistitem \\\"Crime, justice and the law\\\"\\n[ax-15530860410895846934] link \\\"Crime, justice and the law\\\"\\nlistitem \\\"Disabled people\\\"\\n[ax-13928543286647217873] link \\\"Disabled people\\\"\\nlistitem \\\"Driving and transport\\\"\\n[ax-13329444825126139860] link \\\"Driving and transport\\\"\\nlistitem \\\"Education and learning\\\"\\n[ax-6247739151502288112] link \\\"Education and learning\\\"\\nlistitem \\\"Employing people\\\"\\n[ax-6714301097357367758] link \\\"Employing people\\\"\\nlistitem \\\"Environment and countryside\\\"\\n[ax-10740768792872719481] link \\\"Environment and countryside\\\"\\nlistitem \\\"Housing and local services\\\"\\n[ax-15250689105286555718] link \\\"Housing and local services\\\"\\nlistitem \\\"Money and tax\\\"\\n[ax-9143874668125348133] link \\\"Money and tax\\\"\\nlistitem \\\"Passports, travel and living abroad\\\"\\n[ax-5613232335642077770] link \\\"Passports, travel and living abroad\\\"\\nlistitem \\\"Visas and immigration\\\"\\n[ax-18184149038205932759] link \\\"Visas and immigration\\\"\\nlistitem \\\"Working, jobs and pensions\\\"\\n[ax-13634016178037304010] link \\\"Working, jobs and pensions\\\"\\nheading \\\"Government activity\\\"\\nlistitem \\\"Departments\\\"\\n[ax-37492400785477002] link \\\"Departments\\\"\\nlistitem \\\"News\\\"\\n[ax-17282426906800664418] link \\\"News\\\"\\nlistitem \\\"Guidance and regulation\\\"\\n[ax-1450496256411723596] link \\\"Guidance and regulation\\\"\\nlistitem \\\"Research and statistics\\\"\\n[ax-4296481930229222474] link \\\"Research and statistics\\\"\",\"title\":\"UK bank holidays - GOV.UK\",\"truncated\":true,\"url\":\"https://www.gov.uk/bank-holidays#scotland\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\",\"Continue with next_offset and revision to read this captured snapshot.\"]}}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 33.69038099999307,
+      "response_bytes": 15905
+    },
+    {
+      "sequence": 6,
+      "name": "callisto",
+      "arguments": {
+        "op": "help",
+        "args": {
+          "op": "extract"
+        }
+      },
+      "started_at": "2026-11-17T08:20:59.686Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"args_schema\":{\"properties\":{\"fields\":{\"additionalProperties\":{\"anyOf\":[{\"type\":\"string\"},{\"properties\":{\"attribute\":{\"type\":\"string\"},\"selector\":{\"type\":\"string\"},\"type\":{\"enum\":[\"text\",\"number\"],\"type\":\"string\"}},\"type\":\"object\"}]},\"maxProperties\":20,\"minProperties\":1,\"type\":\"object\"},\"include_text\":{\"type\":\"boolean\"},\"limit\":{\"maximum\":1000,\"minimum\":1,\"type\":\"integer\"},\"paginate\":{\"properties\":{\"max_pages\":{\"maximum\":25,\"minimum\":1,\"type\":\"integer\"},\"next\":{\"maxLength\":500,\"minLength\":1,\"type\":\"string\"}},\"required\":[\"next\"],\"type\":\"object\"},\"selector\":{\"maxLength\":500,\"minLength\":1,\"type\":\"string\"}},\"required\":[\"selector\",\"fields\"],\"type\":\"object\"},\"description\":\"Read structured rows from the shared page using CSS selectors: a row selector plus a field map. Optionally follow a next-page control and merge pages. Returns typed rows, not a snapshot, so counting and aggregation need one call.\",\"op\":\"extract\"}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 0.43226400000276044,
+      "response_bytes": 1090
+    },
+    {
+      "sequence": 7,
+      "name": "callisto",
+      "arguments": {
+        "op": "help",
+        "args": {
+          "op": "run"
+        }
+      },
+      "started_at": "2026-11-17T08:21:02.286Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"args_schema\":{\"properties\":{\"snapshot\":{\"type\":\"boolean\"},\"steps\":{\"items\":{\"properties\":{\"action\":{\"enum\":[\"navigate\",\"click_ref\",\"click_role\",\"fill_ref\",\"fill_role\",\"submit_ref\",\"submit_role\",\"select_ref\",\"select_role\",\"check_ref\",\"check_role\",\"hover_ref\",\"hover_role\",\"press\",\"scroll\",\"wait\",\"wait_for\",\"extract\"],\"type\":\"string\"},\"checked\":{\"type\":\"boolean\"},\"delta_x\":{\"type\":\"number\"},\"delta_y\":{\"type\":\"number\"},\"key\":{\"type\":\"string\"},\"ms\":{\"maximum\":5000,\"minimum\":1,\"type\":\"integer\"},\"name\":{\"type\":\"string\"},\"ref\":{\"type\":\"string\"},\"role\":{\"type\":\"string\"},\"selector\":{\"maxLength\":500,\"minLength\":1,\"type\":\"string\"},\"spec\":{\"type\":\"object\"},\"state\":{\"enum\":[\"visible\",\"hidden\",\"attached\",\"detached\"],\"type\":\"string\"},\"text\":{\"maxLength\":500,\"minLength\":1,\"type\":\"string\"},\"timeout_ms\":{\"maximum\":20000,\"minimum\":100,\"type\":\"integer\"},\"url\":{\"type\":\"string\"},\"value\":{\"type\":\"string\"}},\"required\":[\"action\"],\"type\":\"object\"},\"maxItems\":40,\"minItems\":1,\"type\":\"array\"}},\"required\":[\"steps\"],\"type\":\"object\"},\"description\":\"Run 1–40 dependent steps in one call: navigate; click/fill/submit/select/check/hover by ref or exact role; press; scroll; wait; wait_for text or CSS selector state; extract rows. Use submit instead of synthetic Enter for forms. Returns the last extraction and an optional final snapshot. Stops at the first failure within a 60-second budget; earlier steps are not rolled back. Input uses the explicitly selected input mode.\",\"op\":\"run\"}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 0.8454649999912363,
+      "response_bytes": 1719
+    },
+    {
+      "sequence": 8,
+      "name": "callisto",
+      "arguments": {
+        "op": "help",
+        "args": {
+          "op": "find"
+        }
+      },
+      "started_at": "2026-11-17T08:21:14.898Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"args_schema\":{\"properties\":{\"max_matches\":{\"default\":5,\"maximum\":10,\"minimum\":1,\"type\":\"integer\"},\"query\":{\"maxLength\":200,\"minLength\":1,\"type\":\"string\"}},\"required\":[\"query\"],\"type\":\"object\"},\"description\":\"Search visible page text and return bounded matching snippets. Unlike Chromium accessibility search, this uses rendered DOM text.\",\"op\":\"find\"}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 0.462628000008408,
+      "response_bytes": 434
+    },
+    {
+      "sequence": 9,
+      "name": "callisto",
+      "arguments": {
+        "op": "find",
+        "args": {
+          "query": "2027",
+          "max_matches": 5
+        }
+      },
+      "started_at": "2026-11-17T08:21:17.478Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"matches\":[{\"offset\":896,\"text\":\" Day\\n25 December\\tFriday\\tChristmas Day\\n28 December\\tMonday\\tBoxing Day (substitute day)\\nUpcoming bank holidays in Scotland\\n2027\\nDate\\tDay of the week\\tBank holiday\\n1 January\\tFriday\\tNew Year’s Day\\n4 January\\tMonday\\t2nd January (substitute day)\\n26 Marc\"}]}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 4.770148999989033,
+      "response_bytes": 367
+    },
+    {
+      "sequence": 10,
+      "name": "callisto",
+      "arguments": {
+        "op": "find",
+        "args": {
+          "query": "2 August",
+          "max_matches": 5
+        }
+      },
+      "started_at": "2026-11-17T08:21:20.463Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"matches\":[{\"offset\":1111,\"text\":\"uary (substitute day)\\n26 March\\tFriday\\tGood Friday\\n3 May\\tMonday\\tEarly May bank holiday\\n31 May\\tMonday\\tSpring bank holiday\\n2 August\\tMonday\\tSummer bank holiday\\n30 November\\tTuesday\\tSt Andrew’s Day\\n27 December\\tMonday\\tChristmas Day (substitute day)\\n28 Dec\"},{\"offset\":4372,\"text\":\"esday\\tBoxing Day (substitute day)\\n27 December\\tMonday\\tChristmas Day (substitute day)\\n30 November\\tTuesday\\tSt Andrew’s Day\\n2 August\\tMonday\\tSummer bank holiday\\n31 May\\tMonday\\tSpring bank holiday\\n3 May\\tMonday\\tEarly May bank holiday\\n2 April\\tFriday\\tGood Fr\"}]}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 3.434804999997141,
+      "response_bytes": 694
+    },
+    {
+      "sequence": 11,
+      "name": "callisto",
+      "arguments": {
+        "op": "find",
+        "args": {
+          "query": "30 November",
+          "max_matches": 2
+        }
+      },
+      "started_at": "2026-11-17T08:21:25.442Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"matches\":[{\"offset\":609,\"text\":\"y and paternity leave\\nUK bank holidays\\nEngland and Wales\\nScotland\\nNorthern Ireland\\nThe next bank holiday in Scotland is\\n30 November\\nSt Andrew’s Day\\nUpcoming bank holidays in Scotland\\nUpcoming bank holidays in Scotland\\n2026\\nDate\\tDay of the week\\tBank ho\"},{\"offset\":746,\"text\":\"drew’s Day\\nUpcoming bank holidays in Scotland\\nUpcoming bank holidays in Scotland\\n2026\\nDate\\tDay of the week\\tBank holiday\\n30 November\\tMonday\\tSt Andrew’s Day\\n25 December\\tFriday\\tChristmas Day\\n28 December\\tMonday\\tBoxing Day (substitute day)\\nUpcoming bank ho\"}]}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 3.5879369999747723,
+      "response_bytes": 682
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+fixture failure Fixture deadline exceeded
+relay {
+  status: 200,
+  keys: [
+    'version',
+    'buildId',
+    'instanceId',
+    'startedAt',
+    'pid',
+    'managed',
+    'shutdownProtocol',
+    'runtime',
+    'extensionProtocol',
+    'pairing'
+  ]
+}
+browser local HTTP { status: 200 }
+relay child exit 0 null

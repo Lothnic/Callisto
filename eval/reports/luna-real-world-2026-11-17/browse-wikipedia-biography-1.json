@@ -1,0 +1,391 @@
+{
+  "schema": "callisto.real-world-trace.v1",
+  "host": {
+    "code": 0,
+    "signal": null,
+    "error": null,
+    "timed_out": false,
+    "elapsed_ms": 26313.323674999992,
+    "usage": {
+      "input_tokens": 83390,
+      "cached_input_tokens": 66048,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 858,
+      "reasoning_output_tokens": 339
+    },
+    "final": "{\"answer\":\"Ada Lovelace was born on 10 December 1815 in London, England. Her mother was Anne Isabella Milbanke.\",\"evidence\":[{\"url\":\"https://en.wikipedia.org/wiki/Ada_Lovelace\",\"quote\":\"Born\\tAugusta Ada Byron\\n10 December 1815\\nLondon, England\"},{\"url\":\"https://en.wikipedia.org/wiki/Ada_Lovelace\",\"quote\":\"Anne Isabella Milbanke (mother)\"}]}",
+    "events": [
+      {
+        "type": "thread.started",
+        "thread_id": "01a1e88e-d53b-7d42-a6cc-8a5929fd7406"
+      },
+      {
+        "type": "turn.started"
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_0",
+          "type": "agent_message",
+          "text": "I’ll inspect Wikipedia in the provided browser tab, then verify the requested details directly on Ada Lovelace’s biography page."
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_1",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "tab": 1665732680,
+            "code": "return {url: await page.url(), title: await page.title(), text: (await page.locator('body').innerText()).slice(0,3500)}"
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_1",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "tab": 1665732680,
+            "code": "return {url: await page.url(), title: await page.title(), text: (await page.locator('body').innerText()).slice(0,3500)}"
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "tab: 1665732680\n\n{\"url\":\"http://127.0.0.1:40183/\",\"title\":\"Browser benchmark start\",\"text\":\"Ready for a public-site task\"}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_2",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "tab": 1665732680,
+            "code": "await page.goto('https://en.wikipedia.org/wiki/Main_Page'); await page.waitForLoadState('domcontentloaded'); return {url: await page.url(), title: await page.title(), text:(await page.locator('body').innerText()).slice(0,2600)}"
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_2",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "tab": 1665732680,
+            "code": "await page.goto('https://en.wikipedia.org/wiki/Main_Page'); await page.waitForLoadState('domcontentloaded'); return {url: await page.url(), title: await page.title(), text:(await page.locator('body').innerText()).slice(0,2600)}"
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "tab: 1665732680\n\n{\"url\":\"https://en.wikipedia.org/wiki/Main_Page\",\"title\":\"Wikipedia, the free encyclopedia\",\"text\":\"Jump to content\\nMain menu\\nSearch\\nDonate\\nCreate account\\nLog in\\nMain Page\\nTalk\\nRead\\nView source\\nView history\\nSave\\nTools\\nAppearance hide\\nText\\nSmall\\nStandard\\nLarge\\nWidth\\nStandard\\nWide\\nColor\\nAutomatic\\nLight\\nDark\\nWelcome to Wikipedia,\\nthe free encyclopedia that anyone can edit.\\n261,656 active editors7,265,442 articles in English\\nFrom today's featured article\\nDividing the Light was one of the installation artworks that inspired the game.\\n\\nIslands: Non-Places is an abstract art game developed and published by Carl Burton. It was released on November 17, 2016, and consists of a series of anonymous, liminal environments, each rendered in a stylized manner. The gameplay is minimal and consists mainly of clicking on the environment and observing what unfolds. In developing Islands, Burton drew inspiration from diverse sources, including the work of anthropologist Marc Augé, the installation art of James Turrell (example pictured) and the field recordings of Chris Watson. Critical response was generally positive, and the game was nominated for the Nuovo Award at the 2016 Independent Games Festival. The positive reception focused on the abstract visuals and sound design, while some critics were disappointed with the limited scope of the gameplay. Although divided on the game's precise message, many critics described Islands as leaving them with a feeling of renewed wonder at mundane things in the real world. (Full article...)\\n\\nRecently featured: Mark Satin\\\"Can't Let Go\\\" (Mariah Carey song)Aucanquilcha\\nArchiveBy emailMore featured articlesAbout\\nDid you know ...\\nVerity\\n... that USA Today compared a Generation Alpha meme (pictured) to a Lovecraftian monster used as a metaphor for AI?\\n... that Julian Aguon has argued that some legal cases revolve around the \\\"right to culture\\\"?\\n... that Netflix experienced an outage because numerous Stranger Things fans checked whether a secret episode of the series had been released?\\n... that Swiss painter Alois Lichtsteiner signs his works as \\\"OHMSTAL\\\" because he finds it \\\"a beautiful word\\\"?\\n... that a dangerous stretch of Interstate 24 in Tennessee inspired a Johnny Cash song?\\n... that a 2023 study found that iCloud Private Relay made speed-test downloads up to ten times slower, but improved network performance in some cases?\\n... that when the Dyckman House in New York City opened as a museum, its backyard had a military hut?\\n... that \\\"Consideration\\\" by Rihanna was originally meant to be included on featured artist SZA's debut album?\\n... that Nannie Washburn and her sister faced the death penalty for handing out leaflets?\\nArchiveStart a\"}\n\nPage: moved from http://127.0.0.1:40183/ to https://en.wikipedia.org/wiki/Main_Page; 1 navigation"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_3",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "tab": 1665732680,
+            "code": "return await page.locator('input').evaluateAll(es => es.map(e => ({name:e.name,placeholder:e.placeholder,id:e.id,aria:e.getAttribute('aria-label')})))"
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_3",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "tab": 1665732680,
+            "code": "return await page.locator('input').evaluateAll(es => es.map(e => ({name:e.name,placeholder:e.placeholder,id:e.id,aria:e.getAttribute('aria-label')})))"
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "tab: 1665732680\n\n[{\"aria\":\"Main menu\",\"id\":\"vector-main-menu-dropdown-checkbox\",\"name\":\"\",\"placeholder\":\"\"},{\"aria\":\"Search Wikipedia\",\"id\":\"searchInput\",\"name\":\"search\",\"placeholder\":\"Search Wikipedia\"},{\"aria\":null,\"id\":\"\",\"name\":\"title\",\"placeholder\":\"\"},{\"aria\":\"Appearance\",\"id\":\"vector-appearance-dropdown-checkbox\",\"name\":\"\",\"placeholder\":\"\"},{\"aria\":\"Personal tools\",\"id\":\"vector-user-links-dropdown-checkbox\",\"name\":\"\",\"placeholder\":\"\"},{\"aria\":\"Change language variant\",\"id\":\"vector-variants-dropdown-checkbox\",\"name\":\"\",\"placeholder\":\"\"},{\"aria\":\"Tools\",\"id\":\"vector-page-tools-dropdown-checkbox\",\"name\":\"\",\"placeholder\":\"\"},{\"aria\":null,\"id\":\"skin-client-pref-vector-feature-custom-font-size-value-0\",\"name\":\"skin-client-pref-vector-feature-custom-font-size-group\",\"placeholder\":\"\"},{\"aria\":null,\"id\":\"skin-client-pref-vector-feature-custom-font-size-value-1\",\"name\":\"skin-client-pref-vector-feature-custom-font-size-group\",\"placeholder\":\"\"},{\"aria\":null,\"id\":\"skin-client-pref-vector-feature-custom-font-size-value-2\",\"name\":\"skin-client-pref-vector-feature-custom-font-size-group\",\"placeholder\":\"\"},{\"aria\":null,\"id\":\"skin-client-pref-vector-feature-limited-width-value-1\",\"name\":\"skin-client-pref-vector-feature-limited-width-group\",\"placeholder\":\"\"},{\"aria\":null,\"id\":\"skin-client-pref-vector-feature-limited-width-value-0\",\"name\":\"skin-client-pref-vector-feature-limited-width-group\",\"placeholder\":\"\"},{\"aria\":null,\"id\":\"skin-client-pref-skin-theme-value-os\",\"name\":\"skin-client-pref-skin-theme-group\",\"placeholder\":\"\"},{\"aria\":null,\"id\":\"skin-client-pref-skin-theme-value-day\",\"name\":\"skin-client-pref-skin-theme-group\",\"placeholder\":\"\"},{\"aria\":null,\"id\":\"skin-client-pref-skin-theme-value-night\",\"name\":\"skin-client-pref-skin-theme-group\",\"placeholder\":\"\"},{\"aria\":\"349 languages\",\"id\":\"p-lang-btn-checkbox\",\"name\":\"\",\"placeholder\":\"\"},{\"aria\":null,\"id\":\"\",\"name\":\"search\",\"placeholder\":\"Search Wikipedia\"},{\"aria\":null,\"id\":\"\",\"name\":\"title\",\"placeholder\":\"\"}]"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_4",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "tab": 1665732680,
+            "code": "await page.locator('#searchInput').fill('Ada Lovelace'); await page.locator('#searchInput').press('Enter'); await page.waitForLoadState('domcontentloaded'); return {url:await page.url(),title:await page.title(),text:(await page.locator('body').innerText()).slice(0,5000)}"
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_4",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "tab": 1665732680,
+            "code": "await page.locator('#searchInput').fill('Ada Lovelace'); await page.locator('#searchInput').press('Enter'); await page.waitForLoadState('domcontentloaded'); return {url:await page.url(),title:await page.title(),text:(await page.locator('body').innerText()).slice(0,5000)}"
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "tab: 1665732680\n\n{\"url\":\"https://en.wikipedia.org/wiki/Ada_Lovelace\",\"title\":\"Ada Lovelace - Wikipedia\",\"text\":\"Jump to content\\nMain menu\\nSearch\\nDonate\\nCreate account\\nLog in\\nContents hide\\n(Top)\\nBiography\\nToggle Biography subsection\\nWork\\nToggle Work subsection\\nCommemoration\\nToggle Commemoration subsection\\nIn popular culture\\nToggle In popular culture subsection\\nPublications\\nToggle Publications subsection\\nSee also\\nExplanatory notes\\nReferences\\nToggle References subsection\\nFurther reading\\nExternal links\\nAda Lovelace\\n113 languages\\nArticle\\nTalk\\nRead\\nView source\\nView history\\nSave\\nTools\\nAppearance hide\\nFrom Wikipedia, the free encyclopedia\\nFor the computer microarchitecture, see Ada Lovelace (microarchitecture).\\nThe Right Honourable\\nThe Countess of Lovelace\\n\\n\\nDaguerreotype of Lovelace (c. 1843)[1]\\n\\nBorn\\tAugusta Ada Byron\\n10 December 1815\\nLondon, England\\nDied\\t27 November 1852 (aged 36)\\nMarylebone, London, England\\nResting place\\tChurch of St Mary Magdalene, Hucknall, Nottingham, England\\nKnown for\\tMathematics, computing\\nSpouse\\tWilliam King-Noel, 1st Earl of Lovelace\\n​\\n​(m. 1835)​\\nChildren\\t\\nByron King-Noel, Viscount Ockham\\nAnne Blunt, 15th Baroness Wentworth\\nRalph King-Milbanke, 2nd Earl of Lovelace\\n\\nParents\\t\\nGeorge Byron, 6th Baron Byron (father)\\nAnne Isabella Milbanke (mother)\\n\\nSignature\\n\\n\\nAugusta Ada King, Countess of Lovelace (née Byron; 10 December 1815 – 27 November 1852), also known as Ada Lovelace, was an English mathematician and writer chiefly known for work on Charles Babbage's proposed mechanical general-purpose computer, the analytical engine. She was the first to recognise the machine had applications beyond pure calculation. Lovelace is often considered the first computer programmer.\\n\\nLovelace was the only legitimate child of poet Lord Byron and reformer Anne Isabella Milbanke.[2] Lord Byron separated from his wife a month after Ada was born, and died when she was eight. Although often ill in childhood, Lovelace pursued her studies assiduously. She married William King in 1835. King was a Baron, and was created Viscount Ockham and 1st Earl of Lovelace in 1838. The name Lovelace was chosen because Ada was descended from the extinct Baron Lovelaces.[3] The title given to her husband thus made Ada the Countess of Lovelace.\\n\\nLovelace's educational and social exploits brought her into contact with scientists such as Andrew Crosse, Charles Babbage, David Brewster, Charles Wheatstone and Michael Faraday, and the author Charles Dickens, contacts which she used to further her education. Lovelace described her approach as \\\"poetical science\\\"[4] and herself as an \\\"Analyst (& Metaphysician)\\\".[5]\\n\\nAt age 18, Lovelace's mathematical talents led her to a long working relationship and friendship with fellow British mathematician Charles Babbage. She was particularly interested in Babbage's work on the analytical engine. Lovelace first met him on 5 June 1833, when she and her mother attended one of Charles Babbage's Saturday night soirées[6] with their mutual friend, and Lovelace's private tutor, Mary Somerville. Though Babbage's analytical engine was never constructed and did not influence the invention of electronic computers, it has been recognised as a Turing-complete general-purpose computer, which anticipated the essential features of a modern electronic computer. Babbage is therefore known as the \\\"father of computers,\\\" and Lovelace is credited with several computing \\\"firsts\\\" for her collaboration with him. Lovelace translated an article by the military engineer Luigi Menabrea about the analytical engine, supplementing it with seven long explanatory notes. These described a method of using the machine to calculate Bernoulli numbers which is often called the first published computer program.\\n\\nShe developed a vision of the capability of computers to go beyond mere calculating or number-crunching, while many others, including Babbage, focused only on those capabilities.[7] Lovelace was the first to point out the possibility of encoding information besides mere arithmetical figures, such as music, and manipulating it with such a machine. Her mindset of \\\"poetical science\\\" led her to ask questions about the analytical engine, examining how individuals and society relate to technology as a collaborative tool.[8] Ada is widely commemorated, including in the names of a programming language, roads, buildings and institutes, as well as programmes, lectures and courses. There are plaques, statues, paintings, literary and non-fiction works about her.\\n\\nBiography\\nChildhood\\n\\nLord Byron expected his child to be a \\\"glorious boy\\\" and was disappointed when Lady Byron gave birth to a girl.[9] The child was named after Byron's half-sister, Augusta Leigh, and was called \\\"Ada\\\" by Byron himself.[10] On 16 January 1816, at Lord Byron's command, Lady Byron left for her parents' home at Kirkby Mallory, taking their five-week-old daughter with her.[9] Although English law at the time granted full custody of children to the father in cases of separation, Lord Byron made no attempt to claim his parental rights,[11] but did request that his sister keep him in\"}\n\nPage: moved from https://en.wikipedia.org/wiki/Main_Page to https://en.wikipedia.org/wiki/Ada_Lovelace; 1 navigation"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_5",
+          "type": "agent_message",
+          "text": "{\"answer\":\"Ada Lovelace was born on 10 December 1815 in London, England. Her mother was Anne Isabella Milbanke.\",\"evidence\":[{\"url\":\"https://en.wikipedia.org/wiki/Ada_Lovelace\",\"quote\":\"Born\\tAugusta Ada Byron\\n10 December 1815\\nLondon, England\"},{\"url\":\"https://en.wikipedia.org/wiki/Ada_Lovelace\",\"quote\":\"Anne Isabella Milbanke (mother)\"}]}"
+        }
+      },
+      {
+        "type": "turn.completed",
+        "usage": {
+          "input_tokens": 83390,
+          "cached_input_tokens": 66048,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 858,
+          "reasoning_output_tokens": 339
+        }
+      }
+    ],
+    "parse_errors": 0,
+    "diagnostic": null,
+    "configuration": {
+      "model": "gpt-6-luna",
+      "effort": "high",
+      "sandbox": "read-only",
+      "shell_tool": false,
+      "web_search": "disabled",
+      "user_config_loaded": false,
+      "project_instructions_loaded": false,
+      "skills_catalog_max_tokens": 1,
+      "automatic_skill_instructions": false,
+      "fixture_tool_approval": "explicit approve",
+      "auth": "existing signed-in Codex host",
+      "mcp_transport": "stdio → private Unix socket → native runtime MCP client"
+    }
+  },
+  "engine": "browse",
+  "task": "wikipedia-biography",
+  "round": 1,
+  "phase": 0,
+  "success": true,
+  "outcome": "passed",
+  "answer": {
+    "answer": "Ada Lovelace was born on 10 December 1815 in London, England. Her mother was Anne Isabella Milbanke.",
+    "evidence": [
+      {
+        "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+        "quote": "Born\tAugusta Ada Byron\n10 December 1815\nLondon, England"
+      },
+      {
+        "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+        "quote": "Anne Isabella Milbanke (mother)"
+      }
+    ]
+  },
+  "expected": {
+    "date": "10 December 1815",
+    "place": "London",
+    "mother": "Anne Isabella Milbanke"
+  },
+  "evaluation": {
+    "passed": true,
+    "facts": [
+      {
+        "pattern": "10\\s+December\\s+1815|December\\s+10,?\\s+1815|1815-12-10",
+        "passed": true
+      },
+      {
+        "pattern": "London",
+        "passed": true
+      },
+      {
+        "pattern": "(?:Annabella|Anne?\\s+Isabella)(?:\\s+Noel)?\\s+(?:Milbanke|Byron)",
+        "passed": true
+      }
+    ],
+    "evidence": [
+      {
+        "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+        "quote": "Born\tAugusta Ada Byron\n10 December 1815\nLondon, England",
+        "source_matches": true,
+        "quote_observed": false
+      },
+      {
+        "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+        "quote": "Anne Isabella Milbanke (mother)",
+        "source_matches": true,
+        "quote_observed": true
+      }
+    ],
+    "forbidden_network_or_file_calls": 0
+  },
+  "preparation_ms": 40.825993000064045,
+  "host_elapsed_ms": 26313.323674999992,
+  "verification_ms": 0.44275399995967746,
+  "task_elapsed_ms": 26317.825695000007,
+  "usage": {
+    "input_tokens": 83390,
+    "cached_input_tokens": 66048,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 858,
+    "reasoning_output_tokens": 339
+  },
+  "model_verified": null,
+  "host_error": null,
+  "tool_calls": 4,
+  "tool_failures": 0,
+  "tool_elapsed_ms": 2030.355370999896,
+  "response_bytes": 10974,
+  "response_characters": 10955,
+  "forbidden_host_calls": 0,
+  "reported_cost_usd": null,
+  "cost_usd": null,
+  "timed_out": false,
+  "trace_file": "browse-wikipedia-biography-1.json",
+  "prompt": "Complete this read-only public website task using ONLY the browser MCP tools. You must inspect the live page; do not answer from memory. You choose your own observations, selectors and actions. Do not use HTTP/API clients, fetch, network replay, files, shell, other agents, or non-browser tools. Browser DOM evaluation is allowed for text extraction, but must not make network requests. Do not visit API endpoints. Do not sign in, create accounts, post messages, buy, or change account settings. Do not solve CAPTCHAs or bypass access challenges; report them. You may follow links, use site search and recover from errors. Stay on the task site. Maximum 30 browser calls. Verify all requested facts and finish with JSON {\"answer\":\"concise answer covering every requested fact\",\"evidence\":[{\"url\":\"source page URL\",\"quote\":\"a short exact supporting quote you observed in browser output\"}]}. Evidence quotes must be copied exactly from an observation. Do not claim success when blocked.\nUse browse tab 1665732680; pass tab: 1665732680 to continue in the owned starting tab. Its execute tool runs Playwright with page. Choose what text to return to yourself, and verify it.\nStart URL: https://en.wikipedia.org/wiki/Main_Page\nTask: Find Ada Lovelace on Wikipedia. Report her full birth date, birthplace and mother’s name. Cite the biography page and a short supporting quote.",
+  "tools": [
+    {
+      "sequence": 1,
+      "name": "execute",
+      "arguments": {
+        "tab": 1665732680,
+        "code": "return {url: await page.url(), title: await page.title(), text: (await page.locator('body').innerText()).slice(0,3500)}"
+      },
+      "started_at": "2026-11-17T08:10:44.586Z",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "tab: 1665732680\n\n{\"url\":\"http://127.0.0.1:40183/\",\"title\":\"Browser benchmark start\",\"text\":\"Ready for a public-site task\"}"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 34.09515399998054,
+      "response_bytes": 175
+    },
+    {
+      "sequence": 2,
+      "name": "execute",
+      "arguments": {
+        "tab": 1665732680,
+        "code": "await page.goto('https://en.wikipedia.org/wiki/Main_Page'); await page.waitForLoadState('domcontentloaded'); return {url: await page.url(), title: await page.title(), text:(await page.locator('body').innerText()).slice(0,2600)}"
+      },
+      "started_at": "2026-11-17T08:10:47.676Z",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "tab: 1665732680\n\n{\"url\":\"https://en.wikipedia.org/wiki/Main_Page\",\"title\":\"Wikipedia, the free encyclopedia\",\"text\":\"Jump to content\\nMain menu\\nSearch\\nDonate\\nCreate account\\nLog in\\nMain Page\\nTalk\\nRead\\nView source\\nView history\\nSave\\nTools\\nAppearance hide\\nText\\nSmall\\nStandard\\nLarge\\nWidth\\nStandard\\nWide\\nColor\\nAutomatic\\nLight\\nDark\\nWelcome to Wikipedia,\\nthe free encyclopedia that anyone can edit.\\n261,656 active editors7,265,442 articles in English\\nFrom today's featured article\\nDividing the Light was one of the installation artworks that inspired the game.\\n\\nIslands: Non-Places is an abstract art game developed and published by Carl Burton. It was released on November 17, 2016, and consists of a series of anonymous, liminal environments, each rendered in a stylized manner. The gameplay is minimal and consists mainly of clicking on the environment and observing what unfolds. In developing Islands, Burton drew inspiration from diverse sources, including the work of anthropologist Marc Augé, the installation art of James Turrell (example pictured) and the field recordings of Chris Watson. Critical response was generally positive, and the game was nominated for the Nuovo Award at the 2016 Independent Games Festival. The positive reception focused on the abstract visuals and sound design, while some critics were disappointed with the limited scope of the gameplay. Although divided on the game's precise message, many critics described Islands as leaving them with a feeling of renewed wonder at mundane things in the real world. (Full article...)\\n\\nRecently featured: Mark Satin\\\"Can't Let Go\\\" (Mariah Carey song)Aucanquilcha\\nArchiveBy emailMore featured articlesAbout\\nDid you know ...\\nVerity\\n... that USA Today compared a Generation Alpha meme (pictured) to a Lovecraftian monster used as a metaphor for AI?\\n... that Julian Aguon has argued that some legal cases revolve around the \\\"right to culture\\\"?\\n... that Netflix experienced an outage because numerous Stranger Things fans checked whether a secret episode of the series had been released?\\n... that Swiss painter Alois Lichtsteiner signs his works as \\\"OHMSTAL\\\" because he finds it \\\"a beautiful word\\\"?\\n... that a dangerous stretch of Interstate 24 in Tennessee inspired a Johnny Cash song?\\n... that a 2023 study found that iCloud Private Relay made speed-test downloads up to ten times slower, but improved network performance in some cases?\\n... that when the Dyckman House in New York City opened as a museum, its backyard had a military hut?\\n... that \\\"Consideration\\\" by Rihanna was originally meant to be included on featured artist SZA's debut album?\\n... that Nannie Washburn and her sister faced the death penalty for handing out leaflets?\\nArchiveStart a\"}\n\nPage: moved from http://127.0.0.1:40183/ to https://en.wikipedia.org/wiki/Main_Page; 1 navigation"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 1101.973348999978,
+      "response_bytes": 2999
+    },
+    {
+      "sequence": 3,
+      "name": "execute",
+      "arguments": {
+        "tab": 1665732680,
+        "code": "return await page.locator('input').evaluateAll(es => es.map(e => ({name:e.name,placeholder:e.placeholder,id:e.id,aria:e.getAttribute('aria-label')})))"
+      },
+      "started_at": "2026-11-17T08:10:51.238Z",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "tab: 1665732680\n\n[{\"aria\":\"Main menu\",\"id\":\"vector-main-menu-dropdown-checkbox\",\"name\":\"\",\"placeholder\":\"\"},{\"aria\":\"Search Wikipedia\",\"id\":\"searchInput\",\"name\":\"search\",\"placeholder\":\"Search Wikipedia\"},{\"aria\":null,\"id\":\"\",\"name\":\"title\",\"placeholder\":\"\"},{\"aria\":\"Appearance\",\"id\":\"vector-appearance-dropdown-checkbox\",\"name\":\"\",\"placeholder\":\"\"},{\"aria\":\"Personal tools\",\"id\":\"vector-user-links-dropdown-checkbox\",\"name\":\"\",\"placeholder\":\"\"},{\"aria\":\"Change language variant\",\"id\":\"vector-variants-dropdown-checkbox\",\"name\":\"\",\"placeholder\":\"\"},{\"aria\":\"Tools\",\"id\":\"vector-page-tools-dropdown-checkbox\",\"name\":\"\",\"placeholder\":\"\"},{\"aria\":null,\"id\":\"skin-client-pref-vector-feature-custom-font-size-value-0\",\"name\":\"skin-client-pref-vector-feature-custom-font-size-group\",\"placeholder\":\"\"},{\"aria\":null,\"id\":\"skin-client-pref-vector-feature-custom-font-size-value-1\",\"name\":\"skin-client-pref-vector-feature-custom-font-size-group\",\"placeholder\":\"\"},{\"aria\":null,\"id\":\"skin-client-pref-vector-feature-custom-font-size-value-2\",\"name\":\"skin-client-pref-vector-feature-custom-font-size-group\",\"placeholder\":\"\"},{\"aria\":null,\"id\":\"skin-client-pref-vector-feature-limited-width-value-1\",\"name\":\"skin-client-pref-vector-feature-limited-width-group\",\"placeholder\":\"\"},{\"aria\":null,\"id\":\"skin-client-pref-vector-feature-limited-width-value-0\",\"name\":\"skin-client-pref-vector-feature-limited-width-group\",\"placeholder\":\"\"},{\"aria\":null,\"id\":\"skin-client-pref-skin-theme-value-os\",\"name\":\"skin-client-pref-skin-theme-group\",\"placeholder\":\"\"},{\"aria\":null,\"id\":\"skin-client-pref-skin-theme-value-day\",\"name\":\"skin-client-pref-skin-theme-group\",\"placeholder\":\"\"},{\"aria\":null,\"id\":\"skin-client-pref-skin-theme-value-night\",\"name\":\"skin-client-pref-skin-theme-group\",\"placeholder\":\"\"},{\"aria\":\"349 languages\",\"id\":\"p-lang-btn-checkbox\",\"name\":\"\",\"placeholder\":\"\"},{\"aria\":null,\"id\":\"\",\"name\":\"search\",\"placeholder\":\"Search Wikipedia\"},{\"aria\":null,\"id\":\"\",\"name\":\"title\",\"placeholder\":\"\"}]"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 9.21726199996192,
+      "response_bytes": 2288
+    },
+    {
+      "sequence": 4,
+      "name": "execute",
+      "arguments": {
+        "tab": 1665732680,
+        "code": "await page.locator('#searchInput').fill('Ada Lovelace'); await page.locator('#searchInput').press('Enter'); await page.waitForLoadState('domcontentloaded'); return {url:await page.url(),title:await page.title(),text:(await page.locator('body').innerText()).slice(0,5000)}"
+      },
+      "started_at": "2026-11-17T08:10:54.356Z",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "tab: 1665732680\n\n{\"url\":\"https://en.wikipedia.org/wiki/Ada_Lovelace\",\"title\":\"Ada Lovelace - Wikipedia\",\"text\":\"Jump to content\\nMain menu\\nSearch\\nDonate\\nCreate account\\nLog in\\nContents hide\\n(Top)\\nBiography\\nToggle Biography subsection\\nWork\\nToggle Work subsection\\nCommemoration\\nToggle Commemoration subsection\\nIn popular culture\\nToggle In popular culture subsection\\nPublications\\nToggle Publications subsection\\nSee also\\nExplanatory notes\\nReferences\\nToggle References subsection\\nFurther reading\\nExternal links\\nAda Lovelace\\n113 languages\\nArticle\\nTalk\\nRead\\nView source\\nView history\\nSave\\nTools\\nAppearance hide\\nFrom Wikipedia, the free encyclopedia\\nFor the computer microarchitecture, see Ada Lovelace (microarchitecture).\\nThe Right Honourable\\nThe Countess of Lovelace\\n\\n\\nDaguerreotype of Lovelace (c. 1843)[1]\\n\\nBorn\\tAugusta Ada Byron\\n10 December 1815\\nLondon, England\\nDied\\t27 November 1852 (aged 36)\\nMarylebone, London, England\\nResting place\\tChurch of St Mary Magdalene, Hucknall, Nottingham, England\\nKnown for\\tMathematics, computing\\nSpouse\\tWilliam King-Noel, 1st Earl of Lovelace\\n​\\n​(m. 1835)​\\nChildren\\t\\nByron King-Noel, Viscount Ockham\\nAnne Blunt, 15th Baroness Wentworth\\nRalph King-Milbanke, 2nd Earl of Lovelace\\n\\nParents\\t\\nGeorge Byron, 6th Baron Byron (father)\\nAnne Isabella Milbanke (mother)\\n\\nSignature\\n\\n\\nAugusta Ada King, Countess of Lovelace (née Byron; 10 December 1815 – 27 November 1852), also known as Ada Lovelace, was an English mathematician and writer chiefly known for work on Charles Babbage's proposed mechanical general-purpose computer, the analytical engine. She was the first to recognise the machine had applications beyond pure calculation. Lovelace is often considered the first computer programmer.\\n\\nLovelace was the only legitimate child of poet Lord Byron and reformer Anne Isabella Milbanke.[2] Lord Byron separated from his wife a month after Ada was born, and died when she was eight. Although often ill in childhood, Lovelace pursued her studies assiduously. She married William King in 1835. King was a Baron, and was created Viscount Ockham and 1st Earl of Lovelace in 1838. The name Lovelace was chosen because Ada was descended from the extinct Baron Lovelaces.[3] The title given to her husband thus made Ada the Countess of Lovelace.\\n\\nLovelace's educational and social exploits brought her into contact with scientists such as Andrew Crosse, Charles Babbage, David Brewster, Charles Wheatstone and Michael Faraday, and the author Charles Dickens, contacts which she used to further her education. Lovelace described her approach as \\\"poetical science\\\"[4] and herself as an \\\"Analyst (& Metaphysician)\\\".[5]\\n\\nAt age 18, Lovelace's mathematical talents led her to a long working relationship and friendship with fellow British mathematician Charles Babbage. She was particularly interested in Babbage's work on the analytical engine. Lovelace first met him on 5 June 1833, when she and her mother attended one of Charles Babbage's Saturday night soirées[6] with their mutual friend, and Lovelace's private tutor, Mary Somerville. Though Babbage's analytical engine was never constructed and did not influence the invention of electronic computers, it has been recognised as a Turing-complete general-purpose computer, which anticipated the essential features of a modern electronic computer. Babbage is therefore known as the \\\"father of computers,\\\" and Lovelace is credited with several computing \\\"firsts\\\" for her collaboration with him. Lovelace translated an article by the military engineer Luigi Menabrea about the analytical engine, supplementing it with seven long explanatory notes. These described a method of using the machine to calculate Bernoulli numbers which is often called the first published computer program.\\n\\nShe developed a vision of the capability of computers to go beyond mere calculating or number-crunching, while many others, including Babbage, focused only on those capabilities.[7] Lovelace was the first to point out the possibility of encoding information besides mere arithmetical figures, such as music, and manipulating it with such a machine. Her mindset of \\\"poetical science\\\" led her to ask questions about the analytical engine, examining how individuals and society relate to technology as a collaborative tool.[8] Ada is widely commemorated, including in the names of a programming language, roads, buildings and institutes, as well as programmes, lectures and courses. There are plaques, statues, paintings, literary and non-fiction works about her.\\n\\nBiography\\nChildhood\\n\\nLord Byron expected his child to be a \\\"glorious boy\\\" and was disappointed when Lady Byron gave birth to a girl.[9] The child was named after Byron's half-sister, Augusta Leigh, and was called \\\"Ada\\\" by Byron himself.[10] On 16 January 1816, at Lord Byron's command, Lady Byron left for her parents' home at Kirkby Mallory, taking their five-week-old daughter with her.[9] Although English law at the time granted full custody of children to the father in cases of separation, Lord Byron made no attempt to claim his parental rights,[11] but did request that his sister keep him in\"}\n\nPage: moved from https://en.wikipedia.org/wiki/Main_Page to https://en.wikipedia.org/wiki/Ada_Lovelace; 1 navigation"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 885.0696059999755,
+      "response_bytes": 5512
+    }
+  ]
+}
