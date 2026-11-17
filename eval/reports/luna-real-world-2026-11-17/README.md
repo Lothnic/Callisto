@@ -17,7 +17,7 @@ Each task used a fresh signed-in Codex conversation configured with `gpt-6-luna`
 | Uncached input | 419,960 | 358,379 |
 | Model output, including reasoning | 14,920 | 13,971 |
 | Reasoning output subset | 7,474 | 4,950 |
-| Browser calls | 105 | 74 |
+| Host MCP tool calls | 105 | 74 |
 | Failed browser calls | 6 | 9 |
 | Returned UTF-8 bytes | 350,364 | 233,694 |
 | On-demand contract-help calls | 15 | 0 |
@@ -103,8 +103,9 @@ Failed tool calls, exact arguments, results and elapsed times are in summary.jso
 - Zen 1.14.9b, runtime callisto-firefox-tab-mcp 0.3.1-alpha.1, extension source 0.3.1; Chromium 157.0.8103.38, browse 0.1.0, extension 0.0.16.
 - The model saw one native compact Callisto tool (940 UTF-8 catalog bytes) or browse execute (4,113 bytes). Full catalogs and prompts are saved. This differs from the older Sol experiment and does not isolate the effect of compact schemas.
 - browse 0.1.0 uses native tab-based execution. Its installed store package lacks a key for unpacked loading; the fixture copies it and adds browse's upstream public development key to its manifest. Code is unchanged. Source/loaded manifest hashes, API mode, source-file hashes and the public key source are saved. The current tab API has no legacy session origin allowlist; agents received a same-site policy and their traces were checked.
-- Callisto uses synthetic DOM input; browse uses native Playwright input. Owned headful Xvfb profiles contain no personal logins or tabs. The Zen fixture pregrants optional permissions and pairs automatically; this is not an installation/onboarding test.
+- Callisto uses synthetic DOM input; browse uses CDP-backed input through a Playwright-style interface. Owned headful Xvfb profiles contain no personal logins or tabs. The Zen fixture pregrants optional permissions and pairs automatically; this is not an installation/onboarding test.
 - Provisioning and neutral-tab reset are outside task time and recorded separately. Host startup, model work, navigation, waits, retries, shutdown and independent fact/evidence checks are inside task time. The model deadline is 180 seconds and the dispatch ceiling is 35 browser calls.
+- HostSession supplies a generic MCP initialization response and a custom task/backend prompt; it does not forward the runtime server initialization instructions. This is a controlled task-tool pilot, not the full default host/product experience.
 - The evaluator obtains official mutable facts separately and never supplies them to the model. Success requires the requested facts, an appropriate source URL and an exact supporting quotation found in browser observations. Direct API/file/network answers are prohibited by task policy and transcript checks.
 - A separate paired Wikipedia preflight passed before this run. Its results and usage are not pooled into this comparison. It may have warmed provider-side prefix caches; full-run browser profiles were fresh. The first repetition is initially cold per site and the second is warm.
 - The first coordinator used an invalid task ID and stopped before model access. A later setup-only attempt exposed the missing unpacked identity and changed browse API. Those attempts are retained separately and are not measured browser-task failures. No failed measured trial was silently repeated.

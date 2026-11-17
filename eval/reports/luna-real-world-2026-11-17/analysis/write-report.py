@@ -73,7 +73,7 @@ metrics = [('Passed / attempted', None, lambda s:f"{s['passed']}/{s['attempted']
            ('Total task time', 'total_seconds', seconds), ('Model input, including cache', 'input_tokens', fmt),
            ('Cached input', 'cached_input_tokens', fmt), ('Uncached input', 'uncached_input_tokens', fmt),
            ('Model output, including reasoning', 'output_tokens', fmt), ('Reasoning output subset', 'reasoning_output_tokens', fmt),
-           ('Browser calls', 'browser_calls', fmt), ('Failed browser calls', 'tool_errors', fmt),
+           ('Host MCP tool calls', 'browser_calls', fmt), ('Failed browser calls', 'tool_errors', fmt),
            ('Returned UTF-8 bytes', 'response_bytes', fmt), ('On-demand contract-help calls', 'help_calls', fmt)]
 for label, key, format_value in metrics:
     values=[format_value(all_stats[e] if key is None else all_stats[e][key]) for e in engines]
@@ -148,10 +148,11 @@ lines += [f"- Host {m['codex_version']}; configured model `{raw['model']}`, `{ra
           "the fixture copies it and adds browse's upstream public development key to its manifest. Code is unchanged. "
           'Source/loaded manifest hashes, API mode, source-file hashes and the public key source are saved. '
           'The current tab API has no legacy session origin allowlist; agents received a same-site policy and their traces were checked.',
-          '- Callisto uses synthetic DOM input; browse uses native Playwright input. Owned headful Xvfb profiles contain no personal logins or tabs. '
+          '- Callisto uses synthetic DOM input; browse uses CDP-backed input through a Playwright-style interface. Owned headful Xvfb profiles contain no personal logins or tabs. '
           'The Zen fixture pregrants optional permissions and pairs automatically; this is not an installation/onboarding test.',
           '- Provisioning and neutral-tab reset are outside task time and recorded separately. Host startup, model work, navigation, '
           'waits, retries, shutdown and independent fact/evidence checks are inside task time. The model deadline is 180 seconds and the dispatch ceiling is 35 browser calls.',
+          '- HostSession supplies a generic MCP initialization response and a custom task/backend prompt; it does not forward the runtime server initialization instructions. This is a controlled task-tool pilot, not the full default host/product experience.',
           '- The evaluator obtains official mutable facts separately and never supplies them to the model. Success requires the requested facts, '
           'an appropriate source URL and an exact supporting quotation found in browser observations. Direct API/file/network answers are prohibited by task policy and transcript checks.',
           '- A separate paired Wikipedia preflight passed before this run. Its results and usage are not pooled into this comparison. '

@@ -4,6 +4,10 @@ Measurements are experimental, not a claim that Callisto is better than browse
 or Playwright. The scripts, task outcomes, environments and limitations are kept
 with the associated notes.
 
+The [native OpenCode tool review and improvement plan](research/2026-11-17-browse-native-tools-and-callisto-plan.md)
+separates the 0.1.1 catalog inspection from task performance, identifies current
+measurement limits, and prioritizes the next Callisto changes.
+
 | Comparison | What it measures | Results |
 | --- | --- | --- |
 | [GPT-6 Luna public-site pilot](eval/reports/luna-real-world-2026-11-17/README.md) | Current compact Zen and browse tab API, six goals twice per engine | Both 12/12 after uniform JSON-observation scoring correction; profile restart disclosed; token usage is not billed cost |
