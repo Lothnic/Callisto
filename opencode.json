@@ -6,6 +6,10 @@
         "type": "local",
         "command": ["node", "packages/mini/dist/mcp.js"],
         "protocol": "auto"
+      },
+      "zen": {
+        "type": "local",
+        "command": ["/home/lothnic/Desktop/Projects/callisto/packages/firefox-rs/target/release/callisto-firefox-tab-mcp"]
       }
     }
   }

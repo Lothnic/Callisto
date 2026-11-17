@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "skills": {
+    "blank-page": {
+      "source": "StewdioAI/blank-page",
+      "sourceType": "github",
+      "skillPath": "skills/blank-page/SKILL.md",
+      "computedHash": "fa2fc6cc8b93e8035bd82ea5e0f57da07f8e58d317ab93bbc93644a2e7ce3192"
+    }
+  }
+}
