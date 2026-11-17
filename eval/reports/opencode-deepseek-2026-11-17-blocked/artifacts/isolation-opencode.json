@@ -1,0 +1,28 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "opencode/deepseek-v4.1-flash-free#high",
+  "update": "disable",
+  "instructions": [],
+  "compaction": {"auto": false},
+  "permissions": [
+    {"action": "*", "resource": "*", "effect": "deny"},
+    {"action": "fixture_echo", "resource": "*", "effect": "allow"}
+  ],
+  "mcp": {
+    "timeout": {"startup": 20000, "catalog": 20000, "execution": 60000},
+    "servers": {
+      "fixture": {"type": "local", "command": ["node", "/tmp/opencode/preflight/echo-server.mjs"], "codemode": false}
+    }
+  },
+  "agents": {
+    "benchmark": {
+      "description": "Read-only browser benchmark agent",
+      "mode": "primary",
+      "permissions": [
+        {"action": "*", "resource": "*", "effect": "deny"},
+        {"action": "fixture_echo", "resource": "*", "effect": "allow"}
+      ]
+    }
+  },
+  "default_agent": "benchmark"
+}

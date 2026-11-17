@@ -71,6 +71,36 @@ issue, PyPI release metadata, Python documentation and a GOV.UK calendar.
 The model chooses its browser actions. No selector recipes or expected answers
 are supplied to it. This is separate from the scripted local fixture suites.
 
+### OpenCode host
+
+Set `BENCH_HOST=opencode` to run the same six tasks through fresh OpenCode
+conversations instead of Codex. The narrow adapter in `opencode-host.mjs` uses a
+private HOME/XDG tree, an empty workspace, a private MCP transport to the owned
+session, native MCP tool schemas (`codemode:false`), and deny-all permissions
+except `zen_callisto` (compact Callisto) or `browser_execute` (browse). It
+removes inherited OpenCode session/config state and provider credentials,
+disables project instructions and shell/web/skill/subagent tools, sets a fixed
+title to avoid hidden title generation, and disables automatic compaction.
+
+```sh
+BENCH_HOST=opencode \
+BENCH_ENGINES=zen,browse \
+BENCH_ZEN_TOOL_PROFILE=compact \
+BENCH_OUTPUT_DIR=/tmp/new-opencode-run \
+BROWSE_EXTENSION_PATH=/absolute/path/to/pinned/browse-extension \
+xvfb-run -a node eval/agent-comparison/real-world-agent.mjs
+```
+
+The default OpenCode model is `opencode/deepseek-v4.1-flash-free#high`; override
+with `BENCH_OPENCODE_MODEL` and `BENCH_OPENCODE_VARIANT`. Only the compact
+Callisto catalog is supported by this adapter. A model-call preflight runs
+before browser provisioning; a genuine quota/auth failure writes
+`preflight-opencode.json` and `run-error.json` and stops without a fallback.
+Every trial also verifies the served provider/model/variant through
+`opencode session export`. Full reproduction, event and usage semantics, and
+the blocked 17 November attempt are documented in
+[the OpenCode evaluation guide](../../docs/opencode-evaluation.md).
+
 ```sh
 cargo build --locked --manifest-path packages/firefox-rs/Cargo.toml --bin callisto-firefox-tab-mcp
 BROWSE_EXTENSION_PATH=/absolute/path/to/browse/extension \

@@ -1,0 +1,210 @@
+{
+  "schema": "callisto.opencode-evaluation-summary.v1",
+  "status": "blocked",
+  "complete": false,
+  "created_at": "2026-11-17T07:24:32Z",
+  "host": "opencode",
+  "host_version": "2.3.0",
+  "model_requested": "opencode/deepseek-v4.1-flash-free#high",
+  "model_verified": {
+    "provider": "opencode",
+    "id": "deepseek-v4.1-flash-free",
+    "variant": "high",
+    "source": "opencode --standalone session export",
+    "matches_requested": true
+  },
+  "tool_profile": "compact",
+  "exposed_tools": {
+    "zen": {
+      "native": "callisto",
+      "opencode": "zen_callisto"
+    },
+    "browse": {
+      "native": "execute",
+      "opencode": "browser_execute"
+    }
+  },
+  "input_mode": "synthetic-dom",
+  "engines": [
+    "zen",
+    "browse"
+  ],
+  "tasks": [
+    "wikipedia-biography",
+    "arxiv-paper",
+    "github-issue",
+    "pypi-metadata",
+    "python-json",
+    "govuk-calendar"
+  ],
+  "repetitions": 2,
+  "planned_runs": 24,
+  "attempted_runs": 0,
+  "completed_runs": 0,
+  "passed_runs": 0,
+  "failed_task_runs": 0,
+  "infrastructure_blocked_runs": 24,
+  "planned_small_preflight_pair": {
+    "task": "wikipedia-biography",
+    "engines": [
+      "zen",
+      "browse"
+    ],
+    "repetitions": 1,
+    "runs": 2,
+    "attempted": false,
+    "reason": "The model tool-use preflight blocked before browser provisioning."
+  },
+  "preflight": {
+    "minimal_model_call": {
+      "status": "passed",
+      "session_id": "ses_e17a60cd8ffeySVhHOeBH1Kjaw",
+      "final_text": "OK",
+      "outcome": "succeeded",
+      "usage": {
+        "input_tokens": 5353,
+        "output_tokens": 3,
+        "reasoning_tokens": 0,
+        "cached_input_tokens": 1920,
+        "cached_write_tokens": 0,
+        "cost_usd": 0,
+        "steps": 1,
+        "note": "Parent review corrected normalization: OpenCode v2 input excludes cache reads, so total input is 3433 + 1920 = 5353. Raw step events are preserved. Exported session totals also include title-generation work from this early diagnostic, which predates the fixed-title argument.",
+        "uncached_input_tokens": 3433,
+        "visible_output_tokens": 3,
+        "total_tokens": 5356
+      },
+      "artifact": "artifacts/preflight-minimal-success.json"
+    },
+    "model_tool_use": {
+      "status": "blocked",
+      "transport": "private stdio MCP server with one echo tool; OpenCode reported mcp connected, tools=1",
+      "mcp_connected": true,
+      "native_schema_preserved": true,
+      "codemode": false,
+      "session_id": "ses_e17a599bbffe7Nq5ihv0snTdYM",
+      "outcome": "failed",
+      "usage": null,
+      "artifact": "artifacts/preflight-tool-use-blocked.json"
+    }
+  },
+  "blocker": {
+    "kind": "infrastructure",
+    "category": "provider_quota",
+    "type": "provider.free-limit",
+    "http_status": 429,
+    "message": "Free usage limit reached. Connect a provider or subscribe to OpenCode Go to keep going, or switch models.",
+    "provider_body": "{\"type\":\"error\",\"error\":{\"type\":\"FreeUsageLimitError\",\"message\":\"Free usage limit reached. Free models work in OpenCode (https://opencode.ai); subscribe to OpenCode Go to keep going: https://opencode.ai/go\"}}",
+    "retry_after_ms": 60399000,
+    "retry_after_utc": "2026-11-18T00:00:00.994Z",
+    "first_observed_at_utc": "2026-11-17T07:13:21.994Z",
+    "retried": false,
+    "fallback_used": false,
+    "note": "Genuine model-provider quota/auth failure. No measured trial was attempted after this response. Paid, Codex, and alternate-model fallbacks were not used."
+  },
+  "result_tables": {
+    "all_attempts": null,
+    "matched_successful_pairs": null,
+    "per_trial": null,
+    "reason": "No measured trials completed; reporting zeros or synthetic rows would be misleading."
+  },
+  "verification": {
+    "local_tests": {
+      "passed": 16,
+      "failed": 0,
+      "suites": [
+        "opencode-host.test.mjs",
+        "host-session.test.mjs",
+        "real-world-tasks.test.mjs"
+      ],
+      "ran_at": "2026-11-17"
+    },
+    "artifact_hashes_verified": true,
+    "json_artifacts_parse": true,
+    "node_syntax_check": "opencode-host.mjs and real-world-agent.mjs passed"
+  },
+  "usage": null,
+  "cost_usd": null,
+  "cost_note": "OpenCode and the model catalog report a zero marginal price for this free model. No account invoice or billed amount was available. No cost estimate is substituted.",
+  "environment": {
+    "source_head": "77f57650f85ee99d635326ca6d362b9f19b9e55b",
+    "worktree_dirty": true,
+    "opencode_version": "2.3.0",
+    "node_version": "v26.5.0",
+    "callisto_version": "0.3.1-alpha.1",
+    "zen_version": "1.14.9b",
+    "browse_cli_version": "0.1.0",
+    "chromium_version": "157.0.8103.38 snap",
+    "browse_extension_pinned": "0.0.16",
+    "browse_extension_vendor": "0.0.16"
+  },
+  "isolation": {
+    "private_home_xdg": true,
+    "standalone": true,
+    "empty_workspace": true,
+    "fresh_conversation_per_trial": true,
+    "project_config_disabled": true,
+    "skills_disabled": true,
+    "instructions_empty": true,
+    "shell_disabled": true,
+    "webfetch_disabled": true,
+    "websearch_disabled": true,
+    "unrelated_mcp_servers": 0,
+    "deny_all_permissions_except_one_browser_action": true,
+    "native_mcp_schema_preserved": true,
+    "fixed_title": true,
+    "compaction_disabled": true,
+    "owned_browser_profiles_only": true,
+    "personal_browser_or_credentials_touched": false
+  },
+  "artifacts": [
+    "README.md",
+    "summary.json",
+    "environment.json",
+    "harness-sha256.json",
+    "artifacts/preflight-minimal-success.json",
+    "artifacts/preflight-tool-use-blocked.json",
+    "artifacts/preflight-tool-use-blocked.stderr",
+    "artifacts/session-export-minimal-success.json",
+    "artifacts/session-export-tool-use-blocked.json",
+    "artifacts/resolved-private-config.json",
+    "artifacts/resolved-config-documents.json",
+    "artifacts/isolation-opencode.json",
+    "artifacts/preflight-echo-server.mjs",
+    "artifacts/opencode-private-log-tail.txt"
+  ],
+  "harness_sha256": {
+    "opencode-host.mjs": "3d0e4ca9163a1ee4a2c4057c2e4a4d3341d8e80dfd7851147c20cf4c41049436",
+    "opencode-host.test.mjs": "5bda9256777056fb08b7aa7711da0aa252195c47957f7533aa6238315e3f4275",
+    "real-world-agent.mjs": "9af114096e583df3e73b8c7ff2af7b2040026642714d2aeaf40842c931c52a2a",
+    "real-world-tasks.mjs": "63e82610d46063a4f9f7bfd5e42de772d6f3ab6dd0fc1336f7001ad8ebfb4b54",
+    "real-world-tasks.test.mjs": "5433f08951cf770d0481c0458f6f4162608594835fff204f18b5a60fa1e7a472",
+    "host-session.mjs": "cde5776a3e7a080909a34fd6995d7839be63467220560366160632d9e7e83405",
+    "host-mcp-proxy.mjs": "a2675678c3857c3daf922c52de972aeff84a1b147c77e4163cb102e8f3e0777f",
+    "zen-fixture.mjs": "66d210e98b92a6a41993f463d7b073085ea47108f50813b1a783c00dfc77e0c4",
+    "browse-fixture.mjs": "bb619a3f1ceae559ac9e41ea359ce2f22010daba31170d69efe43e170b789be1",
+    "mcp-client.mjs": "a0a7d68230241ce1dc5ddf2588620b2dfe4de58472dd0dbf2f8e48ba2dd34c97"
+  },
+  "limits": [
+    "This report contains no measured Callisto/Zen or browse trial results.",
+    "The compact-interface comparison against browse is still unmeasured for this model and host.",
+    "Tool-use behavior, browser latency, token usage, browser-call counts and task accuracy remain unverified on OpenCode.",
+    "The small matched preflight pair was planned but not started.",
+    "The quota is expected to clear at the reported retry-after time, but that has not been confirmed by another call."
+  ],
+  "reproduction": {
+    "small_pair": "BENCH_HOST=opencode BENCH_ENGINES=zen,browse BENCH_TASKS=wikipedia-biography BENCH_REPETITIONS=1 BENCH_ZEN_TOOL_PROFILE=compact BENCH_INPUT_MODE=synthetic-dom BENCH_OUTPUT_DIR=/tmp/opencode-preflight-pair BROWSE_EXTENSION_PATH=/home/lothnic/browse-extension xvfb-run -a node eval/agent-comparison/real-world-agent.mjs",
+    "full_run": "BENCH_HOST=opencode BENCH_ENGINES=zen,browse BENCH_REPETITIONS=2 BENCH_ZEN_TOOL_PROFILE=compact BENCH_INPUT_MODE=synthetic-dom BENCH_OUTPUT_DIR=/tmp/opencode-deepseek-full BROWSE_EXTENSION_PATH=/home/lothnic/browse-extension xvfb-run -a node eval/agent-comparison/real-world-agent.mjs",
+    "documentation": "docs/opencode-evaluation.md"
+  },
+  "parent_review": {
+    "usage_normalization_corrected": true,
+    "raw_artifacts_unchanged": true,
+    "current_adapter_differs_from_historical_snapshot": true,
+    "notes": "See parent-review.md for measurement corrections and remaining end-to-end validation.",
+    "local_tests": {
+      "passed": 19,
+      "failed": 0
+    }
+  }
+}

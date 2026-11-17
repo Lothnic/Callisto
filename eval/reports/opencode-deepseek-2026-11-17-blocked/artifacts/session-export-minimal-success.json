@@ -1,0 +1,86 @@
+{
+  "info": {
+    "id": "ses_e17a60cd8ffeySVhHOeBH1Kjaw",
+    "projectID": "7c3289e559a60d1447c387e53c79b256a20ef7ac",
+    "model": {
+      "id": "deepseek-v4.1-flash-free",
+      "providerID": "opencode",
+      "variant": "high"
+    },
+    "cost": 0,
+    "tokens": {
+      "input": 3520,
+      "output": 8,
+      "reasoning": 44,
+      "cache": {
+        "read": 2304,
+        "write": 0
+      }
+    },
+    "outcome": "succeeded",
+    "time": {
+      "created": 1794899571991,
+      "updated": 1794899574657,
+      "busy": 1794899572206,
+      "idle": 1794899574660,
+      "archived": 1794899572067
+    },
+    "title": "Reply with OK",
+    "location": {
+      "directory": "/tmp/opencode/preflight/ws"
+    }
+  },
+  "messages": [
+    {
+      "id": "msg_1e859f585001Vkl2Q2SuMIjDB2",
+      "time": {
+        "created": 1794899572218
+      },
+      "text": "Reply with exactly: OK",
+      "files": [],
+      "type": "user"
+    },
+    {
+      "id": "msg_1e859f608001kULbQmX3XSeDqp",
+      "time": {
+        "created": 1794899572236,
+        "firstToken": 1794899574649,
+        "streamed": 1794899574655,
+        "completed": 1794899574657
+      },
+      "type": "assistant",
+      "agent": "build",
+      "model": {
+        "id": "deepseek-v4.1-flash-free",
+        "providerID": "opencode",
+        "variant": "high"
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "OK"
+        }
+      ],
+      "finish": "stop",
+      "rawFinish": "stop",
+      "cost": 0,
+      "tokens": {
+        "input": 3433,
+        "output": 3,
+        "reasoning": 0,
+        "cache": {
+          "read": 1920,
+          "write": 0
+        }
+      }
+    },
+    {
+      "id": "msg_1e859ff84001zhQM0dL462CnsB",
+      "time": {
+        "created": 1794899574660
+      },
+      "type": "idle",
+      "outcome": "succeeded"
+    }
+  ]
+}

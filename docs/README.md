@@ -42,6 +42,8 @@ both the add-on and the local bridge:
 - [Firefox/Zen tools](../packages/firefox-rs/README.md).
 - [Chromium Mini](../packages/mini/README.md).
 - [Host-agent evaluation](host-agent-evaluation.md).
+- [OpenCode evaluation](opencode-evaluation.md): isolated DeepSeek host adapter,
+  usage semantics and the quota-blocked public-site attempt.
 - [Roadmap and release gates](../roadmap.md).
 
 Firefox-protected pages, including Mozilla Add-ons and `about:` pages, are

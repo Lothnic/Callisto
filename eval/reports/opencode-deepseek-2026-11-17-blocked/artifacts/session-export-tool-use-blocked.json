@@ -1,0 +1,85 @@
+{
+  "info": {
+    "id": "ses_e17a599bbffe7Nq5ihv0snTdYM",
+    "projectID": "ff122e854a203af1160ee74d84662344c3b8567e",
+    "model": {
+      "id": "deepseek-v4.1-flash-free",
+      "providerID": "opencode",
+      "variant": "high"
+    },
+    "cost": 0,
+    "tokens": {
+      "input": 0,
+      "output": 0,
+      "reasoning": 0,
+      "cache": {
+        "read": 0,
+        "write": 0
+      }
+    },
+    "outcome": "failed",
+    "time": {
+      "created": 1794899601222,
+      "updated": 1794899601979,
+      "busy": 1794899601371,
+      "idle": 1794899601982,
+      "archived": 1794899601234
+    },
+    "location": {
+      "directory": "/tmp/opencode/preflight/echo-ws"
+    }
+  },
+  "messages": [
+    {
+      "id": "msg_1e85a676e001ZZ3ShfGRqM9X7a",
+      "time": {
+        "created": 1794899601421
+      },
+      "text": "Use the fixture_echo tool exactly once with text 'hello-preflight', then reply with exactly the tool's returned text.",
+      "files": [],
+      "type": "user"
+    },
+    {
+      "id": "msg_1e85a681a001kM5ZihHziNtPYE",
+      "time": {
+        "created": 1794899601439,
+        "completed": 1794899601979
+      },
+      "type": "assistant",
+      "agent": "build",
+      "model": {
+        "id": "deepseek-v4.1-flash-free",
+        "providerID": "opencode",
+        "variant": "high"
+      },
+      "content": [],
+      "finish": "error",
+      "error": {
+        "type": "provider.free-limit",
+        "message": "Free usage limit reached. Connect a provider or subscribe to OpenCode Go to keep going, or switch models.",
+        "status": 429,
+        "response": {
+          "body": "{\"type\":\"error\",\"error\":{\"type\":\"FreeUsageLimitError\",\"message\":\"Free usage limit reached. Free models work in OpenCode (https://opencode.ai); subscribe to OpenCode Go to keep going: https://opencode.ai/go\"}}"
+        },
+        "retryAfterMs": 60399000
+      }
+    },
+    {
+      "id": "msg_1e85a6a3e001cbSRKOVbXDhjEh",
+      "time": {
+        "created": 1794899601982
+      },
+      "type": "idle",
+      "outcome": "failed",
+      "error": {
+        "type": "provider.free-limit",
+        "message": "Free usage limit reached. Connect a provider or subscribe to OpenCode Go to keep going, or switch models.",
+        "status": 429,
+        "response": {
+          "body": "{\"type\":\"error\",\"error\":{\"type\":\"FreeUsageLimitError\",\"message\":\"Free usage limit reached. Free models work in OpenCode (https://opencode.ai); subscribe to OpenCode Go to keep going: https://opencode.ai/go\"}}"
+        },
+        "retryAfterMs": 60399000
+      }
+    }
+  ]
+}

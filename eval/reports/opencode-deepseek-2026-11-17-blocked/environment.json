@@ -1,0 +1,87 @@
+{
+  "schema": "callisto.opencode-environment.v1",
+  "captured_at": "2026-11-17T07:24:32Z",
+  "source": {
+    "head": "77f57650f85ee99d635326ca6d362b9f19b9e55b",
+    "head_committed_at": "2026-11-17T12:08:04+05:30",
+    "worktree_dirty": true,
+    "note": "Dirty files are the OpenCode adapter, runner changes and documentation from this task, plus pre-existing user edits listed in the repository status. No commit or push was made."
+  },
+  "host": {
+    "name": "opencode",
+    "version": "2.3.0",
+    "channel": "latest",
+    "invocation": "opencode run --standalone --format json --archived --agent benchmark --model opencode/deepseek-v4.1-flash-free#high --title 'callisto browser benchmark'",
+    "session_verification": "opencode --standalone session export <sessionID>"
+  },
+  "model": {
+    "requested": "opencode/deepseek-v4.1-flash-free#high",
+    "provider": "opencode",
+    "id": "deepseek-v4.1-flash-free",
+    "name": "DeepSeek V4.1 Flash Free",
+    "variant": "high",
+    "variant_source": "models.dev model catalog reasoning_options effort enum",
+    "variant_values": ["low", "high", "max"],
+    "catalog_cost": {"input": 0, "output": 0, "cache_read": 0},
+    "catalog_context_limit": 200000,
+    "catalog_output_limit": 32000,
+    "verified_from_session_export": true,
+    "verified_sessions": [
+      {
+        "purpose": "minimal text-only preflight",
+        "session_id": "ses_e17a60cd8ffeySVhHOeBH1Kjaw",
+        "model": {"providerID": "opencode", "id": "deepseek-v4.1-flash-free", "variant": "high"},
+        "outcome": "succeeded",
+        "artifact": "artifacts/session-export-minimal-success.json"
+      },
+      {
+        "purpose": "tool-use preflight (blocked before first model step)",
+        "session_id": "ses_e17a599bbffe7Nq5ihv0snTdYM",
+        "model": {"providerID": "opencode", "id": "deepseek-v4.1-flash-free", "variant": "high"},
+        "outcome": "failed",
+        "artifact": "artifacts/session-export-tool-use-blocked.json"
+      }
+    ]
+  },
+  "runtime": {
+    "callisto_version": "0.3.1-alpha.1",
+    "callisto_binary": "packages/firefox-rs/target/debug/callisto-firefox-tab-mcp",
+    "callisto_sha256": "e858eb23b15c43090b567e42b315d71a1ce7e3be062657a22a4c350758b9b961",
+    "zen_flatpak": "app.zen_browser.zen 1.14.9b",
+    "xvfb": "/usr/bin/Xvfb"
+  },
+  "browse": {
+    "cli_version": "0.1.0",
+    "cli_path": "/home/lothnic/.local/bin/browse",
+    "cli_sha256": "a52ce632b7d7f65ab14247c586ae64525c0fe08f0ba26946c289804a94e1b6ef",
+    "chromium_version": "157.0.8103.38 snap",
+    "extension_pinned_source": "/home/lothnic/browse-extension",
+    "extension_pinned_version": "0.0.16",
+    "extension_pinned_manifest_sha256": "f7cafa9778c3fd8b9af29f85064184dee8a210adb564b51a29b521bc0f0c97fd",
+    "extension_vendor_version": "0.0.16",
+    "extension_vendor_manifest_sha256": "fda9e1f2ef48a4c5fabf8a5c954f413b59314863390f0c8eaf94bf9e7f2e42ac"
+  },
+  "isolation": {
+    "private_home": "temporary HOME and XDG tree under /tmp/opencode/preflight",
+    "mode": "0700",
+    "standalone": true,
+    "project_config_disabled": "OPENCODE_DISABLE_PROJECT_CONFIG=1",
+    "claude_skills_disabled": "OPENCODE_DISABLE_CLAUDE_CODE_SKILLS=1",
+    "autoupdate_disabled": "OPENCODE_DISABLE_AUTOUPDATE=1",
+    "inherited_opencode_state_removed": true,
+    "provider_credentials_removed": true,
+    "workspace": "empty temporary directory",
+    "resolved_config_documents": 1,
+    "unrelated_mcp_servers": 0,
+    "browser_profiles": "none provisioned; the model tool-use preflight blocked before browser setup",
+    "user_browser_untouched": true,
+    "user_credentials_untouched": true
+  },
+  "scheduling": {
+    "planned_runs": 24,
+    "planned_task_engine_repetition": "6 tasks x 2 engines (zen, browse) x 2 repetitions",
+    "planned_small_preflight_pair": 2,
+    "attempted_measured_runs": 0,
+    "completed_measured_runs": 0
+  }
+}

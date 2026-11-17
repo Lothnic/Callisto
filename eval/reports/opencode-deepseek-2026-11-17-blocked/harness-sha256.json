@@ -1,0 +1,23 @@
+{
+  "harness/opencode-host.mjs": "3d0e4ca9163a1ee4a2c4057c2e4a4d3341d8e80dfd7851147c20cf4c41049436",
+  "harness/opencode-host.test.mjs": "5bda9256777056fb08b7aa7711da0aa252195c47957f7533aa6238315e3f4275",
+  "harness/real-world-agent.mjs": "9af114096e583df3e73b8c7ff2af7b2040026642714d2aeaf40842c931c52a2a",
+  "harness/real-world-tasks.mjs": "63e82610d46063a4f9f7bfd5e42de772d6f3ab6dd0fc1336f7001ad8ebfb4b54",
+  "harness/real-world-tasks.test.mjs": "5433f08951cf770d0481c0458f6f4162608594835fff204f18b5a60fa1e7a472",
+  "harness/host-session.mjs": "cde5776a3e7a080909a34fd6995d7839be63467220560366160632d9e7e83405",
+  "harness/host-mcp-proxy.mjs": "a2675678c3857c3daf922c52de972aeff84a1b147c77e4163cb102e8f3e0777f",
+  "harness/zen-fixture.mjs": "66d210e98b92a6a41993f463d7b073085ea47108f50813b1a783c00dfc77e0c4",
+  "harness/browse-fixture.mjs": "bb619a3f1ceae559ac9e41ea359ce2f22010daba31170d69efe43e170b789be1",
+  "harness/mcp-client.mjs": "a0a7d68230241ce1dc5ddf2588620b2dfe4de58472dd0dbf2f8e48ba2dd34c97",
+  "artifacts/isolation-opencode.json": "5bb8f54722d993413f2c64f9ca25c200cb93d5c2d0578e3c8e551a16abe0eb61",
+  "artifacts/opencode-private-log-tail.txt": "22ea3254321c4c75e5afb4b00cb8c24efc9abe29d61668a2a649153a4d099625",
+  "artifacts/preflight-echo-server.mjs": "4f8a3c09d5631f096b2374980119a806289eebbed6f697f5cd1c21da0b07fd9c",
+  "artifacts/preflight-minimal-success.json": "13fd68a2ebd8dc141be70a6fd75af7e4955665621bfe794ea83d32afaba62423",
+  "artifacts/preflight-tool-use-blocked.json": "e65c7da2fc96358b1195857a7a5017ebf780f74bd6ad66e44625441a8f287a00",
+  "artifacts/preflight-tool-use-blocked.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "artifacts/resolved-config-documents.json": "bcde7ef8394ce8c7ca6f2b7e7689bd6a2974380280b2daa769c5c7b137240394",
+  "artifacts/resolved-private-config.json": "cdc516980ecc754355417789a52bec5f9803cfe6dd15735343c7551bc425bd2b",
+  "artifacts/session-export-minimal-success.json": "ee89864c7948d6e69d6705400917ed65064d90c6455a66eec054b2ec49bfa7ab",
+  "artifacts/session-export-tool-use-blocked.json": "cf5088b06f7e973bac30269fb4be1690206bfc19295d548a1654e07f312ff9e5",
+  "analysis/opencode-evaluation.md": "a18d4efed7203866bb0e9d196fc409d45521cf870f18f5412f04e381dbc921de"
+}

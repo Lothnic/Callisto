@@ -1,0 +1,71 @@
+[
+  {
+    "type": "document",
+    "path": "/tmp/opencode/preflight/isolation/.config/opencode/opencode.json",
+    "info": {
+      "$schema": "https://opencode.ai/config.json",
+      "model": {
+        "providerID": "opencode",
+        "model": "deepseek-v4.1-flash-free",
+        "variant": "high"
+      },
+      "default_agent": "benchmark",
+      "update": "disable",
+      "permissions": [
+        {
+          "action": "*",
+          "resource": "*",
+          "effect": "deny"
+        },
+        {
+          "action": "fixture_echo",
+          "resource": "*",
+          "effect": "allow"
+        }
+      ],
+      "agents": {
+        "benchmark": {
+          "description": "Read-only browser benchmark agent",
+          "mode": "primary",
+          "permissions": [
+            {
+              "action": "*",
+              "resource": "*",
+              "effect": "deny"
+            },
+            {
+              "action": "fixture_echo",
+              "resource": "*",
+              "effect": "allow"
+            }
+          ]
+        }
+      },
+      "mcp": {
+        "timeout": {
+          "startup": 20000,
+          "catalog": 20000,
+          "execution": 60000
+        },
+        "servers": {
+          "fixture": {
+            "type": "local",
+            "command": [
+              "node",
+              "/tmp/opencode/preflight/echo-server.mjs"
+            ],
+            "codemode": false
+          }
+        }
+      },
+      "compaction": {
+        "auto": false
+      },
+      "instructions": []
+    }
+  },
+  {
+    "type": "directory",
+    "path": "/tmp/opencode/preflight/isolation/.config/opencode"
+  }
+]
