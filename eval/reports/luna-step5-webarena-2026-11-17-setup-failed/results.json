@@ -1,0 +1,127 @@
+{
+  "schema": "callisto.webarena-verified-agent.v1",
+  "updated_at": "2026-11-17T15:14:02.940Z",
+  "host": "codex",
+  "model": "gpt-6-luna",
+  "reasoning_effort": "high",
+  "planned_runs": 6,
+  "completed_runs": 0,
+  "task_ids": [
+    41,
+    94,
+    208
+  ],
+  "metadata": {
+    "started_at": "2026-11-17T15:13:19.904Z",
+    "source_revision": "b39783f2d1a57ff48f29554601124aadace04adc",
+    "source_worktree_dirty": true,
+    "model_request": "gpt-6-luna",
+    "served_model_echo_available": false,
+    "codex_version": "codex-cli 0.166.0",
+    "site_image": "am1n3e/webarena-verified-shopping_admin@sha256:d0531dd27ed98d0c459ff9e88118bf2ed8b660b0ed99c38837db46c065a5be13",
+    "evaluator": "webarena-verified==1.2.3",
+    "harness_sha256": {
+      "webarena-agent.mjs": "2eabf6429fc541bed7ab60825bd54cf18ef11c1c88d26bdf4868d429393b7b1e",
+      "webarena-fixture.mjs": "1d0569bd3c4dcafc84a9ecc9891e9045a6a1ed8babc48d18cb4a0813db7759de",
+      "webarena-response.py": "70fa74215e116d229257bd2fd406e5d155f8251584862ebb2bb2c93f078b197b",
+      "policy-audit.mjs": "84f0136762f079abf87c486079f8c3ddc9758145c93564c53d8009288a7019c5",
+      "mcp-client.mjs": "029cf0b5e3bcc302319aaa911baac9a2d4cf2c45a5519da23b77eeb090204d47",
+      "zen-fixture.mjs": "f4c6d6fe2a64a499486a00674a627498bc10af5b4b622da5327cc58b4334ed66",
+      "browse-fixture.mjs": "ce4e85a27033fbd7ded0935ee623c95ef654d62d4d97353a5b2514e4b8b24ae0",
+      "browse-extension.mjs": "3efede30fc13b9f6c6d8dee9a303ca636d695508aef93787e6a93094c67c5ee0",
+      "host-session.mjs": "7e954eb2e50e32b60c6d6887368a6f939ff62bdab20b786510f9154c6379077b",
+      "host-mcp-proxy.mjs": "a2675678c3857c3daf922c52de972aeff84a1b147c77e4163cb102e8f3e0777f",
+      "codex-host.mjs": "bcc8c68240729ef4fb043a2557e76fa96c16f788ec0aef5c83a392dbf691cd5a"
+    },
+    "site_reset": "new owned 2GiB/2CPU container for every attempt",
+    "browser_reset": "new owned profile for every attempt",
+    "initialization_instructions_forwarded": true
+  },
+  "setup_failures": [
+    {
+      "engine": "zen",
+      "task": 41,
+      "stage": "setup",
+      "model_attempted": false,
+      "message": "Reached error page: about:neterror?e=connectionFailure&u=http%3A//localhost%3A7780/admin&c=UTF-8&d=Firefox%20can%E2%80%99t%20establish%20a%20connection%20to%20the%20server%20at%20localhost%3A7780.",
+      "stack": "Error: Reached error page: about:neterror?e=connectionFailure&u=http%3A//localhost%3A7780/admin&c=UTF-8&d=Firefox%20can%E2%80%99t%20establish%20a%20connection%20to%20the%20server%20at%20localhost%3A7780.\n    at ZenFixture.request (file:///home/lothnic/Desktop/Projects/callisto/eval/agent-comparison/zen-fixture.mjs:17:295)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async ZenFixture.openBrowser (file:///home/lothnic/Desktop/Projects/callisto/eval/agent-comparison/zen-fixture.mjs:45:3)\n    at async ZenFixture.start (file:///home/lothnic/Desktop/Projects/callisto/eval/agent-comparison/zen-fixture.mjs:34:3)\n    at async file:///home/lothnic/Desktop/Projects/callisto/eval/agent-comparison/webarena-agent.mjs:20:156",
+      "site_log": [
+        {
+          "args": [
+            "run",
+            "--detach",
+            "--name",
+            "callisto-step5-wa-efc75f3fb574e4a0",
+            "--label",
+            "callisto.step5.owner=efc75f3fb574e4a0",
+            "--memory",
+            "2g",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "512",
+            "--publish",
+            "127.0.0.1:41467:80",
+            "--env",
+            "MAGENTO_BASE_URL=http://127.0.0.1:43035",
+            "am1n3e/webarena-verified-shopping_admin@sha256:d0531dd27ed98d0c459ff9e88118bf2ed8b660b0ed99c38837db46c065a5be13"
+          ],
+          "ok": true,
+          "elapsed_ms": 236.52272599999998,
+          "stdout": "2acd3ff5e60089bfdc4d90a1866b829975e6cb571bbf0f80eefc53d61d8f01eb\n"
+        },
+        {
+          "args": [
+            "exec",
+            "2acd3ff5e60089bfdc4d90a1866b829975e6cb571bbf0f80eefc53d61d8f01eb",
+            "env-ctrl",
+            "--verbose",
+            "status"
+          ],
+          "ok": true,
+          "elapsed_ms": 2844.138243,
+          "stdout": "{\n  \"success\": true,\n  \"message\": \"\",\n  \"details\": {\n    \"value\": {\n      \"services\": {\n        \"mysqld\": \"HEALTHY\",\n        \"env-ctrl\": \"RUNNING\",\n        \"cron\": \"RUNNING\",\n        \"nginx\": \"RUNNING\",\n        \"redis-server\": \"HEALTHY\",\n        \"php-fpm\": \"RUNNING\",\n        \"mailcatcher\": \"HEALTHY\"\n      }\n    },\n    \"exec_logs\": [\n      {\n        \"command\": \"test -S /run/supervisord.sock\",\n        \"returncode\": 1,\n        \"stdout\": \"\",\n        \"stderr\": \"\"\n      },\n      {\n        \"command\": \"test -S /run/supervisord.sock\",\n        \"returncode\": 0,\n        \"stdout\": \"\",\n        \"stderr\": \"\"\n      },\n      {\n        \"command\": \"supervisorctl status\",\n        \"returncode\": 0,\n        \"stdout\": \"cron                             RUNNING   pid 56, uptime 0:00:01\\nelasticsearch                    RUNNING   pid 55, uptime 0:00:01\\nenv-ctrl                         RUNNING   pid 59, uptime 0:00:01\\nen... (truncated)\",\n        \"stderr\": \"\"\n      },\n      {\n        \"command\": \"mysqladmin ping -u magentouser -pMyPassword\",\n        \"returncode\": 0,\n        \"stdout\": \"mysqld is alive\",\n        \"stderr\": \"\"\n      },\n      {\n        \"command\": \"redis-cli ping\",\n        \"returncode\": 0,\n        \"stdout\": \"PONG\",\n        \"stderr\": \"\"\n      },\n      {\n        \"command\": \"curl -sf --max-time 10 http://localhost:88/\",\n        \"returncode\": 0,\n        \"stdout\": \"<!DOCTYPE html>\\n<html class=\\\"mailcatcher\\\">\\n<head>\\n  <title>MailCatcher</title>\\n  <base href=\\\"/\\\">\\n  <link href=\\\"favicon.ico\\\" rel=\\\"icon\\\">\\n  <script src=\\\"/assets/mailcatcher.js\\\"></script>\\n  <link rel=\\\"st... (truncated)\",\n        \"stderr\": \"\"\n      }\n    ]\n  }\n}\n"
+        },
+        {
+          "args": [
+            "exec",
+            "2acd3ff5e60089bfdc4d90a1866b829975e6cb571bbf0f80eefc53d61d8f01eb",
+            "env-ctrl",
+            "--verbose",
+            "init",
+            "--base-url",
+            "http://127.0.0.1:43035"
+          ],
+          "ok": true,
+          "elapsed_ms": 22149.179611,
+          "stdout": "{\n  \"success\": true,\n  \"message\": \"\",\n  \"details\": {\n    \"value\": null,\n    \"exec_logs\": [\n      {\n        \"command\": \"php /var/www/magento2/bin/magento setup:store-config:set --base-url=\\\"http://127.0.0.1:43035\\\"\",\n        \"returncode\": 0,\n        \"stdout\": \"\",\n        \"stderr\": \"\"\n      },\n      {\n        \"command\": \"mysql -u magentouser -pMyPassword magentodb -e \\\"UPDATE core_config_data SET value = \\\\\\\"http://127.0.0.1:43035\\\\\\\" WHERE path = \\\\\\\"web/secure/base_url\\\\\\\";\\\"\",\n        \"returncode\": 0,\n        \"stdout\": \"\",\n        \"stderr\": \"\"\n      },\n      {\n        \"command\": \"php /var/www/magento2/bin/magento config:set admin/security/password_is_forced 0\",\n        \"returncode\": 0,\n        \"stdout\": \"Value was saved.\",\n        \"stderr\": \"\"\n      },\n      {\n        \"command\": \"php /var/www/magento2/bin/magento config:set admin/security/password_lifetime 0\",\n        \"returncode\": 0,\n        \"stdout\": \"Value was saved.\",\n        \"stderr\": \"\"\n      },\n      {\n        \"command\": \"php /var/www/magento2/bin/magento cache:flush\",\n        \"returncode\": 0,\n        \"stdout\": \"Flushed cache types:\\nconfig\\nlayout\\nblock_html\\ncollections\\nreflection\\ndb_ddl\\ncompiled_config\\neav\\ncustomer_notification\\nconfig_integration\\nconfig_integration_api\\nfull_page\\nconfig_webservice\\ntranslate\",\n        \"stderr\": \"\"\n      }\n    ]\n  }\n}\n"
+        },
+        {
+          "args": [
+            "inspect",
+            "--format",
+            "{{index .Config.Labels \"callisto.step5.owner\"}}",
+            "2acd3ff5e60089bfdc4d90a1866b829975e6cb571bbf0f80eefc53d61d8f01eb"
+          ],
+          "ok": true,
+          "elapsed_ms": 20.229004000000714,
+          "stdout": "efc75f3fb574e4a0\n"
+        },
+        {
+          "args": [
+            "rm",
+            "--force",
+            "2acd3ff5e60089bfdc4d90a1866b829975e6cb571bbf0f80eefc53d61d8f01eb"
+          ],
+          "ok": true,
+          "elapsed_ms": 376.69651899999735,
+          "stdout": "2acd3ff5e60089bfdc4d90a1866b829975e6cb571bbf0f80eefc53d61d8f01eb\n"
+        }
+      ]
+    }
+  ],
+  "cost_usd": null,
+  "scope": "Three predeclared answer-only RETRIEVE tasks from official WebArena Verified 1.2.3, one repetition per engine. Real pinned Shopping Admin site and official AgentResponseEvaluator; no network-evaluated tasks or leaderboard score. Fresh site container and browser profile per attempt. Authentication uses the official X-M2-Admin-Auto-Login header through a local provisioning proxy. No personal account. All browser decisions are model-selected.",
+  "measurement": "Provisioning, image initialization, authentication and initial page load are outside task elapsed and recorded. Task elapsed includes host startup, model turns, failures, shutdown and independent official scoring. Browser API inspection is allowed; direct API/network/file requests by the model are forbidden and audited conservatively.",
+  "results": []
+}

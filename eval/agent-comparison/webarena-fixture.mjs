@@ -9,9 +9,9 @@ export class ShoppingFixture{
  async docker(args,timeout=120000){const start=performance.now();try{const result=await exec('docker',['--host','unix:///var/run/docker.sock',...args],{timeout,maxBuffer:2_000_000});this.log.push({args,ok:true,elapsed_ms:performance.now()-start,stdout:result.stdout.slice(-4000)});return result.stdout;}catch(error){this.log.push({args,ok:false,elapsed_ms:performance.now()-start,error:String(error.stderr||error.message).slice(-4000)});throw error;}}
  async start(){
   const internal=await freePort();
-  this.proxy=createServer((req,res)=>{const upstream=request({hostname:'127.0.0.1',port:internal,path:req.url,method:req.method,headers:{...req.headers,'x-m2-admin-auto-login':'admin'}},remote=>{res.writeHead(remote.statusCode,remote.headers);remote.pipe(res);});upstream.on('error',()=>{if(!res.headersSent)res.writeHead(502);res.end('Local fixture starting');});req.pipe(upstream);});
+  this.proxy=createServer((req,res)=>{const upstream=request({hostname:'127.0.0.1',port:internal,path:req.url,method:req.method,headers:{...req.headers,'x-m2-admin-auto-login':'admin:admin1234'}},remote=>{res.writeHead(remote.statusCode,remote.headers);remote.pipe(res);});upstream.on('error',()=>{if(!res.headersSent)res.writeHead(502);res.end('Local fixture starting');});req.pipe(upstream);});
   await new Promise(r=>this.proxy.listen(0,'127.0.0.1',r));this.origin='http://127.0.0.1:'+this.proxy.address().port;
-  this.id=(await this.docker(['run','--detach','--name',this.name,'--label','callisto.step5.owner='+this.owner,'--memory','2g','--cpus','2','--pids-limit','512','--publish',`127.0.0.1:${internal}:80`,shoppingImage])).trim();
+  this.id=(await this.docker(['run','--detach','--name',this.name,'--label','callisto.step5.owner='+this.owner,'--memory','2g','--cpus','2','--pids-limit','512','--publish',`127.0.0.1:${internal}:80`,'--env','MAGENTO_BASE_URL='+this.origin,'--env','WA_ENV_CTRL_EXTERNAL_SITE_URL='+this.origin,shoppingImage])).trim();
   // env-ctrl is the image's official setup interface; provisioning is not agent work.
   const deadline=Date.now()+150000;let ready=false;
   while(Date.now()<deadline){try{const status=JSON.parse(await this.docker(['exec',this.id,'env-ctrl','--verbose','status'],15000));if(status.success){ready=true;break;}}catch{}await pause(1000);}

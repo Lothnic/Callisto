@@ -1,0 +1,41 @@
+✔ independent account judge requires authentication, exact state and one write (42.54946ms)
+✔ receipt answer alone and incorrect order mutations do not pass (0.43851ms)
+✔ store package gets upstream unpacked identity only in an owned copy (12.815092ms)
+✔ development package retains its existing identity in a browser-visible owned copy (3.447526ms)
+✔ legacy fresh sessions create before any replacement deletion (1.981044ms)
+✔ tab mode never calls removed session tools and resets its owned tab (0.333133ms)
+✔ real stdio host transport preserves the owned lease, schema and result; refuses other tools (99.316144ms)
+✔ default-host mode preserves initialization instructions and rejects a mismatched host identity (0.48142ms)
+✔ exact OpenCode JSON lines preserve events and expose final assistant text (1.473936ms)
+✔ v2 usage sums disjoint uncached/cache and visible/reasoning counters (0.258253ms)
+✔ missing reported cost remains unavailable instead of becoming zero (0.110827ms)
+✔ unexpected reasoning text is excluded from retained host events (0.164488ms)
+✔ saved v2 preflight usage retains cache reads in total input (6.244897ms)
+✔ provider free-limit event is an infrastructure blocker, not a task failure (0.552403ms)
+✔ private environment drops unrelated credentials, project config and harness session state (0.500516ms)
+✔ host config exposes one native MCP tool and denies every other action (0.50797ms)
+✔ OpenCode resolves the private host config without global or project MCP servers (1842.948556ms)
+✔ native composition config enables Code Mode with an explicit browser-tool allowlist (0.433761ms)
+✔ unknown task IDs reject the whole selection before provisioning or model access (335.274475ms)
+✔ wikipedia-biography: facts, canonical source and a quote decoded from an MCP observation (1.70054ms)
+✔ arxiv-paper: facts, canonical source and a quote decoded from an MCP observation (0.469508ms)
+✔ github-issue: facts, canonical source and a quote decoded from an MCP observation (0.412391ms)
+✔ pypi-metadata: facts, canonical source and a quote decoded from an MCP observation (0.281416ms)
+✔ python-json: facts, canonical source and a quote decoded from an MCP observation (0.370583ms)
+✔ govuk-calendar: facts, canonical source and a quote decoded from an MCP observation (1.565617ms)
+✔ known correct facts cannot bypass the browser with a direct request (0.500686ms)
+✔ calendar rejects the wrong date even with an observed source quote (0.223979ms)
+✔ calendar accepts one explicit year shared by both dates and rejects the wrong year (0.777433ms)
+✔ tab-wrapped JSON uses observed page values uniformly for either engine (0.520253ms)
+✔ decoded observation evidence still refuses direct API answers (0.212958ms)
+✔ native eval and compact Callisto replay obey the same no-direct-API policy (0.32609ms)
+✔ official task descriptions omit gold answers; fabricated responses score zero (1279.185807ms)
+✔ network-evaluated official tasks are refused by the answer-only adapter (571.748381ms)
+ℹ tests 33
+ℹ suites 0
+ℹ pass 33
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3197.939215

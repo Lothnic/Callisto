@@ -1,0 +1,484 @@
+{
+  "engine": "browse",
+  "task": {
+    "task_id": 41,
+    "intent": "Get the top 1 search term(s) in my store",
+    "start_urls": [
+      "__SHOPPING_ADMIN__"
+    ],
+    "results_schemas": [
+      {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      }
+    ],
+    "evaluator_version": "1.2.3",
+    "dataset_sha256": "d65275660814663375028e9017e1f929e3c38321041b125795e2713b52243d30"
+  },
+  "round": 0,
+  "success": true,
+  "outcome": "passed",
+  "answer": {
+    "task_type": "RETRIEVE",
+    "status": "SUCCESS",
+    "retrieved_data": [
+      "hollister"
+    ],
+    "error_details": null
+  },
+  "evaluation": {
+    "task_id": 41,
+    "intent_template_id": 285,
+    "sites": [
+      "shopping_admin"
+    ],
+    "task_revision": 2,
+    "status": "success",
+    "score": 1,
+    "evaluators_results": [
+      {
+        "evaluator_name": "AgentResponseEvaluator",
+        "status": "success",
+        "score": 1,
+        "actual": {
+          "task_type": "RETRIEVE",
+          "status": "SUCCESS",
+          "retrieved_data": [
+            "hollister"
+          ],
+          "error_details": null
+        },
+        "actual_normalized": {
+          "task_type": "retrieve",
+          "status": "success",
+          "retrieved_data": [
+            "hollister"
+          ]
+        },
+        "expected": {
+          "task_type": "retrieve",
+          "status": "success",
+          "retrieved_data": [
+            "hollister"
+          ]
+        },
+        "assertions": null,
+        "error_msg": null,
+        "should_not_exist": null
+      }
+    ],
+    "error_msg": null,
+    "webarena_verified_version": "1.2.3",
+    "webarena_verified_evaluator_checksum": "35c3385b1db4b3378657589f95f50defd4234bd36e5b93d44733fd561b01db4e",
+    "webarena_verified_data_checksum": "d65275660814663375028e9017e1f929e3c38321041b125795e2713b52243d30"
+  },
+  "actual_host_client_info": {
+    "name": "codex-mcp-client",
+    "title": "Codex",
+    "version": "0.166.0"
+  },
+  "preparation_ms": 50393.240011999995,
+  "host_elapsed_ms": 27266.87007199999,
+  "verification_ms": 549.7337469999911,
+  "task_elapsed_ms": 27823.006447999986,
+  "usage": {
+    "input_tokens": 79738,
+    "cached_input_tokens": 60800,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 618,
+    "reasoning_output_tokens": 361
+  },
+  "tool_calls": 3,
+  "tool_failures": 0,
+  "response_bytes": 4908,
+  "policy_violations": [],
+  "forbidden_host_calls": 0,
+  "timed_out": false,
+  "trace_file": "browse-41.json",
+  "versions": {
+    "runtime_sha256": null,
+    "zen": null,
+    "browse_cli": "0.1.1",
+    "browse_binary_sha256": "1b0e53d9a000a50b100eb8e64637ef961975a39bf09c13ee38279747fab64e05",
+    "chromium": "157.0.8103.38",
+    "dataset_sha256": "d65275660814663375028e9017e1f929e3c38321041b125795e2713b52243d30"
+  },
+  "prompt": "Complete this read-only Shopping Admin retrieval task using ONLY browser MCP tools. You are already authenticated to the owned local benchmark site. Inspect the live UI and verify the requested value. Do not modify data, use HTTP/API clients, fetch, network replay, files, shell, other agents or non-browser tools. Stay on http://127.0.0.1:37771. Maximum 35 MCP calls. Finish with the required JSON object {task_type:\"RETRIEVE\",status:\"SUCCESS\" or \"NOT_FOUND_ERROR\" or \"UNKNOWN_ERROR\",retrieved_data: requested array or null,error_details:string or null}. Never invent a result when blocked. Use browse tab 460688957 on the existing Shopping Admin page.\nTask: Get the top 1 search term(s) in my store\nRequested result schema: {\"type\":\"array\",\"items\":{\"type\":\"string\"}}",
+  "host": {
+    "code": 0,
+    "signal": null,
+    "error": null,
+    "timed_out": false,
+    "elapsed_ms": 27266.87007199999,
+    "usage": {
+      "input_tokens": 79738,
+      "cached_input_tokens": 60800,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 618,
+      "reasoning_output_tokens": 361
+    },
+    "final": "{\"task_type\":\"RETRIEVE\",\"status\":\"SUCCESS\",\"retrieved_data\":[\"hollister\"],\"error_details\":null}",
+    "events": [
+      {
+        "type": "thread.started",
+        "thread_id": "01a1ea17-898c-7c51-8187-7c9183c17b2a"
+      },
+      {
+        "type": "turn.started"
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_0",
+          "type": "agent_message",
+          "text": "I’ll inspect the existing Shopping Admin tab and read the search terms shown in the live UI."
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_1",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "tab": 460688957,
+            "code": "return {url: page.url(), title: await page.title(), snapshot: await snapshot()}"
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_1",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "tab": 460688957,
+            "code": "return {url: page.url(), title: await page.title(), snapshot: await snapshot()}"
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "tab: 460688957\n\n{\"url\":\"http://127.0.0.1:37771/admin/admin/dashboard/\",\"title\":\"Dashboard / Magento Admin\",\"snapshot\":\"scoped to <main>; 2 landmarks and 17 controls outside it are not shown (within: \\\"body\\\" to include them)\\n- textbox \\\"textbox\\\" [ref=e1]\\n- button \\\"All Store Views\\\" [ref=e2]\\n- link \\\"What is this?\\\" [ref=e3]\\n- button \\\"Reload Data\\\" [ref=e4]\\n- link \\\"Go to Advanced Reporting\\\" [ref=e5]\\n- link \\\"here\\\" [ref=e6]\\n- list \\\"List\\\" [4 items]\\n  - listitem \\\"Revenue $0.00\\\"\\n  - listitem \\\"Tax $0.00\\\"\\n  - listitem \\\"Shipping $0.00\\\"\\n  - listitem \\\"Quantity 0\\\"\\n- tablist \\\"Tab list\\\" [4 items]\\n  - tab \\\"Bestsellers\\\" [ref=e7 expanded=true selected=true]\\n  - presentation \\\"Bestsellers\\\" [ref=e8]\\n  - tab \\\"Most Viewed Products\\\" [ref=e9 expanded=false selected=false]\\n  - presentation \\\"Most Viewed Products\\\" [ref=e10]\\n  - tab \\\"New Customers\\\" [ref=e11 expanded=false selected=false]\\n  - presentation \\\"New Customers\\\" [ref=e12]\\n  - tab \\\"Customers\\\" [ref=e13 expanded=false selected=false]\\n  - presentation \\\"Customers\\\" [ref=e14]\\n- table \\\"Table\\\" [6 rows]\\n  - row \\\"Product | Price | Quantity\\\"\\n  - row \\\"http://127.0.0.1:37771/admin/catalog/product/edit/id/20/\\\"\\n  - row \\\"http://127.0.0.1:37771/admin/catalog/product/edit/id/33/\\\"\\n  - row \\\"http://127.0.0.1:37771/admin/catalog/product/edit/id/29/\\\"\\n  - row \\\"http://127.0.0.1:37771/admin/catalog/product/edit/id/25/\\\"\\n  - row \\\"http://127.0.0.1:37771/admin/catalog/product/edit/id/13/\\\"\\n- table \\\"Table\\\" [6 rows]\\n  - row \\\"Customer | Items | Total\\\"\\n  - row \\\"http://127.0.0.1:37771/admin/sales/order/view/order_id/299/\\\"\\n  - row \\\"http://127.0.0.1:37771/admin/sales/order/view/order_id/65/\\\"\\n  - row \\\"http://127.0.0.1:37771/admin/sales/order/view/order_id/125/\\\"\\n  - row \\\"http://127.0.0.1:37771/admin/sales/order/view/order_id/136/\\\"\\n  - row \\\"http://127.0.0.1:37771/admin/sales/order/view/order_id/230/\\\"\\n- table \\\"Table\\\" [6 rows]\\n  - row \\\"Search Term | Results | Uses\\\"\\n  - row \\\"http://127.0.0.1:37771/admin/search/term/edit/id/25/\\\"\\n  - row \\\"http://127.0.0.1:37771/admin/search/term/edit/id/19/\\\"\\n  - row \\\"http://127.0.0.1:37771/admin/search/term/edit/id/1/\\\"\\n  - row \\\"http://127.0.0.1:37771/admin/search/term/edit/id/11/\\\"\\n  - row \\\"http://127.0.0.1:37771/admin/search/term/edit/id/13/\\\"\\n- table \\\"Table\\\" [6 rows]\\n  - row \\\"Search Term | Results | Uses\\\"\\n  - row \\\"http://127.0.0.1:37771/admin/search/term/edit/id/11/\\\"\\n  - row \\\"http://127.0.0.1:37771/admin/search/term/edit/id/1/\\\"\\n  - row \\\"http://127.0.0.1:37771/admin/search/term/edit/id/13/\\\"\\n  - row \\\"http://127.0.0.1:37771/admin/search/term/edit/id/25/\\\"\\n  - row \\\"http://127.0.0.1:37771/admin/search/term/edit/id/9/\\\"\"}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_2",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "tab": 460688957,
+            "code": "return await page.locator('table').evaluateAll(ts => ts.map(t => t.innerText))"
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_2",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "tab": 460688957,
+            "code": "return await page.locator('table').evaluateAll(ts => ts.map(t => t.innerText))"
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "tab: 460688957\n\n[\"Product\\tPrice\\tQuantity\\nQuest Lumaflex™ Band\\t$19.00\\t6\\nSprite Yoga Strap 6 foot\\t$14.00\\t6\\nSprite Stasis Ball 65 cm\\t$27.00\\t6\\nSprite Stasis Ball 55 cm\\t$23.00\\t5\\nOvernight Duffle\\t$45.00\\t5\",\"Customer\\tItems\\tTotal\\nSarah Miller\\t5\\t$194.40\\nGrace Nguyen\\t4\\t$190.00\\nMatt Baker\\t3\\t$151.40\\nLily Potter\\t4\\t$188.20\\nAva Brown\\t2\\t$83.40\",\"Search Term\\tResults\\tUses\\ntanks\\t23\\t1\\nnike\\t0\\t3\\nJoust Bag\\t10\\t4\\nhollister\\t1\\t19\\nAntonia Racer Tank\\t23\\t2\",\"Search Term\\tResults\\tUses\\nhollister\\t1\\t19\\nJoust Bag\\t10\\t4\\nAntonia Racer Tank\\t23\\t2\\ntanks\\t23\\t1\\nWP10\\t1\\t1\"]"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_3",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "tab": 460688957,
+            "code": "return await page.locator('main').innerText()"
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_3",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "tab": 460688957,
+            "code": "return await page.locator('main').innerText()"
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "tab: 460688957\n\nScope: All Store Views \nWhat is this?\nReload Data\nAdvanced Reporting\nGain new insights and take command of your business' performance, using our dynamic product, order, and customer reports tailored to your customer data.\nGo to Advanced Reporting \nChart is disabled. To enable the chart, click here.\nRevenue\n$0.00\t\nTax\n$0.00\t\nShipping\n$0.00\t\nQuantity\n0\t\nBestsellers\n \nMost Viewed Products\n \nNew Customers\n \nCustomers\nProduct\tPrice\tQuantity\nQuest Lumaflex™ Band\t$19.00\t6\nSprite Yoga Strap 6 foot\t$14.00\t6\nSprite Stasis Ball 65 cm\t$27.00\t6\nSprite Stasis Ball 55 cm\t$23.00\t5\nOvernight Duffle\t$45.00\t5\nLifetime Sales\n$0.00\nAverage Order\n$0.00\nLast Orders\nCustomer\tItems\tTotal\nSarah Miller\t5\t$194.40\nGrace Nguyen\t4\t$190.00\nMatt Baker\t3\t$151.40\nLily Potter\t4\t$188.20\nAva Brown\t2\t$83.40\nLast Search Terms\nSearch Term\tResults\tUses\ntanks\t23\t1\nnike\t0\t3\nJoust Bag\t10\t4\nhollister\t1\t19\nAntonia Racer Tank\t23\t2\nTop Search Terms\nSearch Term\tResults\tUses\nhollister\t1\t19\nJoust Bag\t10\t4\nAntonia Racer Tank\t23\t2\ntanks\t23\t1\nWP10\t1\t1"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_4",
+          "type": "agent_message",
+          "text": "{\"task_type\":\"RETRIEVE\",\"status\":\"SUCCESS\",\"retrieved_data\":[\"hollister\"],\"error_details\":null}"
+        }
+      },
+      {
+        "type": "turn.completed",
+        "usage": {
+          "input_tokens": 79738,
+          "cached_input_tokens": 60800,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 618,
+          "reasoning_output_tokens": 361
+        }
+      }
+    ],
+    "parse_errors": 0,
+    "diagnostic": null,
+    "configuration": {
+      "model": "gpt-6-luna",
+      "effort": "high",
+      "sandbox": "read-only",
+      "shell_tool": false,
+      "web_search": "disabled",
+      "user_config_loaded": false,
+      "project_instructions_loaded": false,
+      "skills_catalog_max_tokens": 1,
+      "automatic_skill_instructions": false,
+      "fixture_tool_approval": "explicit approve",
+      "auth": "existing signed-in Codex host",
+      "mcp_transport": "stdio → private Unix socket → native runtime MCP client"
+    }
+  },
+  "tools": [
+    {
+      "sequence": 1,
+      "name": "execute",
+      "arguments": {
+        "tab": 460688957,
+        "code": "return {url: page.url(), title: await page.title(), snapshot: await snapshot()}"
+      },
+      "started_at": "2026-11-17T15:19:48.688Z",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "tab: 460688957\n\n{\"url\":\"http://127.0.0.1:37771/admin/admin/dashboard/\",\"title\":\"Dashboard / Magento Admin\",\"snapshot\":\"scoped to <main>; 2 landmarks and 17 controls outside it are not shown (within: \\\"body\\\" to include them)\\n- textbox \\\"textbox\\\" [ref=e1]\\n- button \\\"All Store Views\\\" [ref=e2]\\n- link \\\"What is this?\\\" [ref=e3]\\n- button \\\"Reload Data\\\" [ref=e4]\\n- link \\\"Go to Advanced Reporting\\\" [ref=e5]\\n- link \\\"here\\\" [ref=e6]\\n- list \\\"List\\\" [4 items]\\n  - listitem \\\"Revenue $0.00\\\"\\n  - listitem \\\"Tax $0.00\\\"\\n  - listitem \\\"Shipping $0.00\\\"\\n  - listitem \\\"Quantity 0\\\"\\n- tablist \\\"Tab list\\\" [4 items]\\n  - tab \\\"Bestsellers\\\" [ref=e7 expanded=true selected=true]\\n  - presentation \\\"Bestsellers\\\" [ref=e8]\\n  - tab \\\"Most Viewed Products\\\" [ref=e9 expanded=false selected=false]\\n  - presentation \\\"Most Viewed Products\\\" [ref=e10]\\n  - tab \\\"New Customers\\\" [ref=e11 expanded=false selected=false]\\n  - presentation \\\"New Customers\\\" [ref=e12]\\n  - tab \\\"Customers\\\" [ref=e13 expanded=false selected=false]\\n  - presentation \\\"Customers\\\" [ref=e14]\\n- table \\\"Table\\\" [6 rows]\\n  - row \\\"Product | Price | Quantity\\\"\\n  - row \\\"http://127.0.0.1:37771/admin/catalog/product/edit/id/20/\\\"\\n  - row \\\"http://127.0.0.1:37771/admin/catalog/product/edit/id/33/\\\"\\n  - row \\\"http://127.0.0.1:37771/admin/catalog/product/edit/id/29/\\\"\\n  - row \\\"http://127.0.0.1:37771/admin/catalog/product/edit/id/25/\\\"\\n  - row \\\"http://127.0.0.1:37771/admin/catalog/product/edit/id/13/\\\"\\n- table \\\"Table\\\" [6 rows]\\n  - row \\\"Customer | Items | Total\\\"\\n  - row \\\"http://127.0.0.1:37771/admin/sales/order/view/order_id/299/\\\"\\n  - row \\\"http://127.0.0.1:37771/admin/sales/order/view/order_id/65/\\\"\\n  - row \\\"http://127.0.0.1:37771/admin/sales/order/view/order_id/125/\\\"\\n  - row \\\"http://127.0.0.1:37771/admin/sales/order/view/order_id/136/\\\"\\n  - row \\\"http://127.0.0.1:37771/admin/sales/order/view/order_id/230/\\\"\\n- table \\\"Table\\\" [6 rows]\\n  - row \\\"Search Term | Results | Uses\\\"\\n  - row \\\"http://127.0.0.1:37771/admin/search/term/edit/id/25/\\\"\\n  - row \\\"http://127.0.0.1:37771/admin/search/term/edit/id/19/\\\"\\n  - row \\\"http://127.0.0.1:37771/admin/search/term/edit/id/1/\\\"\\n  - row \\\"http://127.0.0.1:37771/admin/search/term/edit/id/11/\\\"\\n  - row \\\"http://127.0.0.1:37771/admin/search/term/edit/id/13/\\\"\\n- table \\\"Table\\\" [6 rows]\\n  - row \\\"Search Term | Results | Uses\\\"\\n  - row \\\"http://127.0.0.1:37771/admin/search/term/edit/id/11/\\\"\\n  - row \\\"http://127.0.0.1:37771/admin/search/term/edit/id/1/\\\"\\n  - row \\\"http://127.0.0.1:37771/admin/search/term/edit/id/13/\\\"\\n  - row \\\"http://127.0.0.1:37771/admin/search/term/edit/id/25/\\\"\\n  - row \\\"http://127.0.0.1:37771/admin/search/term/edit/id/9/\\\"\"}"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 23.210946000006516,
+      "response_bytes": 3013
+    },
+    {
+      "sequence": 2,
+      "name": "execute",
+      "arguments": {
+        "tab": 460688957,
+        "code": "return await page.locator('table').evaluateAll(ts => ts.map(t => t.innerText))"
+      },
+      "started_at": "2026-11-17T15:19:51.830Z",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "tab: 460688957\n\n[\"Product\\tPrice\\tQuantity\\nQuest Lumaflex™ Band\\t$19.00\\t6\\nSprite Yoga Strap 6 foot\\t$14.00\\t6\\nSprite Stasis Ball 65 cm\\t$27.00\\t6\\nSprite Stasis Ball 55 cm\\t$23.00\\t5\\nOvernight Duffle\\t$45.00\\t5\",\"Customer\\tItems\\tTotal\\nSarah Miller\\t5\\t$194.40\\nGrace Nguyen\\t4\\t$190.00\\nMatt Baker\\t3\\t$151.40\\nLily Potter\\t4\\t$188.20\\nAva Brown\\t2\\t$83.40\",\"Search Term\\tResults\\tUses\\ntanks\\t23\\t1\\nnike\\t0\\t3\\nJoust Bag\\t10\\t4\\nhollister\\t1\\t19\\nAntonia Racer Tank\\t23\\t2\",\"Search Term\\tResults\\tUses\\nhollister\\t1\\t19\\nJoust Bag\\t10\\t4\\nAntonia Racer Tank\\t23\\t2\\ntanks\\t23\\t1\\nWP10\\t1\\t1\"]"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 40.231440000003204,
+      "response_bytes": 720
+    },
+    {
+      "sequence": 3,
+      "name": "execute",
+      "arguments": {
+        "tab": 460688957,
+        "code": "return await page.locator('main').innerText()"
+      },
+      "started_at": "2026-11-17T15:19:55.493Z",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "tab: 460688957\n\nScope: All Store Views \nWhat is this?\nReload Data\nAdvanced Reporting\nGain new insights and take command of your business' performance, using our dynamic product, order, and customer reports tailored to your customer data.\nGo to Advanced Reporting \nChart is disabled. To enable the chart, click here.\nRevenue\n$0.00\t\nTax\n$0.00\t\nShipping\n$0.00\t\nQuantity\n0\t\nBestsellers\n \nMost Viewed Products\n \nNew Customers\n \nCustomers\nProduct\tPrice\tQuantity\nQuest Lumaflex™ Band\t$19.00\t6\nSprite Yoga Strap 6 foot\t$14.00\t6\nSprite Stasis Ball 65 cm\t$27.00\t6\nSprite Stasis Ball 55 cm\t$23.00\t5\nOvernight Duffle\t$45.00\t5\nLifetime Sales\n$0.00\nAverage Order\n$0.00\nLast Orders\nCustomer\tItems\tTotal\nSarah Miller\t5\t$194.40\nGrace Nguyen\t4\t$190.00\nMatt Baker\t3\t$151.40\nLily Potter\t4\t$188.20\nAva Brown\t2\t$83.40\nLast Search Terms\nSearch Term\tResults\tUses\ntanks\t23\t1\nnike\t0\t3\nJoust Bag\t10\t4\nhollister\t1\t19\nAntonia Racer Tank\t23\t2\nTop Search Terms\nSearch Term\tResults\tUses\nhollister\t1\t19\nJoust Bag\t10\t4\nAntonia Racer Tank\t23\t2\ntanks\t23\t1\nWP10\t1\t1"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 13.380134000006365,
+      "response_bytes": 1175
+    }
+  ],
+  "catalog": [
+    {
+      "name": "execute",
+      "description": "Run JavaScript that drives the browser: the user's real Chrome-family browser, through the browse extension. The code is an async function body (a single expression is returned; `return` a value to get it back) running in a small sandboxed JavaScript engine on the relay: no Node, no require/import, no fs, process or fetch (fetch belongs to the page: use page.evaluate). Synchronous code stops after about 2 seconds without an await. The result has the returned value (JSON, or the string as is), console output, warnings, and what happened to the page (URL changes, navigations, handoffs, a bot challenge: hand interactive ones to the user with handoff(), never solve or retry-loop them). Return a screenshot (`return await page.screenshot()`) to see it. Tabs are the handle: without `tab`, `page.goto(url)` opens a new tab; the result starts with `tab: <id>`, which you pass as `tab` to the next execute to continue there (with the same `state`). Close tabs you opened when you're done (`page.close()`).",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "JavaScript (an async function body). Globals:\n- page: a Playwright-style Page for the tab passed as `tab`; without one it has no tab until its first goto(url), which opens a new tab. goto(url, {waitUntil, timeout}), url(), title(), content(), evaluate(fn | string, arg), $eval/$$eval, waitForTimeout/Selector/URL/LoadState/Function, click/fill/type/press/hover/selectOption/check/uncheck(selector, ...), locator(selector), getByRole/Text/Label/Placeholder/TestId/AltText/Title, frameLocator, keyboard.press/type, mouse.click/move/wheel, screenshot({path, fullPage}), goBack/goForward/reload, setViewportSize, close(). Locators: click, dblclick, fill, clear, type, pressSequentially, press, hover, check, uncheck, selectOption, setInputFiles, textContent, innerText, innerHTML, inputValue, getAttribute, isVisible/Hidden/Checked/Enabled/Disabled, count, all, first, last, nth, filter, locator, getBy*, waitFor, evaluate, evaluateAll, allTextContents, boundingBox, screenshot, dragTo. Selectors are CSS or Playwright selectors (role=button[name=\"Save\"], text=Sign in, >> nth=0, iframe >> frame >> ...). Locators are strict: one element.\n- context.newPage() (a new tab), context.pages() (the tabs this execute works in and their popups); browser.contexts().\n- snapshot(options?) → a compact outline with refs (options: find, diff, delta, interactive, within, mode: \"aria\"); ref(\"e12\") → a locator for a snapshot ref. Prefer snapshot + ref over guessing selectors.\n- handoff(message, {timeoutMs?, start?}) when only the user can proceed (login, 2FA, captcha, payment); demonstrate(message) to watch the user do a flow.\n- screenshotWithLabels(), screenshotDiff({baseline}), network.start/status/stop/cancel, pageConsole.start/read/stop, webmcp.list/call(name, input).\n- browse.<tool>(args): any browse tool directly (navigate, snapshot, click, fill, type, press, select, hover, drag, scroll, eval, wait_for, dialog, upload, emulate, webmcp, screenshot, screenshot_diff, network, console, recording, tabs, handoff, demonstrate, status, settings); they act in `page`'s tab unless you pass `tab` (browse.navigate without one opens a tab for `page`); returns its JSON and throws its error.\n- files.path(name), files.write(name, data), files.read(name, encoding?) inside the file roots (files.dir, files.roots).\n- state: an object kept with the tab between execute calls that pass it as `tab` (JSON values only).\n- console.log/warn/error (shown in the result), setTimeout/clearTimeout/setInterval/clearInterval."
+          },
+          "timeoutMs": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Overall timeout in milliseconds (paused while handoff waits on the user); default 60000, 0 for none. Includes waiting behind another execute in the same tab."
+          },
+          "tab": {
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "The tab `page` stands for: the `tab` an earlier execute (or navigate, tabs) returned, or a chosen id like `work-mail` given to tabs new. Leave it out to start without a tab; page.goto(url) then opens one."
+          }
+        },
+        "required": [
+          "code"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "status",
+      "description": "Report the relay, the connected browsers (ids to pass as `browser` when opening a tab), pairing state and what to do when no browser is connected (`nextStep`), and the tabs you can use.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "tabs",
+      "description": "List, open or close tabs. Tabs are the handle every other tool takes as `tab`. `list` returns every agent tab and every tab the user lent (tab id, id when one was chosen, url, title, group, options, lent, lastUsed, busy and browser). An id or group from that list tells you which tabs you opened; use only those unless the user asks you to touch another. `new` opens a background tab (at `url`, else about:blank), waits for it to load and returns its `tab` id; `navigate` without `tab` does the same. Give it an `id` like `work-mail` to name the tab yourself: opening that id again returns the tab it already names, without navigating it, and the id survives browser restarts (use it as `tab` in every tool). `close` needs explicit tabs: `tab`, `tabs` or a whole `group`; a lent tab is given back to the user instead of closed. Tabs open in the background and never take focus from the user; close the ones you opened when you're done.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "group": {
+            "type": "string",
+            "description": "new: the new tab's group label. list: only that group's tabs. close: close every tab opened with that group (and their popups)."
+          },
+          "allowedOrigins": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "When opening a tab: hosts or origins it may load (example.com, *.example.com, https://app.example.com, http://localhost:3000). Navigations elsewhere are refused or sent back to about:blank; private and loopback addresses need an exact entry. Popups inherit it."
+          },
+          "readOnly": {
+            "type": "boolean",
+            "description": "When opening a tab: only read it (snapshots, screenshots, page state); input and later navigation are refused."
+          },
+          "keepVisible": {
+            "type": "boolean",
+            "description": "When opening a tab: keep it focused to the page between calls, for apps that pause while hidden. Pages can notice."
+          },
+          "browser": {
+            "type": "string",
+            "description": "When opening a tab: which connected browser, by the id or name `status` lists. Defaults to the first connected one."
+          },
+          "action": {
+            "type": "string",
+            "enum": [
+              "list",
+              "new",
+              "close"
+            ],
+            "description": "What to do. Defaults to list."
+          },
+          "id": {
+            "type": "string",
+            "description": "new: an id you choose for the tab, like `work-mail` (lowercase letters, digits and dashes). Every tool takes it as `tab`. Opening with an id that already exists returns that tab without navigating it; the tab keeps the id when the browser restarts, and is never closed as idle."
+          },
+          "url": {
+            "type": "string",
+            "description": "new: the URL to open (else about:blank)."
+          },
+          "tab": {
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "close: the tab to close: its numeric id, or a chosen id like `work-mail`."
+          },
+          "tabs": {
+            "type": "array",
+            "items": {
+              "type": [
+                "integer",
+                "string"
+              ]
+            },
+            "description": "close: several tabs to close, by numeric or chosen id."
+          },
+          "idleMinutes": {
+            "type": "number",
+            "minimum": 0,
+            "description": "close: only tabs no call used for this long. It narrows tab, tabs or group; it doesn't pick tabs on its own, and never a tab with a chosen id."
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      }
+    }
+  ],
+  "initialization": {
+    "protocolVersion": "2024-11-05",
+    "capabilities": {
+      "tools": {
+        "listChanged": false
+      }
+    },
+    "serverInfo": {
+      "name": "browse",
+      "version": "0.1.1"
+    },
+    "instructions": "browse drives the user's real Chrome-family browser through the browse extension, so logins, extensions and open tabs are already there and the user can watch or take over. Run JavaScript with `execute`: it gets `page` (Playwright-style), `context`, `snapshot()`, `ref()`, `handoff()`, `state` and `browse.<tool>()` for every browse tool. `return` a value to get it back; one script can do many steps.\n\nTabs are the handle. Without `tab`, `page` has no tab until its first `page.goto(url)`, which opens a new background tab. Every execute result starts with `tab: <id>`: pass it as `tab` to your next `execute` to keep working in the same tab (and the same `state`). Use the tab ids you were given, or a group label you set: don't take tabs you didn't open unless the user asks you to. `context.newPage()` opens another tab; popups a page opens are yours to use. `tabs` lists every agent tab and the ones the user lent.\n\nIf you're given a tab id like `work-mail`, use it as `tab`; `tabs` with action `new` and that `id` opens it if it's missing.\n\nUse one loop: inspect, act, verify.\n- Inspect with `await snapshot()` before choosing anything. Prefer the returned refs: `await ref(\"e12\").click()`. Fall back to accessible locators (`page.getByRole(...)`, `getByLabel(...)`), then CSS.\n- Act with the narrowest stable control, and keep dependent steps in one `execute` while transient UI is open.\n- Verify with a fresh page read (`page.url()`, a heading, or a new snapshot). A click that returned, or a handoff the user acknowledged, is not proof the task succeeded.\n\nWhen only a person can proceed — login, 2FA, passkey, captcha or payment confirmation — call `handoff(\"what the user should do\")` and wait. Pass `start` for an action that itself blocks. Never solve a captcha yourself and never retry-loop a blocked site; if a challenge is interactive or the site refuses the visit, hand off or stop and tell the user.\n\nThe code runs in a small sandboxed engine on the relay, not Node: no require/import, fs, process or fetch (use `page.evaluate` for things that belong to the page, `files` for files). Unsupported Playwright calls throw an error naming what to use instead.\n\nWhen finished, close the tabs you opened (`await page.close()`, or the `tabs` tool with action `close`). `status` reports the relay and the connected browsers.\n\nIf a call fails because no browser is connected (the extension isn't added, paired or open), `status` says why in `nextStep`: pass that step to the user and wait for them instead of retrying.\n"
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "status": "screening_complete",
+  "public_trials_completed": 24,
+  "public_planned": 24,
+  "account_trials_planned": 12,
+  "official_retrieval_trials_planned": 6,
+  "opencode_model_trials": 0,
+  "opencode_blocker": "provider.free-limit HTTP429",
+  "model": "gpt-6-luna",
+  "effort": "high",
+  "preflights_not_pooled": [
+    "../luna-step5-preflight-2026-11-17",
+    "../luna-step5-preflight-2026-11-17-run2",
+    "../luna-step5-account-preflight-2026-11-17"
+  ],
+  "account_trials_completed": 12,
+  "account_strict_passes": {
+    "zen": 6,
+    "browse": 6
+  },
+  "official_setup_attempts_before_model": 2,
+  "completed_at": "2026-11-17T15:29:03.924441+00:00",
+  "official_retrieval_trials_completed": 6,
+  "official_strict_passes": {
+    "zen": 3,
+    "browse": 3
+  },
+  "total_measured_trials_completed": 42,
+  "unmeasured": [
+    "multi-model comparative performance",
+    "OpenCode native Code Mode model composition",
+    "compact/native causal ablation",
+    "underlying browser command counts",
+    "model request counts",
+    "billed dollars",
+    "peak RSS",
+    "isolated cold startup",
+    "full WebArena/BrowserGym suites"
+  ]
+}

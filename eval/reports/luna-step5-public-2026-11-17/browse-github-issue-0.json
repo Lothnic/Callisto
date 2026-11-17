@@ -1,0 +1,337 @@
+{
+  "schema": "callisto.real-world-trace.v1",
+  "host": {
+    "code": 0,
+    "signal": null,
+    "error": null,
+    "timed_out": false,
+    "elapsed_ms": 38292.479035000026,
+    "usage": {
+      "input_tokens": 92238,
+      "cached_input_tokens": 49280,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 881,
+      "reasoning_output_tokens": 435
+    },
+    "final": "{\"answer\":\"Issue #1 is titled “Suggestion: 'protected' modifier.” It is closed, and it was opened by RyanCavanaugh.\",\"evidence\":[{\"url\":\"https://github.com/microsoft/TypeScript/issues/1\",\"quote\":\"Suggestion: 'protected' modifier\\n #1\\nNew issue\\nClosed\"},{\"url\":\"https://github.com/microsoft/TypeScript/issues/1\",\"quote\":\"Ryan Cavanaugh (RyanCavanaugh)\\nopened\"}]}",
+    "events": [
+      {
+        "type": "thread.started",
+        "thread_id": "01a1e9f2-6c5e-7d12-99b5-07b823887e01"
+      },
+      {
+        "type": "turn.started"
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_0",
+          "type": "agent_message",
+          "text": "I’ll open the repository in the provided browser tab and inspect issue #1 directly."
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_1",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "tab": 1267599607,
+            "code": "return {url: page.url(), title: await page.title(), text: (await page.locator('body').innerText()).slice(0,1600)}"
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_1",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "tab": 1267599607,
+            "code": "return {url: page.url(), title: await page.title(), text: (await page.locator('body').innerText()).slice(0,1600)}"
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "tab: 1267599607\n\n{\"url\":\"http://127.0.0.1:36683/\",\"title\":\"Browser benchmark start\",\"text\":\"Ready for a public-site task\"}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_2",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "tab": 1267599607,
+            "code": "await page.goto('https://github.com/microsoft/TypeScript', {waitUntil:'domcontentloaded'}); await page.waitForTimeout(1200); return {url:page.url(),title:await page.title(),text:(await page.locator('body').innerText()).slice(0,1800)}"
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_2",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "tab": 1267599607,
+            "code": "await page.goto('https://github.com/microsoft/TypeScript', {waitUntil:'domcontentloaded'}); await page.waitForTimeout(1200); return {url:page.url(),title:await page.title(),text:(await page.locator('body').innerText()).slice(0,1800)}"
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "tab: 1267599607\n\n{\"url\":\"https://github.com/microsoft/TypeScript\",\"title\":\"GitHub - microsoft/TypeScript: TypeScript is a superset of JavaScript that compiles to clean JavaScript output. · GitHub\",\"text\":\"Skip to content\\nNavigation Menu\\nProducts\\nDevelopers\\nBusinesses\\nResources\\nPricing\\nSearch\\n/\\nSign in\\nSign up\\nmicrosoft\\nTypeScript\\nRepository navigation\\nCode\\nIssues\\n5k\\n (5k)\\nPull requests\\n338\\n (338)\\nActions\\nProjects\\nWiki\\nSecurity and quality\\nInsights\\nTypeScript\\nPublic\\nNotifications\\nFork14.7k\\n (14.7k)\\nStar112k\\n (112k)\\nmain\\n158 Branches\\n242 Tags\\nCode\\nLatest commit\\nAnders Hejlsberg (ahejlsberg)\\nOptimize getPropertiesOfUnionOrIntersectionType (#65529)\\n6867202\\n · \\nHistory\\n39,734 Commits\\nFolders and files\\nName\\tLast commit message\\tLast commit date\\n\\n.devcontainer\\n\\t\\nUpdate to Go 1.27 (#63902)\\n\\t\\n\\n\\n.github\\n\\t\\nFix PR package publishing (#65416)\\n\\t\\n\\n\\n.vscode\\n\\t\\nFlip files from CRLF to LF (#64046)\\n\\t\\n\\n\\npackages\\n\\t\\nAllow content mapper registrations to filter their files with an `inc…\\n\\t\\n\\n\\ntools\\n\\t\\nReject visitor removal of required children (#65288)\\n\\t\\n\\n\\ntsc\\n\\t\\nOptimize getPropertiesOfUnionOrIntersectionType (#65529)\\n\\t\\n\\n\\n.custom-gcl.yml\\n\\t\\nUpdate to Go 1.27 (#63902)\\n\\t\\n\\n\\n.dprint.jsonc\\n\\t\\nUpdate dependencies (#65131)\\n\\t\\n\\n\\n.editorconfig\\n\\t\\nFlip files from CRLF to LF (#64046)\\n\\t\\n\\n\\n.git-blame-ignore-revs\\n\\t\\nAdd CRLF to LF conversion to .git-blame-ignore-revs (#65320)\\n\\t\\n\\n\\n.gitattributes\\n\\t\\nFlip files from CRLF to LF (#64046)\\n\\t\\n\\n\\n.gitignore\\n\\t\\nFlip files from CRLF to LF (#64046)\\n\\t\\n\\n\\n.golangci.yml\\n\\t\\n[api] Ensure completion symbols returned to API always come from the …\\n\\t\\n\\n\\nCODE_OF_CONDUCT.md\\n\\t\\nAdded Microsoft code of conduct file\\n\\t\\n\\n\\nCONTRIBUTING.md\\n\\t\\nDrop old references and code relating to the tsgo name (#65373)\\n\\t\\n\\n\\nHerebyfile.mjs\\n\\t\\nUse org-local package feed in Pipelines (#65418)\\n\\t\\n\\n\\nLICENSE.txt\\n\\t\\nFlip files from CRLF to LF (#64046)\\n\\t\\n\\n\\nNOTICE.txt\\n\\t\\nFlip files from CRLF to LF (#64046)\\n\\t\\n\\n\\nREADME.md\\n\\t\\nDrop old references and code relating to the tsgo name (#65373)\\n\\t\\n\\n\\nSECURITY.md\\n\\t\\nUpdate SECURITY.md with Type\"}\n\nPage: moved from http://127.0.0.1:36683/ to https://github.com/microsoft/TypeScript; 1 navigation"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_3",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "tab": 1267599607,
+            "code": "await page.goto('https://github.com/microsoft/TypeScript/issues/1', {waitUntil:'domcontentloaded'}); await page.waitForTimeout(1200); return {url:page.url(),title:await page.title(),text:(await page.locator('body').innerText()).slice(0,2400)}"
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_3",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "tab": 1267599607,
+            "code": "await page.goto('https://github.com/microsoft/TypeScript/issues/1', {waitUntil:'domcontentloaded'}); await page.waitForTimeout(1200); return {url:page.url(),title:await page.title(),text:(await page.locator('body').innerText()).slice(0,2400)}"
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "tab: 1267599607\n\n{\"url\":\"https://github.com/microsoft/TypeScript/issues/1\",\"title\":\"Suggestion: 'protected' modifier · Issue #1 · microsoft/TypeScript\",\"text\":\"Skip to content\\nNavigation Menu\\nProducts\\nDevelopers\\nBusinesses\\nResources\\nPricing\\nSearch\\n/\\nSign in\\nSign up\\nmicrosoft\\nTypeScript\\nRepository navigation\\nCode\\nIssues\\n5k\\n (5k)\\nPull requests\\n338\\n (338)\\nActions\\nProjects\\nWiki\\nSecurity and quality\\nInsights\\nSuggestion: 'protected' modifier\\n #1\\nNew issue\\nClosed\\nDescription\\nRyan Cavanaugh (RyanCavanaugh)\\nopened \\nMember\\nGeneral proposal\\n\\nprotected modifier acts the same as private in terms of code generation and assignability, except that it is possible to access a protected member in any subclass of a class which declared the member. Basically, you can access protected members in the same situations where it would have been an error for you to redeclare a private member with the same name as a base class's member.\\n\\nExamples\\nclass Base {\\n    protected myMember;\\n}\\nclass Derived extends Base {\\n    foo() { return this.myMember; } // OK\\n}\\nvar x = new Derived();\\nconsole.log(x.myMember); // Error, cannot access\\n\\nclass Derived2 extends Base {\\n    private myMember; // Error, cannot tighten visibility\\n    public myMember; // Error, cannot widen visibility\\n}\\nOpen Questions\\n\\nAfter the last design meeting, the following open questions remained:\\n\\nIs 'sibling' property access allowed?\\n\\nC# and other IL languages prohibit this pattern, but Java allows it:\\n\\nclass Base { protected x: string; }\\nclass Derived extends Base {\\n    foo(n: Base) {\\n        // Not allowed: cannot reference protected member through base class reference\\n        console.log(n.x);\\n    }\\n}\\n\\nSee these links for reasoning\\nhttp://blogs.msdn.com/b/ericlippert/archive/2008/03/28/why-can-t-i-access-a-protected-member-from-a-derived-class-part-two-why-can-i.aspx\\nhttp://stackoverflow.com/questions/1904782/whats-the-real-reason-for-preventing-protected-member-access\\n\\nAre protected members subject to the \\\"same-declaration\\\" rule as private members for assignability/subtyping?\\n\\nprivate members are considered equivalent for the purposes of assignability and subtyping if they are from the \\\"same declaration\\\". This isn't quite the rule you would want for protected members. Consider some classes:\\n\\nclass Widget {\\n  protected inspector: WidgetInspector;\\n}\\nclass SquareWidget extends Widget {\\n  // Use a more-specific 'inspector'\\n  protected inspector: SquareWidgetInspector;\\n}\\nclass CircleWidget extends Widget {\\n  // Initialize here\\n  protected inspector: WidgetInspector = new WidgetInspecto\"}\n\nPage: moved from https://github.com/microsoft/TypeScript to https://github.com/microsoft/TypeScript/issues/1; 1 navigation"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_4",
+          "type": "agent_message",
+          "text": "{\"answer\":\"Issue #1 is titled “Suggestion: 'protected' modifier.” It is closed, and it was opened by RyanCavanaugh.\",\"evidence\":[{\"url\":\"https://github.com/microsoft/TypeScript/issues/1\",\"quote\":\"Suggestion: 'protected' modifier\\n #1\\nNew issue\\nClosed\"},{\"url\":\"https://github.com/microsoft/TypeScript/issues/1\",\"quote\":\"Ryan Cavanaugh (RyanCavanaugh)\\nopened\"}]}"
+        }
+      },
+      {
+        "type": "turn.completed",
+        "usage": {
+          "input_tokens": 92238,
+          "cached_input_tokens": 49280,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 881,
+          "reasoning_output_tokens": 435
+        }
+      }
+    ],
+    "parse_errors": 0,
+    "diagnostic": null,
+    "configuration": {
+      "model": "gpt-6-luna",
+      "effort": "high",
+      "sandbox": "read-only",
+      "shell_tool": false,
+      "web_search": "disabled",
+      "user_config_loaded": false,
+      "project_instructions_loaded": false,
+      "skills_catalog_max_tokens": 1,
+      "automatic_skill_instructions": false,
+      "fixture_tool_approval": "explicit approve",
+      "auth": "existing signed-in Codex host",
+      "mcp_transport": "stdio → private Unix socket → native runtime MCP client"
+    }
+  },
+  "actual_host_client_info": {
+    "name": "codex-mcp-client",
+    "title": "Codex",
+    "version": "0.166.0"
+  },
+  "engine": "browse",
+  "task": "github-issue",
+  "round": 0,
+  "phase": 0,
+  "success": true,
+  "outcome": "passed",
+  "answer": {
+    "answer": "Issue #1 is titled “Suggestion: 'protected' modifier.” It is closed, and it was opened by RyanCavanaugh.",
+    "evidence": [
+      {
+        "url": "https://github.com/microsoft/TypeScript/issues/1",
+        "quote": "Suggestion: 'protected' modifier\n #1\nNew issue\nClosed"
+      },
+      {
+        "url": "https://github.com/microsoft/TypeScript/issues/1",
+        "quote": "Ryan Cavanaugh (RyanCavanaugh)\nopened"
+      }
+    ]
+  },
+  "expected": {
+    "title": "Suggestion: 'protected' modifier",
+    "state": "closed",
+    "author": "RyanCavanaugh",
+    "url": "https://github.com/microsoft/TypeScript/issues/1"
+  },
+  "evaluation": {
+    "passed": true,
+    "facts": [
+      {
+        "pattern": "Suggestion.{0,10}protected.{0,10}modifier",
+        "passed": true
+      },
+      {
+        "pattern": "closed",
+        "passed": true
+      },
+      {
+        "pattern": "RyanCavanaugh",
+        "passed": true
+      }
+    ],
+    "evidence": [
+      {
+        "url": "https://github.com/microsoft/TypeScript/issues/1",
+        "quote": "Suggestion: 'protected' modifier\n #1\nNew issue\nClosed",
+        "source_matches": true,
+        "quote_observed": true
+      },
+      {
+        "url": "https://github.com/microsoft/TypeScript/issues/1",
+        "quote": "Ryan Cavanaugh (RyanCavanaugh)\nopened",
+        "source_matches": true,
+        "quote_observed": true
+      }
+    ],
+    "forbidden_network_or_file_calls": 0
+  },
+  "preparation_ms": 52.46748600003775,
+  "host_elapsed_ms": 38292.479035000026,
+  "verification_ms": 0.5453500000294298,
+  "task_elapsed_ms": 38297.36769799999,
+  "usage": {
+    "input_tokens": 92238,
+    "cached_input_tokens": 49280,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 881,
+    "reasoning_output_tokens": 435
+  },
+  "model_verified": null,
+  "host_error": null,
+  "tool_calls": 3,
+  "tool_failures": 0,
+  "tool_elapsed_ms": 6163.685027000029,
+  "response_bytes": 5684,
+  "response_characters": 5667,
+  "forbidden_host_calls": 0,
+  "reported_cost_usd": null,
+  "cost_usd": null,
+  "timed_out": false,
+  "trace_file": "browse-github-issue-0.json",
+  "prompt": "Complete this read-only public website task using ONLY the browser MCP tools. You must inspect the live page; do not answer from memory. You choose your own observations, selectors and actions. Do not use HTTP/API clients, fetch, network replay, files, shell, other agents, or non-browser tools. Browser DOM evaluation is allowed for text extraction, but must not make network requests. Do not visit API endpoints. Do not sign in, create accounts, post messages, buy, or change account settings. Do not solve CAPTCHAs or bypass access challenges; report them. You may follow links, use site search and recover from errors. Stay on the task site. Maximum 30 browser calls. Verify all requested facts and finish with JSON {\"answer\":\"concise answer covering every requested fact\",\"evidence\":[{\"url\":\"source page URL\",\"quote\":\"a short exact supporting quote you observed in browser output\"}]}. Evidence quotes must be copied exactly from an observation. Do not claim success when blocked.\nUse browse tab 1267599607; pass tab: 1267599607 to continue in the owned starting tab. Its execute tool provides a Playwright-style page interface. Choose what text to return to yourself, and verify it.\nStart URL: https://github.com/microsoft/TypeScript\nTask: Find issue #1 in microsoft/TypeScript on GitHub. Report its title, whether it is open or closed, and the username of the person who opened it. Cite the issue page and a short supporting quote.",
+  "tools": [
+    {
+      "sequence": 1,
+      "name": "execute",
+      "arguments": {
+        "tab": 1267599607,
+        "code": "return {url: page.url(), title: await page.title(), text: (await page.locator('body').innerText()).slice(0,1600)}"
+      },
+      "started_at": "2026-11-17T14:39:11.337Z",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "tab: 1267599607\n\n{\"url\":\"http://127.0.0.1:36683/\",\"title\":\"Browser benchmark start\",\"text\":\"Ready for a public-site task\"}"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 40.112366000015754,
+      "response_bytes": 175
+    },
+    {
+      "sequence": 2,
+      "name": "execute",
+      "arguments": {
+        "tab": 1267599607,
+        "code": "await page.goto('https://github.com/microsoft/TypeScript', {waitUntil:'domcontentloaded'}); await page.waitForTimeout(1200); return {url:page.url(),title:await page.title(),text:(await page.locator('body').innerText()).slice(0,1800)}"
+      },
+      "started_at": "2026-11-17T14:39:15.819Z",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "tab: 1267599607\n\n{\"url\":\"https://github.com/microsoft/TypeScript\",\"title\":\"GitHub - microsoft/TypeScript: TypeScript is a superset of JavaScript that compiles to clean JavaScript output. · GitHub\",\"text\":\"Skip to content\\nNavigation Menu\\nProducts\\nDevelopers\\nBusinesses\\nResources\\nPricing\\nSearch\\n/\\nSign in\\nSign up\\nmicrosoft\\nTypeScript\\nRepository navigation\\nCode\\nIssues\\n5k\\n (5k)\\nPull requests\\n338\\n (338)\\nActions\\nProjects\\nWiki\\nSecurity and quality\\nInsights\\nTypeScript\\nPublic\\nNotifications\\nFork14.7k\\n (14.7k)\\nStar112k\\n (112k)\\nmain\\n158 Branches\\n242 Tags\\nCode\\nLatest commit\\nAnders Hejlsberg (ahejlsberg)\\nOptimize getPropertiesOfUnionOrIntersectionType (#65529)\\n6867202\\n · \\nHistory\\n39,734 Commits\\nFolders and files\\nName\\tLast commit message\\tLast commit date\\n\\n.devcontainer\\n\\t\\nUpdate to Go 1.27 (#63902)\\n\\t\\n\\n\\n.github\\n\\t\\nFix PR package publishing (#65416)\\n\\t\\n\\n\\n.vscode\\n\\t\\nFlip files from CRLF to LF (#64046)\\n\\t\\n\\n\\npackages\\n\\t\\nAllow content mapper registrations to filter their files with an `inc…\\n\\t\\n\\n\\ntools\\n\\t\\nReject visitor removal of required children (#65288)\\n\\t\\n\\n\\ntsc\\n\\t\\nOptimize getPropertiesOfUnionOrIntersectionType (#65529)\\n\\t\\n\\n\\n.custom-gcl.yml\\n\\t\\nUpdate to Go 1.27 (#63902)\\n\\t\\n\\n\\n.dprint.jsonc\\n\\t\\nUpdate dependencies (#65131)\\n\\t\\n\\n\\n.editorconfig\\n\\t\\nFlip files from CRLF to LF (#64046)\\n\\t\\n\\n\\n.git-blame-ignore-revs\\n\\t\\nAdd CRLF to LF conversion to .git-blame-ignore-revs (#65320)\\n\\t\\n\\n\\n.gitattributes\\n\\t\\nFlip files from CRLF to LF (#64046)\\n\\t\\n\\n\\n.gitignore\\n\\t\\nFlip files from CRLF to LF (#64046)\\n\\t\\n\\n\\n.golangci.yml\\n\\t\\n[api] Ensure completion symbols returned to API always come from the …\\n\\t\\n\\n\\nCODE_OF_CONDUCT.md\\n\\t\\nAdded Microsoft code of conduct file\\n\\t\\n\\n\\nCONTRIBUTING.md\\n\\t\\nDrop old references and code relating to the tsgo name (#65373)\\n\\t\\n\\n\\nHerebyfile.mjs\\n\\t\\nUse org-local package feed in Pipelines (#65418)\\n\\t\\n\\n\\nLICENSE.txt\\n\\t\\nFlip files from CRLF to LF (#64046)\\n\\t\\n\\n\\nNOTICE.txt\\n\\t\\nFlip files from CRLF to LF (#64046)\\n\\t\\n\\n\\nREADME.md\\n\\t\\nDrop old references and code relating to the tsgo name (#65373)\\n\\t\\n\\n\\nSECURITY.md\\n\\t\\nUpdate SECURITY.md with Type\"}\n\nPage: moved from http://127.0.0.1:36683/ to https://github.com/microsoft/TypeScript; 1 navigation"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 2983.591872000019,
+      "response_bytes": 2581
+    },
+    {
+      "sequence": 3,
+      "name": "execute",
+      "arguments": {
+        "tab": 1267599607,
+        "code": "await page.goto('https://github.com/microsoft/TypeScript/issues/1', {waitUntil:'domcontentloaded'}); await page.waitForTimeout(1200); return {url:page.url(),title:await page.title(),text:(await page.locator('body').innerText()).slice(0,2400)}"
+      },
+      "started_at": "2026-11-17T14:39:24.204Z",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "tab: 1267599607\n\n{\"url\":\"https://github.com/microsoft/TypeScript/issues/1\",\"title\":\"Suggestion: 'protected' modifier · Issue #1 · microsoft/TypeScript\",\"text\":\"Skip to content\\nNavigation Menu\\nProducts\\nDevelopers\\nBusinesses\\nResources\\nPricing\\nSearch\\n/\\nSign in\\nSign up\\nmicrosoft\\nTypeScript\\nRepository navigation\\nCode\\nIssues\\n5k\\n (5k)\\nPull requests\\n338\\n (338)\\nActions\\nProjects\\nWiki\\nSecurity and quality\\nInsights\\nSuggestion: 'protected' modifier\\n #1\\nNew issue\\nClosed\\nDescription\\nRyan Cavanaugh (RyanCavanaugh)\\nopened \\nMember\\nGeneral proposal\\n\\nprotected modifier acts the same as private in terms of code generation and assignability, except that it is possible to access a protected member in any subclass of a class which declared the member. Basically, you can access protected members in the same situations where it would have been an error for you to redeclare a private member with the same name as a base class's member.\\n\\nExamples\\nclass Base {\\n    protected myMember;\\n}\\nclass Derived extends Base {\\n    foo() { return this.myMember; } // OK\\n}\\nvar x = new Derived();\\nconsole.log(x.myMember); // Error, cannot access\\n\\nclass Derived2 extends Base {\\n    private myMember; // Error, cannot tighten visibility\\n    public myMember; // Error, cannot widen visibility\\n}\\nOpen Questions\\n\\nAfter the last design meeting, the following open questions remained:\\n\\nIs 'sibling' property access allowed?\\n\\nC# and other IL languages prohibit this pattern, but Java allows it:\\n\\nclass Base { protected x: string; }\\nclass Derived extends Base {\\n    foo(n: Base) {\\n        // Not allowed: cannot reference protected member through base class reference\\n        console.log(n.x);\\n    }\\n}\\n\\nSee these links for reasoning\\nhttp://blogs.msdn.com/b/ericlippert/archive/2008/03/28/why-can-t-i-access-a-protected-member-from-a-derived-class-part-two-why-can-i.aspx\\nhttp://stackoverflow.com/questions/1904782/whats-the-real-reason-for-preventing-protected-member-access\\n\\nAre protected members subject to the \\\"same-declaration\\\" rule as private members for assignability/subtyping?\\n\\nprivate members are considered equivalent for the purposes of assignability and subtyping if they are from the \\\"same declaration\\\". This isn't quite the rule you would want for protected members. Consider some classes:\\n\\nclass Widget {\\n  protected inspector: WidgetInspector;\\n}\\nclass SquareWidget extends Widget {\\n  // Use a more-specific 'inspector'\\n  protected inspector: SquareWidgetInspector;\\n}\\nclass CircleWidget extends Widget {\\n  // Initialize here\\n  protected inspector: WidgetInspector = new WidgetInspecto\"}\n\nPage: moved from https://github.com/microsoft/TypeScript to https://github.com/microsoft/TypeScript/issues/1; 1 navigation"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 3139.980788999994,
+      "response_bytes": 2928
+    }
+  ]
+}

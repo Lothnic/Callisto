@@ -1,0 +1,9 @@
+{
+  "captured_at": "2026-11-17T15:22:56.773563+00:00",
+  "os": "Linux-7.0.0-43-generic-x86_64-with-glibc2.43",
+  "node": "v26.5.0",
+  "codex": "codex-cli 0.166.0",
+  "system_docker_endpoint": "unix:///var/run/docker.sock",
+  "execution": "serial model sessions after the disclosed public/preflight overlap",
+  "global_dependency_updates": false
+}

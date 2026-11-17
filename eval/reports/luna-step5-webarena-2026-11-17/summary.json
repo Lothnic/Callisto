@@ -1,0 +1,250 @@
+{
+  "schema": "callisto.step5-summary.v1",
+  "complete": true,
+  "planned_runs": 6,
+  "completed_runs": 6,
+  "model": "gpt-6-luna",
+  "reasoning_effort": "high",
+  "all_attempts": {
+    "zen": {
+      "attempted": 3,
+      "passed": 3,
+      "outcomes": {
+        "passed": 3
+      },
+      "usage_runs": 3,
+      "mean_seconds": 39.99553817433333,
+      "median_seconds": 34.17959382499999,
+      "sample_p95_seconds": 62.87265896600002,
+      "total_seconds": 119.98661452300001,
+      "input_tokens": 420551,
+      "cached_input_tokens": 295424,
+      "cache_write_input_tokens": 0,
+      "uncached_input_tokens": 125127,
+      "output_tokens": 2052,
+      "reasoning_output_tokens": 987,
+      "mcp_calls": 18,
+      "tool_errors": 0,
+      "response_bytes": 52831,
+      "operations": {
+        "status": 3,
+        "snapshot": 9,
+        "click": 5,
+        "run": 1
+      },
+      "help_calls": 0,
+      "help_bytes": 0,
+      "uncached_input_per_strict_success": 41709.0
+    },
+    "browse": {
+      "attempted": 3,
+      "passed": 3,
+      "outcomes": {
+        "passed": 3
+      },
+      "usage_runs": 3,
+      "mean_seconds": 49.28887664366664,
+      "median_seconds": 55.066998235999954,
+      "sample_p95_seconds": 64.97662524699999,
+      "total_seconds": 147.86662993099992,
+      "input_tokens": 680129,
+      "cached_input_tokens": 536448,
+      "cache_write_input_tokens": 0,
+      "uncached_input_tokens": 143681,
+      "output_tokens": 2878,
+      "reasoning_output_tokens": 1163,
+      "mcp_calls": 26,
+      "tool_errors": 2,
+      "response_bytes": 126473,
+      "operations": {
+        "execute": 26
+      },
+      "help_calls": 0,
+      "help_bytes": 0,
+      "uncached_input_per_strict_success": 47893.666666666664
+    }
+  },
+  "paired_successful_count": 3,
+  "no_overlap_all_pairs": 3,
+  "no_overlap_successful_pairs": 3,
+  "no_overlap_all_attempts": {
+    "zen": {
+      "attempted": 3,
+      "passed": 3,
+      "outcomes": {
+        "passed": 3
+      },
+      "usage_runs": 3,
+      "mean_seconds": 39.99553817433333,
+      "median_seconds": 34.17959382499999,
+      "sample_p95_seconds": 62.87265896600002,
+      "total_seconds": 119.98661452300001,
+      "input_tokens": 420551,
+      "cached_input_tokens": 295424,
+      "cache_write_input_tokens": 0,
+      "uncached_input_tokens": 125127,
+      "output_tokens": 2052,
+      "reasoning_output_tokens": 987,
+      "mcp_calls": 18,
+      "tool_errors": 0,
+      "response_bytes": 52831,
+      "operations": {
+        "status": 3,
+        "snapshot": 9,
+        "click": 5,
+        "run": 1
+      },
+      "help_calls": 0,
+      "help_bytes": 0,
+      "uncached_input_per_strict_success": 41709.0
+    },
+    "browse": {
+      "attempted": 3,
+      "passed": 3,
+      "outcomes": {
+        "passed": 3
+      },
+      "usage_runs": 3,
+      "mean_seconds": 49.28887664366664,
+      "median_seconds": 55.066998235999954,
+      "sample_p95_seconds": 64.97662524699999,
+      "total_seconds": 147.86662993099992,
+      "input_tokens": 680129,
+      "cached_input_tokens": 536448,
+      "cache_write_input_tokens": 0,
+      "uncached_input_tokens": 143681,
+      "output_tokens": 2878,
+      "reasoning_output_tokens": 1163,
+      "mcp_calls": 26,
+      "tool_errors": 2,
+      "response_bytes": 126473,
+      "operations": {
+        "execute": 26
+      },
+      "help_calls": 0,
+      "help_bytes": 0,
+      "uncached_input_per_strict_success": 47893.666666666664
+    }
+  },
+  "no_overlap_successful": {
+    "zen": {
+      "attempted": 3,
+      "passed": 3,
+      "outcomes": {
+        "passed": 3
+      },
+      "usage_runs": 3,
+      "mean_seconds": 39.99553817433333,
+      "median_seconds": 34.17959382499999,
+      "sample_p95_seconds": 62.87265896600002,
+      "total_seconds": 119.98661452300001,
+      "input_tokens": 420551,
+      "cached_input_tokens": 295424,
+      "cache_write_input_tokens": 0,
+      "uncached_input_tokens": 125127,
+      "output_tokens": 2052,
+      "reasoning_output_tokens": 987,
+      "mcp_calls": 18,
+      "tool_errors": 0,
+      "response_bytes": 52831,
+      "operations": {
+        "status": 3,
+        "snapshot": 9,
+        "click": 5,
+        "run": 1
+      },
+      "help_calls": 0,
+      "help_bytes": 0,
+      "uncached_input_per_strict_success": 41709.0
+    },
+    "browse": {
+      "attempted": 3,
+      "passed": 3,
+      "outcomes": {
+        "passed": 3
+      },
+      "usage_runs": 3,
+      "mean_seconds": 49.28887664366664,
+      "median_seconds": 55.066998235999954,
+      "sample_p95_seconds": 64.97662524699999,
+      "total_seconds": 147.86662993099992,
+      "input_tokens": 680129,
+      "cached_input_tokens": 536448,
+      "cache_write_input_tokens": 0,
+      "uncached_input_tokens": 143681,
+      "output_tokens": 2878,
+      "reasoning_output_tokens": 1163,
+      "mcp_calls": 26,
+      "tool_errors": 2,
+      "response_bytes": 126473,
+      "operations": {
+        "execute": 26
+      },
+      "help_calls": 0,
+      "help_bytes": 0,
+      "uncached_input_per_strict_success": 47893.666666666664
+    }
+  },
+  "overlap": {
+    "window": null,
+    "affected_trials": [],
+    "excluded_pairs_only_from_secondary_timing": []
+  },
+  "tool_errors": [
+    {
+      "engine": "browse",
+      "task": "94",
+      "round": 0,
+      "name": "execute",
+      "arguments": {
+        "tab": 68124689,
+        "code": "await page.getByText('SALES',{exact:true}).click(); return await snapshot({within:'body'})"
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "tab: 68124689\n\nTimeoutError: No element matches selector \"internal:text=\\\"SALES\\\"s\" (waited 9999 ms)\n    at <anonymous> (execute.js:1:273)"
+          }
+        ],
+        "isError": true
+      },
+      "elapsed_ms": 10063.076770000014
+    },
+    {
+      "engine": "browse",
+      "task": "208",
+      "round": 0,
+      "name": "execute",
+      "arguments": {
+        "tab": 51148994,
+        "code": "await page.getByRole('link',{name:/Customers/}).hover(); await page.waitForTimeout(300); return await snapshot({mode:'aria',within:'body'})"
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "tab: 51148994\n\nError: Selector \"internal:role=link[name=/Customers/]\" matches 4 elements; it must match one. Make it more specific (a role and name, an id, or `>> nth=0` for the first):\n  <a href=\"#\" class=\"\" onclick=\"return false;\">\u2026</a>\n  <a class=\"\" href=\"http://127.0.0.1:43857/admin/customer/index/\">\u2026</a>\n  <a tabindex=\"-1\" data-tab-type=\"\" role=\"presentation\" title=\"New Customers\" id=\"grid_tab_new_customers\" class=\"tab-item-link ajax notloaded ui-tabs-anchor\" href=\"http://127.0.0.1:43857/admin/admin/dashboard/customersNewest/\">\u2026</a>\n  <a tabindex=\"-1\" data-tab-type=\"\" title=\"Customers\" role=\"presentation\" id=\"grid_tab_customers\" class=\"tab-item-link ajax notloaded ui-tabs-anchor\" href=\"http://127.0.0.1:43857/admin/admin/dashboard/customersMost/\">\u2026</a>\n    at <anonymous> (execute.js:1:278)"
+          }
+        ],
+        "isError": true
+      },
+      "elapsed_ms": 13.901601999998093
+    }
+  ],
+  "billed_cost_usd": null,
+  "task_cluster_bootstrap": {
+    "clusters": 3,
+    "resamples": 5000,
+    "seed": 20261117,
+    "latency_delta_seconds_zen_minus_browse_95pct": [
+      -20.887404410999963,
+      -2.1039662809999697
+    ],
+    "uncached_input_ratio_zen_over_browse_95pct": [
+      0.5846151804318686,
+      1.3252287634626285
+    ],
+    "note": "Descriptive interval conditional on this small predeclared task set; not a production reliability or broad-model estimate. All attempts included, including overlap and failures."
+  }
+}

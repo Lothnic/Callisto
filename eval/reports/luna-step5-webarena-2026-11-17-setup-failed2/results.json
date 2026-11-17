@@ -1,0 +1,129 @@
+{
+  "schema": "callisto.webarena-verified-agent.v1",
+  "updated_at": "2026-11-17T15:17:00.267Z",
+  "host": "codex",
+  "model": "gpt-6-luna",
+  "reasoning_effort": "high",
+  "planned_runs": 6,
+  "completed_runs": 0,
+  "task_ids": [
+    41,
+    94,
+    208
+  ],
+  "metadata": {
+    "started_at": "2026-11-17T15:15:49.256Z",
+    "source_revision": "b39783f2d1a57ff48f29554601124aadace04adc",
+    "source_worktree_dirty": true,
+    "model_request": "gpt-6-luna",
+    "served_model_echo_available": false,
+    "codex_version": "codex-cli 0.166.0",
+    "site_image": "am1n3e/webarena-verified-shopping_admin@sha256:d0531dd27ed98d0c459ff9e88118bf2ed8b660b0ed99c38837db46c065a5be13",
+    "evaluator": "webarena-verified==1.2.3",
+    "harness_sha256": {
+      "webarena-agent.mjs": "2eabf6429fc541bed7ab60825bd54cf18ef11c1c88d26bdf4868d429393b7b1e",
+      "webarena-fixture.mjs": "a96885b839c7f5ed0c3d993f2705aceff62c36bea4ec7f3ba38392775f6b41ae",
+      "webarena-response.py": "70fa74215e116d229257bd2fd406e5d155f8251584862ebb2bb2c93f078b197b",
+      "policy-audit.mjs": "84f0136762f079abf87c486079f8c3ddc9758145c93564c53d8009288a7019c5",
+      "mcp-client.mjs": "029cf0b5e3bcc302319aaa911baac9a2d4cf2c45a5519da23b77eeb090204d47",
+      "zen-fixture.mjs": "f4c6d6fe2a64a499486a00674a627498bc10af5b4b622da5327cc58b4334ed66",
+      "browse-fixture.mjs": "ce4e85a27033fbd7ded0935ee623c95ef654d62d4d97353a5b2514e4b8b24ae0",
+      "browse-extension.mjs": "3efede30fc13b9f6c6d8dee9a303ca636d695508aef93787e6a93094c67c5ee0",
+      "host-session.mjs": "7e954eb2e50e32b60c6d6887368a6f939ff62bdab20b786510f9154c6379077b",
+      "host-mcp-proxy.mjs": "a2675678c3857c3daf922c52de972aeff84a1b147c77e4163cb102e8f3e0777f",
+      "codex-host.mjs": "bcc8c68240729ef4fb043a2557e76fa96c16f788ec0aef5c83a392dbf691cd5a"
+    },
+    "site_reset": "new owned 2GiB/2CPU container for every attempt",
+    "browser_reset": "new owned profile for every attempt",
+    "initialization_instructions_forwarded": true
+  },
+  "setup_failures": [
+    {
+      "engine": "zen",
+      "task": 41,
+      "stage": "setup",
+      "model_attempted": false,
+      "message": "Persistent fixture tab missing: {\"tabs\":[{\"active\":true,\"cookieStoreId\":\"firefox-default\",\"hidden\":false,\"id\":2,\"pinned\":false,\"title\":\"Dashboard / Magento Admin\",\"url\":\"http://127.0.0.1:33773/admin/admin/dashboard/\",\"windowId\":1},{\"active\":false,\"cookieStoreId\":\"firefox-default\",\"hidden\":false,\"id\":1,\"pinned\":false,\"title\":\"New Tab\",\"url\":\"about:blank\",\"windowId\":1}],\"extension\":{\"allTabs\":[{\"id\":2,\"url\":\"http://127.0.0.1:33773/admin/admin/dashboard/\"},{\"id\":1,\"url\":\"about:blank\"}],\"extensionURL\":\"moz-extension://9bc951aa-1880-45c6-a1de-a749381ec8fe/options.html\",\"focusEvents\":[],\"version\":\"0.2.1\",\"windows\":[{\"focused\":true,\"id\":1,\"state\":\"maximized\",\"tabs\":[{\"active\":true,\"id\":2,\"url\":\"http://127.0.0.1:33773/admin/admin/dashboard/\"},{\"active\":false,\"id\":1,\"url\":\"about:blank\"}],\"type\":\"normal\"}]}}",
+      "stack": "Error: Persistent fixture tab missing: {\"tabs\":[{\"active\":true,\"cookieStoreId\":\"firefox-default\",\"hidden\":false,\"id\":2,\"pinned\":false,\"title\":\"Dashboard / Magento Admin\",\"url\":\"http://127.0.0.1:33773/admin/admin/dashboard/\",\"windowId\":1},{\"active\":false,\"cookieStoreId\":\"firefox-default\",\"hidden\":false,\"id\":1,\"pinned\":false,\"title\":\"New Tab\",\"url\":\"about:blank\",\"windowId\":1}],\"extension\":{\"allTabs\":[{\"id\":2,\"url\":\"http://127.0.0.1:33773/admin/admin/dashboard/\"},{\"id\":1,\"url\":\"about:blank\"}],\"extensionURL\":\"moz-extension://9bc951aa-1880-45c6-a1de-a749381ec8fe/options.html\",\"focusEvents\":[],\"version\":\"0.2.1\",\"windows\":[{\"focused\":true,\"id\":1,\"state\":\"maximized\",\"tabs\":[{\"active\":true,\"id\":2,\"url\":\"http://127.0.0.1:33773/admin/admin/dashboard/\"},{\"active\":false,\"id\":1,\"url\":\"about:blank\"}],\"type\":\"normal\"}]}}\n    at file:///home/lothnic/Desktop/Projects/callisto/eval/agent-comparison/zen-fixture.mjs:68:344\n    at async ZenFixture.share (file:///home/lothnic/Desktop/Projects/callisto/eval/agent-comparison/zen-fixture.mjs:68:13)\n    at async ZenFixture.start (file:///home/lothnic/Desktop/Projects/callisto/eval/agent-comparison/zen-fixture.mjs:34:62)\n    at async file:///home/lothnic/Desktop/Projects/callisto/eval/agent-comparison/webarena-agent.mjs:20:156",
+      "site_log": [
+        {
+          "args": [
+            "run",
+            "--detach",
+            "--name",
+            "callisto-step5-wa-aa2505e3ac4ecfc5",
+            "--label",
+            "callisto.step5.owner=aa2505e3ac4ecfc5",
+            "--memory",
+            "2g",
+            "--cpus",
+            "2",
+            "--pids-limit",
+            "512",
+            "--publish",
+            "127.0.0.1:44121:80",
+            "--env",
+            "MAGENTO_BASE_URL=http://127.0.0.1:33773",
+            "--env",
+            "WA_ENV_CTRL_EXTERNAL_SITE_URL=http://127.0.0.1:33773",
+            "am1n3e/webarena-verified-shopping_admin@sha256:d0531dd27ed98d0c459ff9e88118bf2ed8b660b0ed99c38837db46c065a5be13"
+          ],
+          "ok": true,
+          "elapsed_ms": 232.039085,
+          "stdout": "66467a10eb1b921ef8dea4c3ba252b41201467abc84b97c4600d2bdb99c4a61b\n"
+        },
+        {
+          "args": [
+            "exec",
+            "66467a10eb1b921ef8dea4c3ba252b41201467abc84b97c4600d2bdb99c4a61b",
+            "env-ctrl",
+            "--verbose",
+            "status"
+          ],
+          "ok": true,
+          "elapsed_ms": 2818.5920939999996,
+          "stdout": "{\n  \"success\": true,\n  \"message\": \"\",\n  \"details\": {\n    \"value\": {\n      \"services\": {\n        \"php-fpm\": \"RUNNING\",\n        \"cron\": \"RUNNING\",\n        \"redis-server\": \"HEALTHY\",\n        \"mailcatcher\": \"HEALTHY\",\n        \"mysqld\": \"HEALTHY\",\n        \"env-ctrl\": \"RUNNING\",\n        \"nginx\": \"RUNNING\"\n      }\n    },\n    \"exec_logs\": [\n      {\n        \"command\": \"test -S /run/supervisord.sock\",\n        \"returncode\": 1,\n        \"stdout\": \"\",\n        \"stderr\": \"\"\n      },\n      {\n        \"command\": \"test -S /run/supervisord.sock\",\n        \"returncode\": 0,\n        \"stdout\": \"\",\n        \"stderr\": \"\"\n      },\n      {\n        \"command\": \"supervisorctl status\",\n        \"returncode\": 0,\n        \"stdout\": \"cron                             RUNNING   pid 56, uptime 0:00:02\\nelasticsearch                    RUNNING   pid 55, uptime 0:00:02\\nenv-ctrl                         RUNNING   pid 60, uptime 0:00:02\\nen... (truncated)\",\n        \"stderr\": \"\"\n      },\n      {\n        \"command\": \"mysqladmin ping -u magentouser -pMyPassword\",\n        \"returncode\": 0,\n        \"stdout\": \"mysqld is alive\",\n        \"stderr\": \"\"\n      },\n      {\n        \"command\": \"redis-cli ping\",\n        \"returncode\": 0,\n        \"stdout\": \"PONG\",\n        \"stderr\": \"\"\n      },\n      {\n        \"command\": \"curl -sf --max-time 10 http://localhost:88/\",\n        \"returncode\": 0,\n        \"stdout\": \"<!DOCTYPE html>\\n<html class=\\\"mailcatcher\\\">\\n<head>\\n  <title>MailCatcher</title>\\n  <base href=\\\"/\\\">\\n  <link href=\\\"favicon.ico\\\" rel=\\\"icon\\\">\\n  <script src=\\\"/assets/mailcatcher.js\\\"></script>\\n  <link rel=\\\"st... (truncated)\",\n        \"stderr\": \"\"\n      }\n    ]\n  }\n}\n"
+        },
+        {
+          "args": [
+            "exec",
+            "66467a10eb1b921ef8dea4c3ba252b41201467abc84b97c4600d2bdb99c4a61b",
+            "env-ctrl",
+            "--verbose",
+            "init",
+            "--base-url",
+            "http://127.0.0.1:33773"
+          ],
+          "ok": true,
+          "elapsed_ms": 28312.598336,
+          "stdout": "{\n  \"success\": true,\n  \"message\": \"\",\n  \"details\": {\n    \"value\": null,\n    \"exec_logs\": [\n      {\n        \"command\": \"php /var/www/magento2/bin/magento setup:store-config:set --base-url=\\\"http://127.0.0.1:33773\\\"\",\n        \"returncode\": 0,\n        \"stdout\": \"\",\n        \"stderr\": \"\"\n      },\n      {\n        \"command\": \"mysql -u magentouser -pMyPassword magentodb -e \\\"UPDATE core_config_data SET value = \\\\\\\"http://127.0.0.1:33773\\\\\\\" WHERE path = \\\\\\\"web/secure/base_url\\\\\\\";\\\"\",\n        \"returncode\": 0,\n        \"stdout\": \"\",\n        \"stderr\": \"\"\n      },\n      {\n        \"command\": \"php /var/www/magento2/bin/magento config:set admin/security/password_is_forced 0\",\n        \"returncode\": 0,\n        \"stdout\": \"Value was saved.\",\n        \"stderr\": \"\"\n      },\n      {\n        \"command\": \"php /var/www/magento2/bin/magento config:set admin/security/password_lifetime 0\",\n        \"returncode\": 0,\n        \"stdout\": \"Value was saved.\",\n        \"stderr\": \"\"\n      },\n      {\n        \"command\": \"php /var/www/magento2/bin/magento cache:flush\",\n        \"returncode\": 0,\n        \"stdout\": \"Flushed cache types:\\nconfig\\nlayout\\nblock_html\\ncollections\\nreflection\\ndb_ddl\\ncompiled_config\\neav\\ncustomer_notification\\nconfig_integration\\nconfig_integration_api\\nfull_page\\nconfig_webservice\\ntranslate\",\n        \"stderr\": \"\"\n      }\n    ]\n  }\n}\n"
+        },
+        {
+          "args": [
+            "inspect",
+            "--format",
+            "{{index .Config.Labels \"callisto.step5.owner\"}}",
+            "66467a10eb1b921ef8dea4c3ba252b41201467abc84b97c4600d2bdb99c4a61b"
+          ],
+          "ok": true,
+          "elapsed_ms": 19.720011999990675,
+          "stdout": "aa2505e3ac4ecfc5\n"
+        },
+        {
+          "args": [
+            "rm",
+            "--force",
+            "66467a10eb1b921ef8dea4c3ba252b41201467abc84b97c4600d2bdb99c4a61b"
+          ],
+          "ok": true,
+          "elapsed_ms": 435.8140940000012,
+          "stdout": "66467a10eb1b921ef8dea4c3ba252b41201467abc84b97c4600d2bdb99c4a61b\n"
+        }
+      ]
+    }
+  ],
+  "cost_usd": null,
+  "scope": "Three predeclared answer-only RETRIEVE tasks from official WebArena Verified 1.2.3, one repetition per engine. Real pinned Shopping Admin site and official AgentResponseEvaluator; no network-evaluated tasks or leaderboard score. Fresh site container and browser profile per attempt. Authentication uses the official X-M2-Admin-Auto-Login header through a local provisioning proxy. No personal account. All browser decisions are model-selected.",
+  "measurement": "Provisioning, image initialization, authentication and initial page load are outside task elapsed and recorded. Task elapsed includes host startup, model turns, failures, shutdown and independent official scoring. Browser API inspection is allowed; direct API/network/file requests by the model are forbidden and audited conservatively.",
+  "results": []
+}

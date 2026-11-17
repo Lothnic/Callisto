@@ -1,0 +1,1411 @@
+{
+  "sequence": 12,
+  "engine": "zen",
+  "task": "receipt-tabs",
+  "round": 1,
+  "success": true,
+  "outcome": "passed",
+  "answer": {
+    "answer": "Saved the claim once with verification code VX-38-Q7. The portal shows “Claim verified”; the receipt tab remains open and the account is signed in."
+  },
+  "actual_host_client_info": {
+    "name": "codex-mcp-client",
+    "title": "Codex",
+    "version": "0.166.0"
+  },
+  "preparation_ms": 202.46728500002064,
+  "host_elapsed_ms": 65610.23890999996,
+  "verification_ms": 3.9573799999197945,
+  "task_elapsed_ms": 65618.32340599992,
+  "usage": {
+    "input_tokens": 327592,
+    "cached_input_tokens": 286848,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 1620,
+    "reasoning_output_tokens": 597
+  },
+  "tool_calls": 19,
+  "tool_failures": 0,
+  "response_bytes": 15645,
+  "evaluation": {
+    "passed": true,
+    "checks": {
+      "authenticated": true,
+      "exactly_one_write": true,
+      "correct_claim": true,
+      "receipt_tab_open": true,
+      "no_other_mutation": true
+    },
+    "write_count": 1,
+    "writes": [
+      {
+        "path": "claim",
+        "fields": {
+          "code": "VX-38-Q7"
+        },
+        "authenticated": true
+      }
+    ],
+    "authenticated_requests": 5
+  },
+  "policy_violations": [],
+  "forbidden_host_calls": 0,
+  "timed_out": false,
+  "cost_usd": null,
+  "trace_file": "zen-receipt-tabs-1.json",
+  "prompt": "Complete this task in the signed-in local test account using ONLY browser MCP tools. The account is already signed in. Inspect the page, act, and verify. Do not use HTTP clients, fetch, network replay, API endpoints, local files, shell, other agents or non-browser tools. Stay inside http://127.0.0.1:44937/case/6a8e55e9fdf32d41bc3076b2/. Do not change input mode, permissions or runtime settings. Do not repeat uncertain writes: inspect first. End with JSON {\"answer\":\"concise result\"}. Maximum 35 browser MCP calls. Use compact Callisto with op/args. Full browser control is enabled in this owned fixture. browser tabs_list/tab_select manage the task tabs. Input is synthetic DOM; do not change input mode.\nTask: Open the receipt link in a new tab. Copy its verification code into the claim form on the original portal tab, save the claim exactly once, and verify its status. Keep the receipt tab open and the account signed in.",
+  "host": {
+    "code": 0,
+    "signal": null,
+    "error": null,
+    "timed_out": false,
+    "elapsed_ms": 65610.23890999996,
+    "usage": {
+      "input_tokens": 327592,
+      "cached_input_tokens": 286848,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 1620,
+      "reasoning_output_tokens": 597
+    },
+    "final": "{\"answer\":\"Saved the claim once with verification code VX-38-Q7. The portal shows “Claim verified”; the receipt tab remains open and the account is signed in.\"}",
+    "events": [
+      {
+        "type": "thread.started",
+        "thread_id": "01a1ea0f-2195-7c30-b312-3c59e573781a"
+      },
+      {
+        "type": "turn.started"
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_0",
+          "type": "agent_message",
+          "text": "I’ll inspect the portal and available browser controls, then open the receipt in a separate tab and complete the claim once."
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_1",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "status",
+            "args": {}
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_1",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "status",
+            "args": {}
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"active\":false,\"browserAccess\":true,\"capabilities\":{\"backgroundWindow\":true,\"canonicalActions\":true,\"demonstration\":true,\"drag\":true,\"extract\":true,\"focusedSnapshot\":true,\"frames\":\"same-origin\",\"fullBrowserControl\":true,\"namedTabs\":true,\"networkInspection\":true,\"playwrightExecution\":false,\"recording\":true,\"run\":true,\"runFormControls\":true,\"scopedDiff\":true,\"selectorWait\":true,\"shortRefs\":true,\"snapshotPagination\":true,\"targetedObservation\":true,\"trustedBinding\":true,\"trustedInput\":false},\"connected\":true,\"continuous\":false,\"execution\":{\"focusPolicy\":\"agent-controlled\",\"mode\":\"full-browser\",\"paused\":false},\"fullAccess\":true,\"input\":{\"extensionSharingControls\":true,\"fallback\":false,\"leaseBound\":false,\"mode\":\"synthetic-dom\",\"transportConnected\":false},\"lease_id\":\"36\",\"ready\":false,\"sharing\":false}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_2",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "pair",
+            "args": {}
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_2",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "pair",
+            "args": {}
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"code\":\"[REDACTED_EXPIRED_FIXTURE_PAIRING_CODE]\",\"instructions\":\"Pair once in the extension. Future MCP sessions reuse this local relay automatically. Choose Share this tab for scoped access or Enable full browser control for automatic tab selection and creation. Check callisto_status.fullAccess; browser-protected pages remain restricted.\"}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_3",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "snapshot",
+            "args": {
+              "max_chars": 6000
+            }
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_3",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "snapshot",
+            "args": {
+              "max_chars": 6000
+            }
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"next_offset\":null,\"offset\":0,\"omitted\":0,\"order_changed\":false,\"revision\":\"ax-14206546874697030725:2\",\"scope\":{\"focus\":\"all\",\"include_text\":true,\"query\":null,\"retain_navigation\":true,\"selector\":null},\"text\":\"paragraph \\\"Signed in as Asha Mitra\\\"\\n[ax-40000001] link \\\"Settings\\\"\\n[ax-40000002] link \\\"Orders\\\"\\n[ax-40000003] link \\\"Portal\\\"\\nheading \\\"Claims portal\\\"\\n[ax-40000004] link \\\"Open receipt\\\"\\n[ax-40000005] status \\\"No claim saved\\\"\\n[ax-40000006] textbox \\\"Verification code\\\"\\n[ax-40000007] button \\\"Save claim\\\"\",\"title\":\"Owned account workflow\",\"truncated\":false,\"url\":\"http://127.0.0.1:44937/case/6a8e55e9fdf32d41bc3076b2/portal\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\"]}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_4",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "help",
+            "args": {
+              "op": "browser"
+            }
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_4",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "help",
+            "args": {
+              "op": "browser"
+            }
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"args_schema\":{\"additionalProperties\":false,\"properties\":{\"action\":{\"enum\":[\"background\",\"tabs_list\",\"windows_list\",\"tab_select\",\"tab_activate\",\"tab_create\",\"tab_navigate\",\"window_create\",\"window_close\",\"agent_container\",\"tab_close\",\"back\",\"forward\",\"reload\",\"screenshot\",\"cookies_list\",\"cookie_set\",\"cookie_remove\",\"bookmarks_search\",\"history_search\",\"downloads_search\",\"download\",\"tab_name\",\"tab_resolve\"],\"type\":\"string\"},\"agent_container\":{\"description\":\"Create a new tab or window in the opt-in isolated Callisto cookie container; existing logins will not be available there.\",\"type\":\"boolean\"},\"cookie_store_id\":{\"type\":\"string\"},\"format\":{\"enum\":[\"jpeg\",\"png\"],\"type\":\"string\"},\"name\":{\"type\":\"string\"},\"operation\":{\"description\":\"Required for background. The agent window must remain unfocused and unminimized; unsupported conditions pause instead of raising it.\",\"enum\":[\"start\",\"pause\",\"resume\",\"stop\"],\"type\":\"string\"},\"query\":{\"maxLength\":200,\"type\":\"string\"},\"tab_id\":{\"minimum\":0,\"type\":\"integer\"},\"tab_name\":{\"maxLength\":100,\"minLength\":1,\"type\":\"string\"},\"url\":{\"type\":\"string\"},\"value\":{\"type\":\"string\"},\"window_id\":{\"minimum\":0,\"type\":\"integer\"}},\"required\":[\"action\"],\"type\":\"object\"},\"description\":\"Manage the user's browser after they grant Enable browser access in the extension. background start/pause/resume/stop controls only the already shared tab and needs the optional tabs grant; the user must prepare the window in the extension first because Firefox/Zen may focus it on creation. Execution then preserves the tab and login in an unfocused agent window. View is a user control. Other actions support tabs, screenshots, cookies, bookmarks, history and downloads. tab_select activates and shares that existing tab; tab_activate only focuses it, including browser-protected pages. tab_create accepts an HTTP(S) url and window_id; omitting url creates about:blank. Use tab_navigate with tab_id and an HTTP(S) url to load a blank tab before page actions. In opt-in Full browser control mode, new tabs/windows are automatically shared and page tools can adopt the active tab or reactivate their selected tab. Full mode can only be enabled in the extension UI; Stop turns it off. Check status.fullAccess. Browser restrictions still apply. window_close closes the specified whole window, including its tabs; use the id returned by window_create for agent-window cleanup. Cookie values are sensitive. Downloads prompt for a save location. Zen may omit inactive workspaces. tab_name associates a handle with tab_id; tab_resolve returns it; tab_select/tab_activate/tab_close accept tab_name instead of tab_id. Handles survive extension reloads while the tab remains available and are removed when the tab closes.\",\"op\":\"browser\"}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_5",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "help",
+            "args": {
+              "op": "click"
+            }
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_5",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "help",
+            "args": {
+              "op": "click"
+            }
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"args_schema\":{\"additionalProperties\":false,\"oneOf\":[{\"required\":[\"ref\"]},{\"required\":[\"role\",\"name\"]}],\"properties\":{\"name\":{\"maxLength\":500,\"type\":\"string\"},\"ref\":{\"maxLength\":40,\"pattern\":\"^ax-[0-9]+$\",\"type\":\"string\"},\"role\":{\"maxLength\":100,\"minLength\":1,\"type\":\"string\"}},\"required\":[],\"type\":\"object\"},\"description\":\"Click a ref from the latest snapshot in the shared tab using a synthetic DOM click. Some websites reject synthetic input. Target by ref or exact role and name. Uses the selected input mode.\",\"op\":\"click\"}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_6",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "help",
+            "args": {
+              "op": "extract"
+            }
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_6",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "help",
+            "args": {
+              "op": "extract"
+            }
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"args_schema\":{\"additionalProperties\":false,\"properties\":{\"fields\":{\"additionalProperties\":{\"anyOf\":[{\"type\":\"string\"},{\"properties\":{\"attribute\":{\"type\":\"string\"},\"selector\":{\"type\":\"string\"},\"type\":{\"enum\":[\"text\",\"number\"],\"type\":\"string\"}},\"type\":\"object\"}]},\"maxProperties\":20,\"minProperties\":1,\"type\":\"object\"},\"include_text\":{\"type\":\"boolean\"},\"limit\":{\"maximum\":1000,\"minimum\":1,\"type\":\"integer\"},\"paginate\":{\"properties\":{\"max_pages\":{\"maximum\":25,\"minimum\":1,\"type\":\"integer\"},\"next\":{\"maxLength\":500,\"minLength\":1,\"type\":\"string\"}},\"required\":[\"next\"],\"type\":\"object\"},\"selector\":{\"maxLength\":500,\"minLength\":1,\"type\":\"string\"}},\"required\":[\"selector\",\"fields\"],\"type\":\"object\"},\"description\":\"Read structured rows from the shared page using CSS selectors: a row selector plus a field map. Optionally follow a next-page control and merge pages. Returns typed rows, not a snapshot, so counting and aggregation need one call.\",\"op\":\"extract\"}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_7",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "extract",
+            "args": {
+              "selector": "a",
+              "fields": {
+                "text": "text",
+                "href": {
+                  "attribute": "href"
+                }
+              }
+            }
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_7",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "extract",
+            "args": {
+              "selector": "a",
+              "fields": {
+                "text": "text",
+                "href": {
+                  "attribute": "href"
+                }
+              }
+            }
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"count\":4,\"pages\":1,\"rows\":[{\"href\":\"/case/6a8e55e9fdf32d41bc3076b2/settings\",\"text\":null},{\"href\":\"/case/6a8e55e9fdf32d41bc3076b2/orders\",\"text\":null},{\"href\":\"/case/6a8e55e9fdf32d41bc3076b2/portal\",\"text\":null},{\"href\":\"/case/6a8e55e9fdf32d41bc3076b2/receipt\",\"text\":null}],\"title\":\"[Callisto] Owned account workflow\",\"truncated\":false,\"url\":\"http://127.0.0.1:44937/case/6a8e55e9fdf32d41bc3076b2/portal\"}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_8",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "browser",
+            "args": {
+              "action": "tabs_list"
+            }
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_8",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "browser",
+            "args": {
+              "action": "tabs_list"
+            }
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"fixture_diagnostics\":{\"allTabs\":[{\"id\":2,\"url\":\"http://127.0.0.1:44937/case/6a8e55e9fdf32d41bc3076b2/portal\"},{\"id\":1,\"url\":\"about:blank\"}],\"extensionURL\":\"moz-extension://b115eaba-3cb3-4176-82be-71c9dd54d3b3/options.html\",\"focusEvents\":[{\"at\":1794927596985,\"id\":1}],\"version\":\"0.2.1\",\"windows\":[{\"focused\":true,\"id\":1,\"state\":\"maximized\",\"tabs\":[{\"active\":true,\"id\":2,\"url\":\"http://127.0.0.1:44937/case/6a8e55e9fdf32d41bc3076b2/portal\"},{\"active\":false,\"id\":1,\"url\":\"about:blank\"}],\"type\":\"normal\"}]},\"tabs\":[{\"active\":true,\"cookieStoreId\":\"firefox-default\",\"hidden\":false,\"id\":2,\"pinned\":false,\"title\":\"[Callisto] Owned account workflow\",\"url\":\"http://127.0.0.1:44937/case/6a8e55e9fdf32d41bc3076b2/portal\",\"windowId\":1},{\"active\":false,\"cookieStoreId\":\"firefox-default\",\"hidden\":false,\"id\":1,\"pinned\":false,\"title\":\"New Tab\",\"url\":\"about:blank\",\"windowId\":1}],\"warning\":\"Zen may omit tabs from inactive workspaces.\"}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_9",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "browser",
+            "args": {
+              "action": "tab_create",
+              "url": "http://127.0.0.1:44937/case/6a8e55e9fdf32d41bc3076b2/receipt"
+            }
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_9",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "browser",
+            "args": {
+              "action": "tab_create",
+              "url": "http://127.0.0.1:44937/case/6a8e55e9fdf32d41bc3076b2/receipt"
+            }
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"active\":true,\"cookieStoreId\":\"firefox-default\",\"hidden\":false,\"id\":10,\"pinned\":false,\"shared\":true,\"title\":\"127.0.0.1:44937/case/6a8e55e9fdf32d41bc3076b2/receipt\",\"url\":\"about:blank\",\"windowId\":1}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_10",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "browser",
+            "args": {
+              "action": "tab_navigate",
+              "tab_id": 10,
+              "url": "http://127.0.0.1:44937/case/6a8e55e9fdf32d41bc3076b2/receipt"
+            }
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_10",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "browser",
+            "args": {
+              "action": "tab_navigate",
+              "tab_id": 10,
+              "url": "http://127.0.0.1:44937/case/6a8e55e9fdf32d41bc3076b2/receipt"
+            }
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"active\":true,\"cookieStoreId\":\"firefox-default\",\"hidden\":false,\"id\":10,\"pinned\":false,\"shared\":true,\"title\":\"[Callisto] Owned account workflow\",\"url\":\"http://127.0.0.1:44937/case/6a8e55e9fdf32d41bc3076b2/receipt\",\"windowId\":1}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_11",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "browser",
+            "args": {
+              "action": "tab_select",
+              "tab_id": 10
+            }
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_11",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "browser",
+            "args": {
+              "action": "tab_select",
+              "tab_id": 10
+            }
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"active\":true,\"cookieStoreId\":\"firefox-default\",\"hidden\":false,\"id\":10,\"pinned\":false,\"shared\":true,\"title\":\"[Callisto] Owned account workflow\",\"url\":\"http://127.0.0.1:44937/case/6a8e55e9fdf32d41bc3076b2/receipt\",\"windowId\":1}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_12",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "snapshot",
+            "args": {
+              "max_chars": 6000
+            }
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_12",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "snapshot",
+            "args": {
+              "max_chars": 6000
+            }
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"next_offset\":null,\"offset\":0,\"omitted\":0,\"order_changed\":false,\"revision\":\"ax-418256125068142384:1\",\"scope\":{\"focus\":\"all\",\"include_text\":true,\"query\":null,\"retain_navigation\":true,\"selector\":null},\"text\":\"paragraph \\\"Signed in as Asha Mitra\\\"\\n[ax-46000001] link \\\"Settings\\\"\\n[ax-46000002] link \\\"Orders\\\"\\n[ax-46000003] link \\\"Portal\\\"\\nheading \\\"Receipt\\\"\\nparagraph \\\"Reservation EX-5208\\\"\\nparagraph \\\"Verification code: VX-38-Q7\\\"\",\"title\":\"Owned account workflow\",\"truncated\":false,\"url\":\"http://127.0.0.1:44937/case/6a8e55e9fdf32d41bc3076b2/receipt\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\"]}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_13",
+          "type": "agent_message",
+          "text": "The receipt is open in its own tab and shows verification code `VX-38-Q7`. I’m switching back to the portal tab to enter it and save once."
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_14",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "browser",
+            "args": {
+              "action": "tab_select",
+              "tab_id": 2
+            }
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_14",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "browser",
+            "args": {
+              "action": "tab_select",
+              "tab_id": 2
+            }
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"active\":true,\"cookieStoreId\":\"firefox-default\",\"hidden\":false,\"id\":2,\"pinned\":false,\"shared\":true,\"title\":\"Owned account workflow\",\"url\":\"http://127.0.0.1:44937/case/6a8e55e9fdf32d41bc3076b2/portal\",\"windowId\":1}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_15",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "snapshot",
+            "args": {
+              "max_chars": 3000
+            }
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_15",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "snapshot",
+            "args": {
+              "max_chars": 3000
+            }
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"next_offset\":null,\"offset\":0,\"omitted\":0,\"order_changed\":false,\"revision\":\"ax-14206546874697030725:3\",\"scope\":{\"focus\":\"all\",\"include_text\":true,\"query\":null,\"retain_navigation\":true,\"selector\":null},\"text\":\"paragraph \\\"Signed in as Asha Mitra\\\"\\n[ax-40000001] link \\\"Settings\\\"\\n[ax-40000002] link \\\"Orders\\\"\\n[ax-40000003] link \\\"Portal\\\"\\nheading \\\"Claims portal\\\"\\n[ax-40000004] link \\\"Open receipt\\\"\\n[ax-40000005] status \\\"No claim saved\\\"\\n[ax-40000006] textbox \\\"Verification code\\\"\\n[ax-40000007] button \\\"Save claim\\\"\",\"title\":\"Owned account workflow\",\"truncated\":false,\"url\":\"http://127.0.0.1:44937/case/6a8e55e9fdf32d41bc3076b2/portal\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\"]}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_16",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "fill",
+            "args": {
+              "ref": "ax-40000006",
+              "value": "VX-38-Q7"
+            }
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_16",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "fill",
+            "args": {
+              "ref": "ax-40000006",
+              "value": "VX-38-Q7"
+            }
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"completed\":true,\"feedback\":{\"document_revision\":\"ax-14206546874697030725\",\"dom_version\":0,\"frame_id\":0,\"needs_observation\":true,\"ready\":true,\"tab_id\":2,\"title\":\"Owned account workflow\",\"url\":\"http://127.0.0.1:44937/case/6a8e55e9fdf32d41bc3076b2/portal\"}}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_17",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "snapshot",
+            "args": {
+              "max_chars": 3000
+            }
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_17",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "snapshot",
+            "args": {
+              "max_chars": 3000
+            }
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"next_offset\":null,\"offset\":0,\"omitted\":0,\"order_changed\":false,\"revision\":\"ax-14206546874697030725:4\",\"scope\":{\"focus\":\"all\",\"include_text\":true,\"query\":null,\"retain_navigation\":true,\"selector\":null},\"text\":\"paragraph \\\"Signed in as Asha Mitra\\\"\\n[ax-40000001] link \\\"Settings\\\"\\n[ax-40000002] link \\\"Orders\\\"\\n[ax-40000003] link \\\"Portal\\\"\\nheading \\\"Claims portal\\\"\\n[ax-40000004] link \\\"Open receipt\\\"\\n[ax-40000005] status \\\"No claim saved\\\"\\n[ax-40000006] textbox \\\"Verification code\\\" =VX-38-Q7\\n[ax-40000007] button \\\"Save claim\\\"\",\"title\":\"Owned account workflow\",\"truncated\":false,\"url\":\"http://127.0.0.1:44937/case/6a8e55e9fdf32d41bc3076b2/portal\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\"]}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_18",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "click",
+            "args": {
+              "ref": "ax-40000007"
+            }
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_18",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "click",
+            "args": {
+              "ref": "ax-40000007"
+            }
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"completed\":true,\"feedback\":{\"document_revision\":\"ax-14206546874697030725\",\"dom_version\":0,\"frame_id\":0,\"needs_observation\":true,\"ready\":false,\"tab_id\":2,\"title\":\"Owned account workflow\",\"url\":\"http://127.0.0.1:44937/case/6a8e55e9fdf32d41bc3076b2/portal\"},\"navigationStarted\":true}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_19",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "snapshot",
+            "args": {
+              "max_chars": 3000
+            }
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_19",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "snapshot",
+            "args": {
+              "max_chars": 3000
+            }
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"next_offset\":null,\"offset\":0,\"omitted\":0,\"order_changed\":false,\"revision\":\"ax-16372909026698265529:1\",\"scope\":{\"focus\":\"all\",\"include_text\":true,\"query\":null,\"retain_navigation\":true,\"selector\":null},\"text\":\"paragraph \\\"Signed in as Asha Mitra\\\"\\n[ax-49000001] link \\\"Settings\\\"\\n[ax-49000002] link \\\"Orders\\\"\\n[ax-49000003] link \\\"Portal\\\"\\nheading \\\"Claims portal\\\"\\n[ax-49000004] link \\\"Open receipt\\\"\\n[ax-49000005] status \\\"Claim verified\\\"\\n[ax-49000006] textbox \\\"Verification code\\\"\\n[ax-49000007] button \\\"Save claim\\\"\",\"title\":\"Owned account workflow\",\"truncated\":false,\"url\":\"http://127.0.0.1:44937/case/6a8e55e9fdf32d41bc3076b2/portal?saved=1\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\"]}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_20",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "browser",
+            "args": {
+              "action": "tabs_list"
+            }
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_20",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "browser",
+            "args": {
+              "action": "tabs_list"
+            }
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"fixture_diagnostics\":{\"allTabs\":[{\"id\":10,\"url\":\"http://127.0.0.1:44937/case/6a8e55e9fdf32d41bc3076b2/receipt\"},{\"id\":2,\"url\":\"http://127.0.0.1:44937/case/6a8e55e9fdf32d41bc3076b2/portal?saved=1\"},{\"id\":1,\"url\":\"about:blank\"}],\"extensionURL\":\"moz-extension://b115eaba-3cb3-4176-82be-71c9dd54d3b3/options.html\",\"focusEvents\":[{\"at\":1794927596985,\"id\":1}],\"version\":\"0.2.1\",\"windows\":[{\"focused\":true,\"id\":1,\"state\":\"maximized\",\"tabs\":[{\"active\":false,\"id\":10,\"url\":\"http://127.0.0.1:44937/case/6a8e55e9fdf32d41bc3076b2/receipt\"},{\"active\":true,\"id\":2,\"url\":\"http://127.0.0.1:44937/case/6a8e55e9fdf32d41bc3076b2/portal?saved=1\"},{\"active\":false,\"id\":1,\"url\":\"about:blank\"}],\"type\":\"normal\"}]},\"tabs\":[{\"active\":false,\"cookieStoreId\":\"firefox-default\",\"hidden\":false,\"id\":10,\"pinned\":false,\"title\":\"Owned account workflow\",\"url\":\"http://127.0.0.1:44937/case/6a8e55e9fdf32d41bc3076b2/receipt\",\"windowId\":1},{\"active\":true,\"cookieStoreId\":\"firefox-default\",\"hidden\":false,\"id\":2,\"pinned\":false,\"title\":\"[Callisto] Owned account workflow\",\"url\":\"http://127.0.0.1:44937/case/6a8e55e9fdf32d41bc3076b2/portal?saved=1\",\"windowId\":1},{\"active\":false,\"cookieStoreId\":\"firefox-default\",\"hidden\":false,\"id\":1,\"pinned\":false,\"title\":\"New Tab\",\"url\":\"about:blank\",\"windowId\":1}],\"warning\":\"Zen may omit tabs from inactive workspaces.\"}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_21",
+          "type": "agent_message",
+          "text": "{\"answer\":\"Saved the claim once with verification code VX-38-Q7. The portal shows “Claim verified”; the receipt tab remains open and the account is signed in.\"}"
+        }
+      },
+      {
+        "type": "turn.completed",
+        "usage": {
+          "input_tokens": 327592,
+          "cached_input_tokens": 286848,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 1620,
+          "reasoning_output_tokens": 597
+        }
+      }
+    ],
+    "parse_errors": 0,
+    "diagnostic": null,
+    "configuration": {
+      "model": "gpt-6-luna",
+      "effort": "high",
+      "sandbox": "read-only",
+      "shell_tool": false,
+      "web_search": "disabled",
+      "user_config_loaded": false,
+      "project_instructions_loaded": false,
+      "skills_catalog_max_tokens": 1,
+      "automatic_skill_instructions": false,
+      "fixture_tool_approval": "explicit approve",
+      "auth": "existing signed-in Codex host",
+      "mcp_transport": "stdio → private Unix socket → native runtime MCP client"
+    }
+  },
+  "tools": [
+    {
+      "sequence": 1,
+      "name": "callisto",
+      "arguments": {
+        "op": "status",
+        "args": {}
+      },
+      "started_at": "2026-11-17T15:10:31.096Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"active\":false,\"browserAccess\":true,\"capabilities\":{\"backgroundWindow\":true,\"canonicalActions\":true,\"demonstration\":true,\"drag\":true,\"extract\":true,\"focusedSnapshot\":true,\"frames\":\"same-origin\",\"fullBrowserControl\":true,\"namedTabs\":true,\"networkInspection\":true,\"playwrightExecution\":false,\"recording\":true,\"run\":true,\"runFormControls\":true,\"scopedDiff\":true,\"selectorWait\":true,\"shortRefs\":true,\"snapshotPagination\":true,\"targetedObservation\":true,\"trustedBinding\":true,\"trustedInput\":false},\"connected\":true,\"continuous\":false,\"execution\":{\"focusPolicy\":\"agent-controlled\",\"mode\":\"full-browser\",\"paused\":false},\"fullAccess\":true,\"input\":{\"extensionSharingControls\":true,\"fallback\":false,\"leaseBound\":false,\"mode\":\"synthetic-dom\",\"transportConnected\":false},\"lease_id\":\"36\",\"ready\":false,\"sharing\":false}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 4.162714000092819,
+      "response_bytes": 935
+    },
+    {
+      "sequence": 2,
+      "name": "callisto",
+      "arguments": {
+        "op": "pair",
+        "args": {}
+      },
+      "started_at": "2026-11-17T15:10:33.066Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"code\":\"[REDACTED_EXPIRED_FIXTURE_PAIRING_CODE]\",\"instructions\":\"Pair once in the extension. Future MCP sessions reuse this local relay automatically. Choose Share this tab for scoped access or Enable full browser control for automatic tab selection and creation. Check callisto_status.fullAccess; browser-protected pages remain restricted.\"}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 0.804223999963142,
+      "response_bytes": 431
+    },
+    {
+      "sequence": 3,
+      "name": "callisto",
+      "arguments": {
+        "op": "snapshot",
+        "args": {
+          "max_chars": 6000
+        }
+      },
+      "started_at": "2026-11-17T15:10:35.270Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"next_offset\":null,\"offset\":0,\"omitted\":0,\"order_changed\":false,\"revision\":\"ax-14206546874697030725:2\",\"scope\":{\"focus\":\"all\",\"include_text\":true,\"query\":null,\"retain_navigation\":true,\"selector\":null},\"text\":\"paragraph \\\"Signed in as Asha Mitra\\\"\\n[ax-40000001] link \\\"Settings\\\"\\n[ax-40000002] link \\\"Orders\\\"\\n[ax-40000003] link \\\"Portal\\\"\\nheading \\\"Claims portal\\\"\\n[ax-40000004] link \\\"Open receipt\\\"\\n[ax-40000005] status \\\"No claim saved\\\"\\n[ax-40000006] textbox \\\"Verification code\\\"\\n[ax-40000007] button \\\"Save claim\\\"\",\"title\":\"Owned account workflow\",\"truncated\":false,\"url\":\"http://127.0.0.1:44937/case/6a8e55e9fdf32d41bc3076b2/portal\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\"]}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 123.59148099995218,
+      "response_bytes": 958
+    },
+    {
+      "sequence": 4,
+      "name": "callisto",
+      "arguments": {
+        "op": "help",
+        "args": {
+          "op": "browser"
+        }
+      },
+      "started_at": "2026-11-17T15:10:38.092Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"args_schema\":{\"additionalProperties\":false,\"properties\":{\"action\":{\"enum\":[\"background\",\"tabs_list\",\"windows_list\",\"tab_select\",\"tab_activate\",\"tab_create\",\"tab_navigate\",\"window_create\",\"window_close\",\"agent_container\",\"tab_close\",\"back\",\"forward\",\"reload\",\"screenshot\",\"cookies_list\",\"cookie_set\",\"cookie_remove\",\"bookmarks_search\",\"history_search\",\"downloads_search\",\"download\",\"tab_name\",\"tab_resolve\"],\"type\":\"string\"},\"agent_container\":{\"description\":\"Create a new tab or window in the opt-in isolated Callisto cookie container; existing logins will not be available there.\",\"type\":\"boolean\"},\"cookie_store_id\":{\"type\":\"string\"},\"format\":{\"enum\":[\"jpeg\",\"png\"],\"type\":\"string\"},\"name\":{\"type\":\"string\"},\"operation\":{\"description\":\"Required for background. The agent window must remain unfocused and unminimized; unsupported conditions pause instead of raising it.\",\"enum\":[\"start\",\"pause\",\"resume\",\"stop\"],\"type\":\"string\"},\"query\":{\"maxLength\":200,\"type\":\"string\"},\"tab_id\":{\"minimum\":0,\"type\":\"integer\"},\"tab_name\":{\"maxLength\":100,\"minLength\":1,\"type\":\"string\"},\"url\":{\"type\":\"string\"},\"value\":{\"type\":\"string\"},\"window_id\":{\"minimum\":0,\"type\":\"integer\"}},\"required\":[\"action\"],\"type\":\"object\"},\"description\":\"Manage the user's browser after they grant Enable browser access in the extension. background start/pause/resume/stop controls only the already shared tab and needs the optional tabs grant; the user must prepare the window in the extension first because Firefox/Zen may focus it on creation. Execution then preserves the tab and login in an unfocused agent window. View is a user control. Other actions support tabs, screenshots, cookies, bookmarks, history and downloads. tab_select activates and shares that existing tab; tab_activate only focuses it, including browser-protected pages. tab_create accepts an HTTP(S) url and window_id; omitting url creates about:blank. Use tab_navigate with tab_id and an HTTP(S) url to load a blank tab before page actions. In opt-in Full browser control mode, new tabs/windows are automatically shared and page tools can adopt the active tab or reactivate their selected tab. Full mode can only be enabled in the extension UI; Stop turns it off. Check status.fullAccess. Browser restrictions still apply. window_close closes the specified whole window, including its tabs; use the id returned by window_create for agent-window cleanup. Cookie values are sensitive. Downloads prompt for a save location. Zen may omit inactive workspaces. tab_name associates a handle with tab_id; tab_resolve returns it; tab_select/tab_activate/tab_close accept tab_name instead of tab_id. Handles survive extension reloads while the tab remains available and are removed when the tab closes.\",\"op\":\"browser\"}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 0.6421910000499338,
+      "response_bytes": 2966
+    },
+    {
+      "sequence": 5,
+      "name": "callisto",
+      "arguments": {
+        "op": "help",
+        "args": {
+          "op": "click"
+        }
+      },
+      "started_at": "2026-11-17T15:10:41.588Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"args_schema\":{\"additionalProperties\":false,\"oneOf\":[{\"required\":[\"ref\"]},{\"required\":[\"role\",\"name\"]}],\"properties\":{\"name\":{\"maxLength\":500,\"type\":\"string\"},\"ref\":{\"maxLength\":40,\"pattern\":\"^ax-[0-9]+$\",\"type\":\"string\"},\"role\":{\"maxLength\":100,\"minLength\":1,\"type\":\"string\"}},\"required\":[],\"type\":\"object\"},\"description\":\"Click a ref from the latest snapshot in the shared tab using a synthetic DOM click. Some websites reject synthetic input. Target by ref or exact role and name. Uses the selected input mode.\",\"op\":\"click\"}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 0.5076789999147877,
+      "response_bytes": 630
+    },
+    {
+      "sequence": 6,
+      "name": "callisto",
+      "arguments": {
+        "op": "help",
+        "args": {
+          "op": "extract"
+        }
+      },
+      "started_at": "2026-11-17T15:10:43.994Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"args_schema\":{\"additionalProperties\":false,\"properties\":{\"fields\":{\"additionalProperties\":{\"anyOf\":[{\"type\":\"string\"},{\"properties\":{\"attribute\":{\"type\":\"string\"},\"selector\":{\"type\":\"string\"},\"type\":{\"enum\":[\"text\",\"number\"],\"type\":\"string\"}},\"type\":\"object\"}]},\"maxProperties\":20,\"minProperties\":1,\"type\":\"object\"},\"include_text\":{\"type\":\"boolean\"},\"limit\":{\"maximum\":1000,\"minimum\":1,\"type\":\"integer\"},\"paginate\":{\"properties\":{\"max_pages\":{\"maximum\":25,\"minimum\":1,\"type\":\"integer\"},\"next\":{\"maxLength\":500,\"minLength\":1,\"type\":\"string\"}},\"required\":[\"next\"],\"type\":\"object\"},\"selector\":{\"maxLength\":500,\"minLength\":1,\"type\":\"string\"}},\"required\":[\"selector\",\"fields\"],\"type\":\"object\"},\"description\":\"Read structured rows from the shared page using CSS selectors: a row selector plus a field map. Optionally follow a next-page control and merge pages. Returns typed rows, not a snapshot, so counting and aggregation need one call.\",\"op\":\"extract\"}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 0.47504799999296665,
+      "response_bytes": 1121
+    },
+    {
+      "sequence": 7,
+      "name": "callisto",
+      "arguments": {
+        "op": "extract",
+        "args": {
+          "selector": "a",
+          "fields": {
+            "text": "text",
+            "href": {
+              "attribute": "href"
+            }
+          }
+        }
+      },
+      "started_at": "2026-11-17T15:10:46.895Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"count\":4,\"pages\":1,\"rows\":[{\"href\":\"/case/6a8e55e9fdf32d41bc3076b2/settings\",\"text\":null},{\"href\":\"/case/6a8e55e9fdf32d41bc3076b2/orders\",\"text\":null},{\"href\":\"/case/6a8e55e9fdf32d41bc3076b2/portal\",\"text\":null},{\"href\":\"/case/6a8e55e9fdf32d41bc3076b2/receipt\",\"text\":null}],\"title\":\"[Callisto] Owned account workflow\",\"truncated\":false,\"url\":\"http://127.0.0.1:44937/case/6a8e55e9fdf32d41bc3076b2/portal\"}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 5.859866999904625,
+      "response_bytes": 486
+    },
+    {
+      "sequence": 8,
+      "name": "callisto",
+      "arguments": {
+        "op": "browser",
+        "args": {
+          "action": "tabs_list"
+        }
+      },
+      "started_at": "2026-11-17T15:10:50.525Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"fixture_diagnostics\":{\"allTabs\":[{\"id\":2,\"url\":\"http://127.0.0.1:44937/case/6a8e55e9fdf32d41bc3076b2/portal\"},{\"id\":1,\"url\":\"about:blank\"}],\"extensionURL\":\"moz-extension://b115eaba-3cb3-4176-82be-71c9dd54d3b3/options.html\",\"focusEvents\":[{\"at\":1794927596985,\"id\":1}],\"version\":\"0.2.1\",\"windows\":[{\"focused\":true,\"id\":1,\"state\":\"maximized\",\"tabs\":[{\"active\":true,\"id\":2,\"url\":\"http://127.0.0.1:44937/case/6a8e55e9fdf32d41bc3076b2/portal\"},{\"active\":false,\"id\":1,\"url\":\"about:blank\"}],\"type\":\"normal\"}]},\"tabs\":[{\"active\":true,\"cookieStoreId\":\"firefox-default\",\"hidden\":false,\"id\":2,\"pinned\":false,\"title\":\"[Callisto] Owned account workflow\",\"url\":\"http://127.0.0.1:44937/case/6a8e55e9fdf32d41bc3076b2/portal\",\"windowId\":1},{\"active\":false,\"cookieStoreId\":\"firefox-default\",\"hidden\":false,\"id\":1,\"pinned\":false,\"title\":\"New Tab\",\"url\":\"about:blank\",\"windowId\":1}],\"warning\":\"Zen may omit tabs from inactive workspaces.\"}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 5.197047000052407,
+      "response_bytes": 1071
+    },
+    {
+      "sequence": 9,
+      "name": "callisto",
+      "arguments": {
+        "op": "browser",
+        "args": {
+          "action": "tab_create",
+          "url": "http://127.0.0.1:44937/case/6a8e55e9fdf32d41bc3076b2/receipt"
+        }
+      },
+      "started_at": "2026-11-17T15:10:55.025Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"active\":true,\"cookieStoreId\":\"firefox-default\",\"hidden\":false,\"id\":10,\"pinned\":false,\"shared\":true,\"title\":\"127.0.0.1:44937/case/6a8e55e9fdf32d41bc3076b2/receipt\",\"url\":\"about:blank\",\"windowId\":1}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 74.97806400002446,
+      "response_bytes": 261
+    },
+    {
+      "sequence": 10,
+      "name": "callisto",
+      "arguments": {
+        "op": "browser",
+        "args": {
+          "action": "tab_navigate",
+          "tab_id": 10,
+          "url": "http://127.0.0.1:44937/case/6a8e55e9fdf32d41bc3076b2/receipt"
+        }
+      },
+      "started_at": "2026-11-17T15:10:58.121Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"active\":true,\"cookieStoreId\":\"firefox-default\",\"hidden\":false,\"id\":10,\"pinned\":false,\"shared\":true,\"title\":\"[Callisto] Owned account workflow\",\"url\":\"http://127.0.0.1:44937/case/6a8e55e9fdf32d41bc3076b2/receipt\",\"windowId\":1}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 29.392739000031725,
+      "response_bytes": 290
+    },
+    {
+      "sequence": 11,
+      "name": "callisto",
+      "arguments": {
+        "op": "browser",
+        "args": {
+          "action": "tab_select",
+          "tab_id": 10
+        }
+      },
+      "started_at": "2026-11-17T15:11:00.391Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"active\":true,\"cookieStoreId\":\"firefox-default\",\"hidden\":false,\"id\":10,\"pinned\":false,\"shared\":true,\"title\":\"[Callisto] Owned account workflow\",\"url\":\"http://127.0.0.1:44937/case/6a8e55e9fdf32d41bc3076b2/receipt\",\"windowId\":1}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 46.21517300000414,
+      "response_bytes": 290
+    },
+    {
+      "sequence": 12,
+      "name": "callisto",
+      "arguments": {
+        "op": "snapshot",
+        "args": {
+          "max_chars": 6000
+        }
+      },
+      "started_at": "2026-11-17T15:11:02.945Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"next_offset\":null,\"offset\":0,\"omitted\":0,\"order_changed\":false,\"revision\":\"ax-418256125068142384:1\",\"scope\":{\"focus\":\"all\",\"include_text\":true,\"query\":null,\"retain_navigation\":true,\"selector\":null},\"text\":\"paragraph \\\"Signed in as Asha Mitra\\\"\\n[ax-46000001] link \\\"Settings\\\"\\n[ax-46000002] link \\\"Orders\\\"\\n[ax-46000003] link \\\"Portal\\\"\\nheading \\\"Receipt\\\"\\nparagraph \\\"Reservation EX-5208\\\"\\nparagraph \\\"Verification code: VX-38-Q7\\\"\",\"title\":\"Owned account workflow\",\"truncated\":false,\"url\":\"http://127.0.0.1:44937/case/6a8e55e9fdf32d41bc3076b2/receipt\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\"]}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 7.894781999988481,
+      "response_bytes": 859
+    },
+    {
+      "sequence": 13,
+      "name": "callisto",
+      "arguments": {
+        "op": "browser",
+        "args": {
+          "action": "tab_select",
+          "tab_id": 2
+        }
+      },
+      "started_at": "2026-11-17T15:11:08.028Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"active\":true,\"cookieStoreId\":\"firefox-default\",\"hidden\":false,\"id\":2,\"pinned\":false,\"shared\":true,\"title\":\"Owned account workflow\",\"url\":\"http://127.0.0.1:44937/case/6a8e55e9fdf32d41bc3076b2/portal\",\"windowId\":1}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 24.174350999994203,
+      "response_bytes": 277
+    },
+    {
+      "sequence": 14,
+      "name": "callisto",
+      "arguments": {
+        "op": "snapshot",
+        "args": {
+          "max_chars": 3000
+        }
+      },
+      "started_at": "2026-11-17T15:11:10.771Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"next_offset\":null,\"offset\":0,\"omitted\":0,\"order_changed\":false,\"revision\":\"ax-14206546874697030725:3\",\"scope\":{\"focus\":\"all\",\"include_text\":true,\"query\":null,\"retain_navigation\":true,\"selector\":null},\"text\":\"paragraph \\\"Signed in as Asha Mitra\\\"\\n[ax-40000001] link \\\"Settings\\\"\\n[ax-40000002] link \\\"Orders\\\"\\n[ax-40000003] link \\\"Portal\\\"\\nheading \\\"Claims portal\\\"\\n[ax-40000004] link \\\"Open receipt\\\"\\n[ax-40000005] status \\\"No claim saved\\\"\\n[ax-40000006] textbox \\\"Verification code\\\"\\n[ax-40000007] button \\\"Save claim\\\"\",\"title\":\"Owned account workflow\",\"truncated\":false,\"url\":\"http://127.0.0.1:44937/case/6a8e55e9fdf32d41bc3076b2/portal\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\"]}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 5.682886000024155,
+      "response_bytes": 958
+    },
+    {
+      "sequence": 15,
+      "name": "callisto",
+      "arguments": {
+        "op": "fill",
+        "args": {
+          "ref": "ax-40000006",
+          "value": "VX-38-Q7"
+        }
+      },
+      "started_at": "2026-11-17T15:11:13.107Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"completed\":true,\"feedback\":{\"document_revision\":\"ax-14206546874697030725\",\"dom_version\":0,\"frame_id\":0,\"needs_observation\":true,\"ready\":true,\"tab_id\":2,\"title\":\"Owned account workflow\",\"url\":\"http://127.0.0.1:44937/case/6a8e55e9fdf32d41bc3076b2/portal\"}}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 15.551417000009678,
+      "response_bytes": 321
+    },
+    {
+      "sequence": 16,
+      "name": "callisto",
+      "arguments": {
+        "op": "snapshot",
+        "args": {
+          "max_chars": 3000
+        }
+      },
+      "started_at": "2026-11-17T15:11:15.207Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"next_offset\":null,\"offset\":0,\"omitted\":0,\"order_changed\":false,\"revision\":\"ax-14206546874697030725:4\",\"scope\":{\"focus\":\"all\",\"include_text\":true,\"query\":null,\"retain_navigation\":true,\"selector\":null},\"text\":\"paragraph \\\"Signed in as Asha Mitra\\\"\\n[ax-40000001] link \\\"Settings\\\"\\n[ax-40000002] link \\\"Orders\\\"\\n[ax-40000003] link \\\"Portal\\\"\\nheading \\\"Claims portal\\\"\\n[ax-40000004] link \\\"Open receipt\\\"\\n[ax-40000005] status \\\"No claim saved\\\"\\n[ax-40000006] textbox \\\"Verification code\\\" =VX-38-Q7\\n[ax-40000007] button \\\"Save claim\\\"\",\"title\":\"Owned account workflow\",\"truncated\":false,\"url\":\"http://127.0.0.1:44937/case/6a8e55e9fdf32d41bc3076b2/portal\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\"]}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 6.127967000007629,
+      "response_bytes": 968
+    },
+    {
+      "sequence": 17,
+      "name": "callisto",
+      "arguments": {
+        "op": "click",
+        "args": {
+          "ref": "ax-40000007"
+        }
+      },
+      "started_at": "2026-11-17T15:11:17.352Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"completed\":true,\"feedback\":{\"document_revision\":\"ax-14206546874697030725\",\"dom_version\":0,\"frame_id\":0,\"needs_observation\":true,\"ready\":false,\"tab_id\":2,\"title\":\"Owned account workflow\",\"url\":\"http://127.0.0.1:44937/case/6a8e55e9fdf32d41bc3076b2/portal\"},\"navigationStarted\":true}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 10.940475999959745,
+      "response_bytes": 349
+    },
+    {
+      "sequence": 18,
+      "name": "callisto",
+      "arguments": {
+        "op": "snapshot",
+        "args": {
+          "max_chars": 3000
+        }
+      },
+      "started_at": "2026-11-17T15:11:19.418Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"next_offset\":null,\"offset\":0,\"omitted\":0,\"order_changed\":false,\"revision\":\"ax-16372909026698265529:1\",\"scope\":{\"focus\":\"all\",\"include_text\":true,\"query\":null,\"retain_navigation\":true,\"selector\":null},\"text\":\"paragraph \\\"Signed in as Asha Mitra\\\"\\n[ax-49000001] link \\\"Settings\\\"\\n[ax-49000002] link \\\"Orders\\\"\\n[ax-49000003] link \\\"Portal\\\"\\nheading \\\"Claims portal\\\"\\n[ax-49000004] link \\\"Open receipt\\\"\\n[ax-49000005] status \\\"Claim verified\\\"\\n[ax-49000006] textbox \\\"Verification code\\\"\\n[ax-49000007] button \\\"Save claim\\\"\",\"title\":\"Owned account workflow\",\"truncated\":false,\"url\":\"http://127.0.0.1:44937/case/6a8e55e9fdf32d41bc3076b2/portal?saved=1\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\"]}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 8.812346999999136,
+      "response_bytes": 966
+    },
+    {
+      "sequence": 19,
+      "name": "callisto",
+      "arguments": {
+        "op": "browser",
+        "args": {
+          "action": "tabs_list"
+        }
+      },
+      "started_at": "2026-11-17T15:11:23.836Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"fixture_diagnostics\":{\"allTabs\":[{\"id\":10,\"url\":\"http://127.0.0.1:44937/case/6a8e55e9fdf32d41bc3076b2/receipt\"},{\"id\":2,\"url\":\"http://127.0.0.1:44937/case/6a8e55e9fdf32d41bc3076b2/portal?saved=1\"},{\"id\":1,\"url\":\"about:blank\"}],\"extensionURL\":\"moz-extension://b115eaba-3cb3-4176-82be-71c9dd54d3b3/options.html\",\"focusEvents\":[{\"at\":1794927596985,\"id\":1}],\"version\":\"0.2.1\",\"windows\":[{\"focused\":true,\"id\":1,\"state\":\"maximized\",\"tabs\":[{\"active\":false,\"id\":10,\"url\":\"http://127.0.0.1:44937/case/6a8e55e9fdf32d41bc3076b2/receipt\"},{\"active\":true,\"id\":2,\"url\":\"http://127.0.0.1:44937/case/6a8e55e9fdf32d41bc3076b2/portal?saved=1\"},{\"active\":false,\"id\":1,\"url\":\"about:blank\"}],\"type\":\"normal\"}]},\"tabs\":[{\"active\":false,\"cookieStoreId\":\"firefox-default\",\"hidden\":false,\"id\":10,\"pinned\":false,\"title\":\"Owned account workflow\",\"url\":\"http://127.0.0.1:44937/case/6a8e55e9fdf32d41bc3076b2/receipt\",\"windowId\":1},{\"active\":true,\"cookieStoreId\":\"firefox-default\",\"hidden\":false,\"id\":2,\"pinned\":false,\"title\":\"[Callisto] Owned account workflow\",\"url\":\"http://127.0.0.1:44937/case/6a8e55e9fdf32d41bc3076b2/portal?saved=1\",\"windowId\":1},{\"active\":false,\"cookieStoreId\":\"firefox-default\",\"hidden\":false,\"id\":1,\"pinned\":false,\"title\":\"New Tab\",\"url\":\"about:blank\",\"windowId\":1}],\"warning\":\"Zen may omit tabs from inactive workspaces.\"}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 4.185064999968745,
+      "response_bytes": 1508
+    }
+  ]
+}

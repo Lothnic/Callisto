@@ -1,0 +1,832 @@
+{
+  "sequence": 1,
+  "engine": "zen",
+  "task": "preferences",
+  "round": 0,
+  "success": true,
+  "outcome": "passed",
+  "answer": {
+    "answer": "Saved once. Verified: Weekly digest; security alerts enabled. Display name remains Asha Mitra."
+  },
+  "actual_host_client_info": {
+    "name": "codex-mcp-client",
+    "title": "Codex",
+    "version": "0.166.0"
+  },
+  "preparation_ms": 279.4935580000001,
+  "host_elapsed_ms": 52393.716535,
+  "verification_ms": 0.244938000003458,
+  "task_elapsed_ms": 52402.633563999996,
+  "usage": {
+    "input_tokens": 176880,
+    "cached_input_tokens": 121472,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 1462,
+    "reasoning_output_tokens": 879
+  },
+  "tool_calls": 10,
+  "tool_failures": 0,
+  "response_bytes": 16223,
+  "evaluation": {
+    "passed": true,
+    "checks": {
+      "authenticated": true,
+      "exactly_one_write": true,
+      "display_name_unchanged": true,
+      "digest": true,
+      "security": true,
+      "no_other_mutation": true
+    },
+    "write_count": 1,
+    "writes": [
+      {
+        "path": "settings",
+        "fields": {
+          "name": "Asha Mitra",
+          "digest": "weekly",
+          "security": "yes"
+        },
+        "authenticated": true
+      }
+    ],
+    "authenticated_requests": 3
+  },
+  "policy_violations": [],
+  "forbidden_host_calls": 0,
+  "timed_out": false,
+  "cost_usd": null,
+  "trace_file": "zen-preferences-0.json",
+  "prompt": "Complete this task in the signed-in local test account using ONLY browser MCP tools. The account is already signed in. Inspect the page, act, and verify. Do not use HTTP clients, fetch, network replay, API endpoints, local files, shell, other agents or non-browser tools. Stay inside http://127.0.0.1:41647/case/5dbe3efdeee20de6b23159ad/. Do not change input mode, permissions or runtime settings. Do not repeat uncertain writes: inspect first. End with JSON {\"answer\":\"concise result\"}. Maximum 35 browser MCP calls. Use compact Callisto with op/args. Full browser control is enabled in this owned fixture. browser tabs_list/tab_select manage the task tabs. Input is synthetic DOM; do not change input mode.\nTask: In this signed-in account, set Digest to Weekly digest and enable Send security alerts. Save exactly once, then verify the saved summary. Leave the display name unchanged.",
+  "host": {
+    "code": 0,
+    "signal": null,
+    "error": null,
+    "timed_out": false,
+    "elapsed_ms": 52393.716535,
+    "usage": {
+      "input_tokens": 176880,
+      "cached_input_tokens": 121472,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 1462,
+      "reasoning_output_tokens": 879
+    },
+    "final": "{\"answer\":\"Saved once. Verified: Weekly digest; security alerts enabled. Display name remains Asha Mitra.\"}",
+    "events": [
+      {
+        "type": "thread.started",
+        "thread_id": "01a1e9f2-31ec-7202-8d09-aa075af90c63"
+      },
+      {
+        "type": "turn.started"
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_0",
+          "type": "agent_message",
+          "text": "I’ll inspect the account settings page, make the two requested changes while preserving the display name, save once, then verify the saved summary."
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_1",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "status",
+            "args": {}
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_1",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "status",
+            "args": {}
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"active\":false,\"browserAccess\":true,\"capabilities\":{\"backgroundWindow\":true,\"canonicalActions\":true,\"demonstration\":true,\"drag\":true,\"extract\":true,\"focusedSnapshot\":true,\"frames\":\"same-origin\",\"fullBrowserControl\":true,\"namedTabs\":true,\"networkInspection\":true,\"playwrightExecution\":false,\"recording\":true,\"run\":true,\"runFormControls\":true,\"scopedDiff\":true,\"selectorWait\":true,\"shortRefs\":true,\"snapshotPagination\":true,\"targetedObservation\":true,\"trustedBinding\":true,\"trustedInput\":false},\"connected\":true,\"continuous\":false,\"execution\":{\"focusPolicy\":\"agent-controlled\",\"mode\":\"full-browser\",\"paused\":false},\"fullAccess\":true,\"input\":{\"extensionSharingControls\":true,\"fallback\":false,\"leaseBound\":false,\"mode\":\"synthetic-dom\",\"transportConnected\":false},\"lease_id\":\"9\",\"ready\":false,\"sharing\":false}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_2",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "pair",
+            "args": {}
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_2",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "pair",
+            "args": {}
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"code\":\"[REDACTED_EXPIRED_FIXTURE_PAIRING_CODE]\",\"instructions\":\"Pair once in the extension. Future MCP sessions reuse this local relay automatically. Choose Share this tab for scoped access or Enable full browser control for automatic tab selection and creation. Check callisto_status.fullAccess; browser-protected pages remain restricted.\"}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_3",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "help",
+            "args": {
+              "op": "browser"
+            }
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_3",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "help",
+            "args": {
+              "op": "browser"
+            }
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"args_schema\":{\"additionalProperties\":false,\"properties\":{\"action\":{\"enum\":[\"background\",\"tabs_list\",\"windows_list\",\"tab_select\",\"tab_activate\",\"tab_create\",\"tab_navigate\",\"window_create\",\"window_close\",\"agent_container\",\"tab_close\",\"back\",\"forward\",\"reload\",\"screenshot\",\"cookies_list\",\"cookie_set\",\"cookie_remove\",\"bookmarks_search\",\"history_search\",\"downloads_search\",\"download\",\"tab_name\",\"tab_resolve\"],\"type\":\"string\"},\"agent_container\":{\"description\":\"Create a new tab or window in the opt-in isolated Callisto cookie container; existing logins will not be available there.\",\"type\":\"boolean\"},\"cookie_store_id\":{\"type\":\"string\"},\"format\":{\"enum\":[\"jpeg\",\"png\"],\"type\":\"string\"},\"name\":{\"type\":\"string\"},\"operation\":{\"description\":\"Required for background. The agent window must remain unfocused and unminimized; unsupported conditions pause instead of raising it.\",\"enum\":[\"start\",\"pause\",\"resume\",\"stop\"],\"type\":\"string\"},\"query\":{\"maxLength\":200,\"type\":\"string\"},\"tab_id\":{\"minimum\":0,\"type\":\"integer\"},\"tab_name\":{\"maxLength\":100,\"minLength\":1,\"type\":\"string\"},\"url\":{\"type\":\"string\"},\"value\":{\"type\":\"string\"},\"window_id\":{\"minimum\":0,\"type\":\"integer\"}},\"required\":[\"action\"],\"type\":\"object\"},\"description\":\"Manage the user's browser after they grant Enable browser access in the extension. background start/pause/resume/stop controls only the already shared tab and needs the optional tabs grant; the user must prepare the window in the extension first because Firefox/Zen may focus it on creation. Execution then preserves the tab and login in an unfocused agent window. View is a user control. Other actions support tabs, screenshots, cookies, bookmarks, history and downloads. tab_select activates and shares that existing tab; tab_activate only focuses it, including browser-protected pages. tab_create accepts an HTTP(S) url and window_id; omitting url creates about:blank. Use tab_navigate with tab_id and an HTTP(S) url to load a blank tab before page actions. In opt-in Full browser control mode, new tabs/windows are automatically shared and page tools can adopt the active tab or reactivate their selected tab. Full mode can only be enabled in the extension UI; Stop turns it off. Check status.fullAccess. Browser restrictions still apply. window_close closes the specified whole window, including its tabs; use the id returned by window_create for agent-window cleanup. Cookie values are sensitive. Downloads prompt for a save location. Zen may omit inactive workspaces. tab_name associates a handle with tab_id; tab_resolve returns it; tab_select/tab_activate/tab_close accept tab_name instead of tab_id. Handles survive extension reloads while the tab remains available and are removed when the tab closes.\",\"op\":\"browser\"}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_4",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "browser",
+            "args": {
+              "action": "tabs_list"
+            }
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_4",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "browser",
+            "args": {
+              "action": "tabs_list"
+            }
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"fixture_diagnostics\":{\"allTabs\":[{\"id\":2,\"url\":\"http://127.0.0.1:41647/case/5dbe3efdeee20de6b23159ad/settings\"},{\"id\":1,\"url\":\"about:blank\"}],\"extensionURL\":\"moz-extension://a3770b8a-1075-4060-beb6-107e13579070/options.html\",\"focusEvents\":[{\"at\":1794926325791,\"id\":1}],\"version\":\"0.2.1\",\"windows\":[{\"focused\":true,\"id\":1,\"state\":\"maximized\",\"tabs\":[{\"active\":true,\"id\":2,\"url\":\"http://127.0.0.1:41647/case/5dbe3efdeee20de6b23159ad/settings\"},{\"active\":false,\"id\":1,\"url\":\"about:blank\"}],\"type\":\"normal\"}]},\"tabs\":[{\"active\":true,\"cookieStoreId\":\"firefox-default\",\"hidden\":false,\"id\":2,\"pinned\":false,\"title\":\"Owned account workflow\",\"url\":\"http://127.0.0.1:41647/case/5dbe3efdeee20de6b23159ad/settings\",\"windowId\":1},{\"active\":false,\"cookieStoreId\":\"firefox-default\",\"hidden\":false,\"id\":1,\"pinned\":false,\"title\":\"New Tab\",\"url\":\"about:blank\",\"windowId\":1}],\"warning\":\"Zen may omit tabs from inactive workspaces.\"}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_5",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "snapshot",
+            "args": {
+              "max_chars": 5000
+            }
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_5",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "snapshot",
+            "args": {
+              "max_chars": 5000
+            }
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"next_offset\":null,\"offset\":0,\"omitted\":0,\"order_changed\":false,\"revision\":\"ax-12801001980708011618:2\",\"scope\":{\"focus\":\"all\",\"include_text\":true,\"query\":null,\"retain_navigation\":true,\"selector\":null},\"text\":\"paragraph \\\"Signed in as Asha Mitra\\\"\\n[ax-2000001] link \\\"Settings\\\"\\n[ax-2000002] link \\\"Orders\\\"\\n[ax-2000003] link \\\"Portal\\\"\\nheading \\\"Account preferences\\\"\\n[ax-2000004] textbox \\\"Display name\\\" =Asha Mitra\\n[ax-2000005] combobox \\\"Digest\\\" options=[{\\\"label\\\":\\\"Every day\\\",\\\"value\\\":\\\"daily\\\"},{\\\"label\\\":\\\"Weekly digest\\\",\\\"value\\\":\\\"weekly\\\"},{\\\"label\\\":\\\"None\\\",\\\"value\\\":\\\"none\\\"}]\\n[ax-2000006] checkbox \\\"Send security alerts\\\"\\n[ax-2000007] button \\\"Save preferences\\\"\",\"title\":\"Owned account workflow\",\"truncated\":false,\"url\":\"http://127.0.0.1:41647/case/5dbe3efdeee20de6b23159ad/settings\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\"]}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_6",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "help",
+            "args": {
+              "op": "extract"
+            }
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_6",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "help",
+            "args": {
+              "op": "extract"
+            }
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"args_schema\":{\"additionalProperties\":false,\"properties\":{\"fields\":{\"additionalProperties\":{\"anyOf\":[{\"type\":\"string\"},{\"properties\":{\"attribute\":{\"type\":\"string\"},\"selector\":{\"type\":\"string\"},\"type\":{\"enum\":[\"text\",\"number\"],\"type\":\"string\"}},\"type\":\"object\"}]},\"maxProperties\":20,\"minProperties\":1,\"type\":\"object\"},\"include_text\":{\"type\":\"boolean\"},\"limit\":{\"maximum\":1000,\"minimum\":1,\"type\":\"integer\"},\"paginate\":{\"properties\":{\"max_pages\":{\"maximum\":25,\"minimum\":1,\"type\":\"integer\"},\"next\":{\"maxLength\":500,\"minLength\":1,\"type\":\"string\"}},\"required\":[\"next\"],\"type\":\"object\"},\"selector\":{\"maxLength\":500,\"minLength\":1,\"type\":\"string\"}},\"required\":[\"selector\",\"fields\"],\"type\":\"object\"},\"description\":\"Read structured rows from the shared page using CSS selectors: a row selector plus a field map. Optionally follow a next-page control and merge pages. Returns typed rows, not a snapshot, so counting and aggregation need one call.\",\"op\":\"extract\"}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_7",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "help",
+            "args": {
+              "op": "check"
+            }
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_7",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "help",
+            "args": {
+              "op": "check"
+            }
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"args_schema\":{\"additionalProperties\":false,\"oneOf\":[{\"required\":[\"ref\"]},{\"required\":[\"role\",\"name\"]}],\"properties\":{\"checked\":{\"type\":\"boolean\"},\"name\":{\"maxLength\":500,\"type\":\"string\"},\"ref\":{\"maxLength\":40,\"pattern\":\"^ax-[0-9]+$\",\"type\":\"string\"},\"role\":{\"maxLength\":100,\"minLength\":1,\"type\":\"string\"}},\"required\":[\"checked\"],\"type\":\"object\"},\"description\":\"Set a checkbox to the requested state.\",\"op\":\"check\"}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_8",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "help",
+            "args": {
+              "op": "run"
+            }
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_8",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "help",
+            "args": {
+              "op": "run"
+            }
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"args_schema\":{\"additionalProperties\":false,\"properties\":{\"snapshot\":{\"type\":\"boolean\"},\"steps\":{\"items\":{\"oneOf\":[{\"additionalProperties\":false,\"properties\":{\"action\":{\"enum\":[\"navigate\"]},\"url\":{}},\"required\":[\"url\",\"action\"],\"type\":\"object\"},{\"additionalProperties\":false,\"oneOf\":[{\"required\":[\"ref\"]},{\"required\":[\"role\",\"name\"]}],\"properties\":{\"action\":{\"enum\":[\"click\"]},\"name\":{},\"ref\":{},\"role\":{}},\"required\":[\"action\"],\"type\":\"object\"},{\"additionalProperties\":false,\"oneOf\":[{\"required\":[\"ref\"]},{\"required\":[\"role\",\"name\"]}],\"properties\":{\"action\":{\"enum\":[\"fill\"]},\"name\":{},\"ref\":{},\"role\":{},\"value\":{}},\"required\":[\"value\",\"action\"],\"type\":\"object\"},{\"additionalProperties\":false,\"oneOf\":[{\"required\":[\"ref\"]},{\"required\":[\"role\",\"name\"]}],\"properties\":{\"action\":{\"enum\":[\"submit\"]},\"name\":{},\"ref\":{},\"role\":{}},\"required\":[\"action\"],\"type\":\"object\"},{\"additionalProperties\":false,\"oneOf\":[{\"required\":[\"ref\"]},{\"required\":[\"role\",\"name\"]}],\"properties\":{\"action\":{\"enum\":[\"select\"]},\"name\":{},\"ref\":{},\"role\":{},\"value\":{}},\"required\":[\"value\",\"action\"],\"type\":\"object\"},{\"additionalProperties\":false,\"oneOf\":[{\"required\":[\"ref\"]},{\"required\":[\"role\",\"name\"]}],\"properties\":{\"action\":{\"enum\":[\"check\"]},\"checked\":{},\"name\":{},\"ref\":{},\"role\":{}},\"required\":[\"checked\",\"action\"],\"type\":\"object\"},{\"additionalProperties\":false,\"oneOf\":[{\"required\":[\"ref\"]},{\"required\":[\"role\",\"name\"]}],\"properties\":{\"action\":{\"enum\":[\"hover\"]},\"name\":{},\"ref\":{},\"role\":{}},\"required\":[\"action\"],\"type\":\"object\"},{\"additionalProperties\":false,\"properties\":{\"action\":{\"enum\":[\"press\"]},\"key\":{}},\"required\":[\"key\",\"action\"],\"type\":\"object\"},{\"additionalProperties\":false,\"properties\":{\"action\":{\"enum\":[\"scroll\"]},\"delta_x\":{},\"delta_y\":{}},\"required\":[\"delta_y\",\"action\"],\"type\":\"object\"},{\"additionalProperties\":false,\"properties\":{\"action\":{\"enum\":[\"wait\"]},\"ms\":{}},\"required\":[\"ms\",\"action\"],\"type\":\"object\"},{\"additionalProperties\":false,\"oneOf\":[{\"required\":[\"text\"]},{\"required\":[\"selector\"]}],\"properties\":{\"action\":{\"enum\":[\"wait_for\"]},\"selector\":{},\"state\":{},\"text\":{},\"timeout_ms\":{}},\"required\":[\"action\"],\"type\":\"object\"},{\"additionalProperties\":false,\"properties\":{\"action\":{\"enum\":[\"extract\"]},\"fields\":{},\"include_text\":{},\"limit\":{},\"paginate\":{},\"selector\":{}},\"required\":[\"selector\",\"fields\",\"action\"],\"type\":\"object\"},{\"additionalProperties\":false,\"properties\":{\"action\":{\"enum\":[\"drag\"]},\"ref\":{},\"target_ref\":{}},\"required\":[\"ref\",\"target_ref\",\"action\"],\"type\":\"object\"}],\"properties\":{\"action\":{\"enum\":[\"navigate\",\"click\",\"fill\",\"submit\",\"select\",\"check\",\"hover\",\"press\",\"scroll\",\"wait\",\"wait_for\",\"extract\",\"drag\"],\"type\":\"string\"},\"checked\":{\"type\":\"boolean\"},\"delta_x\":{\"default\":0,\"type\":\"number\"},\"delta_y\":{\"type\":\"number\"},\"fields\":{\"additionalProperties\":{\"anyOf\":[{\"type\":\"string\"},{\"properties\":{\"attribute\":{\"type\":\"string\"},\"selector\":{\"type\":\"string\"},\"type\":{\"enum\":[\"text\",\"number\"],\"type\":\"string\"}},\"type\":\"object\"}]},\"maxProperties\":20,\"minProperties\":1,\"type\":\"object\"},\"include_text\":{\"type\":\"boolean\"},\"key\":{\"maxLength\":40,\"minLength\":1,\"type\":\"string\"},\"limit\":{\"maximum\":1000,\"minimum\":1,\"type\":\"integer\"},\"ms\":{\"maximum\":5000,\"minimum\":1,\"type\":\"integer\"},\"name\":{\"maxLength\":500,\"type\":\"string\"},\"paginate\":{\"properties\":{\"max_pages\":{\"maximum\":25,\"minimum\":1,\"type\":\"integer\"},\"next\":{\"maxLength\":500,\"minLength\":1,\"type\":\"string\"}},\"required\":[\"next\"],\"type\":\"object\"},\"ref\":{\"maxLength\":40,\"pattern\":\"^ax-[0-9]+$\",\"type\":\"string\"},\"role\":{\"maxLength\":100,\"minLength\":1,\"type\":\"string\"},\"selector\":{\"maxLength\":500,\"minLength\":1,\"type\":\"string\"},\"state\":{\"enum\":[\"visible\",\"hidden\",\"attached\",\"detached\"],\"type\":\"string\"},\"target_ref\":{\"maxLength\":40,\"pattern\":\"^ax-[0-9]+$\",\"type\":\"string\"},\"text\":{\"maxLength\":500,\"minLength\":1,\"type\":\"string\"},\"timeout_ms\":{\"maximum\":20000,\"minimum\":100,\"type\":\"integer\"},\"url\":{\"maxLength\":8192,\"type\":\"string\"},\"value\":{\"maxLength\":100000,\"type\":\"string\"}},\"required\":[\"action\"],\"type\":\"object\"},\"maxItems\":40,\"minItems\":1,\"type\":\"array\"}},\"required\":[\"steps\"],\"type\":\"object\"},\"description\":\"Execute 1–40 steps using the same actions and fields as standalone tools. All steps are validated before dispatch. Returns compact final page feedback, the last extraction and an optional snapshot. Stops on failure; earlier actions are not rolled back. Never replay uncertain writes.\",\"op\":\"run\"}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_9",
+          "type": "agent_message",
+          "text": "The settings form is open. The display name shows “Asha Mitra,” and the requested controls are present; I’m setting Weekly digest and security alerts on, then submitting the form once."
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_10",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "run",
+            "args": {
+              "steps": [
+                {
+                  "action": "select",
+                  "ref": "ax-2000005",
+                  "value": "weekly"
+                },
+                {
+                  "action": "check",
+                  "ref": "ax-2000006",
+                  "checked": true
+                },
+                {
+                  "action": "click",
+                  "ref": "ax-2000007"
+                }
+              ],
+              "snapshot": true
+            }
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_10",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "run",
+            "args": {
+              "steps": [
+                {
+                  "action": "select",
+                  "ref": "ax-2000005",
+                  "value": "weekly"
+                },
+                {
+                  "action": "check",
+                  "ref": "ax-2000006",
+                  "checked": true
+                },
+                {
+                  "action": "click",
+                  "ref": "ax-2000007"
+                }
+              ],
+              "snapshot": true
+            }
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"completed\":3,\"elapsed_ms\":136,\"feedback\":{\"document_revision\":\"ax-14634679200538904421\",\"dom_version\":0,\"navigationStarted\":true,\"needs_observation\":true,\"title\":\"Owned account workflow\",\"url\":\"http://127.0.0.1:41647/case/5dbe3efdeee20de6b23159ad/settings?saved=1\"},\"snapshot\":{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"next_offset\":null,\"offset\":0,\"omitted\":0,\"order_changed\":false,\"revision\":\"ax-14634679200538904421:1\",\"scope\":{\"focus\":\"all\",\"include_text\":true,\"query\":null,\"retain_navigation\":true,\"selector\":null},\"text\":\"paragraph \\\"Signed in as Asha Mitra\\\"\\n[ax-7000001] link \\\"Settings\\\"\\n[ax-7000002] link \\\"Orders\\\"\\n[ax-7000003] link \\\"Portal\\\"\\nheading \\\"Account preferences\\\"\\n[ax-7000004] status \\\"Saved preferences: Weekly digest. Security alerts enabled.\\\"\\n[ax-7000005] textbox \\\"Display name\\\" =Asha Mitra\\n[ax-7000006] combobox \\\"Digest\\\" options=[{\\\"label\\\":\\\"Every day\\\",\\\"value\\\":\\\"daily\\\"},{\\\"label\\\":\\\"Weekly digest\\\",\\\"value\\\":\\\"weekly\\\"},{\\\"label\\\":\\\"None\\\",\\\"value\\\":\\\"none\\\"}]\\n[ax-7000007] checkbox \\\"Send security alerts\\\"\\n[ax-7000008] button \\\"Save preferences\\\"\",\"title\":\"Owned account workflow\",\"truncated\":false,\"url\":\"http://127.0.0.1:41647/case/5dbe3efdeee20de6b23159ad/settings?saved=1\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\"]}}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_11",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "snapshot",
+            "args": {
+              "max_chars": 3000
+            }
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_11",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "snapshot",
+            "args": {
+              "max_chars": 3000
+            }
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"next_offset\":null,\"offset\":0,\"omitted\":0,\"order_changed\":false,\"revision\":\"ax-14634679200538904421:2\",\"scope\":{\"focus\":\"all\",\"include_text\":true,\"query\":null,\"retain_navigation\":true,\"selector\":null},\"text\":\"paragraph \\\"Signed in as Asha Mitra\\\"\\n[ax-7000001] link \\\"Settings\\\"\\n[ax-7000002] link \\\"Orders\\\"\\n[ax-7000003] link \\\"Portal\\\"\\nheading \\\"Account preferences\\\"\\n[ax-7000004] status \\\"Saved preferences: Weekly digest. Security alerts enabled.\\\"\\n[ax-7000005] textbox \\\"Display name\\\" =Asha Mitra\\n[ax-7000006] combobox \\\"Digest\\\" options=[{\\\"label\\\":\\\"Every day\\\",\\\"value\\\":\\\"daily\\\"},{\\\"label\\\":\\\"Weekly digest\\\",\\\"value\\\":\\\"weekly\\\"},{\\\"label\\\":\\\"None\\\",\\\"value\\\":\\\"none\\\"}]\\n[ax-7000007] checkbox \\\"Send security alerts\\\"\\n[ax-7000008] button \\\"Save preferences\\\"\",\"title\":\"Owned account workflow\",\"truncated\":false,\"url\":\"http://127.0.0.1:41647/case/5dbe3efdeee20de6b23159ad/settings?saved=1\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\"]}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_12",
+          "type": "agent_message",
+          "text": "{\"answer\":\"Saved once. Verified: Weekly digest; security alerts enabled. Display name remains Asha Mitra.\"}"
+        }
+      },
+      {
+        "type": "turn.completed",
+        "usage": {
+          "input_tokens": 176880,
+          "cached_input_tokens": 121472,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 1462,
+          "reasoning_output_tokens": 879
+        }
+      }
+    ],
+    "parse_errors": 0,
+    "diagnostic": null,
+    "configuration": {
+      "model": "gpt-6-luna",
+      "effort": "high",
+      "sandbox": "read-only",
+      "shell_tool": false,
+      "web_search": "disabled",
+      "user_config_loaded": false,
+      "project_instructions_loaded": false,
+      "skills_catalog_max_tokens": 1,
+      "automatic_skill_instructions": false,
+      "fixture_tool_approval": "explicit approve",
+      "auth": "existing signed-in Codex host",
+      "mcp_transport": "stdio → private Unix socket → native runtime MCP client"
+    }
+  },
+  "tools": [
+    {
+      "sequence": 1,
+      "name": "callisto",
+      "arguments": {
+        "op": "status",
+        "args": {}
+      },
+      "started_at": "2026-11-17T14:38:55.036Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"active\":false,\"browserAccess\":true,\"capabilities\":{\"backgroundWindow\":true,\"canonicalActions\":true,\"demonstration\":true,\"drag\":true,\"extract\":true,\"focusedSnapshot\":true,\"frames\":\"same-origin\",\"fullBrowserControl\":true,\"namedTabs\":true,\"networkInspection\":true,\"playwrightExecution\":false,\"recording\":true,\"run\":true,\"runFormControls\":true,\"scopedDiff\":true,\"selectorWait\":true,\"shortRefs\":true,\"snapshotPagination\":true,\"targetedObservation\":true,\"trustedBinding\":true,\"trustedInput\":false},\"connected\":true,\"continuous\":false,\"execution\":{\"focusPolicy\":\"agent-controlled\",\"mode\":\"full-browser\",\"paused\":false},\"fullAccess\":true,\"input\":{\"extensionSharingControls\":true,\"fallback\":false,\"leaseBound\":false,\"mode\":\"synthetic-dom\",\"transportConnected\":false},\"lease_id\":\"9\",\"ready\":false,\"sharing\":false}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 4.383528000002116,
+      "response_bytes": 934
+    },
+    {
+      "sequence": 2,
+      "name": "callisto",
+      "arguments": {
+        "op": "pair",
+        "args": {}
+      },
+      "started_at": "2026-11-17T14:38:57.671Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"code\":\"[REDACTED_EXPIRED_FIXTURE_PAIRING_CODE]\",\"instructions\":\"Pair once in the extension. Future MCP sessions reuse this local relay automatically. Choose Share this tab for scoped access or Enable full browser control for automatic tab selection and creation. Check callisto_status.fullAccess; browser-protected pages remain restricted.\"}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 1.6528619999990042,
+      "response_bytes": 431
+    },
+    {
+      "sequence": 3,
+      "name": "callisto",
+      "arguments": {
+        "op": "help",
+        "args": {
+          "op": "browser"
+        }
+      },
+      "started_at": "2026-11-17T14:39:00.544Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"args_schema\":{\"additionalProperties\":false,\"properties\":{\"action\":{\"enum\":[\"background\",\"tabs_list\",\"windows_list\",\"tab_select\",\"tab_activate\",\"tab_create\",\"tab_navigate\",\"window_create\",\"window_close\",\"agent_container\",\"tab_close\",\"back\",\"forward\",\"reload\",\"screenshot\",\"cookies_list\",\"cookie_set\",\"cookie_remove\",\"bookmarks_search\",\"history_search\",\"downloads_search\",\"download\",\"tab_name\",\"tab_resolve\"],\"type\":\"string\"},\"agent_container\":{\"description\":\"Create a new tab or window in the opt-in isolated Callisto cookie container; existing logins will not be available there.\",\"type\":\"boolean\"},\"cookie_store_id\":{\"type\":\"string\"},\"format\":{\"enum\":[\"jpeg\",\"png\"],\"type\":\"string\"},\"name\":{\"type\":\"string\"},\"operation\":{\"description\":\"Required for background. The agent window must remain unfocused and unminimized; unsupported conditions pause instead of raising it.\",\"enum\":[\"start\",\"pause\",\"resume\",\"stop\"],\"type\":\"string\"},\"query\":{\"maxLength\":200,\"type\":\"string\"},\"tab_id\":{\"minimum\":0,\"type\":\"integer\"},\"tab_name\":{\"maxLength\":100,\"minLength\":1,\"type\":\"string\"},\"url\":{\"type\":\"string\"},\"value\":{\"type\":\"string\"},\"window_id\":{\"minimum\":0,\"type\":\"integer\"}},\"required\":[\"action\"],\"type\":\"object\"},\"description\":\"Manage the user's browser after they grant Enable browser access in the extension. background start/pause/resume/stop controls only the already shared tab and needs the optional tabs grant; the user must prepare the window in the extension first because Firefox/Zen may focus it on creation. Execution then preserves the tab and login in an unfocused agent window. View is a user control. Other actions support tabs, screenshots, cookies, bookmarks, history and downloads. tab_select activates and shares that existing tab; tab_activate only focuses it, including browser-protected pages. tab_create accepts an HTTP(S) url and window_id; omitting url creates about:blank. Use tab_navigate with tab_id and an HTTP(S) url to load a blank tab before page actions. In opt-in Full browser control mode, new tabs/windows are automatically shared and page tools can adopt the active tab or reactivate their selected tab. Full mode can only be enabled in the extension UI; Stop turns it off. Check status.fullAccess. Browser restrictions still apply. window_close closes the specified whole window, including its tabs; use the id returned by window_create for agent-window cleanup. Cookie values are sensitive. Downloads prompt for a save location. Zen may omit inactive workspaces. tab_name associates a handle with tab_id; tab_resolve returns it; tab_select/tab_activate/tab_close accept tab_name instead of tab_id. Handles survive extension reloads while the tab remains available and are removed when the tab closes.\",\"op\":\"browser\"}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 1.0658430000003136,
+      "response_bytes": 2966
+    },
+    {
+      "sequence": 4,
+      "name": "callisto",
+      "arguments": {
+        "op": "browser",
+        "args": {
+          "action": "tabs_list"
+        }
+      },
+      "started_at": "2026-11-17T14:39:03.048Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"fixture_diagnostics\":{\"allTabs\":[{\"id\":2,\"url\":\"http://127.0.0.1:41647/case/5dbe3efdeee20de6b23159ad/settings\"},{\"id\":1,\"url\":\"about:blank\"}],\"extensionURL\":\"moz-extension://a3770b8a-1075-4060-beb6-107e13579070/options.html\",\"focusEvents\":[{\"at\":1794926325791,\"id\":1}],\"version\":\"0.2.1\",\"windows\":[{\"focused\":true,\"id\":1,\"state\":\"maximized\",\"tabs\":[{\"active\":true,\"id\":2,\"url\":\"http://127.0.0.1:41647/case/5dbe3efdeee20de6b23159ad/settings\"},{\"active\":false,\"id\":1,\"url\":\"about:blank\"}],\"type\":\"normal\"}]},\"tabs\":[{\"active\":true,\"cookieStoreId\":\"firefox-default\",\"hidden\":false,\"id\":2,\"pinned\":false,\"title\":\"Owned account workflow\",\"url\":\"http://127.0.0.1:41647/case/5dbe3efdeee20de6b23159ad/settings\",\"windowId\":1},{\"active\":false,\"cookieStoreId\":\"firefox-default\",\"hidden\":false,\"id\":1,\"pinned\":false,\"title\":\"New Tab\",\"url\":\"about:blank\",\"windowId\":1}],\"warning\":\"Zen may omit tabs from inactive workspaces.\"}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 4.80986699999994,
+      "response_bytes": 1066
+    },
+    {
+      "sequence": 5,
+      "name": "callisto",
+      "arguments": {
+        "op": "snapshot",
+        "args": {
+          "max_chars": 5000
+        }
+      },
+      "started_at": "2026-11-17T14:39:05.424Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"next_offset\":null,\"offset\":0,\"omitted\":0,\"order_changed\":false,\"revision\":\"ax-12801001980708011618:2\",\"scope\":{\"focus\":\"all\",\"include_text\":true,\"query\":null,\"retain_navigation\":true,\"selector\":null},\"text\":\"paragraph \\\"Signed in as Asha Mitra\\\"\\n[ax-2000001] link \\\"Settings\\\"\\n[ax-2000002] link \\\"Orders\\\"\\n[ax-2000003] link \\\"Portal\\\"\\nheading \\\"Account preferences\\\"\\n[ax-2000004] textbox \\\"Display name\\\" =Asha Mitra\\n[ax-2000005] combobox \\\"Digest\\\" options=[{\\\"label\\\":\\\"Every day\\\",\\\"value\\\":\\\"daily\\\"},{\\\"label\\\":\\\"Weekly digest\\\",\\\"value\\\":\\\"weekly\\\"},{\\\"label\\\":\\\"None\\\",\\\"value\\\":\\\"none\\\"}]\\n[ax-2000006] checkbox \\\"Send security alerts\\\"\\n[ax-2000007] button \\\"Save preferences\\\"\",\"title\":\"Owned account workflow\",\"truncated\":false,\"url\":\"http://127.0.0.1:41647/case/5dbe3efdeee20de6b23159ad/settings\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\"]}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 33.21475500000088,
+      "response_bytes": 1173
+    },
+    {
+      "sequence": 6,
+      "name": "callisto",
+      "arguments": {
+        "op": "help",
+        "args": {
+          "op": "extract"
+        }
+      },
+      "started_at": "2026-11-17T14:39:09.770Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"args_schema\":{\"additionalProperties\":false,\"properties\":{\"fields\":{\"additionalProperties\":{\"anyOf\":[{\"type\":\"string\"},{\"properties\":{\"attribute\":{\"type\":\"string\"},\"selector\":{\"type\":\"string\"},\"type\":{\"enum\":[\"text\",\"number\"],\"type\":\"string\"}},\"type\":\"object\"}]},\"maxProperties\":20,\"minProperties\":1,\"type\":\"object\"},\"include_text\":{\"type\":\"boolean\"},\"limit\":{\"maximum\":1000,\"minimum\":1,\"type\":\"integer\"},\"paginate\":{\"properties\":{\"max_pages\":{\"maximum\":25,\"minimum\":1,\"type\":\"integer\"},\"next\":{\"maxLength\":500,\"minLength\":1,\"type\":\"string\"}},\"required\":[\"next\"],\"type\":\"object\"},\"selector\":{\"maxLength\":500,\"minLength\":1,\"type\":\"string\"}},\"required\":[\"selector\",\"fields\"],\"type\":\"object\"},\"description\":\"Read structured rows from the shared page using CSS selectors: a row selector plus a field map. Optionally follow a next-page control and merge pages. Returns typed rows, not a snapshot, so counting and aggregation need one call.\",\"op\":\"extract\"}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 0.45079299999633804,
+      "response_bytes": 1121
+    },
+    {
+      "sequence": 7,
+      "name": "callisto",
+      "arguments": {
+        "op": "help",
+        "args": {
+          "op": "check"
+        }
+      },
+      "started_at": "2026-11-17T14:39:14.666Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"args_schema\":{\"additionalProperties\":false,\"oneOf\":[{\"required\":[\"ref\"]},{\"required\":[\"role\",\"name\"]}],\"properties\":{\"checked\":{\"type\":\"boolean\"},\"name\":{\"maxLength\":500,\"type\":\"string\"},\"ref\":{\"maxLength\":40,\"pattern\":\"^ax-[0-9]+$\",\"type\":\"string\"},\"role\":{\"maxLength\":100,\"minLength\":1,\"type\":\"string\"}},\"required\":[\"checked\"],\"type\":\"object\"},\"description\":\"Set a checkbox to the requested state.\",\"op\":\"check\"}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 0.6421309999932419,
+      "response_bytes": 525
+    },
+    {
+      "sequence": 8,
+      "name": "callisto",
+      "arguments": {
+        "op": "help",
+        "args": {
+          "op": "run"
+        }
+      },
+      "started_at": "2026-11-17T14:39:22.395Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"args_schema\":{\"additionalProperties\":false,\"properties\":{\"snapshot\":{\"type\":\"boolean\"},\"steps\":{\"items\":{\"oneOf\":[{\"additionalProperties\":false,\"properties\":{\"action\":{\"enum\":[\"navigate\"]},\"url\":{}},\"required\":[\"url\",\"action\"],\"type\":\"object\"},{\"additionalProperties\":false,\"oneOf\":[{\"required\":[\"ref\"]},{\"required\":[\"role\",\"name\"]}],\"properties\":{\"action\":{\"enum\":[\"click\"]},\"name\":{},\"ref\":{},\"role\":{}},\"required\":[\"action\"],\"type\":\"object\"},{\"additionalProperties\":false,\"oneOf\":[{\"required\":[\"ref\"]},{\"required\":[\"role\",\"name\"]}],\"properties\":{\"action\":{\"enum\":[\"fill\"]},\"name\":{},\"ref\":{},\"role\":{},\"value\":{}},\"required\":[\"value\",\"action\"],\"type\":\"object\"},{\"additionalProperties\":false,\"oneOf\":[{\"required\":[\"ref\"]},{\"required\":[\"role\",\"name\"]}],\"properties\":{\"action\":{\"enum\":[\"submit\"]},\"name\":{},\"ref\":{},\"role\":{}},\"required\":[\"action\"],\"type\":\"object\"},{\"additionalProperties\":false,\"oneOf\":[{\"required\":[\"ref\"]},{\"required\":[\"role\",\"name\"]}],\"properties\":{\"action\":{\"enum\":[\"select\"]},\"name\":{},\"ref\":{},\"role\":{},\"value\":{}},\"required\":[\"value\",\"action\"],\"type\":\"object\"},{\"additionalProperties\":false,\"oneOf\":[{\"required\":[\"ref\"]},{\"required\":[\"role\",\"name\"]}],\"properties\":{\"action\":{\"enum\":[\"check\"]},\"checked\":{},\"name\":{},\"ref\":{},\"role\":{}},\"required\":[\"checked\",\"action\"],\"type\":\"object\"},{\"additionalProperties\":false,\"oneOf\":[{\"required\":[\"ref\"]},{\"required\":[\"role\",\"name\"]}],\"properties\":{\"action\":{\"enum\":[\"hover\"]},\"name\":{},\"ref\":{},\"role\":{}},\"required\":[\"action\"],\"type\":\"object\"},{\"additionalProperties\":false,\"properties\":{\"action\":{\"enum\":[\"press\"]},\"key\":{}},\"required\":[\"key\",\"action\"],\"type\":\"object\"},{\"additionalProperties\":false,\"properties\":{\"action\":{\"enum\":[\"scroll\"]},\"delta_x\":{},\"delta_y\":{}},\"required\":[\"delta_y\",\"action\"],\"type\":\"object\"},{\"additionalProperties\":false,\"properties\":{\"action\":{\"enum\":[\"wait\"]},\"ms\":{}},\"required\":[\"ms\",\"action\"],\"type\":\"object\"},{\"additionalProperties\":false,\"oneOf\":[{\"required\":[\"text\"]},{\"required\":[\"selector\"]}],\"properties\":{\"action\":{\"enum\":[\"wait_for\"]},\"selector\":{},\"state\":{},\"text\":{},\"timeout_ms\":{}},\"required\":[\"action\"],\"type\":\"object\"},{\"additionalProperties\":false,\"properties\":{\"action\":{\"enum\":[\"extract\"]},\"fields\":{},\"include_text\":{},\"limit\":{},\"paginate\":{},\"selector\":{}},\"required\":[\"selector\",\"fields\",\"action\"],\"type\":\"object\"},{\"additionalProperties\":false,\"properties\":{\"action\":{\"enum\":[\"drag\"]},\"ref\":{},\"target_ref\":{}},\"required\":[\"ref\",\"target_ref\",\"action\"],\"type\":\"object\"}],\"properties\":{\"action\":{\"enum\":[\"navigate\",\"click\",\"fill\",\"submit\",\"select\",\"check\",\"hover\",\"press\",\"scroll\",\"wait\",\"wait_for\",\"extract\",\"drag\"],\"type\":\"string\"},\"checked\":{\"type\":\"boolean\"},\"delta_x\":{\"default\":0,\"type\":\"number\"},\"delta_y\":{\"type\":\"number\"},\"fields\":{\"additionalProperties\":{\"anyOf\":[{\"type\":\"string\"},{\"properties\":{\"attribute\":{\"type\":\"string\"},\"selector\":{\"type\":\"string\"},\"type\":{\"enum\":[\"text\",\"number\"],\"type\":\"string\"}},\"type\":\"object\"}]},\"maxProperties\":20,\"minProperties\":1,\"type\":\"object\"},\"include_text\":{\"type\":\"boolean\"},\"key\":{\"maxLength\":40,\"minLength\":1,\"type\":\"string\"},\"limit\":{\"maximum\":1000,\"minimum\":1,\"type\":\"integer\"},\"ms\":{\"maximum\":5000,\"minimum\":1,\"type\":\"integer\"},\"name\":{\"maxLength\":500,\"type\":\"string\"},\"paginate\":{\"properties\":{\"max_pages\":{\"maximum\":25,\"minimum\":1,\"type\":\"integer\"},\"next\":{\"maxLength\":500,\"minLength\":1,\"type\":\"string\"}},\"required\":[\"next\"],\"type\":\"object\"},\"ref\":{\"maxLength\":40,\"pattern\":\"^ax-[0-9]+$\",\"type\":\"string\"},\"role\":{\"maxLength\":100,\"minLength\":1,\"type\":\"string\"},\"selector\":{\"maxLength\":500,\"minLength\":1,\"type\":\"string\"},\"state\":{\"enum\":[\"visible\",\"hidden\",\"attached\",\"detached\"],\"type\":\"string\"},\"target_ref\":{\"maxLength\":40,\"pattern\":\"^ax-[0-9]+$\",\"type\":\"string\"},\"text\":{\"maxLength\":500,\"minLength\":1,\"type\":\"string\"},\"timeout_ms\":{\"maximum\":20000,\"minimum\":100,\"type\":\"integer\"},\"url\":{\"maxLength\":8192,\"type\":\"string\"},\"value\":{\"maxLength\":100000,\"type\":\"string\"}},\"required\":[\"action\"],\"type\":\"object\"},\"maxItems\":40,\"minItems\":1,\"type\":\"array\"}},\"required\":[\"steps\"],\"type\":\"object\"},\"description\":\"Execute 1–40 steps using the same actions and fields as standalone tools. All steps are validated before dispatch. Returns compact final page feedback, the last extraction and an optional snapshot. Stops on failure; earlier actions are not rolled back. Never replay uncertain writes.\",\"op\":\"run\"}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 6.955057999999553,
+      "response_bytes": 5161
+    },
+    {
+      "sequence": 9,
+      "name": "callisto",
+      "arguments": {
+        "op": "run",
+        "args": {
+          "steps": [
+            {
+              "action": "select",
+              "ref": "ax-2000005",
+              "value": "weekly"
+            },
+            {
+              "action": "check",
+              "ref": "ax-2000006",
+              "checked": true
+            },
+            {
+              "action": "click",
+              "ref": "ax-2000007"
+            }
+          ],
+          "snapshot": true
+        }
+      },
+      "started_at": "2026-11-17T14:39:29.664Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"completed\":3,\"elapsed_ms\":136,\"feedback\":{\"document_revision\":\"ax-14634679200538904421\",\"dom_version\":0,\"navigationStarted\":true,\"needs_observation\":true,\"title\":\"Owned account workflow\",\"url\":\"http://127.0.0.1:41647/case/5dbe3efdeee20de6b23159ad/settings?saved=1\"},\"snapshot\":{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"next_offset\":null,\"offset\":0,\"omitted\":0,\"order_changed\":false,\"revision\":\"ax-14634679200538904421:1\",\"scope\":{\"focus\":\"all\",\"include_text\":true,\"query\":null,\"retain_navigation\":true,\"selector\":null},\"text\":\"paragraph \\\"Signed in as Asha Mitra\\\"\\n[ax-7000001] link \\\"Settings\\\"\\n[ax-7000002] link \\\"Orders\\\"\\n[ax-7000003] link \\\"Portal\\\"\\nheading \\\"Account preferences\\\"\\n[ax-7000004] status \\\"Saved preferences: Weekly digest. Security alerts enabled.\\\"\\n[ax-7000005] textbox \\\"Display name\\\" =Asha Mitra\\n[ax-7000006] combobox \\\"Digest\\\" options=[{\\\"label\\\":\\\"Every day\\\",\\\"value\\\":\\\"daily\\\"},{\\\"label\\\":\\\"Weekly digest\\\",\\\"value\\\":\\\"weekly\\\"},{\\\"label\\\":\\\"None\\\",\\\"value\\\":\\\"none\\\"}]\\n[ax-7000007] checkbox \\\"Send security alerts\\\"\\n[ax-7000008] button \\\"Save preferences\\\"\",\"title\":\"Owned account workflow\",\"truncated\":false,\"url\":\"http://127.0.0.1:41647/case/5dbe3efdeee20de6b23159ad/settings?saved=1\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\"]}}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 147.09507999999914,
+      "response_bytes": 1576
+    },
+    {
+      "sequence": 10,
+      "name": "callisto",
+      "arguments": {
+        "op": "snapshot",
+        "args": {
+          "max_chars": 3000
+        }
+      },
+      "started_at": "2026-11-17T14:39:34.333Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"next_offset\":null,\"offset\":0,\"omitted\":0,\"order_changed\":false,\"revision\":\"ax-14634679200538904421:2\",\"scope\":{\"focus\":\"all\",\"include_text\":true,\"query\":null,\"retain_navigation\":true,\"selector\":null},\"text\":\"paragraph \\\"Signed in as Asha Mitra\\\"\\n[ax-7000001] link \\\"Settings\\\"\\n[ax-7000002] link \\\"Orders\\\"\\n[ax-7000003] link \\\"Portal\\\"\\nheading \\\"Account preferences\\\"\\n[ax-7000004] status \\\"Saved preferences: Weekly digest. Security alerts enabled.\\\"\\n[ax-7000005] textbox \\\"Display name\\\" =Asha Mitra\\n[ax-7000006] combobox \\\"Digest\\\" options=[{\\\"label\\\":\\\"Every day\\\",\\\"value\\\":\\\"daily\\\"},{\\\"label\\\":\\\"Weekly digest\\\",\\\"value\\\":\\\"weekly\\\"},{\\\"label\\\":\\\"None\\\",\\\"value\\\":\\\"none\\\"}]\\n[ax-7000007] checkbox \\\"Send security alerts\\\"\\n[ax-7000008] button \\\"Save preferences\\\"\",\"title\":\"Owned account workflow\",\"truncated\":false,\"url\":\"http://127.0.0.1:41647/case/5dbe3efdeee20de6b23159ad/settings?saved=1\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\"]}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 9.345499999995809,
+      "response_bytes": 1270
+    }
+  ]
+}

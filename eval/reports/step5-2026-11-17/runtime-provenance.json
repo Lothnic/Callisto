@@ -1,0 +1,27 @@
+{
+  "product_source_revision": "2138847e72526e22e000deea11e5e2d574918cd8",
+  "firefox_source_tree": "c3f18640090f51f7a7af862044093e4440e8e0f3",
+  "runtime_binary_sha256": "c42bf9dc961ca31d48c5871a0a17bd6af06eadf140d2913ea50fbaf6d6deafc8",
+  "extension_source_sha256": {
+    "api-analysis.js": "05bb9db5e28aa3922a18c51aac266e6500a704fcad9e58daff093f992dd59971",
+    "background.js": "a39e5b63b140255d1f04699c0bc5caa5f906ee816d0eb8d1a7ede60733e60bd6",
+    "browser-control.js": "ea379480eba4af9a835252060450ba8191a4ca395be56ba66b53a3aef6730005",
+    "connection-ui.js": "bf7276571902ccf7da2e09bd2ddc3d09d7943f04343af54dc14889a9f4f1679b",
+    "connection.css": "151d8e2855295cfc9949e23447afc1c31227be43a49410dc7ac2ca097325f4d9",
+    "content.js": "37c4e7527a00dc6b5c68deb0209ef9b649db97a9ec3d486f23a7812f9fc8c49d",
+    "icon-128.png": "3106085294e32b47cd8a3aa48e8edfc06813c56b66bc5ad11acceddd3bb54474",
+    "icon-16.png": "d8089d6806d88155978b47c05e4e4d76079783ad9de6acd150f3e9e125657a8f",
+    "icon-256.png": "b6fa62713f99afe40272ab9f09f2979b45166233a866f3931b305fe45ccb214b",
+    "icon-32.png": "0616ff01bf17731f6f8b89a10f8159e55564db82e0e69a2d3928125d8e5c99c7",
+    "icon-48.png": "a75776ffcbb125344a9d501334a702e7faca88188ce253823bf1d1ca287e28c6",
+    "icon-512.png": "160cebfd72480a2ebe31250ac48b06bb32b7da33c55688a04accff418a5221ab",
+    "icon-64.png": "e69bbca0c787592feac2b2da11514617f40f87de6e539f239ab65bd7a2ce52fe",
+    "icon-96.png": "1f1f3c252af06ee4e96ad9273d0c59c1374d175115303318ca0c689bd54e383c",
+    "manifest.json": "667daa06b57ea1abd57c90f8697523e87dbc451b89abca77335fcd77b141b41b",
+    "network.js": "6da511b94201ebfeb436528558cc0dbed6f95f965b71b5d969d6856beb4e4741",
+    "operations.json": "e99cecc34f383ccf857a1be5a6ea923de7bcd35a2b112e9d1fae661f2df6fab9",
+    "options.html": "600e351da31f05fbb55b09061efe518352f231db86e6d8e2d1d19b48e6459ea4",
+    "popup.html": "4b807930feba7676959f029c3ea7715613ac2a9de5f1e9fe9699866ea84f0f3a"
+  },
+  "note": "Product source unchanged since priorities 1\u20134 implementation. Benchmark-only harness commits and dirty sources are captured separately in each run."
+}

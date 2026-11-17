@@ -24,7 +24,7 @@ jobs:
       - run: npm --prefix packages/mini run build
       - name: Browser and installer contracts
         timeout-minutes: 3
-        run: node --test packages/firefox-rs/tests/extension-background.test.cjs packages/firefox-rs/tests/extension-network.test.cjs scripts/launcher.test.mjs scripts/install-release.test.mjs scripts/site-install.test.mjs scripts/doctor.test.mjs scripts/compact-tools.test.mjs eval/agent-comparison/host-session.test.mjs eval/agent-comparison/real-world-tasks.test.mjs eval/agent-comparison/real-world-settings.test.mjs eval/agent-comparison/browse-extension.test.mjs eval/agent-comparison/browse-fixture.test.mjs eval/agent-comparison/account-fixture.test.mjs
+        run: node --test packages/firefox-rs/tests/extension-background.test.cjs packages/firefox-rs/tests/extension-network.test.cjs scripts/launcher.test.mjs scripts/install-release.test.mjs scripts/site-install.test.mjs scripts/doctor.test.mjs scripts/compact-tools.test.mjs eval/agent-comparison/host-session.test.mjs eval/agent-comparison/real-world-tasks.test.mjs eval/agent-comparison/real-world-settings.test.mjs eval/agent-comparison/browse-extension.test.mjs eval/agent-comparison/browse-fixture.test.mjs eval/agent-comparison/account-fixture.test.mjs eval/agent-comparison/step5-redact.test.mjs
       - name: DOM bridge tests in runner Chrome
         run: |
           export CHROMIUM_PATH="$(command -v google-chrome)"

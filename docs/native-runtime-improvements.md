@@ -2,7 +2,8 @@
 
 This change implements priorities 1–4 from the
 [Browse comparison plan](../research/2026-11-17-browse-native-tools-and-callisto-plan.md).
-It does not run the comparative benchmark program in priority 5. Update the
+The approved priority 5 screening is documented in the
+[comparative report](../eval/reports/step5-2026-11-17/README.md). Update the
 runtime and development extension together, stop the old persistent relay when
 no task is running (`callisto-firefox-tab-mcp --stop-relay`), and reconnect the host
 to start the new relay and reload its catalog. Re-share the intended tab. No new store release or benchmark win is claimed.
@@ -54,8 +55,8 @@ a different host identity instead of silently measuring another interface.
 
 Actual OpenCode config resolution, native/compact MCP routing, contracts and
 browser operations are checked without a model call. Model-driven OpenCode
-composition, token usage and comparative performance remain part of the
-approval-gated evaluation work. The old pilot is not silently reclassified as a
+composition and comparative performance remain unmeasured because the free
+provider returned HTTP 429 during the approved availability preflight. The old pilot is not silently reclassified as a
 default-host experiment.
 
 ## Smaller observations and useful action outcomes
@@ -129,8 +130,10 @@ console logs, viewport/screenshot pixel changes, prompts and lease revocation.
 WebMCP checks cover both absent support and a page-provided fixture implementation;
 they do not certify native browser WebMCP support.
 
-OpenCode config resolution is a setup check. No new comparative timing, token,
-cost or task-success claim follows from this work.
+OpenCode config resolution is a setup check. Engineering correctness alone
+does not establish a comparative win. See the separate
+[screening report](../eval/reports/step5-2026-11-17/README.md) for measured
+Luna outcomes, regressions, usage and limits.
 
 Protocol references: [WebDriver BiDi](https://www.w3.org/TR/webdriver-bidi/) and
 [WebMCP draft](https://webmachinelearning.github.io/webmcp/).

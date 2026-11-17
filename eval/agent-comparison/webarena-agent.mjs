@@ -17,8 +17,10 @@ try{
   const prepStart=performance.now();
   try{
    await site.start();const task=await evaluator('describe',taskId,site.origin);
-   if(engine==='zen'){client=await new MCPClient(binary,[],environment).initialize({name:'codex-mcp-client',version:'0.166.0'});zen=new ZenFixture(client);await zen.start(site.origin);await zen.call('callisto_input',{action:'disable'});}
-   else{browse=new BrowseFixture({clientInfo:{name:'codex-mcp-client',version:'0.166.0'}});await browse.start(site.origin);client=browse.client;}
+   // Resolve the official login redirect before the fixture acquires an exact-URL tab lease.
+   const login=await fetch(site.origin+'/admin');await login.body?.cancel();const startURL=login.url;if(login.status!==200||new URL(startURL).origin!==site.origin)throw Error('Official login did not resolve to the owned fixture');
+   if(engine==='zen'){client=await new MCPClient(binary,[],environment).initialize({name:'codex-mcp-client',version:'0.166.0'});zen=new ZenFixture(client);await zen.start(startURL);await zen.call('callisto_input',{action:'disable'});}
+   else{browse=new BrowseFixture({clientInfo:{name:'codex-mcp-client',version:'0.166.0'}});await browse.start(startURL);client=browse.client;}
    const catalog=(await client.request('tools/list')).tools,cwd=join(state,'workspace');await mkdir(cwd);const schema=join(state,'answer-schema.json');await writeFile(schema,JSON.stringify(providerSchema(task.results_schemas[0])));
    const preparationMs=performance.now()-prepStart,session=await new HostSession(client,catalog,{maxCalls:35,preserveInitialization:true}).start(join(state,'host.sock'));
    const backend=engine==='zen'?'Use compact Callisto with op/args in the shared Zen tab. Input is synthetic DOM; do not change it.':`Use browse tab ${browse.tab} on the existing Shopping Admin page.`;

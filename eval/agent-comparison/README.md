@@ -195,3 +195,21 @@ node eval/agent-comparison/real-world-adjudicate.mjs /tmp/existing-real-world-ru
 node eval/agent-comparison/real-world-report.mjs /tmp/existing-real-world-run
 uv run --with matplotlib python eval/agent-comparison/real-world-plot.py /tmp/existing-real-world-run
 ```
+
+## Pinned priority 5 screening
+
+The [17 November screening report](../reports/step5-2026-11-17/README.md) compares
+compact Callisto on Zen with pinned Browse CLI/extension 0.1.1 through Codex
+Luna. Public reads keep the controlled facade; owned account writes and the
+small official WebArena Verified retrieval subset forward native initialization
+instructions. These are separate suites, not one pooled score. OpenCode's
+free-model quota blocked its availability preflight; no fallback was used.
+
+See [reproduction, judges and measurement boundaries](../../docs/step5-evaluation.md).
+`BROWSE_BINARY` and `BROWSE_EXTENSION_PATH` select private pinned inputs without
+updating the user's installed CLI. `BENCH_HOST_INTERFACE=controlled|default`
+controls initialization forwarding for the public runner. Every run archives
+its exact harness. Use `step5-report.py` for per-suite summaries and
+`step5-plot.py` for the retained three-suite figure. Before publishing fixture
+traces, `step5-redact.py` removes expired pairing secrets while retaining private
+originals and hashes; it does not change measured counts, usage or outcomes.

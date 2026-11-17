@@ -1,0 +1,13 @@
+{
+  "real-world-agent.mjs": "35ce74181b103280841e67d2cd2499eb8607d5aecc92fb794b95a645747e56c6",
+  "real-world-tasks.mjs": "4a25821b37f22e77ba903e1896da5dad290332606165c3b0534052a8647028bc",
+  "observation-text.mjs": "56088198f7c3135bca37bad8e859aa2c342bacd697ca44594609de5f8676f66e",
+  "codex-host.mjs": "bcc8c68240729ef4fb043a2557e76fa96c16f788ec0aef5c83a392dbf691cd5a",
+  "opencode-host.mjs": "b2ae3eb83c3bcd8ae8c019b9904f56ae064ac3e6517e42040763eda70d4e40af",
+  "host-session.mjs": "7e954eb2e50e32b60c6d6887368a6f939ff62bdab20b786510f9154c6379077b",
+  "host-mcp-proxy.mjs": "a2675678c3857c3daf922c52de972aeff84a1b147c77e4163cb102e8f3e0777f",
+  "zen-fixture.mjs": "f4c6d6fe2a64a499486a00674a627498bc10af5b4b622da5327cc58b4334ed66",
+  "browse-fixture.mjs": "ce4e85a27033fbd7ded0935ee623c95ef654d62d4d97353a5b2514e4b8b24ae0",
+  "browse-extension.mjs": "3efede30fc13b9f6c6d8dee9a303ca636d695508aef93787e6a93094c67c5ee0",
+  "mcp-client.mjs": "029cf0b5e3bcc302319aaa911baac9a2d4cf2c45a5519da23b77eeb090204d47"
+}

@@ -1,0 +1,5 @@
+{
+  "at": "2026-11-17T14:27:24.629Z",
+  "message": "browserContext.waitForEvent: Timeout 15000ms exceeded while waiting for event \"serviceworker\"",
+  "stack": "browserContext.waitForEvent: Timeout 15000ms exceeded while waiting for event \"serviceworker\"\n    at BrowseFixture.start (/home/lothnic/Desktop/Projects/callisto/eval/agent-comparison/browse-fixture.mjs:28:69)\n    at async file:///home/lothnic/Desktop/Projects/callisto/eval/agent-comparison/real-world-agent.mjs:110:121"
+}

@@ -1,0 +1,845 @@
+{
+  "schema": "callisto.step5-summary.v1",
+  "complete": true,
+  "planned_runs": 24,
+  "completed_runs": 24,
+  "model": "gpt-6-luna",
+  "reasoning_effort": "high",
+  "all_attempts": {
+    "zen": {
+      "attempted": 12,
+      "passed": 10,
+      "outcomes": {
+        "passed": 10,
+        "agent_failure": 2
+      },
+      "usage_runs": 12,
+      "mean_seconds": 66.43350872624998,
+      "median_seconds": 62.35913798600005,
+      "sample_p95_seconds": 149.13937731200002,
+      "total_seconds": 797.2021047149999,
+      "input_tokens": 2404942,
+      "cached_input_tokens": 2010240,
+      "cache_write_input_tokens": 0,
+      "uncached_input_tokens": 394702,
+      "output_tokens": 14221,
+      "reasoning_output_tokens": 6769,
+      "mcp_calls": 115,
+      "tool_errors": 5,
+      "response_bytes": 427242,
+      "operations": {
+        "status": 3,
+        "snapshot": 53,
+        "navigate": 13,
+        "help": 12,
+        "fill": 2,
+        "submit": 4,
+        "click": 16,
+        "press": 2,
+        "select": 2,
+        "run": 7,
+        "extract": 1
+      },
+      "help_calls": 12,
+      "help_bytes": 20856,
+      "uncached_input_per_strict_success": 39470.2
+    },
+    "browse": {
+      "attempted": 12,
+      "passed": 12,
+      "outcomes": {
+        "passed": 12
+      },
+      "usage_runs": 12,
+      "mean_seconds": 53.52160958399999,
+      "median_seconds": 47.39166507750004,
+      "sample_p95_seconds": 108.724080331,
+      "total_seconds": 642.2593150079998,
+      "input_tokens": 1559779,
+      "cached_input_tokens": 1184896,
+      "cache_write_input_tokens": 0,
+      "uncached_input_tokens": 374883,
+      "output_tokens": 13055,
+      "reasoning_output_tokens": 4550,
+      "mcp_calls": 67,
+      "tool_errors": 12,
+      "response_bytes": 193403,
+      "operations": {
+        "execute": 67
+      },
+      "help_calls": 0,
+      "help_bytes": 0,
+      "uncached_input_per_strict_success": 31240.25
+    }
+  },
+  "paired_successful_count": 10,
+  "no_overlap_all_pairs": 10,
+  "no_overlap_successful_pairs": 8,
+  "no_overlap_all_attempts": {
+    "zen": {
+      "attempted": 10,
+      "passed": 8,
+      "outcomes": {
+        "passed": 8,
+        "agent_failure": 2
+      },
+      "usage_runs": 10,
+      "mean_seconds": 67.41125136379999,
+      "median_seconds": 62.35913798600005,
+      "sample_p95_seconds": 149.13937731200002,
+      "total_seconds": 674.1125136379999,
+      "input_tokens": 2213363,
+      "cached_input_tokens": 1847040,
+      "cache_write_input_tokens": 0,
+      "uncached_input_tokens": 366323,
+      "output_tokens": 12674,
+      "reasoning_output_tokens": 6026,
+      "mcp_calls": 105,
+      "tool_errors": 5,
+      "response_bytes": 388708,
+      "operations": {
+        "status": 3,
+        "snapshot": 48,
+        "navigate": 10,
+        "help": 12,
+        "fill": 2,
+        "submit": 4,
+        "click": 14,
+        "press": 2,
+        "select": 2,
+        "run": 7,
+        "extract": 1
+      },
+      "help_calls": 12,
+      "help_bytes": 20856,
+      "uncached_input_per_strict_success": 45790.375
+    },
+    "browse": {
+      "attempted": 10,
+      "passed": 10,
+      "outcomes": {
+        "passed": 10
+      },
+      "usage_runs": 10,
+      "mean_seconds": 52.989165518399986,
+      "median_seconds": 47.39166507750004,
+      "sample_p95_seconds": 108.724080331,
+      "total_seconds": 529.8916551839999,
+      "input_tokens": 1246072,
+      "cached_input_tokens": 943360,
+      "cache_write_input_tokens": 0,
+      "uncached_input_tokens": 302712,
+      "output_tokens": 10633,
+      "reasoning_output_tokens": 3441,
+      "mcp_calls": 56,
+      "tool_errors": 10,
+      "response_bytes": 170797,
+      "operations": {
+        "execute": 56
+      },
+      "help_calls": 0,
+      "help_bytes": 0,
+      "uncached_input_per_strict_success": 30271.2
+    }
+  },
+  "no_overlap_successful": {
+    "zen": {
+      "attempted": 8,
+      "passed": 8,
+      "outcomes": {
+        "passed": 8
+      },
+      "usage_runs": 8,
+      "mean_seconds": 71.43271981349999,
+      "median_seconds": 62.35913798600005,
+      "sample_p95_seconds": 149.13937731200002,
+      "total_seconds": 571.4617585079999,
+      "input_tokens": 1909258,
+      "cached_input_tokens": 1601536,
+      "cache_write_input_tokens": 0,
+      "uncached_input_tokens": 307722,
+      "output_tokens": 11302,
+      "reasoning_output_tokens": 5667,
+      "mcp_calls": 91,
+      "tool_errors": 4,
+      "response_bytes": 335673,
+      "operations": {
+        "status": 3,
+        "snapshot": 41,
+        "navigate": 8,
+        "help": 12,
+        "fill": 2,
+        "submit": 4,
+        "click": 12,
+        "press": 2,
+        "select": 2,
+        "run": 4,
+        "extract": 1
+      },
+      "help_calls": 12,
+      "help_bytes": 20856,
+      "uncached_input_per_strict_success": 38465.25
+    },
+    "browse": {
+      "attempted": 8,
+      "passed": 8,
+      "outcomes": {
+        "passed": 8
+      },
+      "usage_runs": 8,
+      "mean_seconds": 56.334510271249975,
+      "median_seconds": 53.3751764639999,
+      "sample_p95_seconds": 108.724080331,
+      "total_seconds": 450.6760821699998,
+      "input_tokens": 1119733,
+      "cached_input_tokens": 852992,
+      "cache_write_input_tokens": 0,
+      "uncached_input_tokens": 266741,
+      "output_tokens": 9272,
+      "reasoning_output_tokens": 2847,
+      "mcp_calls": 51,
+      "tool_errors": 10,
+      "response_bytes": 146436,
+      "operations": {
+        "execute": 51
+      },
+      "help_calls": 0,
+      "help_bytes": 0,
+      "uncached_input_per_strict_success": 33342.625
+    }
+  },
+  "overlap": {
+    "window": {
+      "schema": "callisto.benchmark-overlap.v1",
+      "other_experiment": "eval/reports/luna-step5-account-preflight-2026-11-17",
+      "start": "2026-11-17T14:38:32.862Z",
+      "end": "2026-11-17T14:41:48.084Z",
+      "interval": "conservative process window: output directory creation to observed process completion, including setup/cleanup",
+      "rule": "Keep every trial in primary all-attempt counts. For a secondary no-overlap latency view exclude the complete task/repetition pair if either trace interval intersects this window. Infer the task interval from preserved trace file creation-time mtime minus recorded task_elapsed_ms, with a two-second margin; inference is disclosed and never changes raw timing/usage/success.",
+      "reason": "An account preflight accidentally overlapped the public benchmark. No further model experiments run concurrently.",
+      "trial_intervals": {
+        "zen-wikipedia-biography-0.json": {
+          "inferred_start_epoch": 1794925961.5665472,
+          "file_mtime_end_epoch": 1794926012.0960445
+        },
+        "browse-wikipedia-biography-0.json": {
+          "inferred_start_epoch": 1794926012.1349561,
+          "file_mtime_end_epoch": 1794926040.7469447
+        },
+        "browse-arxiv-paper-0.json": {
+          "inferred_start_epoch": 1794926040.7958367,
+          "file_mtime_end_epoch": 1794926149.519917
+        },
+        "zen-arxiv-paper-0.json": {
+          "inferred_start_epoch": 1794926149.6185558,
+          "file_mtime_end_epoch": 1794926298.7579331
+        },
+        "zen-github-issue-0.json": {
+          "inferred_start_epoch": 1794926298.9335997,
+          "file_mtime_end_epoch": 1794926340.8757524
+        },
+        "browse-github-issue-0.json": {
+          "inferred_start_epoch": 1794926340.931305,
+          "file_mtime_end_epoch": 1794926379.2286727
+        },
+        "browse-pypi-metadata-0.json": {
+          "inferred_start_epoch": 1794926379.280028,
+          "file_mtime_end_epoch": 1794926453.3503203
+        },
+        "zen-pypi-metadata-0.json": {
+          "inferred_start_epoch": 1794926453.4295309,
+          "file_mtime_end_epoch": 1794926534.5769694
+        },
+        "zen-python-json-0.json": {
+          "inferred_start_epoch": 1794926534.65273,
+          "file_mtime_end_epoch": 1794926625.3147953
+        },
+        "browse-python-json-0.json": {
+          "inferred_start_epoch": 1794926625.3611767,
+          "file_mtime_end_epoch": 1794926674.69272
+        },
+        "browse-govuk-calendar-0.json": {
+          "inferred_start_epoch": 1794926674.7358918,
+          "file_mtime_end_epoch": 1794926738.026397
+        },
+        "zen-govuk-calendar-0.json": {
+          "inferred_start_epoch": 1794926738.0873444,
+          "file_mtime_end_epoch": 1794926793.4890928
+        },
+        "browse-wikipedia-biography-1.json": {
+          "inferred_start_epoch": 1794926793.5442715,
+          "file_mtime_end_epoch": 1794926827.3080575
+        },
+        "zen-wikipedia-biography-1.json": {
+          "inferred_start_epoch": 1794926827.3664575,
+          "file_mtime_end_epoch": 1794926912.385718
+        },
+        "zen-arxiv-paper-1.json": {
+          "inferred_start_epoch": 1794926912.442478,
+          "file_mtime_end_epoch": 1794926973.6204655
+        },
+        "browse-arxiv-paper-1.json": {
+          "inferred_start_epoch": 1794926973.6638694,
+          "file_mtime_end_epoch": 1794927048.0111504
+        },
+        "browse-github-issue-1.json": {
+          "inferred_start_epoch": 1794927048.0601666,
+          "file_mtime_end_epoch": 1794927093.5119536
+        },
+        "zen-github-issue-1.json": {
+          "inferred_start_epoch": 1794927093.6353815,
+          "file_mtime_end_epoch": 1794927111.266876
+        },
+        "zen-pypi-metadata-1.json": {
+          "inferred_start_epoch": 1794927111.3737261,
+          "file_mtime_end_epoch": 1794927145.8067243
+        },
+        "browse-pypi-metadata-1.json": {
+          "inferred_start_epoch": 1794927145.8506587,
+          "file_mtime_end_epoch": 1794927203.2694685
+        },
+        "browse-python-json-1.json": {
+          "inferred_start_epoch": 1794927203.3107104,
+          "file_mtime_end_epoch": 1794927231.4283419
+        },
+        "zen-python-json-1.json": {
+          "inferred_start_epoch": 1794927231.5347645,
+          "file_mtime_end_epoch": 1794927295.075053
+        },
+        "zen-govuk-calendar-1.json": {
+          "inferred_start_epoch": 1794927295.2504177,
+          "file_mtime_end_epoch": 1794927361.828214
+        },
+        "browse-govuk-calendar-1.json": {
+          "inferred_start_epoch": 1794927361.8694725,
+          "file_mtime_end_epoch": 1794927402.7037153
+        }
+      },
+      "interval_provenance": "Captured original local trace mtimes before committing artifacts; inferred start is original mtime minus task_elapsed_ms, with a 2-second overlap margin. Reuse these stored intervals because Git checkout changes filesystem mtimes."
+    },
+    "affected_trials": [
+      {
+        "engine": "zen",
+        "task": "github-issue",
+        "round": 0,
+        "inferred_start": "2026-11-17T14:38:18.933600+00:00",
+        "file_mtime_end": "2026-11-17T14:39:00.875752+00:00"
+      },
+      {
+        "engine": "browse",
+        "task": "github-issue",
+        "round": 0,
+        "inferred_start": "2026-11-17T14:39:00.931305+00:00",
+        "file_mtime_end": "2026-11-17T14:39:39.228673+00:00"
+      },
+      {
+        "engine": "browse",
+        "task": "pypi-metadata",
+        "round": 0,
+        "inferred_start": "2026-11-17T14:39:39.280028+00:00",
+        "file_mtime_end": "2026-11-17T14:40:53.350320+00:00"
+      },
+      {
+        "engine": "zen",
+        "task": "pypi-metadata",
+        "round": 0,
+        "inferred_start": "2026-11-17T14:40:53.429531+00:00",
+        "file_mtime_end": "2026-11-17T14:42:14.576969+00:00"
+      }
+    ],
+    "excluded_pairs_only_from_secondary_timing": [
+      {
+        "task": "github-issue",
+        "round": 0
+      },
+      {
+        "task": "pypi-metadata",
+        "round": 0
+      }
+    ]
+  },
+  "tool_errors": [
+    {
+      "engine": "zen",
+      "task": "wikipedia-biography",
+      "round": 0,
+      "name": "callisto",
+      "arguments": {
+        "op": "submit",
+        "args": {
+          "ref": "ax-5000005"
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "text": "Unknown or stale reference; capture a new snapshot.",
+            "type": "text"
+          }
+        ],
+        "isError": true
+      },
+      "elapsed_ms": 3.173648999996658
+    },
+    {
+      "engine": "browse",
+      "task": "arxiv-paper",
+      "round": 0,
+      "name": "execute",
+      "arguments": {
+        "tab": 1267599607,
+        "code": "const f=page.locator('form[action=\"https://arxiv.org/search\"]'); await f.locator('input[name=\"query\"]').fill('Attention Is All You Need'); await f.locator('input[type=\"submit\"]').click(); await page.waitForLoadState('domcontentloaded'); return {url:page.url(),title:await page.title(),text:(await page.locator('body').innerText()).slice(0,7000)}"
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "tab: 1267599607\n\nTimeoutError: textbox \"Search arXiv\" is not visible; waited 10000 ms\n    at <anonymous> (execute.js:1:334)"
+          }
+        ],
+        "isError": true
+      },
+      "elapsed_ms": 10088.566490000012
+    },
+    {
+      "engine": "browse",
+      "task": "arxiv-paper",
+      "round": 0,
+      "name": "execute",
+      "arguments": {
+        "tab": 1267599607,
+        "code": "return await page.snapshot({interactive:true})"
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "tab: 1267599607\n\nTypeError: not a function\n    at <anonymous> (execute.js:1:248)\n\nWarnings:\n- Unhandled promise rejection: not a function (await or catch every promise)"
+          }
+        ],
+        "isError": true
+      },
+      "elapsed_ms": 5.304575999994995
+    },
+    {
+      "engine": "browse",
+      "task": "arxiv-paper",
+      "round": 0,
+      "name": "execute",
+      "arguments": {
+        "tab": 1267599607,
+        "code": "await page.locator('#ds-search-input').fill('Attention Is All You Need',{force:true}); await page.locator('#ds-search-input').press('Enter'); await page.waitForLoadState('domcontentloaded'); return {url:page.url(),title:await page.title(),text:(await page.locator('body').innerText()).slice(0,7000)}"
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "tab: 1267599607\n\nError: \"textbox \\\"Search arXiv\\\" (#ds-search-input)\" did not take focus (it may be disabled, hidden, covered or not editable), so nothing was typed\n    at <anonymous> (execute.js:1:269)"
+          }
+        ],
+        "isError": true
+      },
+      "elapsed_ms": 11.893172999989474
+    },
+    {
+      "engine": "browse",
+      "task": "pypi-metadata",
+      "round": 0,
+      "name": "execute",
+      "arguments": {
+        "tab": 1267599607,
+        "code": "await page.getByRole('link',{name:'Release history'}).click(); await page.waitForTimeout(1000); return {url:await page.url(),title:await page.title(),text:(await page.locator('body').innerText()).slice(0,5000)}"
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "tab: 1267599607\n\nTimeoutError: No element matches selector \"internal:role=link[name=\\\"Release history\\\"i]\" (waited 9999 ms)\n    at <anonymous> (execute.js:1:284)"
+          }
+        ],
+        "isError": true
+      },
+      "elapsed_ms": 10090.86703100003
+    },
+    {
+      "engine": "browse",
+      "task": "pypi-metadata",
+      "round": 0,
+      "name": "execute",
+      "arguments": {
+        "tab": 1267599607,
+        "code": "await page.locator('a[href=\"https://pypi.org/project/httpx/#history\"]').click(); await page.waitForTimeout(700); return {url:await page.url(),text:(await page.locator('body').innerText()).slice(0,5000)}"
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "tab: 1267599607\n\nTimeoutError: No element matches selector \"a[href=\\\"https://pypi.org/project/httpx/#history\\\"]\" (waited 9999 ms)\n    at <anonymous> (execute.js:1:302)"
+          }
+        ],
+        "isError": true
+      },
+      "elapsed_ms": 10078.731348000001
+    },
+    {
+      "engine": "zen",
+      "task": "python-json",
+      "round": 0,
+      "name": "callisto",
+      "arguments": {
+        "op": "click",
+        "args": {
+          "ref": "ax-30000014"
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "text": "Unknown or stale reference; capture a new snapshot.",
+            "type": "text"
+          }
+        ],
+        "isError": true
+      },
+      "elapsed_ms": 4.309434999944642
+    },
+    {
+      "engine": "browse",
+      "task": "python-json",
+      "round": 0,
+      "name": "execute",
+      "arguments": {
+        "tab": 1267599607,
+        "code": "const x = await page.locator('dt#json.loads').count(); const y = await page.locator('#json.loads').evaluate(el=>({tag:el.tagName,text:el.parentElement.innerText})); return {url:page.url(),count:x,section:y}"
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "tab: 1267599607\n\nTimeoutError: No element matches selector \"#json.loads\" (waited 10000 ms)\n    at <anonymous> (execute.js:1:338)"
+          }
+        ],
+        "isError": true
+      },
+      "elapsed_ms": 10021.78637300001
+    },
+    {
+      "engine": "browse",
+      "task": "govuk-calendar",
+      "round": 0,
+      "name": "execute",
+      "arguments": {
+        "tab": 1267599607,
+        "code": "await page.getByRole('link',{name:'Scotland'}).click(); await page.waitForLoadState('domcontentloaded'); return {url:page.url(), title:await page.title(), text:(await page.locator('body').innerText()).slice(0,5200)}"
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "tab: 1267599607\n\nTimeoutError: No element matches selector \"internal:role=link[name=\\\"Scotland\\\"i]\" (waited 9999 ms)\n    at <anonymous> (execute.js:1:277)"
+          }
+        ],
+        "isError": true
+      },
+      "elapsed_ms": 10085.661005000002
+    },
+    {
+      "engine": "browse",
+      "task": "govuk-calendar",
+      "round": 0,
+      "name": "execute",
+      "arguments": {
+        "tab": 1267599607,
+        "code": "await page.locator('a[href=\"https://www.gov.uk/bank-holidays#scotland\"]').click(); await page.waitForTimeout(800); return {url:page.url(), text:await page.locator('#scotland').innerText()}"
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "tab: 1267599607\n\nTimeoutError: No element matches selector \"a[href=\\\"https://www.gov.uk/bank-holidays#scotland\\\"]\" (waited 9999 ms)\n    at <anonymous> (execute.js:1:304)"
+          }
+        ],
+        "isError": true
+      },
+      "elapsed_ms": 10106.85320699995
+    },
+    {
+      "engine": "zen",
+      "task": "govuk-calendar",
+      "round": 0,
+      "name": "callisto",
+      "arguments": {
+        "op": "snapshot",
+        "args": {
+          "max_chars": 10000,
+          "offset": 209,
+          "revision": "ax-7523889405504759088:2"
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "text": "Snapshot revision changed; request offset 0.",
+            "type": "text"
+          }
+        ],
+        "isError": true
+      },
+      "elapsed_ms": 3.5696590000297874
+    },
+    {
+      "engine": "zen",
+      "task": "wikipedia-biography",
+      "round": 1,
+      "name": "callisto",
+      "arguments": {
+        "op": "run",
+        "args": {
+          "steps": [
+            {
+              "action": "fill",
+              "ref": "ax-39000005",
+              "value": "Ada Lovelace"
+            },
+            {
+              "action": "press",
+              "key": "ENTER",
+              "ref": "ax-39000005"
+            }
+          ],
+          "snapshot": false
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "text": "Invalid args.steps[1].ref: unknown field; accepted fields: key. No browser action dispatched.",
+            "type": "text"
+          }
+        ],
+        "isError": true,
+        "structuredContent": {
+          "code": "invalid_arguments",
+          "dispatch": "not_dispatched",
+          "expected": "unknown field; accepted fields: key",
+          "field": "args.steps[1].ref"
+        }
+      },
+      "elapsed_ms": 1.1679040000308305
+    },
+    {
+      "engine": "browse",
+      "task": "arxiv-paper",
+      "round": 1,
+      "name": "execute",
+      "arguments": {
+        "tab": 1267599607,
+        "code": "await page.locator('input[name=\"query\"]').fill('Attention Is All You Need'); await page.locator('input[type=\"button\"][value=\"Search\"]').click(); await page.waitForLoadState('domcontentloaded'); return {url:await page.url(),title:await page.title(),text:(await page.locator('body').innerText()).slice(0,4500)}"
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "tab: 1267599607\n\nTimeoutError: textbox \"Search arXiv\" is not visible; waited 10000 ms\n    at <anonymous> (execute.js:1:272)"
+          }
+        ],
+        "isError": true
+      },
+      "elapsed_ms": 10111.133164000115
+    },
+    {
+      "engine": "browse",
+      "task": "arxiv-paper",
+      "round": 1,
+      "name": "execute",
+      "arguments": {
+        "tab": 1267599607,
+        "code": "return await page.snapshot({interactive:true})"
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "tab: 1267599607\n\nTypeError: not a function\n    at <anonymous> (execute.js:1:248)\n\nWarnings:\n- Unhandled promise rejection: not a function (await or catch every promise)"
+          }
+        ],
+        "isError": true
+      },
+      "elapsed_ms": 5.557295999955386
+    },
+    {
+      "engine": "browse",
+      "task": "pypi-metadata",
+      "round": 1,
+      "name": "execute",
+      "arguments": {
+        "tab": 1267599607,
+        "code": "await page.getByRole('link', {name:'Release history'}).click(); await page.waitForTimeout(300); return {url:page.url(), text:(await page.locator('body').innerText()).slice(0,12000)}"
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "tab: 1267599607\n\nTimeoutError: No element matches selector \"internal:role=link[name=\\\"Release history\\\"i]\" (waited 9999 ms)\n    at <anonymous> (execute.js:1:285)"
+          }
+        ],
+        "isError": true
+      },
+      "elapsed_ms": 10065.825054999907
+    },
+    {
+      "engine": "zen",
+      "task": "python-json",
+      "round": 1,
+      "name": "callisto",
+      "arguments": {
+        "op": "snapshot",
+        "args": {
+          "selector": "section:has([id=\"json.loads\"])",
+          "max_chars": 10000
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "text": "Observation selector must match exactly one element, including open shadow roots.",
+            "type": "text"
+          }
+        ],
+        "isError": true
+      },
+      "elapsed_ms": 5.736428000032902
+    },
+    {
+      "engine": "browse",
+      "task": "govuk-calendar",
+      "round": 1,
+      "name": "execute",
+      "arguments": {
+        "tab": 1267599607,
+        "code": "await page.getByRole('link',{name:'Scotland',exact:true}).click(); await page.waitForTimeout(200); return {url:page.url(), text:(await page.locator('body').innerText()).slice(0,6500)}"
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "tab: 1267599607\n\nTimeoutError: No element matches selector \"internal:role=link[name=\\\"Scotland\\\"s]\" (waited 9999 ms)\n    at <anonymous> (execute.js:1:288)"
+          }
+        ],
+        "isError": true
+      },
+      "elapsed_ms": 10078.594744999893
+    }
+  ],
+  "billed_cost_usd": null,
+  "facts_only_passed": {
+    "zen": 12,
+    "browse": 12
+  },
+  "strict_failure_reasons": [
+    {
+      "engine": "zen",
+      "task": "wikipedia-biography",
+      "round": 1,
+      "evaluation": {
+        "passed": false,
+        "facts": [
+          {
+            "pattern": "10\\s+December\\s+1815|December\\s+10,?\\s+1815|1815-12-10",
+            "passed": true
+          },
+          {
+            "pattern": "London",
+            "passed": true
+          },
+          {
+            "pattern": "(?:Annabella|Anne?\\s+Isabella)(?:\\s+Noel)?\\s+(?:Milbanke|Byron)",
+            "passed": true
+          }
+        ],
+        "evidence": [
+          {
+            "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+            "quote": "Born Augusta Ada Byron 10 December 1815 London, England",
+            "source_matches": true,
+            "quote_observed": false
+          },
+          {
+            "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+            "quote": "Parents George Byron, 6th Baron Byron (father) Anne Isabella Milbanke (mother)",
+            "source_matches": true,
+            "quote_observed": false
+          }
+        ],
+        "forbidden_network_or_file_calls": 0
+      },
+      "answer": {
+        "answer": "Ada Lovelace was born on 10 December 1815 in London, England. Her mother was Anne Isabella Milbanke.",
+        "evidence": [
+          {
+            "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+            "quote": "Born Augusta Ada Byron 10 December 1815 London, England"
+          },
+          {
+            "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+            "quote": "Parents George Byron, 6th Baron Byron (father) Anne Isabella Milbanke (mother)"
+          }
+        ]
+      }
+    },
+    {
+      "engine": "zen",
+      "task": "github-issue",
+      "round": 1,
+      "evaluation": {
+        "passed": false,
+        "facts": [
+          {
+            "pattern": "Suggestion.{0,10}protected.{0,10}modifier",
+            "passed": true
+          },
+          {
+            "pattern": "closed",
+            "passed": true
+          },
+          {
+            "pattern": "RyanCavanaugh",
+            "passed": true
+          }
+        ],
+        "evidence": [
+          {
+            "url": "https://github.com/microsoft/TypeScript/issues/1",
+            "quote": "heading \"Suggestion: 'protected' modifier #1\"; text \"Closed\"; link \"Ryan Cavanaugh (RyanCavanaugh)\"; text \"opened\"",
+            "source_matches": true,
+            "quote_observed": false
+          }
+        ],
+        "forbidden_network_or_file_calls": 0
+      },
+      "answer": {
+        "answer": "Issue #1 is titled \u201cSuggestion: 'protected' modifier.\u201d It is closed, and it was opened by RyanCavanaugh.",
+        "evidence": [
+          {
+            "url": "https://github.com/microsoft/TypeScript/issues/1",
+            "quote": "heading \"Suggestion: 'protected' modifier #1\"; text \"Closed\"; link \"Ryan Cavanaugh (RyanCavanaugh)\"; text \"opened\""
+          }
+        ]
+      }
+    }
+  ],
+  "task_cluster_bootstrap": {
+    "clusters": 6,
+    "resamples": 5000,
+    "seed": 20261117,
+    "latency_delta_seconds_zen_minus_browse_95pct": [
+      -2.5975725001666703,
+      29.044443399416686
+    ],
+    "uncached_input_ratio_zen_over_browse_95pct": [
+      0.6810729185329273,
+      1.6228573267677255
+    ],
+    "note": "Descriptive interval conditional on this small predeclared task set; not a production reliability or broad-model estimate. All attempts included, including overlap and failures."
+  }
+}

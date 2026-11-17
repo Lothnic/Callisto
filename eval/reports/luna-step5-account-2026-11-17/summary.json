@@ -1,0 +1,365 @@
+{
+  "schema": "callisto.step5-summary.v1",
+  "complete": true,
+  "planned_runs": 12,
+  "completed_runs": 12,
+  "model": "gpt-6-luna",
+  "reasoning_effort": "high",
+  "all_attempts": {
+    "zen": {
+      "attempted": 6,
+      "passed": 6,
+      "outcomes": {
+        "passed": 6
+      },
+      "usage_runs": 6,
+      "mean_seconds": 63.37766462349998,
+      "median_seconds": 57.690180849499995,
+      "sample_p95_seconds": 102.222642306,
+      "total_seconds": 380.2659877409999,
+      "input_tokens": 1429055,
+      "cached_input_tokens": 1210112,
+      "cache_write_input_tokens": 0,
+      "uncached_input_tokens": 218943,
+      "output_tokens": 7455,
+      "reasoning_output_tokens": 2951,
+      "mcp_calls": 83,
+      "tool_errors": 4,
+      "response_bytes": 76443,
+      "operations": {
+        "help": 11,
+        "browser": 16,
+        "snapshot": 24,
+        "run": 5,
+        "status": 5,
+        "pair": 4,
+        "click": 11,
+        "select": 2,
+        "fill": 3,
+        "extract": 2
+      },
+      "help_calls": 11,
+      "help_bytes": 19916,
+      "uncached_input_per_strict_success": 36490.5
+    },
+    "browse": {
+      "attempted": 6,
+      "passed": 6,
+      "outcomes": {
+        "passed": 6
+      },
+      "usage_runs": 6,
+      "mean_seconds": 51.514078729000005,
+      "median_seconds": 52.00086148050002,
+      "sample_p95_seconds": 68.24320737700002,
+      "total_seconds": 309.08447237400003,
+      "input_tokens": 941473,
+      "cached_input_tokens": 765952,
+      "cache_write_input_tokens": 0,
+      "uncached_input_tokens": 175521,
+      "output_tokens": 5574,
+      "reasoning_output_tokens": 2450,
+      "mcp_calls": 37,
+      "tool_errors": 1,
+      "response_bytes": 17695,
+      "operations": {
+        "execute": 36,
+        "tabs": 1
+      },
+      "help_calls": 0,
+      "help_bytes": 0,
+      "uncached_input_per_strict_success": 29253.5
+    }
+  },
+  "paired_successful_count": 6,
+  "no_overlap_all_pairs": 6,
+  "no_overlap_successful_pairs": 6,
+  "no_overlap_all_attempts": {
+    "zen": {
+      "attempted": 6,
+      "passed": 6,
+      "outcomes": {
+        "passed": 6
+      },
+      "usage_runs": 6,
+      "mean_seconds": 63.37766462349998,
+      "median_seconds": 57.690180849499995,
+      "sample_p95_seconds": 102.222642306,
+      "total_seconds": 380.2659877409999,
+      "input_tokens": 1429055,
+      "cached_input_tokens": 1210112,
+      "cache_write_input_tokens": 0,
+      "uncached_input_tokens": 218943,
+      "output_tokens": 7455,
+      "reasoning_output_tokens": 2951,
+      "mcp_calls": 83,
+      "tool_errors": 4,
+      "response_bytes": 76443,
+      "operations": {
+        "help": 11,
+        "browser": 16,
+        "snapshot": 24,
+        "run": 5,
+        "status": 5,
+        "pair": 4,
+        "click": 11,
+        "select": 2,
+        "fill": 3,
+        "extract": 2
+      },
+      "help_calls": 11,
+      "help_bytes": 19916,
+      "uncached_input_per_strict_success": 36490.5
+    },
+    "browse": {
+      "attempted": 6,
+      "passed": 6,
+      "outcomes": {
+        "passed": 6
+      },
+      "usage_runs": 6,
+      "mean_seconds": 51.514078729000005,
+      "median_seconds": 52.00086148050002,
+      "sample_p95_seconds": 68.24320737700002,
+      "total_seconds": 309.08447237400003,
+      "input_tokens": 941473,
+      "cached_input_tokens": 765952,
+      "cache_write_input_tokens": 0,
+      "uncached_input_tokens": 175521,
+      "output_tokens": 5574,
+      "reasoning_output_tokens": 2450,
+      "mcp_calls": 37,
+      "tool_errors": 1,
+      "response_bytes": 17695,
+      "operations": {
+        "execute": 36,
+        "tabs": 1
+      },
+      "help_calls": 0,
+      "help_bytes": 0,
+      "uncached_input_per_strict_success": 29253.5
+    }
+  },
+  "no_overlap_successful": {
+    "zen": {
+      "attempted": 6,
+      "passed": 6,
+      "outcomes": {
+        "passed": 6
+      },
+      "usage_runs": 6,
+      "mean_seconds": 63.37766462349998,
+      "median_seconds": 57.690180849499995,
+      "sample_p95_seconds": 102.222642306,
+      "total_seconds": 380.2659877409999,
+      "input_tokens": 1429055,
+      "cached_input_tokens": 1210112,
+      "cache_write_input_tokens": 0,
+      "uncached_input_tokens": 218943,
+      "output_tokens": 7455,
+      "reasoning_output_tokens": 2951,
+      "mcp_calls": 83,
+      "tool_errors": 4,
+      "response_bytes": 76443,
+      "operations": {
+        "help": 11,
+        "browser": 16,
+        "snapshot": 24,
+        "run": 5,
+        "status": 5,
+        "pair": 4,
+        "click": 11,
+        "select": 2,
+        "fill": 3,
+        "extract": 2
+      },
+      "help_calls": 11,
+      "help_bytes": 19916,
+      "uncached_input_per_strict_success": 36490.5
+    },
+    "browse": {
+      "attempted": 6,
+      "passed": 6,
+      "outcomes": {
+        "passed": 6
+      },
+      "usage_runs": 6,
+      "mean_seconds": 51.514078729000005,
+      "median_seconds": 52.00086148050002,
+      "sample_p95_seconds": 68.24320737700002,
+      "total_seconds": 309.08447237400003,
+      "input_tokens": 941473,
+      "cached_input_tokens": 765952,
+      "cache_write_input_tokens": 0,
+      "uncached_input_tokens": 175521,
+      "output_tokens": 5574,
+      "reasoning_output_tokens": 2450,
+      "mcp_calls": 37,
+      "tool_errors": 1,
+      "response_bytes": 17695,
+      "operations": {
+        "execute": 36,
+        "tabs": 1
+      },
+      "help_calls": 0,
+      "help_bytes": 0,
+      "uncached_input_per_strict_success": 29253.5
+    }
+  },
+  "overlap": {
+    "window": null,
+    "affected_trials": [],
+    "excluded_pairs_only_from_secondary_timing": []
+  },
+  "tool_errors": [
+    {
+      "engine": "zen",
+      "task": "return",
+      "round": 0,
+      "name": "callisto",
+      "arguments": {
+        "op": "browser",
+        "args": {}
+      },
+      "result": {
+        "content": [
+          {
+            "text": "Invalid args.action: required field is missing. No browser action dispatched.",
+            "type": "text"
+          }
+        ],
+        "isError": true,
+        "structuredContent": {
+          "code": "invalid_arguments",
+          "dispatch": "not_dispatched",
+          "expected": "required field is missing",
+          "field": "args.action"
+        }
+      },
+      "elapsed_ms": 0.6431619999930263
+    },
+    {
+      "engine": "zen",
+      "task": "receipt-tabs",
+      "round": 0,
+      "name": "callisto",
+      "arguments": {
+        "op": "browser",
+        "args": {}
+      },
+      "result": {
+        "content": [
+          {
+            "text": "Invalid args.action: required field is missing. No browser action dispatched.",
+            "type": "text"
+          }
+        ],
+        "isError": true,
+        "structuredContent": {
+          "code": "invalid_arguments",
+          "dispatch": "not_dispatched",
+          "expected": "required field is missing",
+          "field": "args.action"
+        }
+      },
+      "elapsed_ms": 0.7663429999956861
+    },
+    {
+      "engine": "zen",
+      "task": "receipt-tabs",
+      "round": 0,
+      "name": "callisto",
+      "arguments": {
+        "op": "fill",
+        "args": {
+          "ref": "ax-17000006",
+          "value": "VX-38-Q7"
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "text": "Unknown or stale reference; capture a new snapshot.",
+            "type": "text"
+          }
+        ],
+        "isError": true
+      },
+      "elapsed_ms": 4.589341000013519
+    },
+    {
+      "engine": "browse",
+      "task": "receipt-tabs",
+      "round": 0,
+      "name": "execute",
+      "arguments": {
+        "tab": 630345754,
+        "code": "return {pages:context.pages().map(p=>({url:p.url(),title:await p.title()})), portal:await snapshot()}"
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "tab: 630345754\n\nSyntaxError: Unexpected identifier 'p'\n    at execute.js:1:294"
+          }
+        ],
+        "isError": true
+      },
+      "elapsed_ms": 5.401959999988321
+    },
+    {
+      "engine": "zen",
+      "task": "preferences",
+      "round": 1,
+      "name": "callisto",
+      "arguments": {
+        "op": "run",
+        "args": {
+          "steps": [
+            {
+              "action": "select",
+              "ref": "ax-25000005",
+              "value": "weekly"
+            },
+            {
+              "action": "check",
+              "ref": "ax-25000006"
+            }
+          ],
+          "snapshot": true
+        }
+      },
+      "result": {
+        "content": [
+          {
+            "text": "Invalid args.steps[1].checked: required field is missing. No browser action dispatched.",
+            "type": "text"
+          }
+        ],
+        "isError": true,
+        "structuredContent": {
+          "code": "invalid_arguments",
+          "dispatch": "not_dispatched",
+          "expected": "required field is missing",
+          "field": "args.steps[1].checked"
+        }
+      },
+      "elapsed_ms": 1.0925120000028983
+    }
+  ],
+  "billed_cost_usd": null,
+  "task_cluster_bootstrap": {
+    "clusters": 3,
+    "resamples": 5000,
+    "seed": 20261117,
+    "latency_delta_seconds_zen_minus_browse_95pct": [
+      -1.4964564474999946,
+      22.96517170249993
+    ],
+    "uncached_input_ratio_zen_over_browse_95pct": [
+      1.0826251765230532,
+      1.4275711256405725
+    ],
+    "note": "Descriptive interval conditional on this small predeclared task set; not a production reliability or broad-model estimate. All attempts included, including overlap and failures."
+  }
+}

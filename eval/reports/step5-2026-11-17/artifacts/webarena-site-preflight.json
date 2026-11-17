@@ -1,0 +1,82 @@
+{
+  "started_at": "2026-11-17T15:12:16.325Z",
+  "model_trials": 0,
+  "status": "ready",
+  "http_status": 200,
+  "url": "http://127.0.0.1:35201/admin/admin/dashboard/",
+  "title": "Dashboard / Magento Admin",
+  "authenticated_dashboard": true,
+  "log": [
+    {
+      "args": [
+        "run",
+        "--detach",
+        "--name",
+        "callisto-step5-wa-8a67f6e929ccb8cb",
+        "--label",
+        "callisto.step5.owner=8a67f6e929ccb8cb",
+        "--memory",
+        "2g",
+        "--cpus",
+        "2",
+        "--pids-limit",
+        "512",
+        "--publish",
+        "127.0.0.1:34639:80",
+        "--env",
+        "MAGENTO_BASE_URL=http://127.0.0.1:35201",
+        "am1n3e/webarena-verified-shopping_admin@sha256:d0531dd27ed98d0c459ff9e88118bf2ed8b660b0ed99c38837db46c065a5be13"
+      ],
+      "ok": true,
+      "elapsed_ms": 415.406463,
+      "stdout": "642f9aef756311d6ab0c08157013ff1edbb118251099d3a95da6d40d4bd1914c\n"
+    },
+    {
+      "args": [
+        "exec",
+        "642f9aef756311d6ab0c08157013ff1edbb118251099d3a95da6d40d4bd1914c",
+        "env-ctrl",
+        "--verbose",
+        "status"
+      ],
+      "ok": true,
+      "elapsed_ms": 2831.084165,
+      "stdout": "{\n  \"success\": true,\n  \"message\": \"\",\n  \"details\": {\n    \"value\": {\n      \"services\": {\n        \"nginx\": \"RUNNING\",\n        \"php-fpm\": \"RUNNING\",\n        \"mailcatcher\": \"HEALTHY\",\n        \"cron\": \"RUNNING\",\n        \"env-ctrl\": \"RUNNING\",\n        \"mysqld\": \"HEALTHY\",\n        \"redis-server\": \"HEALTHY\"\n      }\n    },\n    \"exec_logs\": [\n      {\n        \"command\": \"test -S /run/supervisord.sock\",\n        \"returncode\": 1,\n        \"stdout\": \"\",\n        \"stderr\": \"\"\n      },\n      {\n        \"command\": \"test -S /run/supervisord.sock\",\n        \"returncode\": 0,\n        \"stdout\": \"\",\n        \"stderr\": \"\"\n      },\n      {\n        \"command\": \"supervisorctl status\",\n        \"returncode\": 0,\n        \"stdout\": \"cron                             RUNNING   pid 56, uptime 0:00:01\\nelasticsearch                    RUNNING   pid 55, uptime 0:00:01\\nenv-ctrl                         RUNNING   pid 57, uptime 0:00:01\\nen... (truncated)\",\n        \"stderr\": \"\"\n      },\n      {\n        \"command\": \"mysqladmin ping -u magentouser -pMyPassword\",\n        \"returncode\": 0,\n        \"stdout\": \"mysqld is alive\",\n        \"stderr\": \"\"\n      },\n      {\n        \"command\": \"redis-cli ping\",\n        \"returncode\": 0,\n        \"stdout\": \"PONG\",\n        \"stderr\": \"\"\n      },\n      {\n        \"command\": \"curl -sf --max-time 10 http://localhost:88/\",\n        \"returncode\": 0,\n        \"stdout\": \"<!DOCTYPE html>\\n<html class=\\\"mailcatcher\\\">\\n<head>\\n  <title>MailCatcher</title>\\n  <base href=\\\"/\\\">\\n  <link href=\\\"favicon.ico\\\" rel=\\\"icon\\\">\\n  <script src=\\\"/assets/mailcatcher.js\\\"></script>\\n  <link rel=\\\"st... (truncated)\",\n        \"stderr\": \"\"\n      }\n    ]\n  }\n}\n"
+    },
+    {
+      "args": [
+        "exec",
+        "642f9aef756311d6ab0c08157013ff1edbb118251099d3a95da6d40d4bd1914c",
+        "env-ctrl",
+        "--verbose",
+        "init",
+        "--base-url",
+        "http://127.0.0.1:35201"
+      ],
+      "ok": true,
+      "elapsed_ms": 23030.999143,
+      "stdout": "{\n  \"success\": true,\n  \"message\": \"\",\n  \"details\": {\n    \"value\": null,\n    \"exec_logs\": [\n      {\n        \"command\": \"php /var/www/magento2/bin/magento setup:store-config:set --base-url=\\\"http://127.0.0.1:35201\\\"\",\n        \"returncode\": 0,\n        \"stdout\": \"\",\n        \"stderr\": \"\"\n      },\n      {\n        \"command\": \"mysql -u magentouser -pMyPassword magentodb -e \\\"UPDATE core_config_data SET value = \\\\\\\"http://127.0.0.1:35201\\\\\\\" WHERE path = \\\\\\\"web/secure/base_url\\\\\\\";\\\"\",\n        \"returncode\": 0,\n        \"stdout\": \"\",\n        \"stderr\": \"\"\n      },\n      {\n        \"command\": \"php /var/www/magento2/bin/magento config:set admin/security/password_is_forced 0\",\n        \"returncode\": 0,\n        \"stdout\": \"Value was saved.\",\n        \"stderr\": \"\"\n      },\n      {\n        \"command\": \"php /var/www/magento2/bin/magento config:set admin/security/password_lifetime 0\",\n        \"returncode\": 0,\n        \"stdout\": \"Value was saved.\",\n        \"stderr\": \"\"\n      },\n      {\n        \"command\": \"php /var/www/magento2/bin/magento cache:flush\",\n        \"returncode\": 0,\n        \"stdout\": \"Flushed cache types:\\nconfig\\nlayout\\nblock_html\\ncollections\\nreflection\\ndb_ddl\\ncompiled_config\\neav\\ncustomer_notification\\nconfig_integration\\nconfig_integration_api\\nfull_page\\nconfig_webservice\\ntranslate\",\n        \"stderr\": \"\"\n      }\n    ]\n  }\n}\n"
+    },
+    {
+      "args": [
+        "inspect",
+        "--format",
+        "{{index .Config.Labels \"callisto.step5.owner\"}}",
+        "642f9aef756311d6ab0c08157013ff1edbb118251099d3a95da6d40d4bd1914c"
+      ],
+      "ok": true,
+      "elapsed_ms": 20.79424100000324,
+      "stdout": "8a67f6e929ccb8cb\n"
+    },
+    {
+      "args": [
+        "rm",
+        "--force",
+        "642f9aef756311d6ab0c08157013ff1edbb118251099d3a95da6d40d4bd1914c"
+      ],
+      "ok": true,
+      "elapsed_ms": 435.1795029999994,
+      "stdout": "642f9aef756311d6ab0c08157013ff1edbb118251099d3a95da6d40d4bd1914c\n"
+    }
+  ]
+}

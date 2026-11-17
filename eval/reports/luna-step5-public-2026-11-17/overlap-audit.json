@@ -1,0 +1,108 @@
+{
+  "schema": "callisto.benchmark-overlap.v1",
+  "other_experiment": "eval/reports/luna-step5-account-preflight-2026-11-17",
+  "start": "2026-11-17T14:38:32.862Z",
+  "end": "2026-11-17T14:41:48.084Z",
+  "interval": "conservative process window: output directory creation to observed process completion, including setup/cleanup",
+  "rule": "Keep every trial in primary all-attempt counts. For a secondary no-overlap latency view exclude the complete task/repetition pair if either trace interval intersects this window. Infer the task interval from preserved trace file creation-time mtime minus recorded task_elapsed_ms, with a two-second margin; inference is disclosed and never changes raw timing/usage/success.",
+  "reason": "An account preflight accidentally overlapped the public benchmark. No further model experiments run concurrently.",
+  "trial_intervals": {
+    "zen-wikipedia-biography-0.json": {
+      "inferred_start_epoch": 1794925961.5665472,
+      "file_mtime_end_epoch": 1794926012.0960445
+    },
+    "browse-wikipedia-biography-0.json": {
+      "inferred_start_epoch": 1794926012.1349561,
+      "file_mtime_end_epoch": 1794926040.7469447
+    },
+    "browse-arxiv-paper-0.json": {
+      "inferred_start_epoch": 1794926040.7958367,
+      "file_mtime_end_epoch": 1794926149.519917
+    },
+    "zen-arxiv-paper-0.json": {
+      "inferred_start_epoch": 1794926149.6185558,
+      "file_mtime_end_epoch": 1794926298.7579331
+    },
+    "zen-github-issue-0.json": {
+      "inferred_start_epoch": 1794926298.9335997,
+      "file_mtime_end_epoch": 1794926340.8757524
+    },
+    "browse-github-issue-0.json": {
+      "inferred_start_epoch": 1794926340.931305,
+      "file_mtime_end_epoch": 1794926379.2286727
+    },
+    "browse-pypi-metadata-0.json": {
+      "inferred_start_epoch": 1794926379.280028,
+      "file_mtime_end_epoch": 1794926453.3503203
+    },
+    "zen-pypi-metadata-0.json": {
+      "inferred_start_epoch": 1794926453.4295309,
+      "file_mtime_end_epoch": 1794926534.5769694
+    },
+    "zen-python-json-0.json": {
+      "inferred_start_epoch": 1794926534.65273,
+      "file_mtime_end_epoch": 1794926625.3147953
+    },
+    "browse-python-json-0.json": {
+      "inferred_start_epoch": 1794926625.3611767,
+      "file_mtime_end_epoch": 1794926674.69272
+    },
+    "browse-govuk-calendar-0.json": {
+      "inferred_start_epoch": 1794926674.7358918,
+      "file_mtime_end_epoch": 1794926738.026397
+    },
+    "zen-govuk-calendar-0.json": {
+      "inferred_start_epoch": 1794926738.0873444,
+      "file_mtime_end_epoch": 1794926793.4890928
+    },
+    "browse-wikipedia-biography-1.json": {
+      "inferred_start_epoch": 1794926793.5442715,
+      "file_mtime_end_epoch": 1794926827.3080575
+    },
+    "zen-wikipedia-biography-1.json": {
+      "inferred_start_epoch": 1794926827.3664575,
+      "file_mtime_end_epoch": 1794926912.385718
+    },
+    "zen-arxiv-paper-1.json": {
+      "inferred_start_epoch": 1794926912.442478,
+      "file_mtime_end_epoch": 1794926973.6204655
+    },
+    "browse-arxiv-paper-1.json": {
+      "inferred_start_epoch": 1794926973.6638694,
+      "file_mtime_end_epoch": 1794927048.0111504
+    },
+    "browse-github-issue-1.json": {
+      "inferred_start_epoch": 1794927048.0601666,
+      "file_mtime_end_epoch": 1794927093.5119536
+    },
+    "zen-github-issue-1.json": {
+      "inferred_start_epoch": 1794927093.6353815,
+      "file_mtime_end_epoch": 1794927111.266876
+    },
+    "zen-pypi-metadata-1.json": {
+      "inferred_start_epoch": 1794927111.3737261,
+      "file_mtime_end_epoch": 1794927145.8067243
+    },
+    "browse-pypi-metadata-1.json": {
+      "inferred_start_epoch": 1794927145.8506587,
+      "file_mtime_end_epoch": 1794927203.2694685
+    },
+    "browse-python-json-1.json": {
+      "inferred_start_epoch": 1794927203.3107104,
+      "file_mtime_end_epoch": 1794927231.4283419
+    },
+    "zen-python-json-1.json": {
+      "inferred_start_epoch": 1794927231.5347645,
+      "file_mtime_end_epoch": 1794927295.075053
+    },
+    "zen-govuk-calendar-1.json": {
+      "inferred_start_epoch": 1794927295.2504177,
+      "file_mtime_end_epoch": 1794927361.828214
+    },
+    "browse-govuk-calendar-1.json": {
+      "inferred_start_epoch": 1794927361.8694725,
+      "file_mtime_end_epoch": 1794927402.7037153
+    }
+  },
+  "interval_provenance": "Captured original local trace mtimes before committing artifacts; inferred start is original mtime minus task_elapsed_ms, with a 2-second overlap margin. Reuse these stored intervals because Git checkout changes filesystem mtimes."
+}

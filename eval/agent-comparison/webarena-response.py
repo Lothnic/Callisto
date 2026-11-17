@@ -5,7 +5,7 @@ from webarena_verified import WebArenaVerified
 from webarena_verified.types.config import WebArenaVerifiedConfig
 from webarena_verified.types.tracing import NetworkTrace
 mode,task_id,origin=sys.argv[1],int(sys.argv[2]),sys.argv[3]
-config=WebArenaVerifiedConfig(environments={'shopping_admin':{'urls':[origin],'use_header_login':True,'credentials':{'username':'admin'}}})
+config=WebArenaVerifiedConfig(environments={'shopping_admin':{'urls':[origin],'use_header_login':True,'credentials':{'username':'admin','password':'admin1234'}}})
 wa=WebArenaVerified(config=config);task=wa.get_task(task_id)
 if not task.eval or any(e.evaluator!='AgentResponseEvaluator' for e in task.eval):
  raise ValueError('This adapter only scores official AgentResponseEvaluator tasks; network/live-judge tasks require their real evaluator inputs')

@@ -1,0 +1,896 @@
+{
+  "schema": "callisto.real-world-trace.v1",
+  "host": {
+    "code": 0,
+    "signal": null,
+    "error": null,
+    "timed_out": false,
+    "elapsed_ms": 108716.02193399999,
+    "usage": {
+      "input_tokens": 235529,
+      "cached_input_tokens": 192256,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 2017,
+      "reasoning_output_tokens": 593
+    },
+    "final": "{\"answer\":\"arXiv:1706.03762. The first two authors are Ashish Vaswani and Noam Shazeer. Original submission date: 12 June 2017.\",\"evidence\":[{\"url\":\"https://arxiv.org/abs/1706.03762\",\"quote\":\"[Submitted on 12 Jun 2017 (v1), last revised 2 Aug 2023 (this version, v7)]\"},{\"url\":\"https://arxiv.org/abs/1706.03762\",\"quote\":\"Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N. Gomez, Lukasz Kaiser, Illia Polosukhin\"},{\"url\":\"https://arxiv.org/abs/1706.03762\",\"quote\":\"Cite as:\\tarXiv:1706.03762 [cs.CL]\"}]}",
+    "events": [
+      {
+        "type": "thread.started",
+        "thread_id": "01a1e9ed-d7d5-70d0-9bde-fa53e803ecdb"
+      },
+      {
+        "type": "turn.started"
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_0",
+          "type": "agent_message",
+          "text": "I’ll open the arXiv page in the specified tab, search for the exact title, and verify the requested details on the paper’s abstract page."
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_1",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "tab": 1267599607,
+            "code": "await page.goto('https://arxiv.org/', {waitUntil:'domcontentloaded'}); return {url:page.url(), title:await page.title(), text:(await page.locator('body').innerText()).slice(0,5000)}"
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_1",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "tab": 1267599607,
+            "code": "await page.goto('https://arxiv.org/', {waitUntil:'domcontentloaded'}); return {url:page.url(), title:await page.title(), text:(await page.locator('body').innerText()).slice(0,5000)}"
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "tab: 1267599607\n\n{\"url\":\"https://arxiv.org/\",\"title\":\"arXiv.org e-Print archive\",\"text\":\"Skip to main content\\nSearch\\nSubmit\\nDonate\\nLog in\\n\\narXiv is a free distribution service and an open-access archive for more than 3.2 million scholarly articles in the fields of physics, mathematics, computer science, quantitative biology, quantitative finance, statistics, electrical engineering and systems science, and economics. Materials on this site are not peer-reviewed by arXiv.\\n\\nSubject search and browse:\\n\\nPhysics\\nMathematics\\nQuantitative Biology\\nComputer Science\\nQuantitative Finance\\nStatistics\\nElectrical Engineering and Systems Science\\nEconomics\\n   \\nPhysics\\nAstrophysics (astro-ph new, recent, search) Astrophysics of Galaxies; Cosmology and Nongalactic Astrophysics; Earth and Planetary Astrophysics; High Energy Astrophysical Phenomena; Instrumentation and Methods for Astrophysics; Solar and Stellar Astrophysics\\nCondensed Matter (cond-mat new, recent, search) Disordered Systems and Neural Networks; Materials Science; Mesoscale and Nanoscale Physics; Other Condensed Matter; Quantum Gases; Soft Condensed Matter; Statistical Mechanics; Strongly Correlated Electrons; Superconductivity\\nGeneral Relativity and Quantum Cosmology (gr-qc new, recent, search)\\nHigh Energy Physics - Experiment (hep-ex new, recent, search)\\nHigh Energy Physics - Lattice (hep-lat new, recent, search)\\nHigh Energy Physics - Phenomenology (hep-ph new, recent, search)\\nHigh Energy Physics - Theory (hep-th new, recent, search)\\nMathematical Physics (math-ph new, recent, search)\\nNonlinear Sciences (nlin new, recent, search)\\nincludes: Adaptation and Self-Organizing Systems; Cellular Automata and Lattice Gases; Chaotic Dynamics; Exactly Solvable and Integrable Systems; Pattern Formation and Solitons\\nNuclear Experiment (nucl-ex new, recent, search)\\nNuclear Theory (nucl-th new, recent, search)\\nPhysics (physics new, recent, search)\\nincludes: Accelerator Physics; Applied Physics; Atmospheric and Oceanic Physics; Atomic and Molecular Clusters; Atomic Physics; Biological Physics; Chemical Physics; Classical Physics; Computational Physics; Data Analysis, Statistics and Probability; Fluid Dynamics; General Physics; Geophysics; History and Philosophy of Physics; Instrumentation and Detectors; Medical Physics; Optics; Physics and Society; Physics Education; Plasma Physics; Popular Physics; Space Physics\\nQuantum Physics (quant-ph new, recent, search)\\nMathematics\\nMathematics (math new, recent, search)\\nincludes: (see detailed description): Algebraic Geometry; Algebraic Topology; Analysis of PDEs; Category Theory; Classical Analysis and ODEs; Combinatorics; Commutative Algebra; Complex Variables; Differential Geometry; Dynamical Systems; Functional Analysis; General Mathematics; General Topology; Geometric Topology; Group Theory; History and Overview; Information Theory; K-Theory and Homology; Logic; Mathematical Physics; Metric Geometry; Number Theory; Numerical Analysis; Operator Algebras; Optimization and Control; Probability; Quantum Algebra; Representation Theory; Rings and Algebras; Spectral Theory; Statistics Theory; Symplectic Geometry\\nComputer Science\\nComputing Research Repository (CoRR new, recent, search)\\nincludes: (see detailed description): Artificial Intelligence; Computation and Language; Computational Complexity; Computational Engineering, Finance, and Science; Computational Geometry; Computer Science and Game Theory; Computer Vision and Pattern Recognition; Computers and Society; Cryptography and Security; Data Structures and Algorithms; Databases; Digital Libraries; Discrete Mathematics; Distributed, Parallel, and Cluster Computing; Emerging Technologies; Formal Languages and Automata Theory; General Literature; Graphics; Hardware Architecture; Human-Computer Interaction; Information Retrieval; Information Theory; Logic in Computer Science; Machine Learning; Mathematical Software; Multiagent Systems; Multimedia; Networking and Internet Architecture; Neural and Evolutionary Computing; Numerical Analysis; Operating Systems; Other Computer Science; Performance; Programming Languages; Robotics; Social and Information Networks; Software Engineering; Sound; Symbolic Computation; Systems and Control\\nQuantitative Biology\\nQuantitative Biology (q-bio new, recent, search)\\nincludes: (see detailed description): Biomolecules; Cell Behavior; Genomics; Molecular Networks; Neurons and Cognition; Other Quantitative Biology; Populations and Evolution; Quantitative Methods; Subcellular Processes; Tissues and Organs\\nQuantitative Finance\\nQuantitative Finance (q-fin new, recent, search)\\nincludes: (see detailed description): Computational Finance; Economics; General Finance; Mathematical Finance; Portfolio Management; Pricing of Securities; Risk Management; Statistical Finance; Trading and Market Microstructure\\nStatistics\\nStatistics (stat new, recent, search)\\nincludes: (see detailed description): Applications; Computation; Machine Learning; Methodology; Other Statistics; Statistics Theory\\nElectrical Engineering and Systems Science\\nElectrical Engineering and Systems\"}\n\nPage: moved from http://127.0.0.1:36683/ to https://arxiv.org/; 1 navigation"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_2",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "tab": 1267599607,
+            "code": "return await page.locator('form').evaluateAll(fs=>fs.map(f=>({action:f.action, text:f.innerText, inputs:[...f.querySelectorAll('input')].map(i=>({name:i.name,placeholder:i.placeholder,type:i.type}))})))"
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_2",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "tab": 1267599607,
+            "code": "return await page.locator('form').evaluateAll(fs=>fs.map(f=>({action:f.action, text:f.innerText, inputs:[...f.querySelectorAll('input')].map(i=>({name:i.name,placeholder:i.placeholder,type:i.type}))})))"
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "tab: 1267599607\n\n[{\"action\":\"https://arxiv.org/search\",\"inputs\":[{\"name\":\"query\",\"placeholder\":\"Search papers by title, author, abstract, or ID...\",\"type\":\"text\"},{\"name\":\"searchtype\",\"placeholder\":\"\",\"type\":\"hidden\"},{\"name\":\"source\",\"placeholder\":\"\",\"type\":\"hidden\"}],\"text\":\"\\n      Search arXiv\\n      \\n      \\n      \\n    \"},{\"action\":\"https://arxiv.org/multi\",\"inputs\":[{\"name\":\"\",\"placeholder\":\"\",\"type\":\"button\"},{\"name\":\"/form\",\"placeholder\":\"\",\"type\":\"submit\"},{\"name\":\"/catchup\",\"placeholder\":\"\",\"type\":\"submit\"}],\"text\":\"Subject search and browse:\\n\\nPhysics\\nMathematics\\nQuantitative Biology\\nComputer Science\\nQuantitative Finance\\nStatistics\\nElectrical Engineering and Systems Science\\nEconomics\\n   \"}]"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_3",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "tab": 1267599607,
+            "code": "const f=page.locator('form[action=\"https://arxiv.org/search\"]'); await f.locator('input[name=\"query\"]').fill('Attention Is All You Need'); await f.locator('input[type=\"submit\"]').click(); await page.waitForLoadState('domcontentloaded'); return {url:page.url(),title:await page.title(),text:(await page.locator('body').innerText()).slice(0,7000)}"
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_3",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "tab": 1267599607,
+            "code": "const f=page.locator('form[action=\"https://arxiv.org/search\"]'); await f.locator('input[name=\"query\"]').fill('Attention Is All You Need'); await f.locator('input[type=\"submit\"]').click(); await page.waitForLoadState('domcontentloaded'); return {url:page.url(),title:await page.title(),text:(await page.locator('body').innerText()).slice(0,7000)}"
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "tab: 1267599607\n\nTimeoutError: textbox \"Search arXiv\" is not visible; waited 10000 ms\n    at <anonymous> (execute.js:1:334)"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "failed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_4",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "tab": 1267599607,
+            "code": "return await page.snapshot({interactive:true})"
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_4",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "tab": 1267599607,
+            "code": "return await page.snapshot({interactive:true})"
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "tab: 1267599607\n\nTypeError: not a function\n    at <anonymous> (execute.js:1:248)\n\nWarnings:\n- Unhandled promise rejection: not a function (await or catch every promise)"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "failed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_5",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "tab": 1267599607,
+            "code": "return await page.locator('form[action=\"https://arxiv.org/search\"]').evaluate(f=>f.outerHTML)"
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_5",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "tab": 1267599607,
+            "code": "return await page.locator('form[action=\"https://arxiv.org/search\"]').evaluate(f=>f.outerHTML)"
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "tab: 1267599607\n\n<form method=\"GET\" action=\"https://arxiv.org/search\">\n      <label for=\"ds-search-input\" class=\"is-sr-only\">Search arXiv</label>\n      <input type=\"text\" name=\"query\" id=\"ds-search-input\" class=\"ds-input\" autocomplete=\"off\" placeholder=\"Search papers by title, author, abstract, or ID...\">\n      <input type=\"hidden\" name=\"searchtype\" value=\"all\">\n      <input type=\"hidden\" name=\"source\" value=\"header\">\n    </form>"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_6",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "tab": 1267599607,
+            "code": "await page.locator('#ds-search-input').fill('Attention Is All You Need',{force:true}); await page.locator('#ds-search-input').press('Enter'); await page.waitForLoadState('domcontentloaded'); return {url:page.url(),title:await page.title(),text:(await page.locator('body').innerText()).slice(0,7000)}"
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_6",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "tab": 1267599607,
+            "code": "await page.locator('#ds-search-input').fill('Attention Is All You Need',{force:true}); await page.locator('#ds-search-input').press('Enter'); await page.waitForLoadState('domcontentloaded'); return {url:page.url(),title:await page.title(),text:(await page.locator('body').innerText()).slice(0,7000)}"
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "tab: 1267599607\n\nError: \"textbox \\\"Search arXiv\\\" (#ds-search-input)\" did not take focus (it may be disabled, hidden, covered or not editable), so nothing was typed\n    at <anonymous> (execute.js:1:269)"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "failed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_7",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "tab": 1267599607,
+            "code": "await page.goto('https://arxiv.org/search/?query=Attention%20Is%20All%20You%20Need&searchtype=title&abstracts=show&order=-announced_date_first&size=50', {waitUntil:'domcontentloaded'}); return {url:page.url(),title:await page.title(),text:(await page.locator('body').innerText()).slice(0,7000)}"
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_7",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "tab": 1267599607,
+            "code": "await page.goto('https://arxiv.org/search/?query=Attention%20Is%20All%20You%20Need&searchtype=title&abstracts=show&order=-announced_date_first&size=50', {waitUntil:'domcontentloaded'}); return {url:page.url(),title:await page.title(),text:(await page.locator('body').innerText()).slice(0,7000)}"
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "tab: 1267599607\n\n{\"url\":\"https://arxiv.org/search/?query=Attention%20Is%20All%20You%20Need&searchtype=title&abstracts=show&order=-announced_date_first&size=50\",\"title\":\"Search | arXiv e-print repository\",\"text\":\"Skip to main content\\nSearch\\nSubmit\\nDonate\\nLog in\\nShowing 1–50 of 70 results for title: Attention Is All You Need\\nSearch v0.5.6 released 2020-02-24  \\nSearch term or terms\\nAll fields\\nTitle\\nAuthor(s)\\nAbstract\\nComments\\nJournal reference\\nACM classification\\nMSC classification\\nReport number\\narXiv identifier\\nDOI\\nORCID\\nLicense (URI)\\narXiv author ID\\nHelp pages\\nFull text\\nSearch\\n Show abstracts  Hide abstracts\\nAdvanced Search\\n25\\n50\\n100\\n200\\n results per page.\\nSort results by \\nAnnouncement date (newest first)\\nAnnouncement date (oldest first)\\nSubmission date (newest first)\\nSubmission date (oldest first)\\nRelevance\\nGo\\nNext\\n1\\n2\\n\\narXiv:2609.13531  [pdf] \\n\\n cs.LG cs.AI physics.flu-dyn\\n\\nAttention Is All You Need (to Avoid Spurious Oscillations)\\n\\nAuthors: Jinyoung Jeong, Joseph B. Choi, Xinlun Cheng, H. S. Udaykumar, Sanghun Choi, Stephen S. Baek\\n\\nAbstract: Can attention move a shock across several cells in one update without breaking it? We develop a conservative, fixed grid finite-volume scheme in which a CFL-conditioned attention flux selects upstream information according to the transport required by the current time step. One-dimensional inviscid Burgers transport is used as the central mechanism test: the same learned flux remains reliable in t… ▽ More\\n\\nSubmitted 29 September, 2026; v1 submitted 11 September, 2026; originally announced September 2026.\\n\\narXiv:2607.23678  [pdf, ps, other] \\n\\n cs.AI\\n\\nFocus Is All You Need: Adaptive Goal-aware Attention Orchestration for Multi-Agent Graph Systems\\n\\nAuthors: Mingzhou Fan, Siyuan Xu, Mingxuan Yuan\\n\\nAbstract: Large language models (LLMs) enable autonomous agents for reasoning, planning, and tool use. Recent systems increasingly organize these agents as graphs of specialized, interconnected nodes. Although graph-based orchestration supports flexible decomposition and coordination, it creates a key challenge: \\\\textbf{attention allocation}. As workflows grow, existing approaches often execute graph compon… ▽ More\\n\\nSubmitted 26 July, 2026; originally announced July 2026.\\n\\narXiv:2607.13537  [pdf, ps, other] \\n\\n eess.SY\\n\\nTransformer is All You Need: Attention-Based Anomaly Detection and Classification in Inverter-Rich Power Systems\\n\\nAuthors: Emad Abukhousa, Saman Zonouz, A. P. Sakis Meliopoulos\\n\\nAbstract: Inverter-based resources and IEC 61850 process-bus measurements introduce new protection challenges, including nontraditional fault behavior and measurement-domain cyber-physical attacks. This paper evaluates DL-Xformer, an attention-based Transformer classifier for multi-class fault and cyberattack diagnosis, side-by-side with Dynamic State Estimation-Based Protection (DSE-EBP) on identical high-… ▽ More\\n\\nSubmitted 15 July, 2026; originally announced July 2026.\\n\\narXiv:2606.12848  [pdf, ps, other] \\n\\n cs.AI econ.GN\\n\\n(Human) Attention Is (Still) All You Need: Human oversight makes AI-assisted social science reliable\\n\\nAuthors: Chen Zhu, Xiaolu Wang, Weilong Zhang\\n\\nAbstract: Large language models (LLMs) are increasingly used for tasks once reserved for trained researchers, including hypothesis generation, specification choice, and drafting conclusions. We argue that the reliability of AI-assisted research depends not only on model capability, but also on how cognitive labour is structured between humans and machines. We study this problem through Human-in-the-Loop Eco… ▽ More\\n\\nSubmitted 10 June, 2026; originally announced June 2026.\\n\\narXiv:2606.02332  [pdf, ps, other] \\n\\n cs.AI cs.CL cs.LG\\n\\nForget Attention: Importance-Aware Attention Is All You Need\\n\\nAuthors: Suhyeong Shin, Yeongwook Yang\\n\\nAbstract: Attention retrieves content precisely, but its scores depend only on query--key products, leaving order and recency to positional encodings. Conversely, state-space models (SSMs) such as Mamba-3 track order and recency through input-dependent state transitions that decay and rotate, yet compressing context into a fixed-size state hampers precise retrieval. Hybrids like Samba and Hymba exploit this… ▽ More\\n\\nSubmitted 27 October, 2026; v1 submitted 1 June, 2026; originally announced June 2026.\\n\\nACM Class: I.2.7; I.2.6\\n\\narXiv:2605.13784  [pdf, ps, other] \\n\\n cs.LG\\n\\nAttention Once Is All You Need: Efficient Streaming Inference with Stateful Transformers\\n\\nAuthors: Victor Norgren\\n\\nAbstract: Conventional transformer inference engines are request-driven, paying an O(n) prefill cost on every query. In streaming workloads, where data arrives continuously and queries probe an ever-growing context, this cost is prohibitive. We introduce a data-driven computational model centred on stateful sessions: a persistent KV cache advanced incrementally as new data arrives, so prefill is moved off t… ▽ More\\n\\nSubmitted 13 May, 2026; originally announced May 2026.\\n\\narXiv:2604.23811  [pdf, ps, other] \\n\\n cond-mat.mtrl-sci\\n\\nAttention Is Not All You Need for Diffraction\\n\\nAuthors: Elizabeth J. Baggett, Edward G. Friedman, Abhishek Shetty, Derrick Chan-Sew, Vanellsa Acha, Harshita Dwarcherla, Paul Kienzle, William Ratcliff\\n\\nAbstract: Determining crystal symmetry from powder X-ray diffraction is a central problem in materials characterization, yet multiple space groups can produce indistinguishable patterns, making automated classification difficult. We show that attention-based architectures, while superior to convolutional networks for this task, are insufficient on their own: reliable symmetry extraction requires encoding cr… ▽ More\\n\\nSubmitted 26 April, 2026; originally announced April 2026.\\n\\nComments: 29 pages, 19 figures, 22 tables\\n\\narXiv:2604.21816  [pdf, ps, other] \\n\\n cs.AI\\n\\nTool Attention Is All You Need: Dynamic Tool Gating and Lazy Schema Loading for Eliminating the MCP/Tools Tax in Scalable Agentic Workflows\\n\\nAuthors: Anuj Sadani, Deepak Kumar\\n\\nAbstract: The Model Context Protocol (MCP) has become a common interface for connecting large language model (LLM) agents to external tools, but its reliance on stateless, eager schema injection imposes a hidden per-turn overhead the MCP Tax or Tools Tax that practitioner reports place between roughly 10k and 60k tokens in typical multi-server deployments. This payload inflates the key-value cache, is assoc… ▽ More\\n\\nSubmitted 23 April, 2026; originally announced April 2026.\\n\\nComments: 21 pages\\n\\narXiv:2603.01285  [pdf, ps, other] \\n\\n cs.LG cs.AI cs.CL\\n\\nAttention Smoothing Is All You Need For Unlearning\\n\\nAuthors: Saleh Zare Zade, Xiangyu Zhou, Sijia Liu, Dongxiao Zhu\\n\\nAbstract: Large Language Models are prone to memorizing sensitive, copyrighted, or hazardous content, posing significant privacy and legal concerns. Retraining from scratch is computationally infeasible, whereas current unlearning methods exhibit unstable trade-offs between forgetting and utility, frequently producing incoherent outputs on forget prompts and failing to generalize due to the persistence of l… ▽ More\\n\\nSubmitted 1 March, 2026; originally announced March 2026.\\n\\nComments: Accepted by ICLR 2026\\n\\narXiv:2603.00133  [pdf, ps, other] \\n\\n cs.CV cs.AI\\n\\nYou Don't Need All T\"}\n\nPage: moved from https://arxiv.org/ to https://arxiv.org/search/?query=Attention%20Is%20All%20You%20Need&searchtype=title&abstracts=show&order=-announced_date_first&size=50; 1 navigation"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_8",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "tab": 1267599607,
+            "code": "return await page.locator('li.arxiv-result').evaluateAll(es=>es.map(e=>({title:e.querySelector('p.title')?.innerText.trim(), href:e.querySelector('p.title a')?.href, text:e.innerText.slice(0,900)})).filter(e=>e.title==='Attention Is All You Need'))"
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_8",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "tab": 1267599607,
+            "code": "return await page.locator('li.arxiv-result').evaluateAll(es=>es.map(e=>({title:e.querySelector('p.title')?.innerText.trim(), href:e.querySelector('p.title a')?.href, text:e.innerText.slice(0,900)})).filter(e=>e.title==='Attention Is All You Need'))"
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "tab: 1267599607\n\n[]"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_9",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "tab": 1267599607,
+            "code": "return await page.locator('a').evaluateAll(as=>as.map(a=>({text:a.innerText.trim(),href:a.href})).filter(x=>x.text==='Attention Is All You Need'))"
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_9",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "tab": 1267599607,
+            "code": "return await page.locator('a').evaluateAll(as=>as.map(a=>({text:a.innerText.trim(),href:a.href})).filter(x=>x.text==='Attention Is All You Need'))"
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "tab: 1267599607\n\n[]"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_10",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "tab": 1267599607,
+            "code": "await page.goto('https://arxiv.org/search/?query=%22Attention+Is+All+You+Need%22&searchtype=all&abstracts=show&order=relevance&size=200',{waitUntil:'domcontentloaded'}); return (await page.locator('body').innerText()).slice(-10000)"
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_10",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "tab": 1267599607,
+            "code": "await page.goto('https://arxiv.org/search/?query=%22Attention+Is+All+You+Need%22&searchtype=all&abstracts=show&order=relevance&size=200',{waitUntil:'domcontentloaded'}); return (await page.locator('body').innerText()).slice(-10000)"
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "tab: 1267599607\n\nSkip to main content\nSearch\nSubmit\nDonate\nLog in\nBad Request\n4\n\nIt looks like there's something odd about your search request. Please try starting over.\n\nIf the error persists, please contact arXiv support at help@arxiv.org.\n\nWe gratefully acknowledge support from our major funders, member institutions, and all contributors.\nAbout\n·\nHelp\n·\nContact\n·\nSubscribe\n·\nCopyright\n·\nPrivacy\n·\nAccessibility\n·\nOperational Status\n(opens in new tab)\n\nPage: moved from https://arxiv.org/search/?query=Attention%20Is%20All%20You%20Need&searchtype=title&abstracts=show&order=-announced_date_first&size=50 to https://arxiv.org/search/?query=%22Attention+Is+All+You+Need%22&searchtype=all&abstracts=show&order=relevance&size=200; 1 navigation"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_11",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "tab": 1267599607,
+            "code": "await page.goto('https://arxiv.org/search/?query=Attention%20Is%20All%20You%20Need&searchtype=title&abstracts=show&order=-announced_date_first&size=200',{waitUntil:'domcontentloaded'}); return {url:page.url(),text:(await page.locator('body').innerText()).slice(-7000)}"
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_11",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "tab": 1267599607,
+            "code": "await page.goto('https://arxiv.org/search/?query=Attention%20Is%20All%20You%20Need&searchtype=title&abstracts=show&order=-announced_date_first&size=200',{waitUntil:'domcontentloaded'}); return {url:page.url(),text:(await page.locator('body').innerText()).slice(-7000)}"
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "tab: 1267599607\n\n{\"url\":\"https://arxiv.org/search/?query=Attention%20Is%20All%20You%20Need&searchtype=title&abstracts=show&order=-announced_date_first&size=200\",\"text\":\"e model size. To this end, dropout serves as a therapy. However, existing methods like random-based, knowledge-based and search-based dropout are more general but less effective onto self-attention based models, which are broadly chosen as t… ▽ More\\n\\nSubmitted 31 May, 2021; v1 submitted 10 April, 2021; originally announced April 2021.\\n\\narXiv:2103.03404  [pdf, other] \\n\\n cs.LG\\n\\nAttention is Not All You Need: Pure Attention Loses Rank Doubly Exponentially with Depth\\n\\nAuthors: Yihe Dong, Jean-Baptiste Cordonnier, Andreas Loukas\\n\\nAbstract: Attention-based architectures have become ubiquitous in machine learning, yet our understanding of the reasons for their effectiveness remains limited. This work proposes a new way to understand self-attention networks: we show that their output can be decomposed into a sum of smaller terms, each involving the operation of a sequence of attention heads across layers. Using this decomposition, we p… ▽ More\\n\\nSubmitted 1 August, 2023; v1 submitted 4 March, 2021; originally announced March 2021.\\n\\narXiv:2102.05095  [pdf, other] \\n\\n cs.CV\\n\\nIs Space-Time Attention All You Need for Video Understanding?\\n\\nAuthors: Gedas Bertasius, Heng Wang, Lorenzo Torresani\\n\\nAbstract: We present a convolution-free approach to video classification built exclusively on self-attention over space and time. Our method, named \\\"TimeSformer,\\\" adapts the standard Transformer architecture to video by enabling spatiotemporal feature learning directly from a sequence of frame-level patches. Our experimental study compares different self-attention schemes and suggests that \\\"divided attentio… ▽ More\\n\\nSubmitted 9 June, 2021; v1 submitted 9 February, 2021; originally announced February 2021.\\n\\nComments: Accepted to ICML 2021\\n\\narXiv:2010.13154  [pdf, other] \\n\\n eess.AS cs.LG cs.SD eess.SP\\n\\nAttention is All You Need in Speech Separation\\n\\nAuthors: Cem Subakan, Mirco Ravanelli, Samuele Cornell, Mirko Bronzi, Jianyuan Zhong\\n\\nAbstract: Recurrent Neural Networks (RNNs) have long been the dominant architecture in sequence-to-sequence learning. RNNs, however, are inherently sequential models that do not allow parallelization of their computations. Transformers are emerging as a natural alternative to standard RNNs, replacing recurrent computations with a multi-head attention mechanism. In this paper, we propose the SepFormer, a nov… ▽ More\\n\\nSubmitted 8 March, 2021; v1 submitted 25 October, 2020; originally announced October 2020.\\n\\nComments: Accepted to ICASSP 2021\\n\\narXiv:2010.11859  [pdf, other] \\n\\n cs.CL\\n\\nNot all parameters are born equal: Attention is mostly what you need\\n\\nAuthors: Nikolay Bogoychev\\n\\nAbstract: Transformers are widely used in state-of-the-art machine translation, but the key to their success is still unknown. To gain insight into this, we consider three groups of parameters: embeddings, attention, and feed forward neural network (FFN) layers. We examine the relative importance of each by performing an ablation study where we initialise them at random and freeze them, so that their weight… ▽ More\\n\\nSubmitted 21 September, 2021; v1 submitted 22 October, 2020; originally announced October 2020.\\n\\nComments: Accepted at BlackboxNLP 2021\\n\\narXiv:1912.11959  [pdf, other] \\n\\n cs.LG cs.CL stat.ML\\n\\nIs Attention All What You Need? -- An Empirical Investigation on Convolution-Based Active Memory and Self-Attention\\n\\nAuthors: Thomas Dowdell, Hongyu Zhang\\n\\nAbstract: The key to a Transformer model is the self-attention mechanism, which allows the model to analyze an entire sequence in a computationally efficient manner. Recent work has suggested the possibility that general attention mechanisms used by RNNs could be replaced by active-memory mechanisms. In this work, we evaluate whether various active-memory mechanisms could replace self-attention in a Transfo… ▽ More\\n\\nSubmitted 30 December, 2019; v1 submitted 26 December, 2019; originally announced December 2019.\\n\\nComments: 7 pages, 2 figures\\n\\nMSC Class: I.2.7 ACM Class: I.2.7\\n\\narXiv:1910.14537  [pdf, other] \\n\\n cs.CL\\n\\nAttention Is All You Need for Chinese Word Segmentation\\n\\nAuthors: Sufeng Duan, Hai Zhao\\n\\nAbstract: Taking greedy decoding algorithm as it should be, this work focuses on further strengthening the model itself for Chinese word segmentation (CWS), which results in an even more fast and more accurate CWS model. Our model consists of an attention only stacked encoder and a light enough decoder for the greedy segmentation plus two highway connections for smoother training, in which the encoder is co… ▽ More\\n\\nSubmitted 6 October, 2020; v1 submitted 31 October, 2019; originally announced October 2019.\\n\\nComments: 11 pages, to appear in EMNLP 2020 as a long paper\\n\\narXiv:1906.02792  [pdf, other] \\n\\n cs.CV\\n\\nAttention is all you need for Videos: Self-attention based Video Summarization using Universal Transformers\\n\\nAuthors: Manjot Bilkhu, Siyang Wang, Tushar Dobhal\\n\\nAbstract: Video Captioning and Summarization have become very popular in the recent years due to advancements in Sequence Modelling, with the resurgence of Long-Short Term Memory networks (LSTMs) and introduction of Gated Recurrent Units (GRUs). Existing architectures extract spatio-temporal features using CNNs and utilize either GRUs or LSTMs to model dependencies with soft attention layers. These attentio… ▽ More\\n\\nSubmitted 6 June, 2019; originally announced June 2019.\\n\\nComments: 15 pages, 10 figures\\n\\narXiv:1905.13497  [pdf, other] \\n\\n cs.CL cs.AI\\n\\nAttention Is (not) All You Need for Commonsense Reasoning\\n\\nAuthors: Tassilo Klein, Moin Nabi\\n\\nAbstract: The recently introduced BERT model exhibits strong performance on several language understanding benchmarks. In this paper, we describe a simple re-implementation of BERT for commonsense reasoning. We show that the attentions produced by BERT can be directly utilized for tasks such as the Pronoun Disambiguation Problem and Winograd Schema Challenge. Our proposed attention-guided commonsense reason… ▽ More\\n\\nSubmitted 31 May, 2019; originally announced May 2019.\\n\\nComments: to appear at ACL 2019\\n\\narXiv:1706.03762  [pdf, other] \\n\\n cs.CL cs.LG\\n\\nAttention Is All You Need\\n\\nAuthors: Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N. Gomez, Lukasz Kaiser, Illia Polosukhin\\n\\nAbstract: The dominant sequence transduction models are based on complex recurrent or convolutional neural networks in an encoder-decoder configuration. The best performing models also connect the encoder and decoder through an attention mechanism. We propose a new simple network architecture, the Transformer, based solely on attention mechanisms, dispensing with recurrence and convolutions entirely. Experi… ▽ More\\n\\nSubmitted 1 August, 2023; v1 submitted 12 June, 2017; originally announced June 2017.\\n\\nComments: 15 pages, 5 figures\\n\\nWe gratefully acknowledge support from our major funders, member institutions, and all contributors.\\nAbout\\n·\\nHelp\\n·\\nContact\\n·\\nSubscribe\\n·\\nCopyright\\n·\\nPrivacy\\n·\\nAccessibility\\n·\\nOperational Status\\n(opens in new tab)\"}\n\nPage: moved from https://arxiv.org/search/?query=%22Attention+Is+All+You+Need%22&searchtype=all&abstracts=show&order=relevance&size=200 to https://arxiv.org/search/?query=Attention%20Is%20All%20You%20Need&searchtype=title&abstracts=show&order=-announced_date_first&size=200; 1 navigation"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_12",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "tab": 1267599607,
+            "code": "await page.goto('https://arxiv.org/abs/1706.03762',{waitUntil:'domcontentloaded'}); return {url:page.url(),title:await page.title(),text:(await page.locator('body').innerText()).slice(0,6000)}"
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_12",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "tab": 1267599607,
+            "code": "await page.goto('https://arxiv.org/abs/1706.03762',{waitUntil:'domcontentloaded'}); return {url:page.url(),title:await page.title(),text:(await page.locator('body').innerText()).slice(0,6000)}"
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "tab: 1267599607\n\n{\"url\":\"https://arxiv.org/abs/1706.03762\",\"title\":\"[1706.03762] Attention Is All You Need\",\"text\":\"Skip to main content\\nSearch\\nSubmit\\nDonate\\nLog in\\nComputer Science > Computation and Language\\n[Submitted on 12 Jun 2017 (v1), last revised 2 Aug 2023 (this version, v7)]\\nAttention Is All You Need\\nAshish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N. Gomez, Lukasz Kaiser, Illia Polosukhin\\nThe dominant sequence transduction models are based on complex recurrent or convolutional neural networks in an encoder-decoder configuration. The best performing models also connect the encoder and decoder through an attention mechanism. We propose a new simple network architecture, the Transformer, based solely on attention mechanisms, dispensing with recurrence and convolutions entirely. Experiments on two machine translation tasks show these models to be superior in quality while being more parallelizable and requiring significantly less time to train. Our model achieves 28.4 BLEU on the WMT 2014 English-to-German translation task, improving over the existing best results, including ensembles by over 2 BLEU. On the WMT 2014 English-to-French translation task, our model establishes a new single-model state-of-the-art BLEU score of 41.8 after training for 3.5 days on eight GPUs, a small fraction of the training costs of the best models from the literature. We show that the Transformer generalizes well to other tasks by applying it successfully to English constituency parsing both with large and limited training data.\\nComments:\\t15 pages, 5 figures\\nSubjects:\\tComputation and Language (cs.CL); Machine Learning (cs.LG)\\nCite as:\\tarXiv:1706.03762 [cs.CL]\\n \\t(or arXiv:1706.03762v7 [cs.CL] for this version)\\n \\t\\nhttps://doi.org/10.48550/arXiv.1706.03762\\nFocus to learn more\\nSubmission history\\nFrom: Llion Jones [view email]\\n[v1] Mon, 12 Jun 2017 17:57:34 UTC (1,102 KB)\\n[v2] Mon, 19 Jun 2017 16:49:45 UTC (1,125 KB)\\n[v3] Tue, 20 Jun 2017 05:20:02 UTC (1,125 KB)\\n[v4] Fri, 30 Jun 2017 17:29:30 UTC (1,124 KB)\\n[v5] Wed, 6 Dec 2017 03:30:32 UTC (1,124 KB)\\n[v6] Mon, 24 Jul 2023 00:48:54 UTC (1,124 KB)\\n[v7] Wed, 2 Aug 2023 00:41:18 UTC (1,124 KB)\\n\\nAccess Paper:\\nView PDF\\nHTML (experimental)\\nTeX Source\\nview license\\nCurrent browse context:\\ncs.CL\\n< prev   |   next >\\n\\nnew | recent | 2017-06\\nChange to browse by:\\ncs\\ncs.LG\\n\\nReferences & Citations\\nNASA ADS\\nGoogle Scholar\\nSemantic Scholar\\n123 blog links (what is this?)\\nDBLP - CS Bibliography\\nlisting | bibtex\\nAshish Vaswani\\nNoam Shazeer\\nNiki Parmar\\nJakob Uszkoreit\\nLlion Jones\\n…\\nExport BibTeX Citation\\nBookmark\\n \\nBibliographic Tools\\nBibliographic and Citation Tools\\nBibliographic Explorer Toggle\\nBibliographic Explorer (What is the Explorer?)\\nConnected Papers Toggle\\nConnected Papers (What is Connected Papers?)\\nLitmaps Toggle\\nLitmaps (What is Litmaps?)\\nscite.ai Toggle\\nscite Smart Citations (What are Smart Citations?)\\nCode, Data, Media\\nDemos\\nRelated Papers\\nAbout arXivLabs\\nWhich authors of this paper are endorsers? | Disable MathJax (What is MathJax?)\\nWe gratefully acknowledge support from our major funders, member institutions, and all contributors.\\nAbout\\n·\\nHelp\\n·\\nContact\\n·\\nSubscribe\\n·\\nCopyright\\n·\\nPrivacy\\n·\\nAccessibility\\n·\\nOperational Status\\n(opens in new tab)\\nMajor funding support from\"}\n\nPage: moved from https://arxiv.org/search/?query=Attention%20Is%20All%20You%20Need&searchtype=title&abstracts=show&order=-announced_date_first&size=200 to https://arxiv.org/abs/1706.03762; 1 navigation"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_13",
+          "type": "agent_message",
+          "text": "{\"answer\":\"arXiv:1706.03762. The first two authors are Ashish Vaswani and Noam Shazeer. Original submission date: 12 June 2017.\",\"evidence\":[{\"url\":\"https://arxiv.org/abs/1706.03762\",\"quote\":\"[Submitted on 12 Jun 2017 (v1), last revised 2 Aug 2023 (this version, v7)]\"},{\"url\":\"https://arxiv.org/abs/1706.03762\",\"quote\":\"Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N. Gomez, Lukasz Kaiser, Illia Polosukhin\"},{\"url\":\"https://arxiv.org/abs/1706.03762\",\"quote\":\"Cite as:\\tarXiv:1706.03762 [cs.CL]\"}]}"
+        }
+      },
+      {
+        "type": "turn.completed",
+        "usage": {
+          "input_tokens": 235529,
+          "cached_input_tokens": 192256,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 2017,
+          "reasoning_output_tokens": 593
+        }
+      }
+    ],
+    "parse_errors": 0,
+    "diagnostic": null,
+    "configuration": {
+      "model": "gpt-6-luna",
+      "effort": "high",
+      "sandbox": "read-only",
+      "shell_tool": false,
+      "web_search": "disabled",
+      "user_config_loaded": false,
+      "project_instructions_loaded": false,
+      "skills_catalog_max_tokens": 1,
+      "automatic_skill_instructions": false,
+      "fixture_tool_approval": "explicit approve",
+      "auth": "existing signed-in Codex host",
+      "mcp_transport": "stdio → private Unix socket → native runtime MCP client"
+    }
+  },
+  "actual_host_client_info": {
+    "name": "codex-mcp-client",
+    "title": "Codex",
+    "version": "0.166.0"
+  },
+  "engine": "browse",
+  "task": "arxiv-paper",
+  "round": 0,
+  "phase": 0,
+  "success": true,
+  "outcome": "passed",
+  "answer": {
+    "answer": "arXiv:1706.03762. The first two authors are Ashish Vaswani and Noam Shazeer. Original submission date: 12 June 2017.",
+    "evidence": [
+      {
+        "url": "https://arxiv.org/abs/1706.03762",
+        "quote": "[Submitted on 12 Jun 2017 (v1), last revised 2 Aug 2023 (this version, v7)]"
+      },
+      {
+        "url": "https://arxiv.org/abs/1706.03762",
+        "quote": "Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N. Gomez, Lukasz Kaiser, Illia Polosukhin"
+      },
+      {
+        "url": "https://arxiv.org/abs/1706.03762",
+        "quote": "Cite as:\tarXiv:1706.03762 [cs.CL]"
+      }
+    ]
+  },
+  "expected": {
+    "id": "1706.03762",
+    "authors": [
+      "Ashish Vaswani",
+      "Noam Shazeer"
+    ],
+    "date": "12 June 2017"
+  },
+  "evaluation": {
+    "passed": true,
+    "facts": [
+      {
+        "pattern": "1706\\.03762",
+        "passed": true
+      },
+      {
+        "pattern": "Ashish\\s+Vaswani",
+        "passed": true
+      },
+      {
+        "pattern": "Noam\\s+Shazeer",
+        "passed": true
+      },
+      {
+        "pattern": "12\\s+Jun(?:e)?\\s+2017|Jun(?:e)?\\s+12,?\\s+2017|2017-06-12",
+        "passed": true
+      }
+    ],
+    "evidence": [
+      {
+        "url": "https://arxiv.org/abs/1706.03762",
+        "quote": "[Submitted on 12 Jun 2017 (v1), last revised 2 Aug 2023 (this version, v7)]",
+        "source_matches": true,
+        "quote_observed": true
+      },
+      {
+        "url": "https://arxiv.org/abs/1706.03762",
+        "quote": "Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N. Gomez, Lukasz Kaiser, Illia Polosukhin",
+        "source_matches": true,
+        "quote_observed": true
+      },
+      {
+        "url": "https://arxiv.org/abs/1706.03762",
+        "quote": "Cite as:\tarXiv:1706.03762 [cs.CL]",
+        "source_matches": true,
+        "quote_observed": true
+      }
+    ],
+    "forbidden_network_or_file_calls": 0
+  },
+  "preparation_ms": 42.235060999999405,
+  "host_elapsed_ms": 108716.02193399999,
+  "verification_ms": 3.359965999989072,
+  "task_elapsed_ms": 108724.08033099999,
+  "usage": {
+    "input_tokens": 235529,
+    "cached_input_tokens": 192256,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 2017,
+    "reasoning_output_tokens": 593
+  },
+  "model_verified": null,
+  "host_error": null,
+  "tool_calls": 12,
+  "tool_failures": 3,
+  "tool_elapsed_ms": 17042.642285000038,
+  "response_bytes": 27791,
+  "response_characters": 27644,
+  "forbidden_host_calls": 0,
+  "reported_cost_usd": null,
+  "cost_usd": null,
+  "timed_out": false,
+  "trace_file": "browse-arxiv-paper-0.json",
+  "prompt": "Complete this read-only public website task using ONLY the browser MCP tools. You must inspect the live page; do not answer from memory. You choose your own observations, selectors and actions. Do not use HTTP/API clients, fetch, network replay, files, shell, other agents, or non-browser tools. Browser DOM evaluation is allowed for text extraction, but must not make network requests. Do not visit API endpoints. Do not sign in, create accounts, post messages, buy, or change account settings. Do not solve CAPTCHAs or bypass access challenges; report them. You may follow links, use site search and recover from errors. Stay on the task site. Maximum 30 browser calls. Verify all requested facts and finish with JSON {\"answer\":\"concise answer covering every requested fact\",\"evidence\":[{\"url\":\"source page URL\",\"quote\":\"a short exact supporting quote you observed in browser output\"}]}. Evidence quotes must be copied exactly from an observation. Do not claim success when blocked.\nUse browse tab 1267599607; pass tab: 1267599607 to continue in the owned starting tab. Its execute tool provides a Playwright-style page interface. Choose what text to return to yourself, and verify it.\nStart URL: https://arxiv.org/\nTask: Find the paper titled exactly “Attention Is All You Need” on arXiv. Report its arXiv identifier, first two authors and original submission date. Cite the abstract page and a short supporting quote.",
+  "tools": [
+    {
+      "sequence": 1,
+      "name": "execute",
+      "arguments": {
+        "tab": 1267599607,
+        "code": "await page.goto('https://arxiv.org/', {waitUntil:'domcontentloaded'}); return {url:page.url(), title:await page.title(), text:(await page.locator('body').innerText()).slice(0,5000)}"
+      },
+      "started_at": "2026-11-17T14:34:18.738Z",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "tab: 1267599607\n\n{\"url\":\"https://arxiv.org/\",\"title\":\"arXiv.org e-Print archive\",\"text\":\"Skip to main content\\nSearch\\nSubmit\\nDonate\\nLog in\\n\\narXiv is a free distribution service and an open-access archive for more than 3.2 million scholarly articles in the fields of physics, mathematics, computer science, quantitative biology, quantitative finance, statistics, electrical engineering and systems science, and economics. Materials on this site are not peer-reviewed by arXiv.\\n\\nSubject search and browse:\\n\\nPhysics\\nMathematics\\nQuantitative Biology\\nComputer Science\\nQuantitative Finance\\nStatistics\\nElectrical Engineering and Systems Science\\nEconomics\\n   \\nPhysics\\nAstrophysics (astro-ph new, recent, search) Astrophysics of Galaxies; Cosmology and Nongalactic Astrophysics; Earth and Planetary Astrophysics; High Energy Astrophysical Phenomena; Instrumentation and Methods for Astrophysics; Solar and Stellar Astrophysics\\nCondensed Matter (cond-mat new, recent, search) Disordered Systems and Neural Networks; Materials Science; Mesoscale and Nanoscale Physics; Other Condensed Matter; Quantum Gases; Soft Condensed Matter; Statistical Mechanics; Strongly Correlated Electrons; Superconductivity\\nGeneral Relativity and Quantum Cosmology (gr-qc new, recent, search)\\nHigh Energy Physics - Experiment (hep-ex new, recent, search)\\nHigh Energy Physics - Lattice (hep-lat new, recent, search)\\nHigh Energy Physics - Phenomenology (hep-ph new, recent, search)\\nHigh Energy Physics - Theory (hep-th new, recent, search)\\nMathematical Physics (math-ph new, recent, search)\\nNonlinear Sciences (nlin new, recent, search)\\nincludes: Adaptation and Self-Organizing Systems; Cellular Automata and Lattice Gases; Chaotic Dynamics; Exactly Solvable and Integrable Systems; Pattern Formation and Solitons\\nNuclear Experiment (nucl-ex new, recent, search)\\nNuclear Theory (nucl-th new, recent, search)\\nPhysics (physics new, recent, search)\\nincludes: Accelerator Physics; Applied Physics; Atmospheric and Oceanic Physics; Atomic and Molecular Clusters; Atomic Physics; Biological Physics; Chemical Physics; Classical Physics; Computational Physics; Data Analysis, Statistics and Probability; Fluid Dynamics; General Physics; Geophysics; History and Philosophy of Physics; Instrumentation and Detectors; Medical Physics; Optics; Physics and Society; Physics Education; Plasma Physics; Popular Physics; Space Physics\\nQuantum Physics (quant-ph new, recent, search)\\nMathematics\\nMathematics (math new, recent, search)\\nincludes: (see detailed description): Algebraic Geometry; Algebraic Topology; Analysis of PDEs; Category Theory; Classical Analysis and ODEs; Combinatorics; Commutative Algebra; Complex Variables; Differential Geometry; Dynamical Systems; Functional Analysis; General Mathematics; General Topology; Geometric Topology; Group Theory; History and Overview; Information Theory; K-Theory and Homology; Logic; Mathematical Physics; Metric Geometry; Number Theory; Numerical Analysis; Operator Algebras; Optimization and Control; Probability; Quantum Algebra; Representation Theory; Rings and Algebras; Spectral Theory; Statistics Theory; Symplectic Geometry\\nComputer Science\\nComputing Research Repository (CoRR new, recent, search)\\nincludes: (see detailed description): Artificial Intelligence; Computation and Language; Computational Complexity; Computational Engineering, Finance, and Science; Computational Geometry; Computer Science and Game Theory; Computer Vision and Pattern Recognition; Computers and Society; Cryptography and Security; Data Structures and Algorithms; Databases; Digital Libraries; Discrete Mathematics; Distributed, Parallel, and Cluster Computing; Emerging Technologies; Formal Languages and Automata Theory; General Literature; Graphics; Hardware Architecture; Human-Computer Interaction; Information Retrieval; Information Theory; Logic in Computer Science; Machine Learning; Mathematical Software; Multiagent Systems; Multimedia; Networking and Internet Architecture; Neural and Evolutionary Computing; Numerical Analysis; Operating Systems; Other Computer Science; Performance; Programming Languages; Robotics; Social and Information Networks; Software Engineering; Sound; Symbolic Computation; Systems and Control\\nQuantitative Biology\\nQuantitative Biology (q-bio new, recent, search)\\nincludes: (see detailed description): Biomolecules; Cell Behavior; Genomics; Molecular Networks; Neurons and Cognition; Other Quantitative Biology; Populations and Evolution; Quantitative Methods; Subcellular Processes; Tissues and Organs\\nQuantitative Finance\\nQuantitative Finance (q-fin new, recent, search)\\nincludes: (see detailed description): Computational Finance; Economics; General Finance; Mathematical Finance; Portfolio Management; Pricing of Securities; Risk Management; Statistical Finance; Trading and Market Microstructure\\nStatistics\\nStatistics (stat new, recent, search)\\nincludes: (see detailed description): Applications; Computation; Machine Learning; Methodology; Other Statistics; Statistics Theory\\nElectrical Engineering and Systems Science\\nElectrical Engineering and Systems\"}\n\nPage: moved from http://127.0.0.1:36683/ to https://arxiv.org/; 1 navigation"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 605.2265360000019,
+      "response_bytes": 5326
+    },
+    {
+      "sequence": 2,
+      "name": "execute",
+      "arguments": {
+        "tab": 1267599607,
+        "code": "return await page.locator('form').evaluateAll(fs=>fs.map(f=>({action:f.action, text:f.innerText, inputs:[...f.querySelectorAll('input')].map(i=>({name:i.name,placeholder:i.placeholder,type:i.type}))})))"
+      },
+      "started_at": "2026-11-17T14:34:25.298Z",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "tab: 1267599607\n\n[{\"action\":\"https://arxiv.org/search\",\"inputs\":[{\"name\":\"query\",\"placeholder\":\"Search papers by title, author, abstract, or ID...\",\"type\":\"text\"},{\"name\":\"searchtype\",\"placeholder\":\"\",\"type\":\"hidden\"},{\"name\":\"source\",\"placeholder\":\"\",\"type\":\"hidden\"}],\"text\":\"\\n      Search arXiv\\n      \\n      \\n      \\n    \"},{\"action\":\"https://arxiv.org/multi\",\"inputs\":[{\"name\":\"\",\"placeholder\":\"\",\"type\":\"button\"},{\"name\":\"/form\",\"placeholder\":\"\",\"type\":\"submit\"},{\"name\":\"/catchup\",\"placeholder\":\"\",\"type\":\"submit\"}],\"text\":\"Subject search and browse:\\n\\nPhysics\\nMathematics\\nQuantitative Biology\\nComputer Science\\nQuantitative Finance\\nStatistics\\nElectrical Engineering and Systems Science\\nEconomics\\n   \"}]"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 8.726227999999537,
+      "response_bytes": 869
+    },
+    {
+      "sequence": 3,
+      "name": "execute",
+      "arguments": {
+        "tab": 1267599607,
+        "code": "const f=page.locator('form[action=\"https://arxiv.org/search\"]'); await f.locator('input[name=\"query\"]').fill('Attention Is All You Need'); await f.locator('input[type=\"submit\"]').click(); await page.waitForLoadState('domcontentloaded'); return {url:page.url(),title:await page.title(),text:(await page.locator('body').innerText()).slice(0,7000)}"
+      },
+      "started_at": "2026-11-17T14:34:32.427Z",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "tab: 1267599607\n\nTimeoutError: textbox \"Search arXiv\" is not visible; waited 10000 ms\n    at <anonymous> (execute.js:1:334)"
+          }
+        ],
+        "isError": true
+      },
+      "failed": true,
+      "elapsed_ms": 10088.566490000012,
+      "response_bytes": 182
+    },
+    {
+      "sequence": 4,
+      "name": "execute",
+      "arguments": {
+        "tab": 1267599607,
+        "code": "return await page.snapshot({interactive:true})"
+      },
+      "started_at": "2026-11-17T14:34:46.957Z",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "tab: 1267599607\n\nTypeError: not a function\n    at <anonymous> (execute.js:1:248)\n\nWarnings:\n- Unhandled promise rejection: not a function (await or catch every promise)"
+          }
+        ],
+        "isError": true
+      },
+      "failed": true,
+      "elapsed_ms": 5.304575999994995,
+      "response_bytes": 228
+    },
+    {
+      "sequence": 5,
+      "name": "execute",
+      "arguments": {
+        "tab": 1267599607,
+        "code": "return await page.locator('form[action=\"https://arxiv.org/search\"]').evaluate(f=>f.outerHTML)"
+      },
+      "started_at": "2026-11-17T14:34:50.259Z",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "tab: 1267599607\n\n<form method=\"GET\" action=\"https://arxiv.org/search\">\n      <label for=\"ds-search-input\" class=\"is-sr-only\">Search arXiv</label>\n      <input type=\"text\" name=\"query\" id=\"ds-search-input\" class=\"ds-input\" autocomplete=\"off\" placeholder=\"Search papers by title, author, abstract, or ID...\">\n      <input type=\"hidden\" name=\"searchtype\" value=\"all\">\n      <input type=\"hidden\" name=\"source\" value=\"header\">\n    </form>"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 10.771895000012591,
+      "response_bytes": 511
+    },
+    {
+      "sequence": 6,
+      "name": "execute",
+      "arguments": {
+        "tab": 1267599607,
+        "code": "await page.locator('#ds-search-input').fill('Attention Is All You Need',{force:true}); await page.locator('#ds-search-input').press('Enter'); await page.waitForLoadState('domcontentloaded'); return {url:page.url(),title:await page.title(),text:(await page.locator('body').innerText()).slice(0,7000)}"
+      },
+      "started_at": "2026-11-17T14:34:54.707Z",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "tab: 1267599607\n\nError: \"textbox \\\"Search arXiv\\\" (#ds-search-input)\" did not take focus (it may be disabled, hidden, covered or not editable), so nothing was typed\n    at <anonymous> (execute.js:1:269)"
+          }
+        ],
+        "isError": true
+      },
+      "failed": true,
+      "elapsed_ms": 11.893172999989474,
+      "response_bytes": 265
+    },
+    {
+      "sequence": 7,
+      "name": "execute",
+      "arguments": {
+        "tab": 1267599607,
+        "code": "await page.goto('https://arxiv.org/search/?query=Attention%20Is%20All%20You%20Need&searchtype=title&abstracts=show&order=-announced_date_first&size=50', {waitUntil:'domcontentloaded'}); return {url:page.url(),title:await page.title(),text:(await page.locator('body').innerText()).slice(0,7000)}"
+      },
+      "started_at": "2026-11-17T14:35:00.750Z",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "tab: 1267599607\n\n{\"url\":\"https://arxiv.org/search/?query=Attention%20Is%20All%20You%20Need&searchtype=title&abstracts=show&order=-announced_date_first&size=50\",\"title\":\"Search | arXiv e-print repository\",\"text\":\"Skip to main content\\nSearch\\nSubmit\\nDonate\\nLog in\\nShowing 1–50 of 70 results for title: Attention Is All You Need\\nSearch v0.5.6 released 2020-02-24  \\nSearch term or terms\\nAll fields\\nTitle\\nAuthor(s)\\nAbstract\\nComments\\nJournal reference\\nACM classification\\nMSC classification\\nReport number\\narXiv identifier\\nDOI\\nORCID\\nLicense (URI)\\narXiv author ID\\nHelp pages\\nFull text\\nSearch\\n Show abstracts  Hide abstracts\\nAdvanced Search\\n25\\n50\\n100\\n200\\n results per page.\\nSort results by \\nAnnouncement date (newest first)\\nAnnouncement date (oldest first)\\nSubmission date (newest first)\\nSubmission date (oldest first)\\nRelevance\\nGo\\nNext\\n1\\n2\\n\\narXiv:2609.13531  [pdf] \\n\\n cs.LG cs.AI physics.flu-dyn\\n\\nAttention Is All You Need (to Avoid Spurious Oscillations)\\n\\nAuthors: Jinyoung Jeong, Joseph B. Choi, Xinlun Cheng, H. S. Udaykumar, Sanghun Choi, Stephen S. Baek\\n\\nAbstract: Can attention move a shock across several cells in one update without breaking it? We develop a conservative, fixed grid finite-volume scheme in which a CFL-conditioned attention flux selects upstream information according to the transport required by the current time step. One-dimensional inviscid Burgers transport is used as the central mechanism test: the same learned flux remains reliable in t… ▽ More\\n\\nSubmitted 29 September, 2026; v1 submitted 11 September, 2026; originally announced September 2026.\\n\\narXiv:2607.23678  [pdf, ps, other] \\n\\n cs.AI\\n\\nFocus Is All You Need: Adaptive Goal-aware Attention Orchestration for Multi-Agent Graph Systems\\n\\nAuthors: Mingzhou Fan, Siyuan Xu, Mingxuan Yuan\\n\\nAbstract: Large language models (LLMs) enable autonomous agents for reasoning, planning, and tool use. Recent systems increasingly organize these agents as graphs of specialized, interconnected nodes. Although graph-based orchestration supports flexible decomposition and coordination, it creates a key challenge: \\\\textbf{attention allocation}. As workflows grow, existing approaches often execute graph compon… ▽ More\\n\\nSubmitted 26 July, 2026; originally announced July 2026.\\n\\narXiv:2607.13537  [pdf, ps, other] \\n\\n eess.SY\\n\\nTransformer is All You Need: Attention-Based Anomaly Detection and Classification in Inverter-Rich Power Systems\\n\\nAuthors: Emad Abukhousa, Saman Zonouz, A. P. Sakis Meliopoulos\\n\\nAbstract: Inverter-based resources and IEC 61850 process-bus measurements introduce new protection challenges, including nontraditional fault behavior and measurement-domain cyber-physical attacks. This paper evaluates DL-Xformer, an attention-based Transformer classifier for multi-class fault and cyberattack diagnosis, side-by-side with Dynamic State Estimation-Based Protection (DSE-EBP) on identical high-… ▽ More\\n\\nSubmitted 15 July, 2026; originally announced July 2026.\\n\\narXiv:2606.12848  [pdf, ps, other] \\n\\n cs.AI econ.GN\\n\\n(Human) Attention Is (Still) All You Need: Human oversight makes AI-assisted social science reliable\\n\\nAuthors: Chen Zhu, Xiaolu Wang, Weilong Zhang\\n\\nAbstract: Large language models (LLMs) are increasingly used for tasks once reserved for trained researchers, including hypothesis generation, specification choice, and drafting conclusions. We argue that the reliability of AI-assisted research depends not only on model capability, but also on how cognitive labour is structured between humans and machines. We study this problem through Human-in-the-Loop Eco… ▽ More\\n\\nSubmitted 10 June, 2026; originally announced June 2026.\\n\\narXiv:2606.02332  [pdf, ps, other] \\n\\n cs.AI cs.CL cs.LG\\n\\nForget Attention: Importance-Aware Attention Is All You Need\\n\\nAuthors: Suhyeong Shin, Yeongwook Yang\\n\\nAbstract: Attention retrieves content precisely, but its scores depend only on query--key products, leaving order and recency to positional encodings. Conversely, state-space models (SSMs) such as Mamba-3 track order and recency through input-dependent state transitions that decay and rotate, yet compressing context into a fixed-size state hampers precise retrieval. Hybrids like Samba and Hymba exploit this… ▽ More\\n\\nSubmitted 27 October, 2026; v1 submitted 1 June, 2026; originally announced June 2026.\\n\\nACM Class: I.2.7; I.2.6\\n\\narXiv:2605.13784  [pdf, ps, other] \\n\\n cs.LG\\n\\nAttention Once Is All You Need: Efficient Streaming Inference with Stateful Transformers\\n\\nAuthors: Victor Norgren\\n\\nAbstract: Conventional transformer inference engines are request-driven, paying an O(n) prefill cost on every query. In streaming workloads, where data arrives continuously and queries probe an ever-growing context, this cost is prohibitive. We introduce a data-driven computational model centred on stateful sessions: a persistent KV cache advanced incrementally as new data arrives, so prefill is moved off t… ▽ More\\n\\nSubmitted 13 May, 2026; originally announced May 2026.\\n\\narXiv:2604.23811  [pdf, ps, other] \\n\\n cond-mat.mtrl-sci\\n\\nAttention Is Not All You Need for Diffraction\\n\\nAuthors: Elizabeth J. Baggett, Edward G. Friedman, Abhishek Shetty, Derrick Chan-Sew, Vanellsa Acha, Harshita Dwarcherla, Paul Kienzle, William Ratcliff\\n\\nAbstract: Determining crystal symmetry from powder X-ray diffraction is a central problem in materials characterization, yet multiple space groups can produce indistinguishable patterns, making automated classification difficult. We show that attention-based architectures, while superior to convolutional networks for this task, are insufficient on their own: reliable symmetry extraction requires encoding cr… ▽ More\\n\\nSubmitted 26 April, 2026; originally announced April 2026.\\n\\nComments: 29 pages, 19 figures, 22 tables\\n\\narXiv:2604.21816  [pdf, ps, other] \\n\\n cs.AI\\n\\nTool Attention Is All You Need: Dynamic Tool Gating and Lazy Schema Loading for Eliminating the MCP/Tools Tax in Scalable Agentic Workflows\\n\\nAuthors: Anuj Sadani, Deepak Kumar\\n\\nAbstract: The Model Context Protocol (MCP) has become a common interface for connecting large language model (LLM) agents to external tools, but its reliance on stateless, eager schema injection imposes a hidden per-turn overhead the MCP Tax or Tools Tax that practitioner reports place between roughly 10k and 60k tokens in typical multi-server deployments. This payload inflates the key-value cache, is assoc… ▽ More\\n\\nSubmitted 23 April, 2026; originally announced April 2026.\\n\\nComments: 21 pages\\n\\narXiv:2603.01285  [pdf, ps, other] \\n\\n cs.LG cs.AI cs.CL\\n\\nAttention Smoothing Is All You Need For Unlearning\\n\\nAuthors: Saleh Zare Zade, Xiangyu Zhou, Sijia Liu, Dongxiao Zhu\\n\\nAbstract: Large Language Models are prone to memorizing sensitive, copyrighted, or hazardous content, posing significant privacy and legal concerns. Retraining from scratch is computationally infeasible, whereas current unlearning methods exhibit unstable trade-offs between forgetting and utility, frequently producing incoherent outputs on forget prompts and failing to generalize due to the persistence of l… ▽ More\\n\\nSubmitted 1 March, 2026; originally announced March 2026.\\n\\nComments: Accepted by ICLR 2026\\n\\narXiv:2603.00133  [pdf, ps, other] \\n\\n cs.CV cs.AI\\n\\nYou Don't Need All T\"}\n\nPage: moved from https://arxiv.org/ to https://arxiv.org/search/?query=Attention%20Is%20All%20You%20Need&searchtype=title&abstracts=show&order=-announced_date_first&size=50; 1 navigation"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 4019.2204210000054,
+      "response_bytes": 7846
+    },
+    {
+      "sequence": 8,
+      "name": "execute",
+      "arguments": {
+        "tab": 1267599607,
+        "code": "return await page.locator('li.arxiv-result').evaluateAll(es=>es.map(e=>({title:e.querySelector('p.title')?.innerText.trim(), href:e.querySelector('p.title a')?.href, text:e.innerText.slice(0,900)})).filter(e=>e.title==='Attention Is All You Need'))"
+      },
+      "started_at": "2026-11-17T14:35:11.226Z",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "tab: 1267599607\n\n[]"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 9.825935000000754,
+      "response_bytes": 60
+    },
+    {
+      "sequence": 9,
+      "name": "execute",
+      "arguments": {
+        "tab": 1267599607,
+        "code": "return await page.locator('a').evaluateAll(as=>as.map(a=>({text:a.innerText.trim(),href:a.href})).filter(x=>x.text==='Attention Is All You Need'))"
+      },
+      "started_at": "2026-11-17T14:35:17.528Z",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "tab: 1267599607\n\n[]"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 10.671935999998823,
+      "response_bytes": 60
+    },
+    {
+      "sequence": 10,
+      "name": "execute",
+      "arguments": {
+        "tab": 1267599607,
+        "code": "await page.goto('https://arxiv.org/search/?query=%22Attention+Is+All+You+Need%22&searchtype=all&abstracts=show&order=relevance&size=200',{waitUntil:'domcontentloaded'}); return (await page.locator('body').innerText()).slice(-10000)"
+      },
+      "started_at": "2026-11-17T14:35:24.828Z",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "tab: 1267599607\n\nSkip to main content\nSearch\nSubmit\nDonate\nLog in\nBad Request\n4\n\nIt looks like there's something odd about your search request. Please try starting over.\n\nIf the error persists, please contact arXiv support at help@arxiv.org.\n\nWe gratefully acknowledge support from our major funders, member institutions, and all contributors.\nAbout\n·\nHelp\n·\nContact\n·\nSubscribe\n·\nCopyright\n·\nPrivacy\n·\nAccessibility\n·\nOperational Status\n(opens in new tab)\n\nPage: moved from https://arxiv.org/search/?query=Attention%20Is%20All%20You%20Need&searchtype=title&abstracts=show&order=-announced_date_first&size=50 to https://arxiv.org/search/?query=%22Attention+Is+All+You+Need%22&searchtype=all&abstracts=show&order=relevance&size=200; 1 navigation"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 851.3446600000025,
+      "response_bytes": 822
+    },
+    {
+      "sequence": 11,
+      "name": "execute",
+      "arguments": {
+        "tab": 1267599607,
+        "code": "await page.goto('https://arxiv.org/search/?query=Attention%20Is%20All%20You%20Need&searchtype=title&abstracts=show&order=-announced_date_first&size=200',{waitUntil:'domcontentloaded'}); return {url:page.url(),text:(await page.locator('body').innerText()).slice(-7000)}"
+      },
+      "started_at": "2026-11-17T14:35:33.133Z",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "tab: 1267599607\n\n{\"url\":\"https://arxiv.org/search/?query=Attention%20Is%20All%20You%20Need&searchtype=title&abstracts=show&order=-announced_date_first&size=200\",\"text\":\"e model size. To this end, dropout serves as a therapy. However, existing methods like random-based, knowledge-based and search-based dropout are more general but less effective onto self-attention based models, which are broadly chosen as t… ▽ More\\n\\nSubmitted 31 May, 2021; v1 submitted 10 April, 2021; originally announced April 2021.\\n\\narXiv:2103.03404  [pdf, other] \\n\\n cs.LG\\n\\nAttention is Not All You Need: Pure Attention Loses Rank Doubly Exponentially with Depth\\n\\nAuthors: Yihe Dong, Jean-Baptiste Cordonnier, Andreas Loukas\\n\\nAbstract: Attention-based architectures have become ubiquitous in machine learning, yet our understanding of the reasons for their effectiveness remains limited. This work proposes a new way to understand self-attention networks: we show that their output can be decomposed into a sum of smaller terms, each involving the operation of a sequence of attention heads across layers. Using this decomposition, we p… ▽ More\\n\\nSubmitted 1 August, 2023; v1 submitted 4 March, 2021; originally announced March 2021.\\n\\narXiv:2102.05095  [pdf, other] \\n\\n cs.CV\\n\\nIs Space-Time Attention All You Need for Video Understanding?\\n\\nAuthors: Gedas Bertasius, Heng Wang, Lorenzo Torresani\\n\\nAbstract: We present a convolution-free approach to video classification built exclusively on self-attention over space and time. Our method, named \\\"TimeSformer,\\\" adapts the standard Transformer architecture to video by enabling spatiotemporal feature learning directly from a sequence of frame-level patches. Our experimental study compares different self-attention schemes and suggests that \\\"divided attentio… ▽ More\\n\\nSubmitted 9 June, 2021; v1 submitted 9 February, 2021; originally announced February 2021.\\n\\nComments: Accepted to ICML 2021\\n\\narXiv:2010.13154  [pdf, other] \\n\\n eess.AS cs.LG cs.SD eess.SP\\n\\nAttention is All You Need in Speech Separation\\n\\nAuthors: Cem Subakan, Mirco Ravanelli, Samuele Cornell, Mirko Bronzi, Jianyuan Zhong\\n\\nAbstract: Recurrent Neural Networks (RNNs) have long been the dominant architecture in sequence-to-sequence learning. RNNs, however, are inherently sequential models that do not allow parallelization of their computations. Transformers are emerging as a natural alternative to standard RNNs, replacing recurrent computations with a multi-head attention mechanism. In this paper, we propose the SepFormer, a nov… ▽ More\\n\\nSubmitted 8 March, 2021; v1 submitted 25 October, 2020; originally announced October 2020.\\n\\nComments: Accepted to ICASSP 2021\\n\\narXiv:2010.11859  [pdf, other] \\n\\n cs.CL\\n\\nNot all parameters are born equal: Attention is mostly what you need\\n\\nAuthors: Nikolay Bogoychev\\n\\nAbstract: Transformers are widely used in state-of-the-art machine translation, but the key to their success is still unknown. To gain insight into this, we consider three groups of parameters: embeddings, attention, and feed forward neural network (FFN) layers. We examine the relative importance of each by performing an ablation study where we initialise them at random and freeze them, so that their weight… ▽ More\\n\\nSubmitted 21 September, 2021; v1 submitted 22 October, 2020; originally announced October 2020.\\n\\nComments: Accepted at BlackboxNLP 2021\\n\\narXiv:1912.11959  [pdf, other] \\n\\n cs.LG cs.CL stat.ML\\n\\nIs Attention All What You Need? -- An Empirical Investigation on Convolution-Based Active Memory and Self-Attention\\n\\nAuthors: Thomas Dowdell, Hongyu Zhang\\n\\nAbstract: The key to a Transformer model is the self-attention mechanism, which allows the model to analyze an entire sequence in a computationally efficient manner. Recent work has suggested the possibility that general attention mechanisms used by RNNs could be replaced by active-memory mechanisms. In this work, we evaluate whether various active-memory mechanisms could replace self-attention in a Transfo… ▽ More\\n\\nSubmitted 30 December, 2019; v1 submitted 26 December, 2019; originally announced December 2019.\\n\\nComments: 7 pages, 2 figures\\n\\nMSC Class: I.2.7 ACM Class: I.2.7\\n\\narXiv:1910.14537  [pdf, other] \\n\\n cs.CL\\n\\nAttention Is All You Need for Chinese Word Segmentation\\n\\nAuthors: Sufeng Duan, Hai Zhao\\n\\nAbstract: Taking greedy decoding algorithm as it should be, this work focuses on further strengthening the model itself for Chinese word segmentation (CWS), which results in an even more fast and more accurate CWS model. Our model consists of an attention only stacked encoder and a light enough decoder for the greedy segmentation plus two highway connections for smoother training, in which the encoder is co… ▽ More\\n\\nSubmitted 6 October, 2020; v1 submitted 31 October, 2019; originally announced October 2019.\\n\\nComments: 11 pages, to appear in EMNLP 2020 as a long paper\\n\\narXiv:1906.02792  [pdf, other] \\n\\n cs.CV\\n\\nAttention is all you need for Videos: Self-attention based Video Summarization using Universal Transformers\\n\\nAuthors: Manjot Bilkhu, Siyang Wang, Tushar Dobhal\\n\\nAbstract: Video Captioning and Summarization have become very popular in the recent years due to advancements in Sequence Modelling, with the resurgence of Long-Short Term Memory networks (LSTMs) and introduction of Gated Recurrent Units (GRUs). Existing architectures extract spatio-temporal features using CNNs and utilize either GRUs or LSTMs to model dependencies with soft attention layers. These attentio… ▽ More\\n\\nSubmitted 6 June, 2019; originally announced June 2019.\\n\\nComments: 15 pages, 10 figures\\n\\narXiv:1905.13497  [pdf, other] \\n\\n cs.CL cs.AI\\n\\nAttention Is (not) All You Need for Commonsense Reasoning\\n\\nAuthors: Tassilo Klein, Moin Nabi\\n\\nAbstract: The recently introduced BERT model exhibits strong performance on several language understanding benchmarks. In this paper, we describe a simple re-implementation of BERT for commonsense reasoning. We show that the attentions produced by BERT can be directly utilized for tasks such as the Pronoun Disambiguation Problem and Winograd Schema Challenge. Our proposed attention-guided commonsense reason… ▽ More\\n\\nSubmitted 31 May, 2019; originally announced May 2019.\\n\\nComments: to appear at ACL 2019\\n\\narXiv:1706.03762  [pdf, other] \\n\\n cs.CL cs.LG\\n\\nAttention Is All You Need\\n\\nAuthors: Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N. Gomez, Lukasz Kaiser, Illia Polosukhin\\n\\nAbstract: The dominant sequence transduction models are based on complex recurrent or convolutional neural networks in an encoder-decoder configuration. The best performing models also connect the encoder and decoder through an attention mechanism. We propose a new simple network architecture, the Transformer, based solely on attention mechanisms, dispensing with recurrence and convolutions entirely. Experi… ▽ More\\n\\nSubmitted 1 August, 2023; v1 submitted 12 June, 2017; originally announced June 2017.\\n\\nComments: 15 pages, 5 figures\\n\\nWe gratefully acknowledge support from our major funders, member institutions, and all contributors.\\nAbout\\n·\\nHelp\\n·\\nContact\\n·\\nSubscribe\\n·\\nCopyright\\n·\\nPrivacy\\n·\\nAccessibility\\n·\\nOperational Status\\n(opens in new tab)\"}\n\nPage: moved from https://arxiv.org/search/?query=%22Attention+Is+All+You+Need%22&searchtype=all&abstracts=show&order=relevance&size=200 to https://arxiv.org/search/?query=Attention%20Is%20All%20You%20Need&searchtype=title&abstracts=show&order=-announced_date_first&size=200; 1 navigation"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 1022.8055070000119,
+      "response_bytes": 7877
+    },
+    {
+      "sequence": 12,
+      "name": "execute",
+      "arguments": {
+        "tab": 1267599607,
+        "code": "await page.goto('https://arxiv.org/abs/1706.03762',{waitUntil:'domcontentloaded'}); return {url:page.url(),title:await page.title(),text:(await page.locator('body').innerText()).slice(0,6000)}"
+      },
+      "started_at": "2026-11-17T14:35:38.993Z",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "tab: 1267599607\n\n{\"url\":\"https://arxiv.org/abs/1706.03762\",\"title\":\"[1706.03762] Attention Is All You Need\",\"text\":\"Skip to main content\\nSearch\\nSubmit\\nDonate\\nLog in\\nComputer Science > Computation and Language\\n[Submitted on 12 Jun 2017 (v1), last revised 2 Aug 2023 (this version, v7)]\\nAttention Is All You Need\\nAshish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N. Gomez, Lukasz Kaiser, Illia Polosukhin\\nThe dominant sequence transduction models are based on complex recurrent or convolutional neural networks in an encoder-decoder configuration. The best performing models also connect the encoder and decoder through an attention mechanism. We propose a new simple network architecture, the Transformer, based solely on attention mechanisms, dispensing with recurrence and convolutions entirely. Experiments on two machine translation tasks show these models to be superior in quality while being more parallelizable and requiring significantly less time to train. Our model achieves 28.4 BLEU on the WMT 2014 English-to-German translation task, improving over the existing best results, including ensembles by over 2 BLEU. On the WMT 2014 English-to-French translation task, our model establishes a new single-model state-of-the-art BLEU score of 41.8 after training for 3.5 days on eight GPUs, a small fraction of the training costs of the best models from the literature. We show that the Transformer generalizes well to other tasks by applying it successfully to English constituency parsing both with large and limited training data.\\nComments:\\t15 pages, 5 figures\\nSubjects:\\tComputation and Language (cs.CL); Machine Learning (cs.LG)\\nCite as:\\tarXiv:1706.03762 [cs.CL]\\n \\t(or arXiv:1706.03762v7 [cs.CL] for this version)\\n \\t\\nhttps://doi.org/10.48550/arXiv.1706.03762\\nFocus to learn more\\nSubmission history\\nFrom: Llion Jones [view email]\\n[v1] Mon, 12 Jun 2017 17:57:34 UTC (1,102 KB)\\n[v2] Mon, 19 Jun 2017 16:49:45 UTC (1,125 KB)\\n[v3] Tue, 20 Jun 2017 05:20:02 UTC (1,125 KB)\\n[v4] Fri, 30 Jun 2017 17:29:30 UTC (1,124 KB)\\n[v5] Wed, 6 Dec 2017 03:30:32 UTC (1,124 KB)\\n[v6] Mon, 24 Jul 2023 00:48:54 UTC (1,124 KB)\\n[v7] Wed, 2 Aug 2023 00:41:18 UTC (1,124 KB)\\n\\nAccess Paper:\\nView PDF\\nHTML (experimental)\\nTeX Source\\nview license\\nCurrent browse context:\\ncs.CL\\n< prev   |   next >\\n\\nnew | recent | 2017-06\\nChange to browse by:\\ncs\\ncs.LG\\n\\nReferences & Citations\\nNASA ADS\\nGoogle Scholar\\nSemantic Scholar\\n123 blog links (what is this?)\\nDBLP - CS Bibliography\\nlisting | bibtex\\nAshish Vaswani\\nNoam Shazeer\\nNiki Parmar\\nJakob Uszkoreit\\nLlion Jones\\n…\\nExport BibTeX Citation\\nBookmark\\n \\nBibliographic Tools\\nBibliographic and Citation Tools\\nBibliographic Explorer Toggle\\nBibliographic Explorer (What is the Explorer?)\\nConnected Papers Toggle\\nConnected Papers (What is Connected Papers?)\\nLitmaps Toggle\\nLitmaps (What is Litmaps?)\\nscite.ai Toggle\\nscite Smart Citations (What are Smart Citations?)\\nCode, Data, Media\\nDemos\\nRelated Papers\\nAbout arXivLabs\\nWhich authors of this paper are endorsers? | Disable MathJax (What is MathJax?)\\nWe gratefully acknowledge support from our major funders, member institutions, and all contributors.\\nAbout\\n·\\nHelp\\n·\\nContact\\n·\\nSubscribe\\n·\\nCopyright\\n·\\nPrivacy\\n·\\nAccessibility\\n·\\nOperational Status\\n(opens in new tab)\\nMajor funding support from\"}\n\nPage: moved from https://arxiv.org/search/?query=Attention%20Is%20All%20You%20Need&searchtype=title&abstracts=show&order=-announced_date_first&size=200 to https://arxiv.org/abs/1706.03762; 1 navigation"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 398.2849280000082,
+      "response_bytes": 3745
+    }
+  ]
+}

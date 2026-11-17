@@ -1,0 +1,376 @@
+{
+  "engine": "zen",
+  "task": {
+    "task_id": 41,
+    "intent": "Get the top 1 search term(s) in my store",
+    "start_urls": [
+      "__SHOPPING_ADMIN__"
+    ],
+    "results_schemas": [
+      {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      }
+    ],
+    "evaluator_version": "1.2.3",
+    "dataset_sha256": "d65275660814663375028e9017e1f929e3c38321041b125795e2713b52243d30"
+  },
+  "round": 0,
+  "success": true,
+  "outcome": "passed",
+  "answer": {
+    "task_type": "RETRIEVE",
+    "status": "SUCCESS",
+    "retrieved_data": [
+      "hollister"
+    ],
+    "error_details": null
+  },
+  "evaluation": {
+    "task_id": 41,
+    "intent_template_id": 285,
+    "sites": [
+      "shopping_admin"
+    ],
+    "task_revision": 2,
+    "status": "success",
+    "score": 1,
+    "evaluators_results": [
+      {
+        "evaluator_name": "AgentResponseEvaluator",
+        "status": "success",
+        "score": 1,
+        "actual": {
+          "task_type": "RETRIEVE",
+          "status": "SUCCESS",
+          "retrieved_data": [
+            "hollister"
+          ],
+          "error_details": null
+        },
+        "actual_normalized": {
+          "retrieved_data": [
+            "hollister"
+          ],
+          "task_type": "retrieve",
+          "status": "success"
+        },
+        "expected": {
+          "task_type": "retrieve",
+          "status": "success",
+          "retrieved_data": [
+            "hollister"
+          ]
+        },
+        "assertions": null,
+        "error_msg": null,
+        "should_not_exist": null
+      }
+    ],
+    "error_msg": null,
+    "webarena_verified_version": "1.2.3",
+    "webarena_verified_evaluator_checksum": "35c3385b1db4b3378657589f95f50defd4234bd36e5b93d44733fd561b01db4e",
+    "webarena_verified_data_checksum": "d65275660814663375028e9017e1f929e3c38321041b125795e2713b52243d30"
+  },
+  "actual_host_client_info": {
+    "name": "codex-mcp-client",
+    "title": "Codex",
+    "version": "0.166.0"
+  },
+  "preparation_ms": 53061.560925,
+  "host_elapsed_ms": 22053.805252,
+  "verification_ms": 875.3281060000008,
+  "task_elapsed_ms": 22934.361731999998,
+  "usage": {
+    "input_tokens": 51713,
+    "cached_input_tokens": 36096,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 585,
+    "reasoning_output_tokens": 414
+  },
+  "tool_calls": 2,
+  "tool_failures": 0,
+  "response_bytes": 5845,
+  "policy_violations": [],
+  "forbidden_host_calls": 0,
+  "timed_out": false,
+  "trace_file": "zen-41.json",
+  "versions": {
+    "runtime_sha256": "c42bf9dc961ca31d48c5871a0a17bd6af06eadf140d2913ea50fbaf6d6deafc8",
+    "zen": "1.14.9b",
+    "browse_cli": null,
+    "browse_binary_sha256": null,
+    "chromium": null,
+    "dataset_sha256": "d65275660814663375028e9017e1f929e3c38321041b125795e2713b52243d30"
+  },
+  "prompt": "Complete this read-only Shopping Admin retrieval task using ONLY browser MCP tools. You are already authenticated to the owned local benchmark site. Inspect the live UI and verify the requested value. Do not modify data, use HTTP/API clients, fetch, network replay, files, shell, other agents or non-browser tools. Stay on http://127.0.0.1:45401. Maximum 35 MCP calls. Finish with the required JSON object {task_type:\"RETRIEVE\",status:\"SUCCESS\" or \"NOT_FOUND_ERROR\" or \"UNKNOWN_ERROR\",retrieved_data: requested array or null,error_details:string or null}. Never invent a result when blocked. Use compact Callisto with op/args in the shared Zen tab. Input is synthetic DOM; do not change it.\nTask: Get the top 1 search term(s) in my store\nRequested result schema: {\"type\":\"array\",\"items\":{\"type\":\"string\"}}",
+  "host": {
+    "code": 0,
+    "signal": null,
+    "error": null,
+    "timed_out": false,
+    "elapsed_ms": 22053.805252,
+    "usage": {
+      "input_tokens": 51713,
+      "cached_input_tokens": 36096,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 585,
+      "reasoning_output_tokens": 414
+    },
+    "final": "{\"task_type\":\"RETRIEVE\",\"status\":\"SUCCESS\",\"retrieved_data\":[\"hollister\"],\"error_details\":null}",
+    "events": [
+      {
+        "type": "thread.started",
+        "thread_id": "01a1ea16-6608-7540-a266-85cf434d0667"
+      },
+      {
+        "type": "turn.started"
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_0",
+          "type": "agent_message",
+          "text": "I’ll use the available browser MCP controls to inspect the store’s live UI and verify the top search term."
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_1",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "status",
+            "args": {}
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_1",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "status",
+            "args": {}
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"active\":true,\"browserAccess\":true,\"capabilities\":{\"backgroundWindow\":true,\"canonicalActions\":true,\"demonstration\":true,\"drag\":true,\"extract\":true,\"focusedSnapshot\":true,\"frames\":\"same-origin\",\"fullBrowserControl\":true,\"namedTabs\":true,\"networkInspection\":true,\"playwrightExecution\":false,\"recording\":true,\"run\":true,\"runFormControls\":true,\"scopedDiff\":true,\"selectorWait\":true,\"shortRefs\":true,\"snapshotPagination\":true,\"targetedObservation\":true,\"trustedBinding\":true,\"trustedInput\":false},\"connected\":true,\"continuous\":true,\"execution\":{\"focusPolicy\":\"user-controlled\",\"mode\":\"shared-tab\",\"paused\":false},\"fullAccess\":false,\"input\":{\"extensionSharingControls\":true,\"fallback\":false,\"leaseBound\":false,\"mode\":\"synthetic-dom\",\"transportConnected\":false},\"lease_id\":\"5\",\"ready\":true,\"sharing\":true}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_2",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "snapshot",
+            "args": {
+              "max_chars": 6000
+            }
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_2",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "snapshot",
+            "args": {
+              "max_chars": 6000
+            }
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"next_offset\":null,\"offset\":0,\"omitted\":0,\"order_changed\":false,\"revision\":\"ax-15648520309436865354:1\",\"scope\":{\"focus\":\"all\",\"include_text\":true,\"query\":null,\"retain_navigation\":true,\"selector\":null},\"text\":\"[ax-1000001] link \\\"\\\"\\n[ax-1000002] menubar \\\"DASHBOARD SALES CATALOG CUSTOMERS MARKETING CONTENT REPORTS STORES SYSTEM FIND PARTNERS & EXTENSIONS\\\"\\n[ax-1000003] menu-item \\\"DASHBOARD\\\"\\n[ax-1000004] link \\\"DASHBOARD\\\"\\n[ax-1000005] menu-item \\\"SALES\\\"\\n[ax-1000006] link \\\"SALES\\\"\\n[ax-1000007] menu-item \\\"CATALOG\\\"\\n[ax-1000008] link \\\"CATALOG\\\"\\n[ax-1000009] menu-item \\\"CUSTOMERS\\\"\\n[ax-1000010] link \\\"CUSTOMERS\\\"\\n[ax-1000011] menu-item \\\"MARKETING\\\"\\n[ax-1000012] link \\\"MARKETING\\\"\\n[ax-1000013] menu-item \\\"CONTENT\\\"\\n[ax-1000014] link \\\"CONTENT\\\"\\n[ax-1000015] menu-item \\\"REPORTS\\\"\\n[ax-1000016] link \\\"REPORTS\\\"\\n[ax-1000017] menu-item \\\"STORES\\\"\\n[ax-1000018] link \\\"STORES\\\"\\n[ax-1000019] menu-item \\\"SYSTEM\\\"\\n[ax-1000020] link \\\"SYSTEM\\\"\\n[ax-1000021] menu-item \\\"FIND PARTNERS & EXTENSIONS\\\"\\n[ax-1000022] link \\\"FIND PARTNERS & EXTENSIONS\\\"\\nheading \\\"Dashboard\\\"\\n[ax-1000023] link \\\"admin\\\"\\n[ax-1000024] link \\\"Notifications\\\"\\n[ax-1000025] textbox \\\"\\\"\\ntext \\\"Scope:\\\"\\n[ax-1000026] button \\\"All Store Views\\\"\\n[ax-1000027] link \\\"What is this?\\\"\\n[ax-1000028] button \\\"Reload Data\\\"\\ntext \\\"Gain new insights and take command of your business' performance, using our dynamic product, order, and customer reports tailored to your customer data.\\\"\\n[ax-1000029] link \\\"Go to Advanced Reporting\\\"\\ntext \\\"Chart is disabled. To enable the chart, click .\\\"\\n[ax-1000030] link \\\"here\\\"\\nlistitem \\\"Revenue $0.00\\\"\\nlistitem \\\"Tax $0.00\\\"\\nlistitem \\\"Shipping $0.00\\\"\\nlistitem \\\"Quantity 0\\\"\\n[ax-1000031] tablist \\\"Bestsellers Most Viewed Products New Customers Customers\\\"\\n[ax-1000032] tab \\\"Bestsellers\\\"\\npresentation \\\"Bestsellers\\\"\\n[ax-1000033] tab \\\"Most Viewed Products\\\"\\npresentation \\\"Most Viewed Products\\\"\\n[ax-1000034] tab \\\"New Customers\\\"\\npresentation \\\"New Customers\\\"\\n[ax-1000035] tab \\\"Customers\\\"\\npresentation \\\"Customers\\\"\\n[ax-1000036] tabpanel \\\"Bestsellers\\\"\\ncolumnheader \\\"Product\\\"\\ncolumnheader \\\"Price\\\"\\ncolumnheader \\\"Quantity\\\"\\ncell \\\"Sprite Stasis Ball 65 cm\\\"\\ncell \\\"$27.00\\\"\\ncell \\\"6\\\"\\ncell \\\"Quest Lumaflex™ Band\\\"\\ncell \\\"$19.00\\\"\\ncell \\\"6\\\"\\ncell \\\"Sprite Yoga Strap 6 foot\\\"\\ncell \\\"$14.00\\\"\\ncell \\\"6\\\"\\ncell \\\"Sprite Stasis Ball 55 cm\\\"\\ncell \\\"$23.00\\\"\\ncell \\\"5\\\"\\ncell \\\"Overnight Duffle\\\"\\ncell \\\"$45.00\\\"\\ncell \\\"5\\\"\\ntext \\\"Lifetime Sales\\\"\\ntext \\\"$0.00\\\"\\ntext \\\"Average Order\\\"\\ntext \\\"$0.00\\\"\\ntext \\\"Last Orders\\\"\\ncolumnheader \\\"Customer\\\"\\ncolumnheader \\\"Items\\\"\\ncolumnheader \\\"Total\\\"\\ncell \\\"Sarah Miller\\\"\\ncell \\\"5\\\"\\ncell \\\"$194.40\\\"\\ncell \\\"Grace Nguyen\\\"\\ncell \\\"4\\\"\\ncell \\\"$190.00\\\"\\ncell \\\"Matt Baker\\\"\\ncell \\\"3\\\"\\ncell \\\"$151.40\\\"\\ncell \\\"Lily Potter\\\"\\ncell \\\"4\\\"\\ncell \\\"$188.20\\\"\\ncell \\\"Ava Brown\\\"\\ncell \\\"2\\\"\\ncell \\\"$83.40\\\"\\ntext \\\"Last Search Terms\\\"\\ncolumnheader \\\"Search Term\\\"\\ncolumnheader \\\"Results\\\"\\ncolumnheader \\\"Uses\\\"\\ncell \\\"tanks\\\"\\ncell \\\"23\\\"\\ncell \\\"1\\\"\\ncell \\\"nike\\\"\\ncell \\\"0\\\"\\ncell \\\"3\\\"\\ncell \\\"Joust Bag\\\"\\ncell \\\"10\\\"\\ncell \\\"4\\\"\\ncell \\\"hollister\\\"\\ncell \\\"1\\\"\\ncell \\\"19\\\"\\ncell \\\"Antonia Racer Tank\\\"\\ncell \\\"23\\\"\\ncell \\\"2\\\"\\ntext \\\"Top Search Terms\\\"\\ncolumnheader \\\"Search Term\\\"\\ncolumnheader \\\"Results\\\"\\ncolumnheader \\\"Uses\\\"\\ncell \\\"hollister\\\"\\ncell \\\"1\\\"\\ncell \\\"19\\\"\\ncell \\\"Joust Bag\\\"\\ncell \\\"10\\\"\\ncell \\\"4\\\"\\ncell \\\"Antonia Racer Tank\\\"\\ncell \\\"23\\\"\\ncell \\\"2\\\"\\ncell \\\"tanks\\\"\\ncell \\\"23\\\"\\ncell \\\"1\\\"\\ncell \\\"WP10\\\"\\ncell \\\"1\\\"\\ncell \\\"1\\\"\\nparagraph \\\"Copyright © 2026 Magento Commerce Inc. All rights reserved.\\\"\\n[ax-1000037] link \\\"Magento\\\"\\ntext \\\"| |\\\"\\nparagraph \\\"Magento ver. 2.4.6\\\"\\n[ax-1000038] link \\\"Privacy Policy\\\"\\n[ax-1000039] link \\\"Account Activity\\\"\\n[ax-1000040] link \\\"Report an Issue\\\"\",\"title\":\"Dashboard / Magento Admin\",\"truncated\":false,\"url\":\"http://127.0.0.1:45401/admin/admin/dashboard/\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\"]}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_3",
+          "type": "agent_message",
+          "text": "{\"task_type\":\"RETRIEVE\",\"status\":\"SUCCESS\",\"retrieved_data\":[\"hollister\"],\"error_details\":null}"
+        }
+      },
+      {
+        "type": "turn.completed",
+        "usage": {
+          "input_tokens": 51713,
+          "cached_input_tokens": 36096,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 585,
+          "reasoning_output_tokens": 414
+        }
+      }
+    ],
+    "parse_errors": 0,
+    "diagnostic": null,
+    "configuration": {
+      "model": "gpt-6-luna",
+      "effort": "high",
+      "sandbox": "read-only",
+      "shell_tool": false,
+      "web_search": "disabled",
+      "user_config_loaded": false,
+      "project_instructions_loaded": false,
+      "skills_catalog_max_tokens": 1,
+      "automatic_skill_instructions": false,
+      "fixture_tool_approval": "explicit approve",
+      "auth": "existing signed-in Codex host",
+      "mcp_transport": "stdio → private Unix socket → native runtime MCP client"
+    }
+  },
+  "tools": [
+    {
+      "sequence": 1,
+      "name": "callisto",
+      "arguments": {
+        "op": "status",
+        "args": {}
+      },
+      "started_at": "2026-11-17T15:18:32.953Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"active\":true,\"browserAccess\":true,\"capabilities\":{\"backgroundWindow\":true,\"canonicalActions\":true,\"demonstration\":true,\"drag\":true,\"extract\":true,\"focusedSnapshot\":true,\"frames\":\"same-origin\",\"fullBrowserControl\":true,\"namedTabs\":true,\"networkInspection\":true,\"playwrightExecution\":false,\"recording\":true,\"run\":true,\"runFormControls\":true,\"scopedDiff\":true,\"selectorWait\":true,\"shortRefs\":true,\"snapshotPagination\":true,\"targetedObservation\":true,\"trustedBinding\":true,\"trustedInput\":false},\"connected\":true,\"continuous\":true,\"execution\":{\"focusPolicy\":\"user-controlled\",\"mode\":\"shared-tab\",\"paused\":false},\"fullAccess\":false,\"input\":{\"extensionSharingControls\":true,\"fallback\":false,\"leaseBound\":false,\"mode\":\"synthetic-dom\",\"transportConnected\":false},\"lease_id\":\"5\",\"ready\":true,\"sharing\":true}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 7.113950999992085,
+      "response_bytes": 928
+    },
+    {
+      "sequence": 2,
+      "name": "callisto",
+      "arguments": {
+        "op": "snapshot",
+        "args": {
+          "max_chars": 6000
+        }
+      },
+      "started_at": "2026-11-17T15:18:35.320Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"next_offset\":null,\"offset\":0,\"omitted\":0,\"order_changed\":false,\"revision\":\"ax-15648520309436865354:1\",\"scope\":{\"focus\":\"all\",\"include_text\":true,\"query\":null,\"retain_navigation\":true,\"selector\":null},\"text\":\"[ax-1000001] link \\\"\\\"\\n[ax-1000002] menubar \\\"DASHBOARD SALES CATALOG CUSTOMERS MARKETING CONTENT REPORTS STORES SYSTEM FIND PARTNERS & EXTENSIONS\\\"\\n[ax-1000003] menu-item \\\"DASHBOARD\\\"\\n[ax-1000004] link \\\"DASHBOARD\\\"\\n[ax-1000005] menu-item \\\"SALES\\\"\\n[ax-1000006] link \\\"SALES\\\"\\n[ax-1000007] menu-item \\\"CATALOG\\\"\\n[ax-1000008] link \\\"CATALOG\\\"\\n[ax-1000009] menu-item \\\"CUSTOMERS\\\"\\n[ax-1000010] link \\\"CUSTOMERS\\\"\\n[ax-1000011] menu-item \\\"MARKETING\\\"\\n[ax-1000012] link \\\"MARKETING\\\"\\n[ax-1000013] menu-item \\\"CONTENT\\\"\\n[ax-1000014] link \\\"CONTENT\\\"\\n[ax-1000015] menu-item \\\"REPORTS\\\"\\n[ax-1000016] link \\\"REPORTS\\\"\\n[ax-1000017] menu-item \\\"STORES\\\"\\n[ax-1000018] link \\\"STORES\\\"\\n[ax-1000019] menu-item \\\"SYSTEM\\\"\\n[ax-1000020] link \\\"SYSTEM\\\"\\n[ax-1000021] menu-item \\\"FIND PARTNERS & EXTENSIONS\\\"\\n[ax-1000022] link \\\"FIND PARTNERS & EXTENSIONS\\\"\\nheading \\\"Dashboard\\\"\\n[ax-1000023] link \\\"admin\\\"\\n[ax-1000024] link \\\"Notifications\\\"\\n[ax-1000025] textbox \\\"\\\"\\ntext \\\"Scope:\\\"\\n[ax-1000026] button \\\"All Store Views\\\"\\n[ax-1000027] link \\\"What is this?\\\"\\n[ax-1000028] button \\\"Reload Data\\\"\\ntext \\\"Gain new insights and take command of your business' performance, using our dynamic product, order, and customer reports tailored to your customer data.\\\"\\n[ax-1000029] link \\\"Go to Advanced Reporting\\\"\\ntext \\\"Chart is disabled. To enable the chart, click .\\\"\\n[ax-1000030] link \\\"here\\\"\\nlistitem \\\"Revenue $0.00\\\"\\nlistitem \\\"Tax $0.00\\\"\\nlistitem \\\"Shipping $0.00\\\"\\nlistitem \\\"Quantity 0\\\"\\n[ax-1000031] tablist \\\"Bestsellers Most Viewed Products New Customers Customers\\\"\\n[ax-1000032] tab \\\"Bestsellers\\\"\\npresentation \\\"Bestsellers\\\"\\n[ax-1000033] tab \\\"Most Viewed Products\\\"\\npresentation \\\"Most Viewed Products\\\"\\n[ax-1000034] tab \\\"New Customers\\\"\\npresentation \\\"New Customers\\\"\\n[ax-1000035] tab \\\"Customers\\\"\\npresentation \\\"Customers\\\"\\n[ax-1000036] tabpanel \\\"Bestsellers\\\"\\ncolumnheader \\\"Product\\\"\\ncolumnheader \\\"Price\\\"\\ncolumnheader \\\"Quantity\\\"\\ncell \\\"Sprite Stasis Ball 65 cm\\\"\\ncell \\\"$27.00\\\"\\ncell \\\"6\\\"\\ncell \\\"Quest Lumaflex™ Band\\\"\\ncell \\\"$19.00\\\"\\ncell \\\"6\\\"\\ncell \\\"Sprite Yoga Strap 6 foot\\\"\\ncell \\\"$14.00\\\"\\ncell \\\"6\\\"\\ncell \\\"Sprite Stasis Ball 55 cm\\\"\\ncell \\\"$23.00\\\"\\ncell \\\"5\\\"\\ncell \\\"Overnight Duffle\\\"\\ncell \\\"$45.00\\\"\\ncell \\\"5\\\"\\ntext \\\"Lifetime Sales\\\"\\ntext \\\"$0.00\\\"\\ntext \\\"Average Order\\\"\\ntext \\\"$0.00\\\"\\ntext \\\"Last Orders\\\"\\ncolumnheader \\\"Customer\\\"\\ncolumnheader \\\"Items\\\"\\ncolumnheader \\\"Total\\\"\\ncell \\\"Sarah Miller\\\"\\ncell \\\"5\\\"\\ncell \\\"$194.40\\\"\\ncell \\\"Grace Nguyen\\\"\\ncell \\\"4\\\"\\ncell \\\"$190.00\\\"\\ncell \\\"Matt Baker\\\"\\ncell \\\"3\\\"\\ncell \\\"$151.40\\\"\\ncell \\\"Lily Potter\\\"\\ncell \\\"4\\\"\\ncell \\\"$188.20\\\"\\ncell \\\"Ava Brown\\\"\\ncell \\\"2\\\"\\ncell \\\"$83.40\\\"\\ntext \\\"Last Search Terms\\\"\\ncolumnheader \\\"Search Term\\\"\\ncolumnheader \\\"Results\\\"\\ncolumnheader \\\"Uses\\\"\\ncell \\\"tanks\\\"\\ncell \\\"23\\\"\\ncell \\\"1\\\"\\ncell \\\"nike\\\"\\ncell \\\"0\\\"\\ncell \\\"3\\\"\\ncell \\\"Joust Bag\\\"\\ncell \\\"10\\\"\\ncell \\\"4\\\"\\ncell \\\"hollister\\\"\\ncell \\\"1\\\"\\ncell \\\"19\\\"\\ncell \\\"Antonia Racer Tank\\\"\\ncell \\\"23\\\"\\ncell \\\"2\\\"\\ntext \\\"Top Search Terms\\\"\\ncolumnheader \\\"Search Term\\\"\\ncolumnheader \\\"Results\\\"\\ncolumnheader \\\"Uses\\\"\\ncell \\\"hollister\\\"\\ncell \\\"1\\\"\\ncell \\\"19\\\"\\ncell \\\"Joust Bag\\\"\\ncell \\\"10\\\"\\ncell \\\"4\\\"\\ncell \\\"Antonia Racer Tank\\\"\\ncell \\\"23\\\"\\ncell \\\"2\\\"\\ncell \\\"tanks\\\"\\ncell \\\"23\\\"\\ncell \\\"1\\\"\\ncell \\\"WP10\\\"\\ncell \\\"1\\\"\\ncell \\\"1\\\"\\nparagraph \\\"Copyright © 2026 Magento Commerce Inc. All rights reserved.\\\"\\n[ax-1000037] link \\\"Magento\\\"\\ntext \\\"| |\\\"\\nparagraph \\\"Magento ver. 2.4.6\\\"\\n[ax-1000038] link \\\"Privacy Policy\\\"\\n[ax-1000039] link \\\"Account Activity\\\"\\n[ax-1000040] link \\\"Report an Issue\\\"\",\"title\":\"Dashboard / Magento Admin\",\"truncated\":false,\"url\":\"http://127.0.0.1:45401/admin/admin/dashboard/\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\"]}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 23.363135000006878,
+      "response_bytes": 4917
+    }
+  ],
+  "catalog": [
+    {
+      "description": "Control Firefox/Zen through its shared tab. Pass operation fields in args. Start with status or pair. Navigate: {op:'navigate',args:{url:'https://example.com'}}. Observe: {op:'snapshot',args:{max_chars:6000}}. Act: {op:'run',args:{steps:[{action:'click',ref:'ax-1'}],snapshot:false}}. Get any operation's parameters with {op:'help',args:{op:'run'}}. Use run for dependent actions and extract for rows. Existing sharing, permissions, input mode and cancellation apply. Inspect after uncertain errors before retrying.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "args": {
+            "type": "object"
+          },
+          "op": {
+            "enum": [
+              "help",
+              "press",
+              "frames",
+              "frame",
+              "handoff",
+              "capabilities",
+              "upload",
+              "pair",
+              "status",
+              "browser",
+              "page",
+              "scroll",
+              "screenshot",
+              "find",
+              "submit",
+              "batch",
+              "extract",
+              "run",
+              "input",
+              "network",
+              "trace",
+              "snapshot",
+              "navigate",
+              "click",
+              "fill",
+              "close",
+              "select",
+              "check",
+              "hover",
+              "wait_for",
+              "wait",
+              "drag",
+              "console",
+              "dialog",
+              "emulate",
+              "screenshot_diff",
+              "webmcp",
+              "recording",
+              "demonstrate"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "op"
+        ],
+        "type": "object"
+      },
+      "name": "callisto"
+    }
+  ],
+  "initialization": {
+    "capabilities": {
+      "tools": {}
+    },
+    "instructions": "Call callisto with {op,args}. Use run for dependent actions and extract for typed rows. Run steps use the same names and fields as standalone operations: {action:'fill',ref:'ax-123',value:'text'}. Prefer wait_for over polling. Use help for one operation's contract, not the full catalog. Observe with focused snapshots or scoped diff. Never repeat an uncertain write: inspect first. Existing tab sharing and permissions apply.",
+    "protocolVersion": "2024-11-05",
+    "serverInfo": {
+      "name": "callisto-firefox-tab-mcp",
+      "version": "0.3.1-alpha.1"
+    }
+  }
+}

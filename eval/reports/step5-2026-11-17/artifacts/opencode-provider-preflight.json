@@ -1,0 +1,73 @@
+{
+  "status": "blocked",
+  "model": "opencode/deepseek-v4.1-flash-free",
+  "variant": "high",
+  "code": 1,
+  "signal": null,
+  "error": null,
+  "timed_out": false,
+  "elapsed_ms": 2161.1798049999998,
+  "events": [
+    {
+      "type": "step_start",
+      "timestamp": 1794925560175,
+      "sessionID": "ses_e1619814effet3uXR2s2RWANjx",
+      "part": {
+        "id": "prt_1e9e6816f001OGxbcRThBt3RYu",
+        "sessionID": "ses_e1619814effet3uXR2s2RWANjx",
+        "messageID": "msg_1e9e67f9a001hYdGloODAcX1Ay",
+        "type": "step-start"
+      }
+    },
+    {
+      "type": "error",
+      "timestamp": 1794925560688,
+      "sessionID": "ses_e1619814effet3uXR2s2RWANjx",
+      "error": {
+        "type": "provider.free-limit",
+        "message": "Free usage limit reached. Connect a provider or subscribe to OpenCode Go to keep going, or switch models.",
+        "status": 429,
+        "response": {
+          "body": "{\"type\":\"error\",\"error\":{\"type\":\"FreeUsageLimitError\",\"message\":\"Free usage limit reached. Free models work in OpenCode (https://opencode.ai); subscribe to OpenCode Go to keep going: https://opencode.ai/go\"}}"
+        },
+        "retryAfterMs": 34440000
+      }
+    }
+  ],
+  "parse_errors": 0,
+  "usage": null,
+  "final": "",
+  "provider_error": {
+    "type": "provider.free-limit",
+    "message": "Free usage limit reached. Connect a provider or subscribe to OpenCode Go to keep going, or switch models.",
+    "status": 429,
+    "response": {
+      "body": "{\"type\":\"error\",\"error\":{\"type\":\"FreeUsageLimitError\",\"message\":\"Free usage limit reached. Free models work in OpenCode (https://opencode.ai); subscribe to OpenCode Go to keep going: https://opencode.ai/go\"}}"
+    },
+    "retryAfterMs": 34440000
+  },
+  "session": {
+    "session_id": "ses_e1619814effet3uXR2s2RWANjx",
+    "model": {
+      "id": "deepseek-v4.1-flash-free",
+      "providerID": "opencode",
+      "variant": "high"
+    },
+    "model_matches": true,
+    "outcome": "failed",
+    "tokens": {
+      "input": 0,
+      "output": 0,
+      "reasoning": 0,
+      "cache": {
+        "read": 0,
+        "write": 0
+      }
+    },
+    "cost_usd": 0,
+    "message_count": 3
+  },
+  "stderr": "",
+  "home": "/tmp/callisto-step5-opencode-availability/callisto-opencode-host-M0uoDJ",
+  "cwd": "/tmp/callisto-step5-opencode-availability/callisto-opencode-host-M0uoDJ/workspace"
+}

@@ -1,0 +1,622 @@
+{
+  "schema": "callisto.webarena-verified-agent.v1",
+  "updated_at": "2026-11-17T15:27:13.268Z",
+  "host": "codex",
+  "model": "gpt-6-luna",
+  "reasoning_effort": "high",
+  "planned_runs": 6,
+  "completed_runs": 6,
+  "task_ids": [
+    41,
+    94,
+    208
+  ],
+  "metadata": {
+    "started_at": "2026-11-17T15:17:25.598Z",
+    "source_revision": "b39783f2d1a57ff48f29554601124aadace04adc",
+    "source_worktree_dirty": true,
+    "model_request": "gpt-6-luna",
+    "served_model_echo_available": false,
+    "codex_version": "codex-cli 0.166.0",
+    "site_image": "am1n3e/webarena-verified-shopping_admin@sha256:d0531dd27ed98d0c459ff9e88118bf2ed8b660b0ed99c38837db46c065a5be13",
+    "evaluator": "webarena-verified==1.2.3",
+    "harness_sha256": {
+      "webarena-agent.mjs": "ff2d100c02cbda45aebf38cab3bf352fa5f877f5cc23b9f7aa50fc04f366168d",
+      "webarena-fixture.mjs": "a96885b839c7f5ed0c3d993f2705aceff62c36bea4ec7f3ba38392775f6b41ae",
+      "webarena-response.py": "70fa74215e116d229257bd2fd406e5d155f8251584862ebb2bb2c93f078b197b",
+      "policy-audit.mjs": "84f0136762f079abf87c486079f8c3ddc9758145c93564c53d8009288a7019c5",
+      "mcp-client.mjs": "029cf0b5e3bcc302319aaa911baac9a2d4cf2c45a5519da23b77eeb090204d47",
+      "zen-fixture.mjs": "f4c6d6fe2a64a499486a00674a627498bc10af5b4b622da5327cc58b4334ed66",
+      "browse-fixture.mjs": "ce4e85a27033fbd7ded0935ee623c95ef654d62d4d97353a5b2514e4b8b24ae0",
+      "browse-extension.mjs": "3efede30fc13b9f6c6d8dee9a303ca636d695508aef93787e6a93094c67c5ee0",
+      "host-session.mjs": "7e954eb2e50e32b60c6d6887368a6f939ff62bdab20b786510f9154c6379077b",
+      "host-mcp-proxy.mjs": "a2675678c3857c3daf922c52de972aeff84a1b147c77e4163cb102e8f3e0777f",
+      "codex-host.mjs": "bcc8c68240729ef4fb043a2557e76fa96c16f788ec0aef5c83a392dbf691cd5a"
+    },
+    "site_reset": "new owned 2GiB/2CPU container for every attempt",
+    "browser_reset": "new owned profile for every attempt",
+    "initialization_instructions_forwarded": true
+  },
+  "setup_failures": [],
+  "cost_usd": null,
+  "scope": "Three predeclared answer-only RETRIEVE tasks from official WebArena Verified 1.2.3, one repetition per engine. Real pinned Shopping Admin site and official AgentResponseEvaluator; no network-evaluated tasks or leaderboard score. Fresh site container and browser profile per attempt. Authentication uses the official X-M2-Admin-Auto-Login header through a local provisioning proxy. No personal account. All browser decisions are model-selected.",
+  "measurement": "Provisioning, image initialization, authentication and initial page load are outside task elapsed and recorded. Task elapsed includes host startup, model turns, failures, shutdown and independent official scoring. Browser API inspection is allowed; direct API/network/file requests by the model are forbidden and audited conservatively.",
+  "results": [
+    {
+      "engine": "zen",
+      "task": "41",
+      "round": 0,
+      "success": true,
+      "outcome": "passed",
+      "answer": {
+        "task_type": "RETRIEVE",
+        "status": "SUCCESS",
+        "retrieved_data": [
+          "hollister"
+        ],
+        "error_details": null
+      },
+      "evaluation": {
+        "task_id": 41,
+        "intent_template_id": 285,
+        "sites": [
+          "shopping_admin"
+        ],
+        "task_revision": 2,
+        "status": "success",
+        "score": 1,
+        "evaluators_results": [
+          {
+            "evaluator_name": "AgentResponseEvaluator",
+            "status": "success",
+            "score": 1,
+            "actual": {
+              "task_type": "RETRIEVE",
+              "status": "SUCCESS",
+              "retrieved_data": [
+                "hollister"
+              ],
+              "error_details": null
+            },
+            "actual_normalized": {
+              "retrieved_data": [
+                "hollister"
+              ],
+              "task_type": "retrieve",
+              "status": "success"
+            },
+            "expected": {
+              "task_type": "retrieve",
+              "status": "success",
+              "retrieved_data": [
+                "hollister"
+              ]
+            },
+            "assertions": null,
+            "error_msg": null,
+            "should_not_exist": null
+          }
+        ],
+        "error_msg": null,
+        "webarena_verified_version": "1.2.3",
+        "webarena_verified_evaluator_checksum": "35c3385b1db4b3378657589f95f50defd4234bd36e5b93d44733fd561b01db4e",
+        "webarena_verified_data_checksum": "d65275660814663375028e9017e1f929e3c38321041b125795e2713b52243d30"
+      },
+      "actual_host_client_info": {
+        "name": "codex-mcp-client",
+        "title": "Codex",
+        "version": "0.166.0"
+      },
+      "preparation_ms": 53061.560925,
+      "host_elapsed_ms": 22053.805252,
+      "verification_ms": 875.3281060000008,
+      "task_elapsed_ms": 22934.361731999998,
+      "usage": {
+        "input_tokens": 51713,
+        "cached_input_tokens": 36096,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 585,
+        "reasoning_output_tokens": 414
+      },
+      "tool_calls": 2,
+      "tool_failures": 0,
+      "response_bytes": 5845,
+      "policy_violations": [],
+      "forbidden_host_calls": 0,
+      "timed_out": false,
+      "trace_file": "zen-41.json",
+      "versions": {
+        "runtime_sha256": "c42bf9dc961ca31d48c5871a0a17bd6af06eadf140d2913ea50fbaf6d6deafc8",
+        "zen": "1.14.9b",
+        "browse_cli": null,
+        "browse_binary_sha256": null,
+        "chromium": null,
+        "dataset_sha256": "d65275660814663375028e9017e1f929e3c38321041b125795e2713b52243d30"
+      }
+    },
+    {
+      "engine": "browse",
+      "task": "41",
+      "round": 0,
+      "success": true,
+      "outcome": "passed",
+      "answer": {
+        "task_type": "RETRIEVE",
+        "status": "SUCCESS",
+        "retrieved_data": [
+          "hollister"
+        ],
+        "error_details": null
+      },
+      "evaluation": {
+        "task_id": 41,
+        "intent_template_id": 285,
+        "sites": [
+          "shopping_admin"
+        ],
+        "task_revision": 2,
+        "status": "success",
+        "score": 1,
+        "evaluators_results": [
+          {
+            "evaluator_name": "AgentResponseEvaluator",
+            "status": "success",
+            "score": 1,
+            "actual": {
+              "task_type": "RETRIEVE",
+              "status": "SUCCESS",
+              "retrieved_data": [
+                "hollister"
+              ],
+              "error_details": null
+            },
+            "actual_normalized": {
+              "task_type": "retrieve",
+              "status": "success",
+              "retrieved_data": [
+                "hollister"
+              ]
+            },
+            "expected": {
+              "task_type": "retrieve",
+              "status": "success",
+              "retrieved_data": [
+                "hollister"
+              ]
+            },
+            "assertions": null,
+            "error_msg": null,
+            "should_not_exist": null
+          }
+        ],
+        "error_msg": null,
+        "webarena_verified_version": "1.2.3",
+        "webarena_verified_evaluator_checksum": "35c3385b1db4b3378657589f95f50defd4234bd36e5b93d44733fd561b01db4e",
+        "webarena_verified_data_checksum": "d65275660814663375028e9017e1f929e3c38321041b125795e2713b52243d30"
+      },
+      "actual_host_client_info": {
+        "name": "codex-mcp-client",
+        "title": "Codex",
+        "version": "0.166.0"
+      },
+      "preparation_ms": 50393.240011999995,
+      "host_elapsed_ms": 27266.87007199999,
+      "verification_ms": 549.7337469999911,
+      "task_elapsed_ms": 27823.006447999986,
+      "usage": {
+        "input_tokens": 79738,
+        "cached_input_tokens": 60800,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 618,
+        "reasoning_output_tokens": 361
+      },
+      "tool_calls": 3,
+      "tool_failures": 0,
+      "response_bytes": 4908,
+      "policy_violations": [],
+      "forbidden_host_calls": 0,
+      "timed_out": false,
+      "trace_file": "browse-41.json",
+      "versions": {
+        "runtime_sha256": null,
+        "zen": null,
+        "browse_cli": "0.1.1",
+        "browse_binary_sha256": "1b0e53d9a000a50b100eb8e64637ef961975a39bf09c13ee38279747fab64e05",
+        "chromium": "157.0.8103.38",
+        "dataset_sha256": "d65275660814663375028e9017e1f929e3c38321041b125795e2713b52243d30"
+      }
+    },
+    {
+      "engine": "browse",
+      "task": "94",
+      "round": 0,
+      "success": true,
+      "outcome": "passed",
+      "answer": {
+        "task_type": "RETRIEVE",
+        "status": "SUCCESS",
+        "retrieved_data": [
+          36.39
+        ],
+        "error_details": null
+      },
+      "evaluation": {
+        "task_id": 94,
+        "intent_template_id": 274,
+        "sites": [
+          "shopping_admin"
+        ],
+        "task_revision": 2,
+        "status": "success",
+        "score": 1,
+        "evaluators_results": [
+          {
+            "evaluator_name": "AgentResponseEvaluator",
+            "status": "success",
+            "score": 1,
+            "actual": {
+              "task_type": "RETRIEVE",
+              "status": "SUCCESS",
+              "retrieved_data": [
+                36.39
+              ],
+              "error_details": null
+            },
+            "actual_normalized": {
+              "task_type": "retrieve",
+              "status": "success",
+              "retrieved_data": [
+                "36.39"
+              ]
+            },
+            "expected": {
+              "task_type": "retrieve",
+              "status": "success",
+              "retrieved_data": [
+                "36.39"
+              ]
+            },
+            "assertions": null,
+            "error_msg": null,
+            "should_not_exist": null
+          }
+        ],
+        "error_msg": null,
+        "webarena_verified_version": "1.2.3",
+        "webarena_verified_evaluator_checksum": "35c3385b1db4b3378657589f95f50defd4234bd36e5b93d44733fd561b01db4e",
+        "webarena_verified_data_checksum": "d65275660814663375028e9017e1f929e3c38321041b125795e2713b52243d30"
+      },
+      "actual_host_client_info": {
+        "name": "codex-mcp-client",
+        "title": "Codex",
+        "version": "0.166.0"
+      },
+      "preparation_ms": 46275.386583000014,
+      "host_elapsed_ms": 64295.41342200001,
+      "verification_ms": 676.5707430000184,
+      "task_elapsed_ms": 64976.62524699999,
+      "usage": {
+        "input_tokens": 274932,
+        "cached_input_tokens": 225536,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1006,
+        "reasoning_output_tokens": 316
+      },
+      "tool_calls": 12,
+      "tool_failures": 1,
+      "response_bytes": 19181,
+      "policy_violations": [],
+      "forbidden_host_calls": 0,
+      "timed_out": false,
+      "trace_file": "browse-94.json",
+      "versions": {
+        "runtime_sha256": null,
+        "zen": null,
+        "browse_cli": "0.1.1",
+        "browse_binary_sha256": "1b0e53d9a000a50b100eb8e64637ef961975a39bf09c13ee38279747fab64e05",
+        "chromium": "157.0.8103.38",
+        "dataset_sha256": "d65275660814663375028e9017e1f929e3c38321041b125795e2713b52243d30"
+      }
+    },
+    {
+      "engine": "zen",
+      "task": "94",
+      "round": 0,
+      "success": true,
+      "outcome": "passed",
+      "answer": {
+        "task_type": "RETRIEVE",
+        "status": "SUCCESS",
+        "retrieved_data": [
+          36.39
+        ],
+        "error_details": null
+      },
+      "evaluation": {
+        "task_id": 94,
+        "intent_template_id": 274,
+        "sites": [
+          "shopping_admin"
+        ],
+        "task_revision": 2,
+        "status": "success",
+        "score": 1,
+        "evaluators_results": [
+          {
+            "evaluator_name": "AgentResponseEvaluator",
+            "status": "success",
+            "score": 1,
+            "actual": {
+              "task_type": "RETRIEVE",
+              "status": "SUCCESS",
+              "retrieved_data": [
+                36.39
+              ],
+              "error_details": null
+            },
+            "actual_normalized": {
+              "retrieved_data": [
+                "36.39"
+              ],
+              "task_type": "retrieve",
+              "status": "success"
+            },
+            "expected": {
+              "task_type": "retrieve",
+              "status": "success",
+              "retrieved_data": [
+                "36.39"
+              ]
+            },
+            "assertions": null,
+            "error_msg": null,
+            "should_not_exist": null
+          }
+        ],
+        "error_msg": null,
+        "webarena_verified_version": "1.2.3",
+        "webarena_verified_evaluator_checksum": "35c3385b1db4b3378657589f95f50defd4234bd36e5b93d44733fd561b01db4e",
+        "webarena_verified_data_checksum": "d65275660814663375028e9017e1f929e3c38321041b125795e2713b52243d30"
+      },
+      "actual_host_client_info": {
+        "name": "codex-mcp-client",
+        "title": "Codex",
+        "version": "0.166.0"
+      },
+      "preparation_ms": 55397.157088999986,
+      "host_elapsed_ms": 62183.472392000025,
+      "verification_ms": 684.0521689999732,
+      "task_elapsed_ms": 62872.65896600002,
+      "usage": {
+        "input_tokens": 180789,
+        "cached_input_tokens": 115328,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 713,
+        "reasoning_output_tokens": 285
+      },
+      "tool_calls": 8,
+      "tool_failures": 0,
+      "response_bytes": 21031,
+      "policy_violations": [],
+      "forbidden_host_calls": 0,
+      "timed_out": false,
+      "trace_file": "zen-94.json",
+      "versions": {
+        "runtime_sha256": "c42bf9dc961ca31d48c5871a0a17bd6af06eadf140d2913ea50fbaf6d6deafc8",
+        "zen": "1.14.9b",
+        "browse_cli": null,
+        "browse_binary_sha256": null,
+        "chromium": null,
+        "dataset_sha256": "d65275660814663375028e9017e1f929e3c38321041b125795e2713b52243d30"
+      }
+    },
+    {
+      "engine": "zen",
+      "task": "208",
+      "round": 0,
+      "success": true,
+      "outcome": "passed",
+      "answer": {
+        "task_type": "RETRIEVE",
+        "status": "SUCCESS",
+        "retrieved_data": [
+          {
+            "name": "John Smith",
+            "email": "john.smith.xyz@gmail.com"
+          }
+        ],
+        "error_details": null
+      },
+      "evaluation": {
+        "task_id": 208,
+        "intent_template_id": 364,
+        "sites": [
+          "shopping_admin"
+        ],
+        "task_revision": 2,
+        "status": "success",
+        "score": 1,
+        "evaluators_results": [
+          {
+            "evaluator_name": "AgentResponseEvaluator",
+            "status": "success",
+            "score": 1,
+            "actual": {
+              "task_type": "RETRIEVE",
+              "status": "SUCCESS",
+              "retrieved_data": [
+                {
+                  "name": "John Smith",
+                  "email": "john.smith.xyz@gmail.com"
+                }
+              ],
+              "error_details": null
+            },
+            "actual_normalized": {
+              "retrieved_data": [
+                {
+                  "name": "john smith",
+                  "email": "john.smith.xyz@gmail.com"
+                }
+              ],
+              "task_type": "retrieve",
+              "status": "success"
+            },
+            "expected": {
+              "task_type": "retrieve",
+              "status": "success",
+              "retrieved_data": [
+                {
+                  "name": "john smith",
+                  "email": "john.smith.xyz@gmail.com"
+                }
+              ]
+            },
+            "assertions": null,
+            "error_msg": null,
+            "should_not_exist": null
+          }
+        ],
+        "error_msg": null,
+        "webarena_verified_version": "1.2.3",
+        "webarena_verified_evaluator_checksum": "35c3385b1db4b3378657589f95f50defd4234bd36e5b93d44733fd561b01db4e",
+        "webarena_verified_data_checksum": "d65275660814663375028e9017e1f929e3c38321041b125795e2713b52243d30"
+      },
+      "actual_host_client_info": {
+        "name": "codex-mcp-client",
+        "title": "Codex",
+        "version": "0.166.0"
+      },
+      "preparation_ms": 57968.289713000006,
+      "host_elapsed_ms": 33606.06516400003,
+      "verification_ms": 568.8714390000096,
+      "task_elapsed_ms": 34179.59382499999,
+      "usage": {
+        "input_tokens": 188049,
+        "cached_input_tokens": 144000,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 754,
+        "reasoning_output_tokens": 288
+      },
+      "tool_calls": 8,
+      "tool_failures": 0,
+      "response_bytes": 25955,
+      "policy_violations": [],
+      "forbidden_host_calls": 0,
+      "timed_out": false,
+      "trace_file": "zen-208.json",
+      "versions": {
+        "runtime_sha256": "c42bf9dc961ca31d48c5871a0a17bd6af06eadf140d2913ea50fbaf6d6deafc8",
+        "zen": "1.14.9b",
+        "browse_cli": null,
+        "browse_binary_sha256": null,
+        "chromium": null,
+        "dataset_sha256": "d65275660814663375028e9017e1f929e3c38321041b125795e2713b52243d30"
+      }
+    },
+    {
+      "engine": "browse",
+      "task": "208",
+      "round": 0,
+      "success": true,
+      "outcome": "passed",
+      "answer": {
+        "task_type": "RETRIEVE",
+        "status": "SUCCESS",
+        "retrieved_data": [
+          {
+            "name": "John Smith",
+            "email": "john.smith.xyz@gmail.com"
+          }
+        ],
+        "error_details": null
+      },
+      "evaluation": {
+        "task_id": 208,
+        "intent_template_id": 364,
+        "sites": [
+          "shopping_admin"
+        ],
+        "task_revision": 2,
+        "status": "success",
+        "score": 1,
+        "evaluators_results": [
+          {
+            "evaluator_name": "AgentResponseEvaluator",
+            "status": "success",
+            "score": 1,
+            "actual": {
+              "task_type": "RETRIEVE",
+              "status": "SUCCESS",
+              "retrieved_data": [
+                {
+                  "name": "John Smith",
+                  "email": "john.smith.xyz@gmail.com"
+                }
+              ],
+              "error_details": null
+            },
+            "actual_normalized": {
+              "retrieved_data": [
+                {
+                  "name": "john smith",
+                  "email": "john.smith.xyz@gmail.com"
+                }
+              ],
+              "task_type": "retrieve",
+              "status": "success"
+            },
+            "expected": {
+              "task_type": "retrieve",
+              "status": "success",
+              "retrieved_data": [
+                {
+                  "name": "john smith",
+                  "email": "john.smith.xyz@gmail.com"
+                }
+              ]
+            },
+            "assertions": null,
+            "error_msg": null,
+            "should_not_exist": null
+          }
+        ],
+        "error_msg": null,
+        "webarena_verified_version": "1.2.3",
+        "webarena_verified_evaluator_checksum": "35c3385b1db4b3378657589f95f50defd4234bd36e5b93d44733fd561b01db4e",
+        "webarena_verified_data_checksum": "d65275660814663375028e9017e1f929e3c38321041b125795e2713b52243d30"
+      },
+      "actual_host_client_info": {
+        "name": "codex-mcp-client",
+        "title": "Codex",
+        "version": "0.166.0"
+      },
+      "preparation_ms": 50413.34845799999,
+      "host_elapsed_ms": 54373.540926999995,
+      "verification_ms": 686.082323999959,
+      "task_elapsed_ms": 55066.998235999956,
+      "usage": {
+        "input_tokens": 325459,
+        "cached_input_tokens": 250112,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1254,
+        "reasoning_output_tokens": 486
+      },
+      "tool_calls": 11,
+      "tool_failures": 1,
+      "response_bytes": 102384,
+      "policy_violations": [],
+      "forbidden_host_calls": 0,
+      "timed_out": false,
+      "trace_file": "browse-208.json",
+      "versions": {
+        "runtime_sha256": null,
+        "zen": null,
+        "browse_cli": "0.1.1",
+        "browse_binary_sha256": "1b0e53d9a000a50b100eb8e64637ef961975a39bf09c13ee38279747fab64e05",
+        "chromium": "157.0.8103.38",
+        "dataset_sha256": "d65275660814663375028e9017e1f929e3c38321041b125795e2713b52243d30"
+      }
+    }
+  ]
+}

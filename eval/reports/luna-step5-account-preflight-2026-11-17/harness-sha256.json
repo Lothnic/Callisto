@@ -1,0 +1,12 @@
+{
+  "account-agent.mjs": "416210176c4762c1c0ebd9d3cfb4e178546da62cbee9967243391d7562485fb8",
+  "account-fixture.mjs": "50a19c25f193da11523423c94194ef411db867cf5b7236e1d1533a85afd8be32",
+  "policy-audit.mjs": "84f0136762f079abf87c486079f8c3ddc9758145c93564c53d8009288a7019c5",
+  "mcp-client.mjs": "029cf0b5e3bcc302319aaa911baac9a2d4cf2c45a5519da23b77eeb090204d47",
+  "zen-fixture.mjs": "f4c6d6fe2a64a499486a00674a627498bc10af5b4b622da5327cc58b4334ed66",
+  "browse-fixture.mjs": "ce4e85a27033fbd7ded0935ee623c95ef654d62d4d97353a5b2514e4b8b24ae0",
+  "browse-extension.mjs": "3efede30fc13b9f6c6d8dee9a303ca636d695508aef93787e6a93094c67c5ee0",
+  "host-session.mjs": "7e954eb2e50e32b60c6d6887368a6f939ff62bdab20b786510f9154c6379077b",
+  "host-mcp-proxy.mjs": "a2675678c3857c3daf922c52de972aeff84a1b147c77e4163cb102e8f3e0777f",
+  "codex-host.mjs": "bcc8c68240729ef4fb043a2557e76fa96c16f788ec0aef5c83a392dbf691cd5a"
+}

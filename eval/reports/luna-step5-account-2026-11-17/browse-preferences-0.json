@@ -1,0 +1,308 @@
+{
+  "sequence": 2,
+  "engine": "browse",
+  "task": "preferences",
+  "round": 0,
+  "success": true,
+  "outcome": "passed",
+  "answer": {
+    "answer": "Saved once. Verified summary: Weekly digest; security alerts enabled. Display name unchanged."
+  },
+  "actual_host_client_info": {
+    "name": "codex-mcp-client",
+    "title": "Codex",
+    "version": "0.166.0"
+  },
+  "preparation_ms": 71.8020269999979,
+  "host_elapsed_ms": 47484.395542,
+  "verification_ms": 0.2773379999998724,
+  "task_elapsed_ms": 47491.092215,
+  "usage": {
+    "input_tokens": 75901,
+    "cached_input_tokens": 58368,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 383,
+    "reasoning_output_tokens": 108
+  },
+  "tool_calls": 3,
+  "tool_failures": 0,
+  "response_bytes": 1746,
+  "evaluation": {
+    "passed": true,
+    "checks": {
+      "authenticated": true,
+      "exactly_one_write": true,
+      "display_name_unchanged": true,
+      "digest": true,
+      "security": true,
+      "no_other_mutation": true
+    },
+    "write_count": 1,
+    "writes": [
+      {
+        "path": "settings",
+        "fields": {
+          "name": "Asha Mitra",
+          "digest": "weekly",
+          "security": "yes"
+        },
+        "authenticated": true
+      }
+    ],
+    "authenticated_requests": 3
+  },
+  "policy_violations": [],
+  "forbidden_host_calls": 0,
+  "timed_out": false,
+  "cost_usd": null,
+  "trace_file": "browse-preferences-0.json",
+  "prompt": "Complete this task in the signed-in local test account using ONLY browser MCP tools. The account is already signed in. Inspect the page, act, and verify. Do not use HTTP clients, fetch, network replay, API endpoints, local files, shell, other agents or non-browser tools. Stay inside http://127.0.0.1:44937/case/b9468cda4cd54789107cc5b2/. Do not change input mode, permissions or runtime settings. Do not repeat uncertain writes: inspect first. End with JSON {\"answer\":\"concise result\"}. Maximum 35 browser MCP calls. Use the existing browse tab 630345754; tabs/execute can inspect the receipt popup and return to that portal tab.\nTask: In this signed-in account, set Digest to Weekly digest and enable Send security alerts. Save exactly once, then verify the saved summary. Leave the display name unchanged.",
+  "host": {
+    "code": 0,
+    "signal": null,
+    "error": null,
+    "timed_out": false,
+    "elapsed_ms": 47484.395542,
+    "usage": {
+      "input_tokens": 75901,
+      "cached_input_tokens": 58368,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 383,
+      "reasoning_output_tokens": 108
+    },
+    "final": "{\"answer\":\"Saved once. Verified summary: Weekly digest; security alerts enabled. Display name unchanged.\"}",
+    "events": [
+      {
+        "type": "thread.started",
+        "thread_id": "01a1ea06-66b3-7853-9b1a-d5a5ccfb2f82"
+      },
+      {
+        "type": "turn.started"
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_0",
+          "type": "agent_message",
+          "text": "I’ll inspect the portal controls first, then make the two requested changes, save once, and verify the saved summary."
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_1",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "tab": 630345754,
+            "code": "return {url: page.url(), snapshot: await snapshot()}"
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_1",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "tab": 630345754,
+            "code": "return {url: page.url(), snapshot: await snapshot()}"
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "tab: 630345754\n\n{\"url\":\"http://127.0.0.1:44937/case/b9468cda4cd54789107cc5b2/settings\",\"snapshot\":\"scoped to <main>; 1 landmark and 3 controls outside it are not shown (within: \\\"body\\\" to include them)\\n- heading \\\"Account preferences\\\" [level=1]\\n  - textbox \\\"Display name\\\" [ref=e1]\\n  - combobox \\\"Digest\\\" [ref=e2 selected=\\\"Every day\\\" 3 options]\\n  - checkbox \\\"Send security alerts\\\" [ref=e3 unchecked]\\n  - button \\\"Save preferences\\\" [ref=e4]\"}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_2",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "tab": 630345754,
+            "code": "await ref('e2').selectOption({label:'Weekly digest'}); await ref('e3').check(); return await snapshot()"
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_2",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "tab": 630345754,
+            "code": "await ref('e2').selectOption({label:'Weekly digest'}); await ref('e3').check(); return await snapshot()"
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "tab: 630345754\n\nscoped to <main>; 1 landmark and 3 controls outside it are not shown (within: \"body\" to include them)\n- heading \"Account preferences\" [level=1]\n  - textbox \"Display name\" [ref=e1]\n  - combobox \"Digest\" [ref=e2 selected=\"Weekly digest\" 3 options]\n  - checkbox \"Send security alerts\" [ref=e3 checked]\n  - button \"Save preferences\" [ref=e4]"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_3",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "tab": 630345754,
+            "code": "await ref('e4').click(); await page.waitForTimeout(500); return {url:page.url(), snapshot:await snapshot()}"
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_3",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "execute",
+          "arguments": {
+            "tab": 630345754,
+            "code": "await ref('e4').click(); await page.waitForTimeout(500); return {url:page.url(), snapshot:await snapshot()}"
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "tab: 630345754\n\n{\"url\":\"http://127.0.0.1:44937/case/b9468cda4cd54789107cc5b2/settings?saved=1\",\"snapshot\":\"scoped to <main>; 1 landmark and 3 controls outside it are not shown (within: \\\"body\\\" to include them)\\n- heading \\\"Account preferences\\\" [level=1]\\n  - status \\\"Saved preferences: Weekly digest. Security alerts enabled.\\\"\\n  - textbox \\\"Display name\\\" [ref=e5]\\n  - combobox \\\"Digest\\\" [ref=e6 selected=\\\"Weekly digest\\\" 3 options]\\n  - checkbox \\\"Send security alerts\\\" [ref=e7 checked]\\n  - button \\\"Save preferences\\\" [ref=e8]\"}\n\nPage: moved from http://127.0.0.1:44937/case/b9468cda4cd54789107cc5b2/settings to http://127.0.0.1:44937/case/b9468cda4cd54789107cc5b2/settings?saved=1; 1 navigation"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_4",
+          "type": "agent_message",
+          "text": "{\"answer\":\"Saved once. Verified summary: Weekly digest; security alerts enabled. Display name unchanged.\"}"
+        }
+      },
+      {
+        "type": "turn.completed",
+        "usage": {
+          "input_tokens": 75901,
+          "cached_input_tokens": 58368,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 383,
+          "reasoning_output_tokens": 108
+        }
+      }
+    ],
+    "parse_errors": 0,
+    "diagnostic": null,
+    "configuration": {
+      "model": "gpt-6-luna",
+      "effort": "high",
+      "sandbox": "read-only",
+      "shell_tool": false,
+      "web_search": "disabled",
+      "user_config_loaded": false,
+      "project_instructions_loaded": false,
+      "skills_catalog_max_tokens": 1,
+      "automatic_skill_instructions": false,
+      "fixture_tool_approval": "explicit approve",
+      "auth": "existing signed-in Codex host",
+      "mcp_transport": "stdio → private Unix socket → native runtime MCP client"
+    }
+  },
+  "tools": [
+    {
+      "sequence": 1,
+      "name": "execute",
+      "arguments": {
+        "tab": 630345754,
+        "code": "return {url: page.url(), snapshot: await snapshot()}"
+      },
+      "started_at": "2026-11-17T15:01:07.353Z",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "tab: 630345754\n\n{\"url\":\"http://127.0.0.1:44937/case/b9468cda4cd54789107cc5b2/settings\",\"snapshot\":\"scoped to <main>; 1 landmark and 3 controls outside it are not shown (within: \\\"body\\\" to include them)\\n- heading \\\"Account preferences\\\" [level=1]\\n  - textbox \\\"Display name\\\" [ref=e1]\\n  - combobox \\\"Digest\\\" [ref=e2 selected=\\\"Every day\\\" 3 options]\\n  - checkbox \\\"Send security alerts\\\" [ref=e3 unchecked]\\n  - button \\\"Save preferences\\\" [ref=e4]\"}"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 16.249876000001677,
+      "response_bytes": 537
+    },
+    {
+      "sequence": 2,
+      "name": "execute",
+      "arguments": {
+        "tab": 630345754,
+        "code": "await ref('e2').selectOption({label:'Weekly digest'}); await ref('e3').check(); return await snapshot()"
+      },
+      "started_at": "2026-11-17T15:01:16.562Z",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "tab: 630345754\n\nscoped to <main>; 1 landmark and 3 controls outside it are not shown (within: \"body\" to include them)\n- heading \"Account preferences\" [level=1]\n  - textbox \"Display name\" [ref=e1]\n  - combobox \"Digest\" [ref=e2 selected=\"Weekly digest\" 3 options]\n  - checkbox \"Send security alerts\" [ref=e3 checked]\n  - button \"Save preferences\" [ref=e4]"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 1585.108162000004,
+      "response_bytes": 413
+    },
+    {
+      "sequence": 3,
+      "name": "execute",
+      "arguments": {
+        "tab": 630345754,
+        "code": "await ref('e4').click(); await page.waitForTimeout(500); return {url:page.url(), snapshot:await snapshot()}"
+      },
+      "started_at": "2026-11-17T15:01:27.474Z",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "tab: 630345754\n\n{\"url\":\"http://127.0.0.1:44937/case/b9468cda4cd54789107cc5b2/settings?saved=1\",\"snapshot\":\"scoped to <main>; 1 landmark and 3 controls outside it are not shown (within: \\\"body\\\" to include them)\\n- heading \\\"Account preferences\\\" [level=1]\\n  - status \\\"Saved preferences: Weekly digest. Security alerts enabled.\\\"\\n  - textbox \\\"Display name\\\" [ref=e5]\\n  - combobox \\\"Digest\\\" [ref=e6 selected=\\\"Weekly digest\\\" 3 options]\\n  - checkbox \\\"Send security alerts\\\" [ref=e7 checked]\\n  - button \\\"Save preferences\\\" [ref=e8]\"}\n\nPage: moved from http://127.0.0.1:44937/case/b9468cda4cd54789107cc5b2/settings to http://127.0.0.1:44937/case/b9468cda4cd54789107cc5b2/settings?saved=1; 1 navigation"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 1245.140155999994,
+      "response_bytes": 796
+    }
+  ]
+}

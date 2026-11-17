@@ -1,0 +1,998 @@
+{
+  "schema": "callisto.real-world-trace.v1",
+  "host": {
+    "code": 0,
+    "signal": null,
+    "error": null,
+    "timed_out": false,
+    "elapsed_ms": 63528.636058999924,
+    "usage": {
+      "input_tokens": 268625,
+      "cached_input_tokens": 210816,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 1833,
+      "reasoning_output_tokens": 1100
+    },
+    "final": "{\"answer\":\"`json.loads` raises `JSONDecodeError` for invalid JSON. Its `s` argument supports `str`, `bytes`, and `bytearray`.\",\"evidence\":[{\"url\":\"https://docs.python.org/3/library/json.html#json.loads\",\"quote\":\"JSONDecodeError – When the data being deserialized is not a valid JSON document.\"},{\"url\":\"https://docs.python.org/3/library/json.html#json.loads\",\"quote\":\"deserialize s (a str, bytes or bytearray instance containing a JSON document)\"}]}",
+    "events": [
+      {
+        "type": "thread.started",
+        "thread_id": "01a1ea00-02cf-7df0-a87d-8d6f1490486e"
+      },
+      {
+        "type": "turn.started"
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_0",
+          "type": "agent_message",
+          "text": "I’ll inspect the live Python documentation page in the owned browser tab and verify the `json.loads` details there."
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_1",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "snapshot",
+            "args": {
+              "max_chars": 5000
+            }
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_1",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "snapshot",
+            "args": {
+              "max_chars": 5000
+            }
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"next_offset\":null,\"offset\":0,\"omitted\":0,\"order_changed\":false,\"revision\":\"ax-3945411652916964074:2\",\"scope\":{\"focus\":\"all\",\"include_text\":true,\"query\":null,\"retain_navigation\":true,\"selector\":null},\"text\":\"heading \\\"Ready for a public-site task\\\"\",\"title\":\"Browser benchmark start\",\"truncated\":false,\"url\":\"http://127.0.0.1:36683/\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\"]}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_2",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "navigate",
+            "args": {
+              "url": "https://docs.python.org/3/"
+            }
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_2",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "navigate",
+            "args": {
+              "url": "https://docs.python.org/3/"
+            }
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"feedback\":{\"frame_id\":0,\"needs_observation\":true,\"ready\":false,\"tab_id\":2,\"url\":\"https://docs.python.org/3/\"},\"navigationStarted\":true}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_3",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "snapshot",
+            "args": {
+              "max_chars": 6500
+            }
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_3",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "snapshot",
+            "args": {
+              "max_chars": 6500
+            }
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"next_offset\":148,\"offset\":0,\"omitted\":0,\"order_changed\":false,\"revision\":\"ax-8858001633477046865:1\",\"scope\":{\"focus\":\"all\",\"include_text\":true,\"query\":null,\"retain_navigation\":true,\"selector\":null},\"text\":\"[ax-59000001] navigation \\\"Related\\\"\\nlistitem \\\"index\\\"\\n[ax-59000002] link \\\"index\\\"\\nlistitem \\\"modules |\\\"\\n[ax-59000003] link \\\"modules\\\"\\nlistitem \\\"\\\"\\nlistitem \\\"Python »\\\"\\n[ax-59000004] link \\\"Python\\\"\\nlistitem \\\"\\\"\\n[ax-59000005] combobox \\\"Language\\\" options=[{\\\"label\\\":\\\"German | Deutsch\\\",\\\"value\\\":\\\"de\\\"},{\\\"label\\\":\\\"Greek | Ελληνικά\\\",\\\"value\\\":\\\"el\\\"},{\\\"label\\\":\\\"English\\\",\\\"value\\\":\\\"en\\\"},{\\\"label\\\":\\\"Spanish | español\\\",\\\"value\\\":\\\"es\\\"},{\\\"label\\\":\\\"Persian | فارسی\\\",\\\"value\\\":\\\"fa\\\"}] {options_truncated}\\n[ax-59000006] combobox \\\"Python version\\\" options=[{\\\"label\\\":\\\"dev (3.16)\\\",\\\"value\\\":\\\"3.16\\\"},{\\\"label\\\":\\\"3.15.2\\\",\\\"value\\\":\\\"3.15\\\"},{\\\"label\\\":\\\"3.14\\\",\\\"value\\\":\\\"3.14\\\"},{\\\"label\\\":\\\"3.13\\\",\\\"value\\\":\\\"3.13\\\"},{\\\"label\\\":\\\"3.12\\\",\\\"value\\\":\\\"3.12\\\"}] {options_truncated}\\nlistitem \\\"3.15.2 documentation »\\\"\\n[ax-59000007] link \\\"3.15.2 documentation\\\"\\nlistitem \\\"|\\\"\\n[ax-59000008] search \\\"\\\"\\n[ax-59000009] searchbox \\\"Quick search\\\"\\n[ax-59000010] button \\\"Go\\\"\\nlistitem \\\"Theme |\\\"\\n[ax-59000011] combobox \\\"Theme\\\" options=[{\\\"label\\\":\\\"Auto\\\",\\\"value\\\":\\\"auto\\\"},{\\\"label\\\":\\\"Light\\\",\\\"value\\\":\\\"light\\\"},{\\\"label\\\":\\\"Dark\\\",\\\"value\\\":\\\"dark\\\"}]\\n[ax-59000012] main \\\"Python 3.15.2 documentation Welcome! This is the official documentation for Python 3.15.2. Documentation sections: What's new in Python 3.15? Or all \\\\\\\"What's new\\\\\\\" documents since Python 2.0 Tutorial St\\\"\\nheading \\\"Python 3.15.2 documentation\\\"\\nparagraph \\\"Welcome! This is the official documentation for Python 3.15.2.\\\"\\nparagraph \\\"Documentation sections:\\\"\\nlistitem \\\"What's new in Python 3.15? Or all \\\\\\\"What's new\\\\\\\" documents since Python 2.0\\\"\\n[ax-59000013] link \\\"What's new in Python 3.15?\\\"\\n[ax-59000014] link \\\"all \\\\\\\"What's new\\\\\\\" documents since Python 2.0\\\"\\nlistitem \\\"Tutorial Start here: a tour of Python's syntax and features\\\"\\n[ax-59000015] link \\\"Tutorial\\\"\\nlistitem \\\"Built-ins reference Built-in functions and classes\\\"\\n[ax-59000016] link \\\"Built-ins reference\\\"\\nlistitem \\\"Library reference Standard library modules\\\"\\n[ax-59000017] link \\\"Library reference\\\"\\nlistitem \\\"Language reference Syntax and language elements\\\"\\n[ax-59000018] link \\\"Language reference\\\"\\nlistitem \\\"Python setup and usage How to install, configure, and use Python\\\"\\n[ax-59000019] link \\\"Python setup and usage\\\"\\nlistitem \\\"Python HOWTOs In-depth topic manuals\\\"\\n[ax-59000020] link \\\"Python HOWTOs\\\"\\nlistitem \\\"Installing Python modules Third-party modules and PyPI.org\\\"\\n[ax-59000021] link \\\"Installing Python modules\\\"\\nlistitem \\\"Extending and embedding For C/C++ programmers\\\"\\n[ax-59000022] link \\\"Extending and embedding\\\"\\nlistitem \\\"Python's C API C API reference\\\"\\n[ax-59000023] link \\\"Python's C API\\\"\\nlistitem \\\"FAQs Frequently asked questions (with answers!)\\\"\\n[ax-59000024] link \\\"FAQs\\\"\\nlistitem \\\"Deprecations Deprecated functionality\\\"\\n[ax-59000025] link \\\"Deprecations\\\"\\nparagraph \\\"Other resources:\\\"\\nlistitem \\\"Python developer's guide Information on contributing to Python\\\"\\n[ax-59000026] link \\\"Python developer's guide\\\"\\nlistitem \\\"Python Packaging User Guide Resources relating to Python packaging\\\"\\n[ax-59000027] link \\\"Python Packaging User Guide\\\"\\nlistitem \\\"Audio/visual talks Podcasts, talks, and video presentations from the community\\\"\\n[ax-59000028] link \\\"Audio/visual talks\\\"\\nlistitem \\\"Python Enhancement Proposals Index of proposed improvements to Python\\\"\\n[ax-59000029] link \\\"Python Enhancement Proposals\\\"\\nlistitem \\\"Static Typing with Python Information and guides about Python type safety\\\"\\n[ax-59000030] link \\\"Static Typing with Python\\\"\\nparagraph \\\"Indices, glossary, and search:\\\"\\nlistitem \\\"Global module index All modules and libraries\\\"\\n[ax-59000031] link \\\"Global module index\\\"\\nlistitem \\\"General index All functions, classes, and terms\\\"\\n[ax-59000032] link \\\"General index\\\"\\nlistitem \\\"Glossary Terms explained\\\"\\n[ax-59000033] link \\\"Glossary\\\"\\nlistitem \\\"Search page Search this documentation\\\"\\n[ax-59000034] link \\\"Search page\\\"\\nlistitem \\\"Complete table of contents All sections and subsections\\\"\\n[ax-59000035] link \\\"Complete table of contents\\\"\\nparagraph \\\"Project information:\\\"\\nlistitem \\\"Reporting issues\\\"\\n[ax-59000036] link \\\"Reporting issues\\\"\\nlistitem \\\"Contributing to docs\\\"\\n[ax-59000037] link \\\"Contributing to docs\\\"\\nlistitem \\\"Download the documentation\\\"\\n[ax-59000038] link \\\"Download the documentation\\\"\\nlistitem \\\"History and license of Python\\\"\\n[ax-59000039] link \\\"History and license of Python\\\"\\nlistitem \\\"Copyright\\\"\\n[ax-59000040] link \\\"Copyright\\\"\\nlistitem \\\"About the documentation\\\"\\n[ax-59000041] link \\\"About the documentation\\\"\\n[ax-59000042] navigation \\\"Main\\\"\\nheading \\\"Download\\\"\\nparagraph \\\"Download these documents\\\"\\n[ax-59000043] link \\\"Download these documents\\\"\\nheading \\\"Docs by version\\\"\\nlistitem \\\"Python 3.16 (in development)\\\"\\n[ax-59000044] link \\\"Python 3.16 (in development)\\\"\\nlistitem \\\"Python 3.15 (stable)\\\"\\n[ax-59000045] link \\\"Python 3.15 (stable)\\\"\\nlistitem \\\"Python 3.14 (stable)\\\"\\n[ax-59000046] link \\\"Python 3.14 (stable)\\\"\\nlistitem \\\"Python 3.13 (security-fixes)\\\"\\n[ax-59000047] link \\\"Python 3.13 (security-fixes)\\\"\\nlistitem \\\"Python 3.12 (security-fixes)\\\"\\n[ax-59000048] link \\\"Python 3.12 (security-fixes)\\\"\\nlistitem \\\"Python 3.11 (security-fixes)\\\"\\n[ax-59000049] link \\\"Python 3.11 (security-fixes)\\\"\\nlistitem \\\"Python 3.10 (EOL)\\\"\\n[ax-59000050] link \\\"Python 3.10 (EOL)\\\"\\nlistitem \\\"Python 3.9 (EOL)\\\"\\n[ax-59000051] link \\\"Python 3.9 (EOL)\\\"\\nlistitem \\\"Python 3.8 (EOL)\\\"\\n[ax-59000052] link \\\"Python 3.8 (EOL)\\\"\\nlistitem \\\"Python 3.7 (EOL)\\\"\\n[ax-59000053] link \\\"Python 3.7 (EOL)\\\"\\nlistitem \\\"Python 3.6 (EOL)\\\"\\n[ax-59000054] link \\\"Python 3.6 (EOL)\\\"\\nlistitem \\\"Python 3.5 (EOL)\\\"\\n[ax-59000055] link \\\"Python 3.5 (EOL)\\\"\\nlistitem \\\"Python 3.4 (EOL)\\\"\\n[ax-59000056] link \\\"Python 3.4 (EOL)\\\"\\nlistitem \\\"Python 3.3 (EOL)\\\"\\n[ax-59000057] link \\\"Python 3.3 (EOL)\\\"\\nlistitem \\\"Python 3.2 (EOL)\\\"\\n[ax-59000058] link \\\"Python 3.2 (EOL)\\\"\\nlistitem \\\"Python 3.1 (EOL)\\\"\\n[ax-59000059] link \\\"Python 3.1 (EOL)\\\"\\nlistitem \\\"Python 3.0 (EOL)\\\"\\n[ax-59000060] link \\\"Python 3.0 (EOL)\\\"\\nlistitem \\\"Python 2.7 (EOL)\\\"\\n[ax-59000061] link \\\"Python 2.7 (EOL)\\\"\\nlistitem \\\"Python 2.6 (EOL)\\\"\\n[ax-59000062] link \\\"Python 2.6 (EOL)\\\"\\nlistitem \\\"All versions\\\"\\n[ax-59000063] link \\\"All versions\\\"\\nheading \\\"Other resources\\\"\\nlistitem \\\"PEP Index\\\"\\n[ax-59000064] link \\\"PEP Index\\\"\\nlistitem \\\"Beginner's Guide\\\"\\n[ax-59000065] link \\\"Beginner's Guide\\\"\\nlistitem \\\"Book List\\\"\\n[ax-59000066] link \\\"Book List\\\"\\nlistitem \\\"Audio/Visual Talks\\\"\\n[ax-59000067] link \\\"Audio/Visual Talks\\\"\\nlistitem \\\"Python Developer’s Guide\\\"\\n[ax-59000068] link \\\"Python Developer’s Guide\\\"\\n[ax-59000069] navigation \\\"Related\\\"\\nlistitem \\\"index\\\"\\n[ax-59000070] link \\\"index\\\"\\nlistitem \\\"modules |\\\"\\n[ax-59000071] link \\\"modules\\\"\\nlistitem \\\"\\\"\\nlistitem \\\"Python »\\\"\\n[ax-59000072] link \\\"Python\\\"\\nlistitem \\\"\\\"\",\"title\":\"Python 3.15.2 documentation\",\"truncated\":true,\"url\":\"https://docs.python.org/3/\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\",\"Continue with next_offset and revision to read this captured snapshot.\"]}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_4",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "help",
+            "args": {
+              "op": "run"
+            }
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_4",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "help",
+            "args": {
+              "op": "run"
+            }
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"args_schema\":{\"additionalProperties\":false,\"properties\":{\"snapshot\":{\"type\":\"boolean\"},\"steps\":{\"items\":{\"oneOf\":[{\"additionalProperties\":false,\"properties\":{\"action\":{\"enum\":[\"navigate\"]},\"url\":{}},\"required\":[\"url\",\"action\"],\"type\":\"object\"},{\"additionalProperties\":false,\"oneOf\":[{\"required\":[\"ref\"]},{\"required\":[\"role\",\"name\"]}],\"properties\":{\"action\":{\"enum\":[\"click\"]},\"name\":{},\"ref\":{},\"role\":{}},\"required\":[\"action\"],\"type\":\"object\"},{\"additionalProperties\":false,\"oneOf\":[{\"required\":[\"ref\"]},{\"required\":[\"role\",\"name\"]}],\"properties\":{\"action\":{\"enum\":[\"fill\"]},\"name\":{},\"ref\":{},\"role\":{},\"value\":{}},\"required\":[\"value\",\"action\"],\"type\":\"object\"},{\"additionalProperties\":false,\"oneOf\":[{\"required\":[\"ref\"]},{\"required\":[\"role\",\"name\"]}],\"properties\":{\"action\":{\"enum\":[\"submit\"]},\"name\":{},\"ref\":{},\"role\":{}},\"required\":[\"action\"],\"type\":\"object\"},{\"additionalProperties\":false,\"oneOf\":[{\"required\":[\"ref\"]},{\"required\":[\"role\",\"name\"]}],\"properties\":{\"action\":{\"enum\":[\"select\"]},\"name\":{},\"ref\":{},\"role\":{},\"value\":{}},\"required\":[\"value\",\"action\"],\"type\":\"object\"},{\"additionalProperties\":false,\"oneOf\":[{\"required\":[\"ref\"]},{\"required\":[\"role\",\"name\"]}],\"properties\":{\"action\":{\"enum\":[\"check\"]},\"checked\":{},\"name\":{},\"ref\":{},\"role\":{}},\"required\":[\"checked\",\"action\"],\"type\":\"object\"},{\"additionalProperties\":false,\"oneOf\":[{\"required\":[\"ref\"]},{\"required\":[\"role\",\"name\"]}],\"properties\":{\"action\":{\"enum\":[\"hover\"]},\"name\":{},\"ref\":{},\"role\":{}},\"required\":[\"action\"],\"type\":\"object\"},{\"additionalProperties\":false,\"properties\":{\"action\":{\"enum\":[\"press\"]},\"key\":{}},\"required\":[\"key\",\"action\"],\"type\":\"object\"},{\"additionalProperties\":false,\"properties\":{\"action\":{\"enum\":[\"scroll\"]},\"delta_x\":{},\"delta_y\":{}},\"required\":[\"delta_y\",\"action\"],\"type\":\"object\"},{\"additionalProperties\":false,\"properties\":{\"action\":{\"enum\":[\"wait\"]},\"ms\":{}},\"required\":[\"ms\",\"action\"],\"type\":\"object\"},{\"additionalProperties\":false,\"oneOf\":[{\"required\":[\"text\"]},{\"required\":[\"selector\"]}],\"properties\":{\"action\":{\"enum\":[\"wait_for\"]},\"selector\":{},\"state\":{},\"text\":{},\"timeout_ms\":{}},\"required\":[\"action\"],\"type\":\"object\"},{\"additionalProperties\":false,\"properties\":{\"action\":{\"enum\":[\"extract\"]},\"fields\":{},\"include_text\":{},\"limit\":{},\"paginate\":{},\"selector\":{}},\"required\":[\"selector\",\"fields\",\"action\"],\"type\":\"object\"},{\"additionalProperties\":false,\"properties\":{\"action\":{\"enum\":[\"drag\"]},\"ref\":{},\"target_ref\":{}},\"required\":[\"ref\",\"target_ref\",\"action\"],\"type\":\"object\"}],\"properties\":{\"action\":{\"enum\":[\"navigate\",\"click\",\"fill\",\"submit\",\"select\",\"check\",\"hover\",\"press\",\"scroll\",\"wait\",\"wait_for\",\"extract\",\"drag\"],\"type\":\"string\"},\"checked\":{\"type\":\"boolean\"},\"delta_x\":{\"default\":0,\"type\":\"number\"},\"delta_y\":{\"type\":\"number\"},\"fields\":{\"additionalProperties\":{\"anyOf\":[{\"type\":\"string\"},{\"properties\":{\"attribute\":{\"type\":\"string\"},\"selector\":{\"type\":\"string\"},\"type\":{\"enum\":[\"text\",\"number\"],\"type\":\"string\"}},\"type\":\"object\"}]},\"maxProperties\":20,\"minProperties\":1,\"type\":\"object\"},\"include_text\":{\"type\":\"boolean\"},\"key\":{\"maxLength\":40,\"minLength\":1,\"type\":\"string\"},\"limit\":{\"maximum\":1000,\"minimum\":1,\"type\":\"integer\"},\"ms\":{\"maximum\":5000,\"minimum\":1,\"type\":\"integer\"},\"name\":{\"maxLength\":500,\"type\":\"string\"},\"paginate\":{\"properties\":{\"max_pages\":{\"maximum\":25,\"minimum\":1,\"type\":\"integer\"},\"next\":{\"maxLength\":500,\"minLength\":1,\"type\":\"string\"}},\"required\":[\"next\"],\"type\":\"object\"},\"ref\":{\"maxLength\":40,\"pattern\":\"^ax-[0-9]+$\",\"type\":\"string\"},\"role\":{\"maxLength\":100,\"minLength\":1,\"type\":\"string\"},\"selector\":{\"maxLength\":500,\"minLength\":1,\"type\":\"string\"},\"state\":{\"enum\":[\"visible\",\"hidden\",\"attached\",\"detached\"],\"type\":\"string\"},\"target_ref\":{\"maxLength\":40,\"pattern\":\"^ax-[0-9]+$\",\"type\":\"string\"},\"text\":{\"maxLength\":500,\"minLength\":1,\"type\":\"string\"},\"timeout_ms\":{\"maximum\":20000,\"minimum\":100,\"type\":\"integer\"},\"url\":{\"maxLength\":8192,\"type\":\"string\"},\"value\":{\"maxLength\":100000,\"type\":\"string\"}},\"required\":[\"action\"],\"type\":\"object\"},\"maxItems\":40,\"minItems\":1,\"type\":\"array\"}},\"required\":[\"steps\"],\"type\":\"object\"},\"description\":\"Execute 1–40 steps using the same actions and fields as standalone tools. All steps are validated before dispatch. Returns compact final page feedback, the last extraction and an optional snapshot. Stops on failure; earlier actions are not rolled back. Never replay uncertain writes.\",\"op\":\"run\"}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_5",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "run",
+            "args": {
+              "steps": [
+                {
+                  "action": "fill",
+                  "ref": "ax-59000009",
+                  "value": "json.loads"
+                },
+                {
+                  "action": "submit",
+                  "ref": "ax-59000009"
+                }
+              ],
+              "snapshot": true
+            }
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_5",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "run",
+            "args": {
+              "steps": [
+                {
+                  "action": "fill",
+                  "ref": "ax-59000009",
+                  "value": "json.loads"
+                },
+                {
+                  "action": "submit",
+                  "ref": "ax-59000009"
+                }
+              ],
+              "snapshot": true
+            }
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"completed\":2,\"elapsed_ms\":265,\"feedback\":{\"document_revision\":\"ax-4589642215374900404\",\"dom_version\":4,\"navigationStarted\":true,\"needs_observation\":true,\"title\":\"Search — Python 3.15.2 documentation\",\"url\":\"https://docs.python.org/3/search.html?q=json.loads\"},\"snapshot\":{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"next_offset\":null,\"offset\":0,\"omitted\":0,\"order_changed\":false,\"revision\":\"ax-4589642215374900404:1\",\"scope\":{\"focus\":\"all\",\"include_text\":true,\"query\":null,\"retain_navigation\":true,\"selector\":null},\"text\":\"[ax-60000001] navigation \\\"Related\\\"\\nlistitem \\\"index\\\"\\n[ax-60000002] link \\\"index\\\"\\nlistitem \\\"modules |\\\"\\n[ax-60000003] link \\\"modules\\\"\\nlistitem \\\"\\\"\\nlistitem \\\"Python »\\\"\\n[ax-60000004] link \\\"Python\\\"\\nlistitem \\\"\\\"\\n[ax-60000005] combobox \\\"Language\\\" options=[{\\\"label\\\":\\\"German | Deutsch\\\",\\\"value\\\":\\\"de\\\"},{\\\"label\\\":\\\"Greek | Ελληνικά\\\",\\\"value\\\":\\\"el\\\"},{\\\"label\\\":\\\"English\\\",\\\"value\\\":\\\"en\\\"},{\\\"label\\\":\\\"Spanish | español\\\",\\\"value\\\":\\\"es\\\"},{\\\"label\\\":\\\"Persian | فارسی\\\",\\\"value\\\":\\\"fa\\\"}] {options_truncated}\\n[ax-60000006] combobox \\\"Python version\\\" options=[{\\\"label\\\":\\\"dev (3.16)\\\",\\\"value\\\":\\\"3.16\\\"},{\\\"label\\\":\\\"3.15.2\\\",\\\"value\\\":\\\"3.15\\\"},{\\\"label\\\":\\\"3.14\\\",\\\"value\\\":\\\"3.14\\\"},{\\\"label\\\":\\\"3.13\\\",\\\"value\\\":\\\"3.13\\\"},{\\\"label\\\":\\\"3.12\\\",\\\"value\\\":\\\"3.12\\\"}] {options_truncated}\\nlistitem \\\"3.15.2 documentation »\\\"\\n[ax-60000007] link \\\"3.15.2 documentation\\\"\\nlistitem \\\"Search\\\"\\n[ax-60000008] link \\\"Search\\\"\\nlistitem \\\"Theme |\\\"\\n[ax-60000009] combobox \\\"Theme\\\" options=[{\\\"label\\\":\\\"Auto\\\",\\\"value\\\":\\\"auto\\\"},{\\\"label\\\":\\\"Light\\\",\\\"value\\\":\\\"light\\\"},{\\\"label\\\":\\\"Dark\\\",\\\"value\\\":\\\"dark\\\"}]\\n[ax-60000010] main \\\"Search Searching for multiple words only shows matches that contain all words. Searching json.loads (Python function, in json — JSON encoder and decoder) Input and output json — JSON encoder and decod\\\"\\nheading \\\"Search\\\"\\nparagraph \\\"Searching for multiple words only shows matches that contain all words.\\\"\\n[ax-60000011] textbox \\\"Search\\\" =json.loads\\n[ax-60000012] button \\\"search\\\"\\nheading \\\"Searching\\\"\\n[ax-60000013] list \\\"json.loads (Python function, in json — JSON encoder and decoder) Input and output json — JSON encoder and decoder pickle — Python object serialization What’s New in Python 2.6\\\"\\nlistitem \\\"json.loads (Python function, in json — JSON encoder and decoder)\\\"\\n[ax-60000014] link \\\"json.loads\\\"\\nlistitem \\\"Input and output\\\"\\n[ax-60000015] link \\\"Input and output\\\"\\nlistitem \\\"json — JSON encoder and decoder\\\"\\n[ax-60000016] link \\\"json — JSON encoder and decoder\\\"\\nlistitem \\\"pickle — Python object serialization\\\"\\n[ax-60000017] link \\\"pickle — Python object serialization\\\"\\nlistitem \\\"What’s New in Python 2.6\\\"\\n[ax-60000018] link \\\"What’s New in Python 2.6\\\"\\n[ax-60000019] navigation \\\"Main\\\"\\n[ax-60000020] navigation \\\"Related\\\"\\nlistitem \\\"index\\\"\\n[ax-60000021] link \\\"index\\\"\\nlistitem \\\"modules |\\\"\\n[ax-60000022] link \\\"modules\\\"\\nlistitem \\\"\\\"\\nlistitem \\\"Python »\\\"\\n[ax-60000023] link \\\"Python\\\"\\nlistitem \\\"\\\"\\n[ax-60000024] combobox \\\"Language\\\" options=[{\\\"label\\\":\\\"German | Deutsch\\\",\\\"value\\\":\\\"de\\\"},{\\\"label\\\":\\\"Greek | Ελληνικά\\\",\\\"value\\\":\\\"el\\\"},{\\\"label\\\":\\\"English\\\",\\\"value\\\":\\\"en\\\"},{\\\"label\\\":\\\"Spanish | español\\\",\\\"value\\\":\\\"es\\\"},{\\\"label\\\":\\\"Persian | فارسی\\\",\\\"value\\\":\\\"fa\\\"}] {options_truncated}\\n[ax-60000025] combobox \\\"Python version\\\" options=[{\\\"label\\\":\\\"dev (3.16)\\\",\\\"value\\\":\\\"3.16\\\"},{\\\"label\\\":\\\"3.15.2\\\",\\\"value\\\":\\\"3.15\\\"},{\\\"label\\\":\\\"3.14\\\",\\\"value\\\":\\\"3.14\\\"},{\\\"label\\\":\\\"3.13\\\",\\\"value\\\":\\\"3.13\\\"},{\\\"label\\\":\\\"3.12\\\",\\\"value\\\":\\\"3.12\\\"}] {options_truncated}\\nlistitem \\\"3.15.2 documentation »\\\"\\n[ax-60000026] link \\\"3.15.2 documentation\\\"\\nlistitem \\\"Search\\\"\\n[ax-60000027] link \\\"Search\\\"\\nlistitem \\\"Theme |\\\"\\n[ax-60000028] combobox \\\"Theme\\\" options=[{\\\"label\\\":\\\"Auto\\\",\\\"value\\\":\\\"auto\\\"},{\\\"label\\\":\\\"Light\\\",\\\"value\\\":\\\"light\\\"},{\\\"label\\\":\\\"Dark\\\",\\\"value\\\":\\\"dark\\\"}]\\ntext \\\"© 2001 Python Software Foundation. This page is licensed under the Python Software Foundation License Version 2. Examples, recipes, and other code in the documentation are additionally licensed under \\\"\\n[ax-60000029] link \\\"Copyright\\\"\\n[ax-60000030] link \\\"History and License\\\"\\n[ax-60000031] link \\\"Please donate.\\\"\\n[ax-60000032] link \\\"Found a bug\\\"\\n[ax-60000033] link \\\"Sphinx\\\"\",\"title\":\"Search — Python 3.15.2 documentation\",\"truncated\":false,\"url\":\"https://docs.python.org/3/search.html?q=json.loads\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\"]}}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_6",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "click",
+            "args": {
+              "ref": "ax-60000014"
+            }
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_6",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "click",
+            "args": {
+              "ref": "ax-60000014"
+            }
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"completed\":true,\"feedback\":{\"document_revision\":\"ax-4589642215374900404\",\"dom_version\":61,\"frame_id\":0,\"needs_observation\":true,\"ready\":true,\"tab_id\":2,\"title\":\"Search — Python 3.15.2 documentation\",\"url\":\"https://docs.python.org/3/search.html?q=json.loads\"}}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_7",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "snapshot",
+            "args": {
+              "max_chars": 4000
+            }
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_7",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "snapshot",
+            "args": {
+              "max_chars": 4000
+            }
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"next_offset\":58,\"offset\":0,\"omitted\":0,\"order_changed\":false,\"revision\":\"ax-1086907296556532761:1\",\"scope\":{\"focus\":\"all\",\"include_text\":true,\"query\":null,\"retain_navigation\":true,\"selector\":null},\"text\":\"[ax-61000001] navigation \\\"Related\\\"\\nlistitem \\\"index\\\"\\n[ax-61000002] link \\\"index\\\"\\nlistitem \\\"modules |\\\"\\n[ax-61000003] link \\\"modules\\\"\\nlistitem \\\"next |\\\"\\n[ax-61000004] link \\\"next\\\"\\nlistitem \\\"previous |\\\"\\n[ax-61000005] link \\\"previous\\\"\\nlistitem \\\"\\\"\\nlistitem \\\"Python »\\\"\\n[ax-61000006] link \\\"Python\\\"\\nlistitem \\\"\\\"\\n[ax-61000007] combobox \\\"Language\\\" options=[{\\\"label\\\":\\\"German | Deutsch\\\",\\\"value\\\":\\\"de\\\"},{\\\"label\\\":\\\"Greek | Ελληνικά\\\",\\\"value\\\":\\\"el\\\"},{\\\"label\\\":\\\"English\\\",\\\"value\\\":\\\"en\\\"},{\\\"label\\\":\\\"Spanish | español\\\",\\\"value\\\":\\\"es\\\"},{\\\"label\\\":\\\"Persian | فارسی\\\",\\\"value\\\":\\\"fa\\\"}] {options_truncated}\\n[ax-61000008] combobox \\\"Python version\\\" options=[{\\\"label\\\":\\\"dev (3.16)\\\",\\\"value\\\":\\\"3.16\\\"},{\\\"label\\\":\\\"3.15.2\\\",\\\"value\\\":\\\"3.15\\\"},{\\\"label\\\":\\\"3.14\\\",\\\"value\\\":\\\"3.14\\\"},{\\\"label\\\":\\\"3.13\\\",\\\"value\\\":\\\"3.13\\\"},{\\\"label\\\":\\\"3.12\\\",\\\"value\\\":\\\"3.12\\\"}] {options_truncated}\\nlistitem \\\"3.15.2 documentation »\\\"\\n[ax-61000009] link \\\"3.15.2 documentation\\\"\\nlistitem \\\"The Python standard library »\\\"\\n[ax-61000010] link \\\"The Python standard library\\\"\\nlistitem \\\"Internet Data Handling »\\\"\\n[ax-61000011] link \\\"Internet Data Handling\\\"\\nlistitem \\\"json — JSON encoder and decoder\\\"\\n[ax-61000012] link \\\"json — JSON encoder and decoder\\\"\\nlistitem \\\"|\\\"\\n[ax-61000013] search \\\"\\\"\\n[ax-61000014] searchbox \\\"Quick search\\\"\\n[ax-61000015] button \\\"Go\\\"\\nlistitem \\\"Theme |\\\"\\n[ax-61000016] combobox \\\"Theme\\\" options=[{\\\"label\\\":\\\"Auto\\\",\\\"value\\\":\\\"auto\\\"},{\\\"label\\\":\\\"Light\\\",\\\"value\\\":\\\"light\\\"},{\\\"label\\\":\\\"Dark\\\",\\\"value\\\":\\\"dark\\\"}]\\n[ax-61000017] main \\\"json — JSON encoder and decoder Source code: Lib/json/__init__.py JSON (JavaScript Object Notation), specified by RFC 7159 (which obsoletes RFC 4627) and by ECMA-404, is a lightweight data interchange\\\"\\nheading \\\"json — JSON encoder and decoder\\\"\\nparagraph \\\"Source code: Lib/json/__init__.py\\\"\\n[ax-61000018] link \\\"Lib/json/__init__.py\\\"\\nparagraph \\\"JSON (JavaScript Object Notation), specified by RFC 7159 (which obsoletes RFC 4627) and by ECMA-404, is a lightweight data interchange format inspired by JavaScript object literal syntax (although it \\\"\\n[ax-61000019] link \\\"JSON (JavaScript Object Notation)\\\"\\n[ax-61000020] link \\\"RFC 7159\\\"\\n[ax-61000021] link \\\"RFC 4627\\\"\\n[ax-61000022] link \\\"ECMA-404\\\"\\n[ax-61000023] link \\\"JavaScript\\\"\\n[ax-61000024] doc-noteref \\\"[1]\\\"\\nparagraph \\\"Note\\\"\\nparagraph \\\"The term “object” in the context of JSON processing in Python can be ambiguous. All values in Python are objects. In JSON, an object refers to any data wrapped in curly braces, similar to a Python dic\\\"\\nparagraph \\\"Warning\\\"\\nparagraph \\\"Be cautious when parsing JSON data from untrusted sources. A malicious JSON string may cause the decoder to consume considerable CPU and memory resources. Limiting the size of data to be parsed is rec\\\"\\nparagraph \\\"This module exposes an API familiar to users of the standard library marshal and pickle modules.\\\"\\n[ax-61000025] link \\\"marshal\\\"\\n[ax-61000026] link \\\"pickle\\\"\\nparagraph \\\"Encoding basic Python object hierarchies:\\\"\\ncode \\\">>> import json >>> json.dumps(['foo', {'bar': ('baz', None, 1.0, 2)}]) '[\\\\\\\"foo\\\\\\\", {\\\\\\\"bar\\\\\\\": [\\\\\\\"baz\\\\\\\", null, 1.0, 2]}]' >>> print(json.dumps(\\\\\\\"\\\\\\\\\\\\\\\"foo\\\\\\\\bar\\\\\\\")) \\\\\\\"\\\\\\\\\\\\\\\"foo\\\\\\\\bar\\\\\\\" >>> print(json.dumps('\\\\\\\\u1234')) \\\\\\\"\\\\\\\\u1234\\\"\\nparagraph \\\"Compact encoding:\\\"\\ncode \\\">>> import json >>> json.dumps([1, 2, 3, {'4': 5, '6': 7}], separators=(',', ':')) '[1,2,3,{\\\\\\\"4\\\\\\\":5,\\\\\\\"6\\\\\\\":7}]'\\\"\\nparagraph \\\"Pretty printing:\\\"\\ncode \\\">>> import json >>> print(json.dumps({'6': 7, '4': 5}, sort_keys=True, indent=4)) { \\\\\\\"4\\\\\\\": 5, \\\\\\\"6\\\\\\\": 7 }\\\"\\nparagraph \\\"Customizing JSON object encoding:\\\"\\ncode \\\">>> import json >>> def custom_json(obj): ... if isinstance(obj, complex): ... return {'__complex__': True, 'real': obj.real, 'imag': obj.imag} ... raise TypeError(f'Cannot serialize object of {type(o\\\"\\nparagraph \\\"Decoding JSON:\\\"\\ncode \\\">>> import json >>> json.loads('[\\\\\\\"foo\\\\\\\", {\\\\\\\"bar\\\\\\\":[\\\\\\\"baz\\\\\\\", null, 1.0, 2]}]') ['foo', {'bar': ['baz', None, 1.0, 2]}] >>> json.loads('\\\\\\\"\\\\\\\\\\\\\\\\\\\\\\\"foo\\\\\\\\\\\\\\\\bar\\\\\\\"') '\\\\\\\"foo\\\\\\\\x08ar' >>> from io import StringIO >>> io = Strin\\\"\\nparagraph \\\"Customizing JSON object decoding:\\\"\",\"title\":\"json — JSON encoder and decoder — Python 3.15.2 documentation\",\"truncated\":true,\"url\":\"https://docs.python.org/3/library/json.html#json.loads\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\",\"Continue with next_offset and revision to read this captured snapshot.\"]}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_8",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "help",
+            "args": {
+              "op": "extract"
+            }
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_8",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "help",
+            "args": {
+              "op": "extract"
+            }
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"args_schema\":{\"additionalProperties\":false,\"properties\":{\"fields\":{\"additionalProperties\":{\"anyOf\":[{\"type\":\"string\"},{\"properties\":{\"attribute\":{\"type\":\"string\"},\"selector\":{\"type\":\"string\"},\"type\":{\"enum\":[\"text\",\"number\"],\"type\":\"string\"}},\"type\":\"object\"}]},\"maxProperties\":20,\"minProperties\":1,\"type\":\"object\"},\"include_text\":{\"type\":\"boolean\"},\"limit\":{\"maximum\":1000,\"minimum\":1,\"type\":\"integer\"},\"paginate\":{\"properties\":{\"max_pages\":{\"maximum\":25,\"minimum\":1,\"type\":\"integer\"},\"next\":{\"maxLength\":500,\"minLength\":1,\"type\":\"string\"}},\"required\":[\"next\"],\"type\":\"object\"},\"selector\":{\"maxLength\":500,\"minLength\":1,\"type\":\"string\"}},\"required\":[\"selector\",\"fields\"],\"type\":\"object\"},\"description\":\"Read structured rows from the shared page using CSS selectors: a row selector plus a field map. Optionally follow a next-page control and merge pages. Returns typed rows, not a snapshot, so counting and aggregation need one call.\",\"op\":\"extract\"}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_9",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "help",
+            "args": {
+              "op": "snapshot"
+            }
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_9",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "help",
+            "args": {
+              "op": "snapshot"
+            }
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"args_schema\":{\"additionalProperties\":false,\"properties\":{\"diff\":{\"default\":false,\"type\":\"boolean\"},\"focus\":{\"default\":\"all\",\"enum\":[\"all\",\"main\",\"modal\",\"auto\"],\"type\":\"string\"},\"include_text\":{\"default\":true,\"type\":\"boolean\"},\"max_chars\":{\"maximum\":30000,\"minimum\":1000,\"type\":\"integer\"},\"offset\":{\"maximum\":10000,\"minimum\":0,\"type\":\"integer\"},\"query\":{\"maxLength\":200,\"minLength\":1,\"type\":\"string\"},\"retain_navigation\":{\"default\":true,\"type\":\"boolean\"},\"revision\":{\"type\":\"string\"},\"selector\":{\"maxLength\":500,\"minLength\":1,\"type\":\"string\"}},\"type\":\"object\"},\"description\":\"Inspect the selected tab. In Full browser control mode, the active tab is adopted automatically when none is selected; otherwise share a tab or call browser tab_select first. Use max_chars to bound output and offset=next_offset to page through truncated controls. Refs belong to the latest snapshot. This experimental DOM-derived snapshot can omit content and frames. Use focus=auto/main/modal to prioritize a region while retaining navigation. Scoped diff baselines are independent. offset is a line index; use next_offset.\",\"op\":\"snapshot\"}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_10",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "snapshot",
+            "args": {
+              "selector": "[id=\"json.loads\"]",
+              "max_chars": 8000
+            }
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_10",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "snapshot",
+            "args": {
+              "selector": "[id=\"json.loads\"]",
+              "max_chars": 8000
+            }
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"next_offset\":null,\"offset\":0,\"omitted\":198,\"order_changed\":false,\"revision\":\"ax-1086907296556532761:2\",\"scope\":{\"focus\":\"all\",\"include_text\":true,\"query\":null,\"retain_navigation\":true,\"selector\":\"[id=\\\"json.loads\\\"]\"},\"text\":\"term \\\"json.loads(s, *, cls=None, object_hook=None, parse_float=None, parse_int=None, parse_constant=None, object_pairs_hook=None, array_hook=None, **kw)\\\"\",\"title\":\"json — JSON encoder and decoder — Python 3.15.2 documentation\",\"truncated\":false,\"url\":\"https://docs.python.org/3/library/json.html#json.loads\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\",\"198 controls/headings outside the selected region omitted.\"]}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_11",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "snapshot",
+            "args": {
+              "selector": "section:has([id=\"json.loads\"])",
+              "max_chars": 10000
+            }
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_11",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "snapshot",
+            "args": {
+              "selector": "section:has([id=\"json.loads\"])",
+              "max_chars": 10000
+            }
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "Observation selector must match exactly one element, including open shadow roots."
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "failed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_12",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "snapshot",
+            "args": {
+              "focus": "main",
+              "max_chars": 30000
+            }
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_12",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "snapshot",
+            "args": {
+              "focus": "main",
+              "max_chars": 30000
+            }
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"next_offset\":372,\"offset\":0,\"omitted\":5,\"order_changed\":false,\"revision\":\"ax-1086907296556532761:3\",\"scope\":{\"focus\":\"main\",\"include_text\":true,\"query\":null,\"retain_navigation\":true,\"selector\":null},\"text\":\"[ax-61000017] main \\\"json — JSON encoder and decoder Source code: Lib/json/__init__.py JSON (JavaScript Object Notation), specified by RFC 7159 (which obsoletes RFC 4627) and by ECMA-404, is a lightweight data interchange\\\"\\nheading \\\"json — JSON encoder and decoder\\\"\\nparagraph \\\"Source code: Lib/json/__init__.py\\\"\\n[ax-61000018] link \\\"Lib/json/__init__.py\\\"\\nparagraph \\\"JSON (JavaScript Object Notation), specified by RFC 7159 (which obsoletes RFC 4627) and by ECMA-404, is a lightweight data interchange format inspired by JavaScript object literal syntax (although it \\\"\\n[ax-61000019] link \\\"JSON (JavaScript Object Notation)\\\"\\n[ax-61000020] link \\\"RFC 7159\\\"\\n[ax-61000021] link \\\"RFC 4627\\\"\\n[ax-61000022] link \\\"ECMA-404\\\"\\n[ax-61000023] link \\\"JavaScript\\\"\\n[ax-61000024] doc-noteref \\\"[1]\\\"\\nparagraph \\\"Note\\\"\\nparagraph \\\"The term “object” in the context of JSON processing in Python can be ambiguous. All values in Python are objects. In JSON, an object refers to any data wrapped in curly braces, similar to a Python dic\\\"\\nparagraph \\\"Warning\\\"\\nparagraph \\\"Be cautious when parsing JSON data from untrusted sources. A malicious JSON string may cause the decoder to consume considerable CPU and memory resources. Limiting the size of data to be parsed is rec\\\"\\nparagraph \\\"This module exposes an API familiar to users of the standard library marshal and pickle modules.\\\"\\n[ax-61000025] link \\\"marshal\\\"\\n[ax-61000026] link \\\"pickle\\\"\\nparagraph \\\"Encoding basic Python object hierarchies:\\\"\\ncode \\\">>> import json >>> json.dumps(['foo', {'bar': ('baz', None, 1.0, 2)}]) '[\\\\\\\"foo\\\\\\\", {\\\\\\\"bar\\\\\\\": [\\\\\\\"baz\\\\\\\", null, 1.0, 2]}]' >>> print(json.dumps(\\\\\\\"\\\\\\\\\\\\\\\"foo\\\\\\\\bar\\\\\\\")) \\\\\\\"\\\\\\\\\\\\\\\"foo\\\\\\\\bar\\\\\\\" >>> print(json.dumps('\\\\\\\\u1234')) \\\\\\\"\\\\\\\\u1234\\\"\\nparagraph \\\"Compact encoding:\\\"\\ncode \\\">>> import json >>> json.dumps([1, 2, 3, {'4': 5, '6': 7}], separators=(',', ':')) '[1,2,3,{\\\\\\\"4\\\\\\\":5,\\\\\\\"6\\\\\\\":7}]'\\\"\\nparagraph \\\"Pretty printing:\\\"\\ncode \\\">>> import json >>> print(json.dumps({'6': 7, '4': 5}, sort_keys=True, indent=4)) { \\\\\\\"4\\\\\\\": 5, \\\\\\\"6\\\\\\\": 7 }\\\"\\nparagraph \\\"Customizing JSON object encoding:\\\"\\ncode \\\">>> import json >>> def custom_json(obj): ... if isinstance(obj, complex): ... return {'__complex__': True, 'real': obj.real, 'imag': obj.imag} ... raise TypeError(f'Cannot serialize object of {type(o\\\"\\nparagraph \\\"Decoding JSON:\\\"\\ncode \\\">>> import json >>> json.loads('[\\\\\\\"foo\\\\\\\", {\\\\\\\"bar\\\\\\\":[\\\\\\\"baz\\\\\\\", null, 1.0, 2]}]') ['foo', {'bar': ['baz', None, 1.0, 2]}] >>> json.loads('\\\\\\\"\\\\\\\\\\\\\\\\\\\\\\\"foo\\\\\\\\\\\\\\\\bar\\\\\\\"') '\\\\\\\"foo\\\\\\\\x08ar' >>> from io import StringIO >>> io = Strin\\\"\\nparagraph \\\"Customizing JSON object decoding:\\\"\\ncode \\\">>> import json >>> def as_complex(dct): ... if '__complex__' in dct: ... return complex(dct['real'], dct['imag']) ... return dct ... >>> json.loads('{\\\\\\\"__complex__\\\\\\\": true, \\\\\\\"real\\\\\\\": 1, \\\\\\\"imag\\\\\\\": 2}', ... \\\"\\nparagraph \\\"Extending JSONEncoder:\\\"\\n[ax-61000027] link \\\"JSONEncoder\\\"\\ncode \\\">>> import json >>> class ComplexEncoder(json.JSONEncoder): ... def default(self, obj): ... if isinstance(obj, complex): ... return [obj.real, obj.imag] ... # Let the base class default method raise t\\\"\\nparagraph \\\"Using json from the shell to validate and pretty-print:\\\"\\ncode \\\"$ echo '{\\\\\\\"json\\\\\\\":\\\\\\\"obj\\\\\\\"}' | python -m json { \\\\\\\"json\\\\\\\": \\\\\\\"obj\\\\\\\" } $ echo '{1.2:3.4}' | python -m json Expecting property name enclosed in double quotes: line 1 column 2 (char 1)\\\"\\nparagraph \\\"See Command-line interface for detailed documentation.\\\"\\n[ax-61000028] link \\\"Command-line interface\\\"\\nparagraph \\\"Note\\\"\\nparagraph \\\"JSON is a subset of YAML 1.2. The JSON produced by this module’s default settings (in particular, the default separators value) is also a subset of YAML 1.0 and 1.1. This module can thus also be used \\\"\\n[ax-61000029] link \\\"YAML\\\"\\nparagraph \\\"Note\\\"\\nparagraph \\\"This module’s encoders and decoders preserve input and output order by default. Order is only lost if the underlying containers are unordered.\\\"\\nheading \\\"Basic Usage\\\"\\nterm \\\"json.dump(obj, fp, *, skipkeys=False, ensure_ascii=True, check_circular=True, allow_nan=True, cls=None, indent=None, separators=None, default=None, sort_keys=False, **kw)\\\"\\ndefinition \\\"Serialize obj as a JSON formatted stream to fp (a .write()-supporting file-like object) using this Python-to-JSON conversion table. Note Unlike pickle and marshal, JSON is not a framed protocol, so tr\\\"\\nparagraph \\\"Serialize obj as a JSON formatted stream to fp (a .write()-supporting file-like object) using this Python-to-JSON conversion table.\\\"\\n[ax-61000030] link \\\"file-like object\\\"\\n[ax-61000031] link \\\"Python-to-JSON conversion table\\\"\\nparagraph \\\"Note\\\"\\nparagraph \\\"Unlike pickle and marshal, JSON is not a framed protocol, so trying to serialize multiple objects with repeated calls to dump() using the same fp will result in an invalid JSON file.\\\"\\n[ax-61000032] link \\\"pickle\\\"\\n[ax-61000033] link \\\"marshal\\\"\\nterm \\\"Parameters:\\\"\\ndefinition \\\"obj (object) – The Python object to be serialized. fp (file-like object) – The file-like object obj will be serialized to. The json module always produces str objects, not bytes objects, therefore fp.\\\"\\nlistitem \\\"obj (object) – The Python object to be serialized.\\\"\\nparagraph \\\"obj (object) – The Python object to be serialized.\\\"\\n[ax-61000034] link \\\"object\\\"\\nlistitem \\\"fp (file-like object) – The file-like object obj will be serialized to. The json module always produces str objects, not bytes objects, therefore fp.write() must support str input.\\\"\\nparagraph \\\"fp (file-like object) – The file-like object obj will be serialized to. The json module always produces str objects, not bytes objects, therefore fp.write() must support str input.\\\"\\n[ax-61000035] link \\\"file-like object\\\"\\n[ax-61000036] link \\\"str\\\"\\n[ax-61000037] link \\\"bytes\\\"\\nlistitem \\\"skipkeys (bool) – If True, keys that are not of a basic type (str, int, float, bool, None) will be skipped instead of raising a TypeError. Default False.\\\"\\nparagraph \\\"skipkeys (bool) – If True, keys that are not of a basic type (str, int, float, bool, None) will be skipped instead of raising a TypeError. Default False.\\\"\\n[ax-61000038] link \\\"bool\\\"\\n[ax-61000039] link \\\"str\\\"\\n[ax-61000040] link \\\"int\\\"\\n[ax-61000041] link \\\"float\\\"\\n[ax-61000042] link \\\"TypeError\\\"\\nlistitem \\\"ensure_ascii (bool) – If True (the default), the output is guaranteed to have all incoming non-ASCII and non-printable characters escaped. If False, all characters will be outputted as-is, except for \\\"\\nparagraph \\\"ensure_ascii (bool) – If True (the default), the output is guaranteed to have all incoming non-ASCII and non-printable characters escaped. If False, all characters will be outputted as-is, except for \\\"\\n[ax-61000043] link \\\"bool\\\"\\nlistitem \\\"check_circular (bool) – If False, the circular reference check for container types is skipped and a circular reference will result in a RecursionError (or worse). Default True.\\\"\\nparagraph \\\"check_circular (bool) – If False, the circular reference check for container types is skipped and a circular reference will result in a RecursionError (or worse). Default True.\\\"\\n[ax-61000044] link \\\"bool\\\"\\n[ax-61000045] link \\\"RecursionError\\\"\\nlistitem \\\"allow_nan (bool) – If False, serialization of out-of-range float values (nan, inf, -inf) will result in a ValueError, in strict compliance with the JSON specification. If True (the default), their Jav\\\"\\nparagraph \\\"allow_nan (bool) – If False, serialization of out-of-range float values (nan, inf, -inf) will result in a ValueError, in strict compliance with the JSON specification. If True (the default), their Jav\\\"\\n[ax-61000046] link \\\"bool\\\"\\n[ax-61000047] link \\\"float\\\"\\n[ax-61000048] link \\\"ValueError\\\"\\nlistitem \\\"cls (a JSONEncoder subclass) – If set, a custom JSON encoder with the default() method overridden, for serializing into custom datatypes. If None (the default), JSONEncoder is used.\\\"\\nparagraph \\\"cls (a JSONEncoder subclass) – If set, a custom JSON encoder with the default() method overridden, for serializing into custom datatypes. If None (the default), JSONEncoder is used.\\\"\\n[ax-61000049] link \\\"JSONEncoder\\\"\\n[ax-61000050] link \\\"default()\\\"\\nlistitem \\\"indent (int | str | None) – If a positive integer or string, JSON array elements and object members will be pretty-printed with that indent level. A positive integer indents that many spaces per level\\\"\\nparagraph \\\"indent (int | str | None) – If a positive integer or string, JSON array elements and object members will be pretty-printed with that indent level. A positive integer indents that many spaces per level\\\"\\n[ax-61000051] link \\\"int\\\"\\n[ax-61000052] link \\\"str\\\"\\n[ax-61000053] link \\\"None\\\"\\nlistitem \\\"separators (tuple | None) – A two-tuple: (item_separator, key_separator). If None (the default), separators defaults to (', ', ': ') if indent is None, and (',', ': ') otherwise. For the most compact \\\"\\nparagraph \\\"separators (tuple | None) – A two-tuple: (item_separator, key_separator). If None (the default), separators defaults to (', ', ': ') if indent is None, and (',', ': ') otherwise. For the most compact \\\"\\n[ax-61000054] link \\\"tuple\\\"\\n[ax-61000055] link \\\"None\\\"\\nlistitem \\\"default (callable | None) – A function that is called for objects that can’t otherwise be serialized. It should return a JSON encodable version of the object or raise a TypeError. If None (the default\\\"\\nparagraph \\\"default (callable | None) – A function that is called for objects that can’t otherwise be serialized. It should return a JSON encodable version of the object or raise a TypeError. If None (the default\\\"\\n[ax-61000056] link \\\"callable\\\"\\n[ax-61000057] link \\\"TypeError\\\"\\nlistitem \\\"sort_keys (bool) – If True, dictionaries will be outputted sorted by key. Default False.\\\"\\nparagraph \\\"sort_keys (bool) – If True, dictionaries will be outputted sorted by key. Default False.\\\"\\n[ax-61000058] link \\\"bool\\\"\\nparagraph \\\"Note\\\"\\nparagraph \\\"Keys in key/value pairs of JSON are always of the type str. When a dictionary is converted into JSON, all the keys of the dictionary are converted to strings. As a result of this, if a dictionary is c\\\"\\n[ax-61000059] link \\\"str\\\"\\nparagraph \\\"Changed in version 3.2: Allow strings for indent in addition to integers.\\\"\\nparagraph \\\"Changed in version 3.4: Use (',', ': ') as default if indent is not None.\\\"\\nparagraph \\\"Changed in version 3.6: All optional parameters are now keyword-only.\\\"\\n[ax-61000060] link \\\"keyword-only\\\"\\nterm \\\"json.dumps(obj, *, skipkeys=False, ensure_ascii=True, check_circular=True, allow_nan=True, cls=None, indent=None, separators=None, default=None, sort_keys=False, **kw)\\\"\\ndefinition \\\"Serialize obj to a JSON formatted str using this conversion table. The arguments have the same meaning as in dump().\\\"\\nparagraph \\\"Serialize obj to a JSON formatted str using this conversion table. The arguments have the same meaning as in dump().\\\"\\n[ax-61000061] link \\\"str\\\"\\n[ax-61000062] link \\\"conversion table\\\"\\n[ax-61000063] link \\\"dump()\\\"\\nterm \\\"json.load(fp, *, cls=None, object_hook=None, parse_float=None, parse_int=None, parse_constant=None, object_pairs_hook=None, array_hook=None, **kw)\\\"\\ndefinition \\\"Deserialize fp to a Python object using the JSON-to-Python conversion table. Parameters: fp (file-like object) – A .read()-supporting text file or binary file containing the JSON document to be deseri\\\"\\nparagraph \\\"Deserialize fp to a Python object using the JSON-to-Python conversion table.\\\"\\n[ax-61000064] link \\\"JSON-to-Python conversion table\\\"\\nterm \\\"Parameters:\\\"\\ndefinition \\\"fp (file-like object) – A .read()-supporting text file or binary file containing the JSON document to be deserialized. cls (a JSONDecoder subclass) – If set, a custom JSON decoder. Additional keyword \\\"\\nlistitem \\\"fp (file-like object) – A .read()-supporting text file or binary file containing the JSON document to be deserialized.\\\"\\nparagraph \\\"fp (file-like object) – A .read()-supporting text file or binary file containing the JSON document to be deserialized.\\\"\\n[ax-61000065] link \\\"file-like object\\\"\\n[ax-61000066] link \\\"text file\\\"\\n[ax-61000067] link \\\"binary file\\\"\\nlistitem \\\"cls (a JSONDecoder subclass) – If set, a custom JSON decoder. Additional keyword arguments to load() will be passed to the constructor of cls. If None (the default), JSONDecoder is used.\\\"\\nparagraph \\\"cls (a JSONDecoder subclass) – If set, a custom JSON decoder. Additional keyword arguments to load() will be passed to the constructor of cls. If None (the default), JSONDecoder is used.\\\"\\n[ax-61000068] link \\\"JSONDecoder\\\"\\nlistitem \\\"object_hook (callable | None) – If set, a function that is called with the result of any JSON object literal decoded (a dict). The return value of this function will be used instead of the dict. This \\\"\\nparagraph \\\"object_hook (callable | None) – If set, a function that is called with the result of any JSON object literal decoded (a dict). The return value of this function will be used instead of the dict. This \\\"\\n[ax-61000069] link \\\"callable\\\"\\n[ax-61000070] link \\\"dict\\\"\\n[ax-61000071] link \\\"JSON-RPC\\\"\\nlistitem \\\"object_pairs_hook (callable | None) – If set, a function that is called with the result of any JSON object literal decoded with an ordered list of pairs. The return value of this function will be used\\\"\\nparagraph \\\"object_pairs_hook (callable | None) – If set, a function that is called with the result of any JSON object literal decoded with an ordered list of pairs. The return value of this function will be used\\\"\\n[ax-61000072] link \\\"callable\\\"\\n[ax-61000073] link \\\"dict\\\"\\nlistitem \\\"array_hook (callable | None) – If set, a function that is called with the result of any JSON array literal decoded as a Python list. The return value of this function will be used instead of the list.\\\"\\nparagraph \\\"array_hook (callable | None) – If set, a function that is called with the result of any JSON array literal decoded as a Python list. The return value of this function will be used instead of the list.\\\"\\n[ax-61000074] link \\\"callable\\\"\\n[ax-61000075] link \\\"list\\\"\\nlistitem \\\"parse_float (callable | None) – If set, a function that is called with the string of every JSON float to be decoded. If None (the default), it is equivalent to float(num_str). This can be used to pars\\\"\\nparagraph \\\"parse_float (callable | None) – If set, a function that is called with the string of every JSON float to be decoded. If None (the default), it is equivalent to float(num_str). This can be used to pars\\\"\\n[ax-61000076] link \\\"callable\\\"\\n[ax-61000077] link \\\"decimal.Decimal\\\"\\nlistitem \\\"parse_int (callable | None) – If set, a function that is called with the string of every JSON int to be decoded. If None (the default), it is equivalent to int(num_str). This can be used to parse JSON\\\"\\nparagraph \\\"parse_int (callable | None) – If set, a function that is called with the string of every JSON int to be decoded. If None (the default), it is equivalent to int(num_str). This can be used to parse JSON\\\"\\n[ax-61000078] link \\\"callable\\\"\\n[ax-61000079] link \\\"float\\\"\\nlistitem \\\"parse_constant (callable | None) – If set, a function that is called with one of the following strings: '-Infinity', 'Infinity', or 'NaN'. This can be used to raise an exception if invalid JSON number\\\"\\nparagraph \\\"parse_constant (callable | None) – If set, a function that is called with one of the following strings: '-Infinity', 'Infinity', or 'NaN'. This can be used to raise an exception if invalid JSON number\\\"\\n[ax-61000080] link \\\"callable\\\"\\nterm \\\"Raises:\\\"\\ndefinition \\\"JSONDecodeError – When the data being deserialized is not a valid JSON document. UnicodeDecodeError – When the data being deserialized does not contain UTF-8, UTF-16 or UTF-32 encoded data.\\\"\\nlistitem \\\"JSONDecodeError – When the data being deserialized is not a valid JSON document.\\\"\\nparagraph \\\"JSONDecodeError – When the data being deserialized is not a valid JSON document.\\\"\\n[ax-61000081] link \\\"JSONDecodeError\\\"\\nlistitem \\\"UnicodeDecodeError – When the data being deserialized does not contain UTF-8, UTF-16 or UTF-32 encoded data.\\\"\\nparagraph \\\"UnicodeDecodeError – When the data being deserialized does not contain UTF-8, UTF-16 or UTF-32 encoded data.\\\"\\n[ax-61000082] link \\\"UnicodeDecodeError\\\"\\nparagraph \\\"Changed in version 3.1:\\\"\\nlistitem \\\"Added the optional object_pairs_hook parameter.\\\"\\nparagraph \\\"Added the optional object_pairs_hook parameter.\\\"\\nlistitem \\\"parse_constant doesn’t get called on ‘null’, ‘true’, ‘false’ anymore.\\\"\\nparagraph \\\"parse_constant doesn’t get called on ‘null’, ‘true’, ‘false’ anymore.\\\"\\nparagraph \\\"Changed in version 3.6:\\\"\\nlistitem \\\"All optional parameters are now keyword-only.\\\"\\nparagraph \\\"All optional parameters are now keyword-only.\\\"\\n[ax-61000083] link \\\"keyword-only\\\"\\nlistitem \\\"fp can now be a binary file. The input encoding should be UTF-8, UTF-16 or UTF-32.\\\"\\nparagraph \\\"fp can now be a binary file. The input encoding should be UTF-8, UTF-16 or UTF-32.\\\"\\n[ax-61000084] link \\\"binary file\\\"\\nparagraph \\\"Changed in version 3.11: The default parse_int of int() now limits the maximum length of the integer string via the interpreter’s integer string conversion length limitation to help avoid denial of se\\\"\\n[ax-61000085] link \\\"int()\\\"\\n[ax-61000086] link \\\"integer string conversion length limitation\\\"\\nparagraph \\\"Changed in version 3.15: Added the optional array_hook parameter.\\\"\\nterm \\\"json.loads(s, *, cls=None, object_hook=None, parse_float=None, parse_int=None, parse_constant=None, object_pairs_hook=None, array_hook=None, **kw)\\\"\\ndefinition \\\"Identical to load(), but instead of a file-like object, deserialize s (a str, bytes or bytearray instance containing a JSON document) to a Python object using this conversion table. Changed in version\\\"\\nparagraph \\\"Identical to load(), but instead of a file-like object, deserialize s (a str, bytes or bytearray instance containing a JSON document) to a Python object using this conversion table.\\\"\\n[ax-61000087] link \\\"load()\\\"\\n[ax-61000088] link \\\"str\\\"\\n[ax-61000089] link \\\"bytes\\\"\\n[ax-61000090] link \\\"bytearray\\\"\\n[ax-61000091] link \\\"conversion table\\\"\\nparagraph \\\"Changed in version 3.6: s can now be of type bytes or bytearray. The input encoding should be UTF-8, UTF-16 or UTF-32.\\\"\\n[ax-61000092] link \\\"bytes\\\"\\n[ax-61000093] link \\\"bytearray\\\"\\nparagraph \\\"Changed in version 3.9: The keyword argument encoding has been removed.\\\"\\nheading \\\"Encoders and Decoders\\\"\\nterm \\\"class json.JSONDecoder(*, object_hook=None, parse_float=None, parse_int=None, parse_constant=None, strict=True, object_pairs_hook=None, array_hook=None)\\\"\\ndefinition \\\"Simple JSON decoder. Performs the following translations in decoding by default: JSON Python object dict array list string str number (int) int number (real) float true True false False null None It a\\\"\\nparagraph \\\"Simple JSON decoder.\\\"\\nparagraph \\\"Performs the following translations in decoding by default:\\\"\\ncolumnheader \\\"JSON\\\"\\nparagraph \\\"JSON\\\"\\ncolumnheader \\\"Python\\\"\\nparagraph \\\"Python\\\"\\ncell \\\"object\\\"\\nparagraph \\\"object\\\"\\ncell \\\"dict\\\"\\nparagraph \\\"dict\\\"\\ncell \\\"array\\\"\\nparagraph \\\"array\\\"\\ncell \\\"list\\\"\\nparagraph \\\"list\\\"\\ncell \\\"string\\\"\\nparagraph \\\"string\\\"\\ncell \\\"str\\\"\\nparagraph \\\"str\\\"\\ncell \\\"number (int)\\\"\\nparagraph \\\"number (int)\\\"\\ncell \\\"int\\\"\\nparagraph \\\"int\\\"\\ncell \\\"number (real)\\\"\\nparagraph \\\"number (real)\\\"\\ncell \\\"float\\\"\\nparagraph \\\"float\\\"\\ncell \\\"true\\\"\\nparagraph \\\"true\\\"\\ncell \\\"True\\\"\\nparagraph \\\"True\\\"\\ncell \\\"false\\\"\\nparagraph \\\"false\\\"\\ncell \\\"False\\\"\\nparagraph \\\"False\\\"\\ncell \\\"null\\\"\\nparagraph \\\"null\\\"\\ncell \\\"None\\\"\\nparagraph \\\"None\\\"\\nparagraph \\\"It also understands NaN, Infinity, and -Infinity as their corresponding float values, which is outside the JSON spec.\\\"\\nparagraph \\\"object_hook is an optional function that will be called with the result of every JSON object decoded and its return value will be used in place of the given dict. This can be used to provide custom de\\\"\\n[ax-61000094] link \\\"dict\\\"\\n[ax-61000095] link \\\"JSON-RPC\\\"\\nparagraph \\\"object_pairs_hook is an optional function that will be called with the result of every JSON object decoded with an ordered list of pairs. The return value of object_pairs_hook will be used instead of \\\"\\n[ax-61000096] link \\\"dict\\\"\\nparagraph \\\"Changed in version 3.1: Added support for object_pairs_hook.\\\"\\nparagraph \\\"array_hook is an optional function that will be called with the result of every JSON array decoded as a list. The return value of array_hook will be used instead of the list. This feature can be used \\\"\\n[ax-61000097] link \\\"list\\\"\\nparagraph \\\"Changed in version 3.15: Added support for array_hook.\\\"\\nparagraph \\\"parse_float is an optional function that will be called with the string of every JSON float to be decoded. By default, this is equivalent to float(num_str). This can be used to use another datatype or\\\"\\n[ax-61000098] link \\\"decimal.Decimal\\\"\\nparagraph \\\"parse_int is an optional function that will be called with the string of every JSON int to be decoded. By default, this is equivalent to int(num_str). This can be used to use another datatype or parse\\\"\\n[ax-61000099] link \\\"float\\\"\\nparagraph \\\"parse_constant is an optional function that will be called with one of the following strings: '-Infinity', 'Infinity', 'NaN'. This can be used to raise an exception if invalid JSON numbers are encount\\\"\\nparagraph \\\"If strict is false (True is the default), then control characters will be allowed inside strings. Control characters in this context are those with character codes in the 0–31 range, including '\\\\\\\\t' (t\\\"\\nparagraph \\\"If the data being deserialized is not a valid JSON document, a JSONDecodeError will be raised.\\\"\\n[ax-61000100] link \\\"JSONDecodeError\\\"\\nparagraph \\\"Changed in version 3.6: All parameters are now keyword-only.\\\"\\n[ax-61000101] link \\\"keyword-only\\\"\\nterm \\\"decode(s)\\\"\\ndefinition \\\"Return the Python representation of s (a str instance containing a JSON document). JSONDecodeError will be raised if the given JSON document is not valid.\\\"\\nparagraph \\\"Return the Python representation of s (a str instance containing a JSON document).\\\"\\n[ax-61000102] link \\\"str\\\"\\nparagraph \\\"JSONDecodeError will be raised if the given JSON document is not valid.\\\"\\n[ax-61000103] link \\\"JSONDecodeError\\\"\\nterm \\\"raw_decode(s)\\\"\\ndefinition \\\"Decode a JSON document from s (a str beginning with a JSON document) and return a 2-tuple of the Python representation and the index in s where the document ended. This can be used to decode a JSON do\\\"\\nparagraph \\\"Decode a JSON document from s (a str beginning with a JSON document) and return a 2-tuple of the Python representation and the index in s where the document ended.\\\"\\n[ax-61000104] link \\\"str\\\"\\nparagraph \\\"This can be used to decode a JSON document from a string that may have extraneous data at the end.\\\"\\nterm \\\"class json.JSONEncoder(*, skipkeys=False, ensure_ascii=True, check_circular=True, allow_nan=True, sort_keys=False, indent=None, separators=None, default=None)\\\"\\ndefinition \\\"Extensible JSON encoder for Python data structures. Supports the following objects and types by default: Python JSON dict, frozendict object list, tuple array str string int, float, int- & float-deriv\\\"\\nparagraph \\\"Extensible JSON encoder for Python data structures.\\\"\\nparagraph \\\"Supports the following objects and types by default:\\\"\\ncolumnheader \\\"Python\\\"\\nparagraph \\\"Python\\\"\\ncolumnheader \\\"JSON\\\"\\nparagraph \\\"JSON\\\"\\ncell \\\"dict, frozendict\\\"\\nparagraph \\\"dict, frozendict\\\"\\ncell \\\"object\\\"\\nparagraph \\\"object\\\"\\ncell \\\"list, tuple\\\"\\nparagraph \\\"list, tuple\\\"\\ncell \\\"array\\\"\\nparagraph \\\"array\\\"\\ncell \\\"str\\\"\\nparagraph \\\"str\\\"\\ncell \\\"string\\\"\\nparagraph \\\"string\\\"\\ncell \\\"int, float, int- & float-derived Enums\\\"\\nparagraph \\\"int, float, int- & float-derived Enums\\\"\\ncell \\\"number\\\"\\nparagraph \\\"number\\\"\\ncell \\\"True\\\"\\nparagraph \\\"True\\\"\\ncell \\\"true\\\"\\nparagraph \\\"true\\\"\\ncell \\\"False\\\"\\nparagraph \\\"False\\\"\\ncell \\\"false\\\"\\nparagraph \\\"false\\\"\\ncell \\\"None\\\"\\nparagraph \\\"None\\\"\\ncell \\\"null\\\"\\nparagraph \\\"null\\\"\\nparagraph \\\"Changed in version 3.4: Added support for int- and float-derived Enum classes.\\\"\\nparagraph \\\"Changed in version 3.15: Added support for frozendict.\\\"\\n[ax-61000105] link \\\"frozendict\\\"\\nparagraph \\\"To extend this to recognize other objects, subclass and implement a default() method with another method that returns a serializable object for o if possible, otherwise it should call the superclass i\\\"\\n[ax-61000106] link \\\"default()\\\"\\n[ax-61000107] link \\\"TypeError\\\"\\nparagraph \\\"If skipkeys is false (the default), a TypeError will be raised when trying to encode keys that are not str, int, float, bool or None. If skipkeys is true, such items are simply skipped.\\\"\\n[ax-61000108] link \\\"TypeError\\\"\\n[ax-61000109] link \\\"str\\\"\\n[ax-61000110] link \\\"int\\\"\\n[ax-61000111] link \\\"float\\\"\\n[ax-61000112] link \\\"bool\\\"\\nparagraph \\\"If ensure_ascii is true (the default), the output is guaranteed to have all incoming non-ASCII and non-printable characters escaped. If ensure_ascii is false, all characters will be output as-is, exce\\\"\\nparagraph \\\"If check_circular is true (the default), then lists, dicts, and custom encoded objects will be checked for circular references during encoding to prevent an infinite recursion (which would cause a Rec\\\"\\n[ax-61000113] link \\\"RecursionError\\\"\\nparagraph \\\"If allow_nan is true (the default), then NaN, Infinity, and -Infinity will be encoded as such. This behavior is not JSON specification compliant, but is consistent with most JavaScript based encoders \\\"\\n[ax-61000114] link \\\"ValueError\\\"\\nparagraph \\\"If sort_keys is true (default: False), then the output of dictionaries will be sorted by key; this is useful for regression tests to ensure that JSON serializations can be compared on a day-to-day bas\\\"\\nparagraph \\\"If indent is a non-negative integer or string, then JSON array elements and object members will be pretty-printed with that indent level. An indent level of 0, negative, or \\\\\\\"\\\\\\\" will only insert newline\\\"\\nparagraph \\\"Changed in version 3.2: Allow strings for indent in addition to integers.\\\"\\nparagraph \\\"If specified, separators should be an (item_separator, key_separator) tuple. The default is (', ', ': ') if indent is None and (',', ': ') otherwise. To get the most compact JSON representation, you s\\\"\\nparagraph \\\"Changed in version 3.4: Use (',', ': ') as default if indent is not None.\\\"\\nparagraph \\\"If specified, default should be a function that gets called for objects that can’t otherwise be serialized. It should return a JSON encodable version of the object or raise a TypeError. If not specifi\\\"\\n[ax-61000115] link \\\"TypeError\\\"\\nparagraph \\\"Changed in version 3.6: All parameters are now keyword-only.\\\"\\n[ax-61000116] link \\\"keyword-only\\\"\\nterm \\\"default(o)\\\"\\ndefinition \\\"Implement this method in a subclass such that it returns a serializable object for o, or calls the base implementation (to raise a TypeError). For example, to support arbitrary iterators, you could im\\\"\\nparagraph \\\"Implement this method in a subclass such that it returns a serializable object for o, or calls the base implementation (to raise a TypeError).\\\"\\n[ax-61000117] link \\\"TypeError\\\"\\nparagraph \\\"For example, to support arbitrary iterators, you could implement default() like this:\\\"\\ncode \\\"def default(self, o): try: iterable = iter(o) except TypeError: pass else: return list(iterable) # Let the base class default method raise the TypeError return super().default(o)\\\"\\nterm \\\"encode(o)\\\"\\ndefinition \\\"Return a JSON string representation of a Python data structure, o. For example: >>> json.JSONEncoder().encode({\\\\\\\"foo\\\\\\\": [\\\\\\\"bar\\\\\\\", \\\\\\\"baz\\\\\\\"]}) '{\\\\\\\"foo\\\\\\\": [\\\\\\\"bar\\\\\\\", \\\\\\\"baz\\\\\\\"]}'\\\"\\nparagraph \\\"Return a JSON string representation of a Python data structure, o. For example:\\\"\\ncode \\\">>> json.JSONEncoder().encode({\\\\\\\"foo\\\\\\\": [\\\\\\\"bar\\\\\\\", \\\\\\\"baz\\\\\\\"]}) '{\\\\\\\"foo\\\\\\\": [\\\\\\\"bar\\\\\\\", \\\\\\\"baz\\\\\\\"]}'\\\"\\nterm \\\"iterencode(o)\\\"\\ndefinition \\\"Encode the given object, o, and yield each string representation as available. For example: for chunk in json.JSONEncoder().iterencode(bigobject): mysocket.write(chunk)\\\"\\nparagraph \\\"Encode the given object, o, and yield each string representation as available. For example:\\\"\\ncode \\\"for chunk in json.JSONEncoder().iterencode(bigobject): mysocket.write(chunk)\\\"\\nheading \\\"Exceptions\\\"\\nterm \\\"exception json.JSONDecodeError(msg, doc, pos)\\\"\\ndefinition \\\"Subclass of ValueError with the following additional attributes: msg The unformatted error message. doc The JSON document being parsed. pos The start index of doc where parsing failed. lineno The line\\\"\\nparagraph \\\"Subclass of ValueError with the following additional attributes:\\\"\\n[ax-61000118] link \\\"ValueError\\\"\\nterm \\\"msg\\\"\\ndefinition \\\"The unformatted error message.\\\"\\nparagraph \\\"The unformatted error message.\\\"\\nterm \\\"doc\\\"\\ndefinition \\\"The JSON document being parsed.\\\"\\nparagraph \\\"The JSON document being parsed.\\\"\\nterm \\\"pos\\\"\\ndefinition \\\"The start index of doc where parsing failed.\\\"\\nparagraph \\\"The start index of doc where parsing failed.\\\"\\nterm \\\"lineno\\\"\\ndefinition \\\"The line corresponding to pos.\\\"\\nparagraph \\\"The line corresponding to pos.\\\"\\nterm \\\"colno\\\"\\ndefinition \\\"The column corresponding to pos.\\\"\\nparagraph \\\"The column corresponding to pos.\\\"\\nparagraph \\\"Added in version 3.5.\\\"\\nheading \\\"Standard Compliance and Interoperability\\\"\\nparagraph \\\"The JSON format is specified by RFC 7159 and by ECMA-404. This section details this module’s level of compliance with the RFC. For simplicity, JSONEncoder and JSONDecoder subclasses, and parameters ot\\\"\\n[ax-61000119] link \\\"RFC 7159\\\"\\n[ax-61000120] link \\\"ECMA-404\\\"\\n[ax-61000121] link \\\"JSONEncoder\\\"\\n[ax-61000122] link \\\"JSONDecoder\\\"\\nparagraph \\\"This module does not comply with the RFC in a strict fashion, implementing some extensions that are valid JavaScript but not valid JSON. In particular:\\\"\\nlistitem \\\"Infinite and NaN number values are accepted and output;\\\"\\nparagraph \\\"Infinite and NaN number values are accepted and output;\\\"\\nlistitem \\\"Repeated names within an object are accepted, and only the value of the last name-value pair is used.\\\"\\nparagraph \\\"Repeated names within an object are accepted, and only the value of the last name-value pair is used.\\\"\\nparagraph \\\"Since the RFC permits RFC-compliant parsers to accept input texts that are not RFC-compliant, this module’s deserializer is technically RFC-compliant under default settings.\\\"\\nheading \\\"Character Encodings\\\"\\nparagraph \\\"The RFC requires that JSON be represented using either UTF-8, UTF-16, or UTF-32, with UTF-8 being the recommended default for maximum interoperability.\\\"\\nparagraph \\\"As permitted, though not required, by the RFC, this module’s serializer sets ensure_ascii=True by default, thus escaping the output so that the resulting strings only contain printable ASCII character\\\"\",\"title\":\"json — JSON encoder and decoder — Python 3.15.2 documentation\",\"truncated\":true,\"url\":\"https://docs.python.org/3/library/json.html#json.loads\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\",\"5 controls/headings outside the selected region omitted.\",\"Continue with next_offset and revision to read this captured snapshot.\"]}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_13",
+          "type": "agent_message",
+          "text": "{\"answer\":\"`json.loads` raises `JSONDecodeError` for invalid JSON. Its `s` argument supports `str`, `bytes`, and `bytearray`.\",\"evidence\":[{\"url\":\"https://docs.python.org/3/library/json.html#json.loads\",\"quote\":\"JSONDecodeError – When the data being deserialized is not a valid JSON document.\"},{\"url\":\"https://docs.python.org/3/library/json.html#json.loads\",\"quote\":\"deserialize s (a str, bytes or bytearray instance containing a JSON document)\"}]}"
+        }
+      },
+      {
+        "type": "turn.completed",
+        "usage": {
+          "input_tokens": 268625,
+          "cached_input_tokens": 210816,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 1833,
+          "reasoning_output_tokens": 1100
+        }
+      }
+    ],
+    "parse_errors": 0,
+    "diagnostic": null,
+    "configuration": {
+      "model": "gpt-6-luna",
+      "effort": "high",
+      "sandbox": "read-only",
+      "shell_tool": false,
+      "web_search": "disabled",
+      "user_config_loaded": false,
+      "project_instructions_loaded": false,
+      "skills_catalog_max_tokens": 1,
+      "automatic_skill_instructions": false,
+      "fixture_tool_approval": "explicit approve",
+      "auth": "existing signed-in Codex host",
+      "mcp_transport": "stdio → private Unix socket → native runtime MCP client"
+    }
+  },
+  "actual_host_client_info": {
+    "name": "codex-mcp-client",
+    "title": "Codex",
+    "version": "0.166.0"
+  },
+  "engine": "zen",
+  "task": "python-json",
+  "round": 1,
+  "phase": 0,
+  "success": true,
+  "outcome": "passed",
+  "answer": {
+    "answer": "`json.loads` raises `JSONDecodeError` for invalid JSON. Its `s` argument supports `str`, `bytes`, and `bytearray`.",
+    "evidence": [
+      {
+        "url": "https://docs.python.org/3/library/json.html#json.loads",
+        "quote": "JSONDecodeError – When the data being deserialized is not a valid JSON document."
+      },
+      {
+        "url": "https://docs.python.org/3/library/json.html#json.loads",
+        "quote": "deserialize s (a str, bytes or bytearray instance containing a JSON document)"
+      }
+    ]
+  },
+  "expected": {
+    "error": "JSONDecodeError",
+    "inputs": [
+      "str",
+      "bytes",
+      "bytearray"
+    ]
+  },
+  "evaluation": {
+    "passed": true,
+    "facts": [
+      {
+        "pattern": "JSONDecodeError",
+        "passed": true
+      },
+      {
+        "pattern": "\\bstr\\b|string",
+        "passed": true
+      },
+      {
+        "pattern": "\\bbytes\\b",
+        "passed": true
+      },
+      {
+        "pattern": "\\bbytearray\\b",
+        "passed": true
+      }
+    ],
+    "evidence": [
+      {
+        "url": "https://docs.python.org/3/library/json.html#json.loads",
+        "quote": "JSONDecodeError – When the data being deserialized is not a valid JSON document.",
+        "source_matches": true,
+        "quote_observed": true
+      },
+      {
+        "url": "https://docs.python.org/3/library/json.html#json.loads",
+        "quote": "deserialize s (a str, bytes or bytearray instance containing a JSON document)",
+        "source_matches": true,
+        "quote_observed": true
+      }
+    ],
+    "forbidden_network_or_file_calls": 0
+  },
+  "preparation_ms": 102.63355899997987,
+  "host_elapsed_ms": 63528.636058999924,
+  "verification_ms": 5.90159699996002,
+  "task_elapsed_ms": 63540.288391000126,
+  "usage": {
+    "input_tokens": 268625,
+    "cached_input_tokens": 210816,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 1833,
+    "reasoning_output_tokens": 1100
+  },
+  "model_verified": null,
+  "host_error": null,
+  "tool_calls": 12,
+  "tool_failures": 1,
+  "tool_elapsed_ms": 496.68816700042225,
+  "response_bytes": 63819,
+  "response_characters": 63535,
+  "forbidden_host_calls": 0,
+  "reported_cost_usd": null,
+  "cost_usd": null,
+  "timed_out": false,
+  "trace_file": "zen-python-json-1.json",
+  "prompt": "Complete this read-only public website task using ONLY the browser MCP tools. You must inspect the live page; do not answer from memory. You choose your own observations, selectors and actions. Do not use HTTP/API clients, fetch, network replay, files, shell, other agents, or non-browser tools. Browser DOM evaluation is allowed for text extraction, but must not make network requests. Do not visit API endpoints. Do not sign in, create accounts, post messages, buy, or change account settings. Do not solve CAPTCHAs or bypass access challenges; report them. You may follow links, use site search and recover from errors. Stay on the task site. Maximum 30 browser calls. Verify all requested facts and finish with JSON {\"answer\":\"concise answer covering every requested fact\",\"evidence\":[{\"url\":\"source page URL\",\"quote\":\"a short exact supporting quote you observed in browser output\"}]}. Evidence quotes must be copied exactly from an observation. Do not claim success when blocked.\nYou control the owned Zen tab using Callisto in synthetic-dom input mode. Navigation starts loading; read a fresh snapshot before using refs. You may use run, batches, targeted observations, extraction and supported explicit waits. Do not enable or change input mode. Use the callisto tool with op and args. op=help returns one operation contract on demand.\nStart URL: https://docs.python.org/3/\nTask: Find the Python documentation for json.loads. Report the exception raised for invalid JSON and the supported types of its input argument s. Cite the relevant documentation page and a short supporting quote.",
+  "tools": [
+    {
+      "sequence": 1,
+      "name": "callisto",
+      "arguments": {
+        "op": "snapshot",
+        "args": {
+          "max_chars": 5000
+        }
+      },
+      "started_at": "2026-11-17T14:54:00.655Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"next_offset\":null,\"offset\":0,\"omitted\":0,\"order_changed\":false,\"revision\":\"ax-3945411652916964074:2\",\"scope\":{\"focus\":\"all\",\"include_text\":true,\"query\":null,\"retain_navigation\":true,\"selector\":null},\"text\":\"heading \\\"Ready for a public-site task\\\"\",\"title\":\"Browser benchmark start\",\"truncated\":false,\"url\":\"http://127.0.0.1:36683/\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\"]}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 3.873193000210449,
+      "response_bytes": 603
+    },
+    {
+      "sequence": 2,
+      "name": "callisto",
+      "arguments": {
+        "op": "navigate",
+        "args": {
+          "url": "https://docs.python.org/3/"
+        }
+      },
+      "started_at": "2026-11-17T14:54:03.476Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"feedback\":{\"frame_id\":0,\"needs_observation\":true,\"ready\":false,\"tab_id\":2,\"url\":\"https://docs.python.org/3/\"},\"navigationStarted\":true}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 6.790830000070855,
+      "response_bytes": 192
+    },
+    {
+      "sequence": 3,
+      "name": "callisto",
+      "arguments": {
+        "op": "snapshot",
+        "args": {
+          "max_chars": 6500
+        }
+      },
+      "started_at": "2026-11-17T14:54:06.298Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"next_offset\":148,\"offset\":0,\"omitted\":0,\"order_changed\":false,\"revision\":\"ax-8858001633477046865:1\",\"scope\":{\"focus\":\"all\",\"include_text\":true,\"query\":null,\"retain_navigation\":true,\"selector\":null},\"text\":\"[ax-59000001] navigation \\\"Related\\\"\\nlistitem \\\"index\\\"\\n[ax-59000002] link \\\"index\\\"\\nlistitem \\\"modules |\\\"\\n[ax-59000003] link \\\"modules\\\"\\nlistitem \\\"\\\"\\nlistitem \\\"Python »\\\"\\n[ax-59000004] link \\\"Python\\\"\\nlistitem \\\"\\\"\\n[ax-59000005] combobox \\\"Language\\\" options=[{\\\"label\\\":\\\"German | Deutsch\\\",\\\"value\\\":\\\"de\\\"},{\\\"label\\\":\\\"Greek | Ελληνικά\\\",\\\"value\\\":\\\"el\\\"},{\\\"label\\\":\\\"English\\\",\\\"value\\\":\\\"en\\\"},{\\\"label\\\":\\\"Spanish | español\\\",\\\"value\\\":\\\"es\\\"},{\\\"label\\\":\\\"Persian | فارسی\\\",\\\"value\\\":\\\"fa\\\"}] {options_truncated}\\n[ax-59000006] combobox \\\"Python version\\\" options=[{\\\"label\\\":\\\"dev (3.16)\\\",\\\"value\\\":\\\"3.16\\\"},{\\\"label\\\":\\\"3.15.2\\\",\\\"value\\\":\\\"3.15\\\"},{\\\"label\\\":\\\"3.14\\\",\\\"value\\\":\\\"3.14\\\"},{\\\"label\\\":\\\"3.13\\\",\\\"value\\\":\\\"3.13\\\"},{\\\"label\\\":\\\"3.12\\\",\\\"value\\\":\\\"3.12\\\"}] {options_truncated}\\nlistitem \\\"3.15.2 documentation »\\\"\\n[ax-59000007] link \\\"3.15.2 documentation\\\"\\nlistitem \\\"|\\\"\\n[ax-59000008] search \\\"\\\"\\n[ax-59000009] searchbox \\\"Quick search\\\"\\n[ax-59000010] button \\\"Go\\\"\\nlistitem \\\"Theme |\\\"\\n[ax-59000011] combobox \\\"Theme\\\" options=[{\\\"label\\\":\\\"Auto\\\",\\\"value\\\":\\\"auto\\\"},{\\\"label\\\":\\\"Light\\\",\\\"value\\\":\\\"light\\\"},{\\\"label\\\":\\\"Dark\\\",\\\"value\\\":\\\"dark\\\"}]\\n[ax-59000012] main \\\"Python 3.15.2 documentation Welcome! This is the official documentation for Python 3.15.2. Documentation sections: What's new in Python 3.15? Or all \\\\\\\"What's new\\\\\\\" documents since Python 2.0 Tutorial St\\\"\\nheading \\\"Python 3.15.2 documentation\\\"\\nparagraph \\\"Welcome! This is the official documentation for Python 3.15.2.\\\"\\nparagraph \\\"Documentation sections:\\\"\\nlistitem \\\"What's new in Python 3.15? Or all \\\\\\\"What's new\\\\\\\" documents since Python 2.0\\\"\\n[ax-59000013] link \\\"What's new in Python 3.15?\\\"\\n[ax-59000014] link \\\"all \\\\\\\"What's new\\\\\\\" documents since Python 2.0\\\"\\nlistitem \\\"Tutorial Start here: a tour of Python's syntax and features\\\"\\n[ax-59000015] link \\\"Tutorial\\\"\\nlistitem \\\"Built-ins reference Built-in functions and classes\\\"\\n[ax-59000016] link \\\"Built-ins reference\\\"\\nlistitem \\\"Library reference Standard library modules\\\"\\n[ax-59000017] link \\\"Library reference\\\"\\nlistitem \\\"Language reference Syntax and language elements\\\"\\n[ax-59000018] link \\\"Language reference\\\"\\nlistitem \\\"Python setup and usage How to install, configure, and use Python\\\"\\n[ax-59000019] link \\\"Python setup and usage\\\"\\nlistitem \\\"Python HOWTOs In-depth topic manuals\\\"\\n[ax-59000020] link \\\"Python HOWTOs\\\"\\nlistitem \\\"Installing Python modules Third-party modules and PyPI.org\\\"\\n[ax-59000021] link \\\"Installing Python modules\\\"\\nlistitem \\\"Extending and embedding For C/C++ programmers\\\"\\n[ax-59000022] link \\\"Extending and embedding\\\"\\nlistitem \\\"Python's C API C API reference\\\"\\n[ax-59000023] link \\\"Python's C API\\\"\\nlistitem \\\"FAQs Frequently asked questions (with answers!)\\\"\\n[ax-59000024] link \\\"FAQs\\\"\\nlistitem \\\"Deprecations Deprecated functionality\\\"\\n[ax-59000025] link \\\"Deprecations\\\"\\nparagraph \\\"Other resources:\\\"\\nlistitem \\\"Python developer's guide Information on contributing to Python\\\"\\n[ax-59000026] link \\\"Python developer's guide\\\"\\nlistitem \\\"Python Packaging User Guide Resources relating to Python packaging\\\"\\n[ax-59000027] link \\\"Python Packaging User Guide\\\"\\nlistitem \\\"Audio/visual talks Podcasts, talks, and video presentations from the community\\\"\\n[ax-59000028] link \\\"Audio/visual talks\\\"\\nlistitem \\\"Python Enhancement Proposals Index of proposed improvements to Python\\\"\\n[ax-59000029] link \\\"Python Enhancement Proposals\\\"\\nlistitem \\\"Static Typing with Python Information and guides about Python type safety\\\"\\n[ax-59000030] link \\\"Static Typing with Python\\\"\\nparagraph \\\"Indices, glossary, and search:\\\"\\nlistitem \\\"Global module index All modules and libraries\\\"\\n[ax-59000031] link \\\"Global module index\\\"\\nlistitem \\\"General index All functions, classes, and terms\\\"\\n[ax-59000032] link \\\"General index\\\"\\nlistitem \\\"Glossary Terms explained\\\"\\n[ax-59000033] link \\\"Glossary\\\"\\nlistitem \\\"Search page Search this documentation\\\"\\n[ax-59000034] link \\\"Search page\\\"\\nlistitem \\\"Complete table of contents All sections and subsections\\\"\\n[ax-59000035] link \\\"Complete table of contents\\\"\\nparagraph \\\"Project information:\\\"\\nlistitem \\\"Reporting issues\\\"\\n[ax-59000036] link \\\"Reporting issues\\\"\\nlistitem \\\"Contributing to docs\\\"\\n[ax-59000037] link \\\"Contributing to docs\\\"\\nlistitem \\\"Download the documentation\\\"\\n[ax-59000038] link \\\"Download the documentation\\\"\\nlistitem \\\"History and license of Python\\\"\\n[ax-59000039] link \\\"History and license of Python\\\"\\nlistitem \\\"Copyright\\\"\\n[ax-59000040] link \\\"Copyright\\\"\\nlistitem \\\"About the documentation\\\"\\n[ax-59000041] link \\\"About the documentation\\\"\\n[ax-59000042] navigation \\\"Main\\\"\\nheading \\\"Download\\\"\\nparagraph \\\"Download these documents\\\"\\n[ax-59000043] link \\\"Download these documents\\\"\\nheading \\\"Docs by version\\\"\\nlistitem \\\"Python 3.16 (in development)\\\"\\n[ax-59000044] link \\\"Python 3.16 (in development)\\\"\\nlistitem \\\"Python 3.15 (stable)\\\"\\n[ax-59000045] link \\\"Python 3.15 (stable)\\\"\\nlistitem \\\"Python 3.14 (stable)\\\"\\n[ax-59000046] link \\\"Python 3.14 (stable)\\\"\\nlistitem \\\"Python 3.13 (security-fixes)\\\"\\n[ax-59000047] link \\\"Python 3.13 (security-fixes)\\\"\\nlistitem \\\"Python 3.12 (security-fixes)\\\"\\n[ax-59000048] link \\\"Python 3.12 (security-fixes)\\\"\\nlistitem \\\"Python 3.11 (security-fixes)\\\"\\n[ax-59000049] link \\\"Python 3.11 (security-fixes)\\\"\\nlistitem \\\"Python 3.10 (EOL)\\\"\\n[ax-59000050] link \\\"Python 3.10 (EOL)\\\"\\nlistitem \\\"Python 3.9 (EOL)\\\"\\n[ax-59000051] link \\\"Python 3.9 (EOL)\\\"\\nlistitem \\\"Python 3.8 (EOL)\\\"\\n[ax-59000052] link \\\"Python 3.8 (EOL)\\\"\\nlistitem \\\"Python 3.7 (EOL)\\\"\\n[ax-59000053] link \\\"Python 3.7 (EOL)\\\"\\nlistitem \\\"Python 3.6 (EOL)\\\"\\n[ax-59000054] link \\\"Python 3.6 (EOL)\\\"\\nlistitem \\\"Python 3.5 (EOL)\\\"\\n[ax-59000055] link \\\"Python 3.5 (EOL)\\\"\\nlistitem \\\"Python 3.4 (EOL)\\\"\\n[ax-59000056] link \\\"Python 3.4 (EOL)\\\"\\nlistitem \\\"Python 3.3 (EOL)\\\"\\n[ax-59000057] link \\\"Python 3.3 (EOL)\\\"\\nlistitem \\\"Python 3.2 (EOL)\\\"\\n[ax-59000058] link \\\"Python 3.2 (EOL)\\\"\\nlistitem \\\"Python 3.1 (EOL)\\\"\\n[ax-59000059] link \\\"Python 3.1 (EOL)\\\"\\nlistitem \\\"Python 3.0 (EOL)\\\"\\n[ax-59000060] link \\\"Python 3.0 (EOL)\\\"\\nlistitem \\\"Python 2.7 (EOL)\\\"\\n[ax-59000061] link \\\"Python 2.7 (EOL)\\\"\\nlistitem \\\"Python 2.6 (EOL)\\\"\\n[ax-59000062] link \\\"Python 2.6 (EOL)\\\"\\nlistitem \\\"All versions\\\"\\n[ax-59000063] link \\\"All versions\\\"\\nheading \\\"Other resources\\\"\\nlistitem \\\"PEP Index\\\"\\n[ax-59000064] link \\\"PEP Index\\\"\\nlistitem \\\"Beginner's Guide\\\"\\n[ax-59000065] link \\\"Beginner's Guide\\\"\\nlistitem \\\"Book List\\\"\\n[ax-59000066] link \\\"Book List\\\"\\nlistitem \\\"Audio/Visual Talks\\\"\\n[ax-59000067] link \\\"Audio/Visual Talks\\\"\\nlistitem \\\"Python Developer’s Guide\\\"\\n[ax-59000068] link \\\"Python Developer’s Guide\\\"\\n[ax-59000069] navigation \\\"Related\\\"\\nlistitem \\\"index\\\"\\n[ax-59000070] link \\\"index\\\"\\nlistitem \\\"modules |\\\"\\n[ax-59000071] link \\\"modules\\\"\\nlistitem \\\"\\\"\\nlistitem \\\"Python »\\\"\\n[ax-59000072] link \\\"Python\\\"\\nlistitem \\\"\\\"\",\"title\":\"Python 3.15.2 documentation\",\"truncated\":true,\"url\":\"https://docs.python.org/3/\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\",\"Continue with next_offset and revision to read this captured snapshot.\"]}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 18.526238000020385,
+      "response_bytes": 8653
+    },
+    {
+      "sequence": 4,
+      "name": "callisto",
+      "arguments": {
+        "op": "help",
+        "args": {
+          "op": "run"
+        }
+      },
+      "started_at": "2026-11-17T14:54:11.140Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"args_schema\":{\"additionalProperties\":false,\"properties\":{\"snapshot\":{\"type\":\"boolean\"},\"steps\":{\"items\":{\"oneOf\":[{\"additionalProperties\":false,\"properties\":{\"action\":{\"enum\":[\"navigate\"]},\"url\":{}},\"required\":[\"url\",\"action\"],\"type\":\"object\"},{\"additionalProperties\":false,\"oneOf\":[{\"required\":[\"ref\"]},{\"required\":[\"role\",\"name\"]}],\"properties\":{\"action\":{\"enum\":[\"click\"]},\"name\":{},\"ref\":{},\"role\":{}},\"required\":[\"action\"],\"type\":\"object\"},{\"additionalProperties\":false,\"oneOf\":[{\"required\":[\"ref\"]},{\"required\":[\"role\",\"name\"]}],\"properties\":{\"action\":{\"enum\":[\"fill\"]},\"name\":{},\"ref\":{},\"role\":{},\"value\":{}},\"required\":[\"value\",\"action\"],\"type\":\"object\"},{\"additionalProperties\":false,\"oneOf\":[{\"required\":[\"ref\"]},{\"required\":[\"role\",\"name\"]}],\"properties\":{\"action\":{\"enum\":[\"submit\"]},\"name\":{},\"ref\":{},\"role\":{}},\"required\":[\"action\"],\"type\":\"object\"},{\"additionalProperties\":false,\"oneOf\":[{\"required\":[\"ref\"]},{\"required\":[\"role\",\"name\"]}],\"properties\":{\"action\":{\"enum\":[\"select\"]},\"name\":{},\"ref\":{},\"role\":{},\"value\":{}},\"required\":[\"value\",\"action\"],\"type\":\"object\"},{\"additionalProperties\":false,\"oneOf\":[{\"required\":[\"ref\"]},{\"required\":[\"role\",\"name\"]}],\"properties\":{\"action\":{\"enum\":[\"check\"]},\"checked\":{},\"name\":{},\"ref\":{},\"role\":{}},\"required\":[\"checked\",\"action\"],\"type\":\"object\"},{\"additionalProperties\":false,\"oneOf\":[{\"required\":[\"ref\"]},{\"required\":[\"role\",\"name\"]}],\"properties\":{\"action\":{\"enum\":[\"hover\"]},\"name\":{},\"ref\":{},\"role\":{}},\"required\":[\"action\"],\"type\":\"object\"},{\"additionalProperties\":false,\"properties\":{\"action\":{\"enum\":[\"press\"]},\"key\":{}},\"required\":[\"key\",\"action\"],\"type\":\"object\"},{\"additionalProperties\":false,\"properties\":{\"action\":{\"enum\":[\"scroll\"]},\"delta_x\":{},\"delta_y\":{}},\"required\":[\"delta_y\",\"action\"],\"type\":\"object\"},{\"additionalProperties\":false,\"properties\":{\"action\":{\"enum\":[\"wait\"]},\"ms\":{}},\"required\":[\"ms\",\"action\"],\"type\":\"object\"},{\"additionalProperties\":false,\"oneOf\":[{\"required\":[\"text\"]},{\"required\":[\"selector\"]}],\"properties\":{\"action\":{\"enum\":[\"wait_for\"]},\"selector\":{},\"state\":{},\"text\":{},\"timeout_ms\":{}},\"required\":[\"action\"],\"type\":\"object\"},{\"additionalProperties\":false,\"properties\":{\"action\":{\"enum\":[\"extract\"]},\"fields\":{},\"include_text\":{},\"limit\":{},\"paginate\":{},\"selector\":{}},\"required\":[\"selector\",\"fields\",\"action\"],\"type\":\"object\"},{\"additionalProperties\":false,\"properties\":{\"action\":{\"enum\":[\"drag\"]},\"ref\":{},\"target_ref\":{}},\"required\":[\"ref\",\"target_ref\",\"action\"],\"type\":\"object\"}],\"properties\":{\"action\":{\"enum\":[\"navigate\",\"click\",\"fill\",\"submit\",\"select\",\"check\",\"hover\",\"press\",\"scroll\",\"wait\",\"wait_for\",\"extract\",\"drag\"],\"type\":\"string\"},\"checked\":{\"type\":\"boolean\"},\"delta_x\":{\"default\":0,\"type\":\"number\"},\"delta_y\":{\"type\":\"number\"},\"fields\":{\"additionalProperties\":{\"anyOf\":[{\"type\":\"string\"},{\"properties\":{\"attribute\":{\"type\":\"string\"},\"selector\":{\"type\":\"string\"},\"type\":{\"enum\":[\"text\",\"number\"],\"type\":\"string\"}},\"type\":\"object\"}]},\"maxProperties\":20,\"minProperties\":1,\"type\":\"object\"},\"include_text\":{\"type\":\"boolean\"},\"key\":{\"maxLength\":40,\"minLength\":1,\"type\":\"string\"},\"limit\":{\"maximum\":1000,\"minimum\":1,\"type\":\"integer\"},\"ms\":{\"maximum\":5000,\"minimum\":1,\"type\":\"integer\"},\"name\":{\"maxLength\":500,\"type\":\"string\"},\"paginate\":{\"properties\":{\"max_pages\":{\"maximum\":25,\"minimum\":1,\"type\":\"integer\"},\"next\":{\"maxLength\":500,\"minLength\":1,\"type\":\"string\"}},\"required\":[\"next\"],\"type\":\"object\"},\"ref\":{\"maxLength\":40,\"pattern\":\"^ax-[0-9]+$\",\"type\":\"string\"},\"role\":{\"maxLength\":100,\"minLength\":1,\"type\":\"string\"},\"selector\":{\"maxLength\":500,\"minLength\":1,\"type\":\"string\"},\"state\":{\"enum\":[\"visible\",\"hidden\",\"attached\",\"detached\"],\"type\":\"string\"},\"target_ref\":{\"maxLength\":40,\"pattern\":\"^ax-[0-9]+$\",\"type\":\"string\"},\"text\":{\"maxLength\":500,\"minLength\":1,\"type\":\"string\"},\"timeout_ms\":{\"maximum\":20000,\"minimum\":100,\"type\":\"integer\"},\"url\":{\"maxLength\":8192,\"type\":\"string\"},\"value\":{\"maxLength\":100000,\"type\":\"string\"}},\"required\":[\"action\"],\"type\":\"object\"},\"maxItems\":40,\"minItems\":1,\"type\":\"array\"}},\"required\":[\"steps\"],\"type\":\"object\"},\"description\":\"Execute 1–40 steps using the same actions and fields as standalone tools. All steps are validated before dispatch. Returns compact final page feedback, the last extraction and an optional snapshot. Stops on failure; earlier actions are not rolled back. Never replay uncertain writes.\",\"op\":\"run\"}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 1.3625580000225455,
+      "response_bytes": 5161
+    },
+    {
+      "sequence": 5,
+      "name": "callisto",
+      "arguments": {
+        "op": "run",
+        "args": {
+          "steps": [
+            {
+              "action": "fill",
+              "ref": "ax-59000009",
+              "value": "json.loads"
+            },
+            {
+              "action": "submit",
+              "ref": "ax-59000009"
+            }
+          ],
+          "snapshot": true
+        }
+      },
+      "started_at": "2026-11-17T14:54:15.032Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"completed\":2,\"elapsed_ms\":265,\"feedback\":{\"document_revision\":\"ax-4589642215374900404\",\"dom_version\":4,\"navigationStarted\":true,\"needs_observation\":true,\"title\":\"Search — Python 3.15.2 documentation\",\"url\":\"https://docs.python.org/3/search.html?q=json.loads\"},\"snapshot\":{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"next_offset\":null,\"offset\":0,\"omitted\":0,\"order_changed\":false,\"revision\":\"ax-4589642215374900404:1\",\"scope\":{\"focus\":\"all\",\"include_text\":true,\"query\":null,\"retain_navigation\":true,\"selector\":null},\"text\":\"[ax-60000001] navigation \\\"Related\\\"\\nlistitem \\\"index\\\"\\n[ax-60000002] link \\\"index\\\"\\nlistitem \\\"modules |\\\"\\n[ax-60000003] link \\\"modules\\\"\\nlistitem \\\"\\\"\\nlistitem \\\"Python »\\\"\\n[ax-60000004] link \\\"Python\\\"\\nlistitem \\\"\\\"\\n[ax-60000005] combobox \\\"Language\\\" options=[{\\\"label\\\":\\\"German | Deutsch\\\",\\\"value\\\":\\\"de\\\"},{\\\"label\\\":\\\"Greek | Ελληνικά\\\",\\\"value\\\":\\\"el\\\"},{\\\"label\\\":\\\"English\\\",\\\"value\\\":\\\"en\\\"},{\\\"label\\\":\\\"Spanish | español\\\",\\\"value\\\":\\\"es\\\"},{\\\"label\\\":\\\"Persian | فارسی\\\",\\\"value\\\":\\\"fa\\\"}] {options_truncated}\\n[ax-60000006] combobox \\\"Python version\\\" options=[{\\\"label\\\":\\\"dev (3.16)\\\",\\\"value\\\":\\\"3.16\\\"},{\\\"label\\\":\\\"3.15.2\\\",\\\"value\\\":\\\"3.15\\\"},{\\\"label\\\":\\\"3.14\\\",\\\"value\\\":\\\"3.14\\\"},{\\\"label\\\":\\\"3.13\\\",\\\"value\\\":\\\"3.13\\\"},{\\\"label\\\":\\\"3.12\\\",\\\"value\\\":\\\"3.12\\\"}] {options_truncated}\\nlistitem \\\"3.15.2 documentation »\\\"\\n[ax-60000007] link \\\"3.15.2 documentation\\\"\\nlistitem \\\"Search\\\"\\n[ax-60000008] link \\\"Search\\\"\\nlistitem \\\"Theme |\\\"\\n[ax-60000009] combobox \\\"Theme\\\" options=[{\\\"label\\\":\\\"Auto\\\",\\\"value\\\":\\\"auto\\\"},{\\\"label\\\":\\\"Light\\\",\\\"value\\\":\\\"light\\\"},{\\\"label\\\":\\\"Dark\\\",\\\"value\\\":\\\"dark\\\"}]\\n[ax-60000010] main \\\"Search Searching for multiple words only shows matches that contain all words. Searching json.loads (Python function, in json — JSON encoder and decoder) Input and output json — JSON encoder and decod\\\"\\nheading \\\"Search\\\"\\nparagraph \\\"Searching for multiple words only shows matches that contain all words.\\\"\\n[ax-60000011] textbox \\\"Search\\\" =json.loads\\n[ax-60000012] button \\\"search\\\"\\nheading \\\"Searching\\\"\\n[ax-60000013] list \\\"json.loads (Python function, in json — JSON encoder and decoder) Input and output json — JSON encoder and decoder pickle — Python object serialization What’s New in Python 2.6\\\"\\nlistitem \\\"json.loads (Python function, in json — JSON encoder and decoder)\\\"\\n[ax-60000014] link \\\"json.loads\\\"\\nlistitem \\\"Input and output\\\"\\n[ax-60000015] link \\\"Input and output\\\"\\nlistitem \\\"json — JSON encoder and decoder\\\"\\n[ax-60000016] link \\\"json — JSON encoder and decoder\\\"\\nlistitem \\\"pickle — Python object serialization\\\"\\n[ax-60000017] link \\\"pickle — Python object serialization\\\"\\nlistitem \\\"What’s New in Python 2.6\\\"\\n[ax-60000018] link \\\"What’s New in Python 2.6\\\"\\n[ax-60000019] navigation \\\"Main\\\"\\n[ax-60000020] navigation \\\"Related\\\"\\nlistitem \\\"index\\\"\\n[ax-60000021] link \\\"index\\\"\\nlistitem \\\"modules |\\\"\\n[ax-60000022] link \\\"modules\\\"\\nlistitem \\\"\\\"\\nlistitem \\\"Python »\\\"\\n[ax-60000023] link \\\"Python\\\"\\nlistitem \\\"\\\"\\n[ax-60000024] combobox \\\"Language\\\" options=[{\\\"label\\\":\\\"German | Deutsch\\\",\\\"value\\\":\\\"de\\\"},{\\\"label\\\":\\\"Greek | Ελληνικά\\\",\\\"value\\\":\\\"el\\\"},{\\\"label\\\":\\\"English\\\",\\\"value\\\":\\\"en\\\"},{\\\"label\\\":\\\"Spanish | español\\\",\\\"value\\\":\\\"es\\\"},{\\\"label\\\":\\\"Persian | فارسی\\\",\\\"value\\\":\\\"fa\\\"}] {options_truncated}\\n[ax-60000025] combobox \\\"Python version\\\" options=[{\\\"label\\\":\\\"dev (3.16)\\\",\\\"value\\\":\\\"3.16\\\"},{\\\"label\\\":\\\"3.15.2\\\",\\\"value\\\":\\\"3.15\\\"},{\\\"label\\\":\\\"3.14\\\",\\\"value\\\":\\\"3.14\\\"},{\\\"label\\\":\\\"3.13\\\",\\\"value\\\":\\\"3.13\\\"},{\\\"label\\\":\\\"3.12\\\",\\\"value\\\":\\\"3.12\\\"}] {options_truncated}\\nlistitem \\\"3.15.2 documentation »\\\"\\n[ax-60000026] link \\\"3.15.2 documentation\\\"\\nlistitem \\\"Search\\\"\\n[ax-60000027] link \\\"Search\\\"\\nlistitem \\\"Theme |\\\"\\n[ax-60000028] combobox \\\"Theme\\\" options=[{\\\"label\\\":\\\"Auto\\\",\\\"value\\\":\\\"auto\\\"},{\\\"label\\\":\\\"Light\\\",\\\"value\\\":\\\"light\\\"},{\\\"label\\\":\\\"Dark\\\",\\\"value\\\":\\\"dark\\\"}]\\ntext \\\"© 2001 Python Software Foundation. This page is licensed under the Python Software Foundation License Version 2. Examples, recipes, and other code in the documentation are additionally licensed under \\\"\\n[ax-60000029] link \\\"Copyright\\\"\\n[ax-60000030] link \\\"History and License\\\"\\n[ax-60000031] link \\\"Please donate.\\\"\\n[ax-60000032] link \\\"Found a bug\\\"\\n[ax-60000033] link \\\"Sphinx\\\"\",\"title\":\"Search — Python 3.15.2 documentation\",\"truncated\":false,\"url\":\"https://docs.python.org/3/search.html?q=json.loads\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\"]}}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 274.36054300004616,
+      "response_bytes": 5495
+    },
+    {
+      "sequence": 6,
+      "name": "callisto",
+      "arguments": {
+        "op": "click",
+        "args": {
+          "ref": "ax-60000014"
+        }
+      },
+      "started_at": "2026-11-17T14:54:17.283Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"completed\":true,\"feedback\":{\"document_revision\":\"ax-4589642215374900404\",\"dom_version\":61,\"frame_id\":0,\"needs_observation\":true,\"ready\":true,\"tab_id\":2,\"title\":\"Search — Python 3.15.2 documentation\",\"url\":\"https://docs.python.org/3/search.html?q=json.loads\"}}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 27.984257000032812,
+      "response_bytes": 328
+    },
+    {
+      "sequence": 7,
+      "name": "callisto",
+      "arguments": {
+        "op": "snapshot",
+        "args": {
+          "max_chars": 4000
+        }
+      },
+      "started_at": "2026-11-17T14:54:23.194Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"next_offset\":58,\"offset\":0,\"omitted\":0,\"order_changed\":false,\"revision\":\"ax-1086907296556532761:1\",\"scope\":{\"focus\":\"all\",\"include_text\":true,\"query\":null,\"retain_navigation\":true,\"selector\":null},\"text\":\"[ax-61000001] navigation \\\"Related\\\"\\nlistitem \\\"index\\\"\\n[ax-61000002] link \\\"index\\\"\\nlistitem \\\"modules |\\\"\\n[ax-61000003] link \\\"modules\\\"\\nlistitem \\\"next |\\\"\\n[ax-61000004] link \\\"next\\\"\\nlistitem \\\"previous |\\\"\\n[ax-61000005] link \\\"previous\\\"\\nlistitem \\\"\\\"\\nlistitem \\\"Python »\\\"\\n[ax-61000006] link \\\"Python\\\"\\nlistitem \\\"\\\"\\n[ax-61000007] combobox \\\"Language\\\" options=[{\\\"label\\\":\\\"German | Deutsch\\\",\\\"value\\\":\\\"de\\\"},{\\\"label\\\":\\\"Greek | Ελληνικά\\\",\\\"value\\\":\\\"el\\\"},{\\\"label\\\":\\\"English\\\",\\\"value\\\":\\\"en\\\"},{\\\"label\\\":\\\"Spanish | español\\\",\\\"value\\\":\\\"es\\\"},{\\\"label\\\":\\\"Persian | فارسی\\\",\\\"value\\\":\\\"fa\\\"}] {options_truncated}\\n[ax-61000008] combobox \\\"Python version\\\" options=[{\\\"label\\\":\\\"dev (3.16)\\\",\\\"value\\\":\\\"3.16\\\"},{\\\"label\\\":\\\"3.15.2\\\",\\\"value\\\":\\\"3.15\\\"},{\\\"label\\\":\\\"3.14\\\",\\\"value\\\":\\\"3.14\\\"},{\\\"label\\\":\\\"3.13\\\",\\\"value\\\":\\\"3.13\\\"},{\\\"label\\\":\\\"3.12\\\",\\\"value\\\":\\\"3.12\\\"}] {options_truncated}\\nlistitem \\\"3.15.2 documentation »\\\"\\n[ax-61000009] link \\\"3.15.2 documentation\\\"\\nlistitem \\\"The Python standard library »\\\"\\n[ax-61000010] link \\\"The Python standard library\\\"\\nlistitem \\\"Internet Data Handling »\\\"\\n[ax-61000011] link \\\"Internet Data Handling\\\"\\nlistitem \\\"json — JSON encoder and decoder\\\"\\n[ax-61000012] link \\\"json — JSON encoder and decoder\\\"\\nlistitem \\\"|\\\"\\n[ax-61000013] search \\\"\\\"\\n[ax-61000014] searchbox \\\"Quick search\\\"\\n[ax-61000015] button \\\"Go\\\"\\nlistitem \\\"Theme |\\\"\\n[ax-61000016] combobox \\\"Theme\\\" options=[{\\\"label\\\":\\\"Auto\\\",\\\"value\\\":\\\"auto\\\"},{\\\"label\\\":\\\"Light\\\",\\\"value\\\":\\\"light\\\"},{\\\"label\\\":\\\"Dark\\\",\\\"value\\\":\\\"dark\\\"}]\\n[ax-61000017] main \\\"json — JSON encoder and decoder Source code: Lib/json/__init__.py JSON (JavaScript Object Notation), specified by RFC 7159 (which obsoletes RFC 4627) and by ECMA-404, is a lightweight data interchange\\\"\\nheading \\\"json — JSON encoder and decoder\\\"\\nparagraph \\\"Source code: Lib/json/__init__.py\\\"\\n[ax-61000018] link \\\"Lib/json/__init__.py\\\"\\nparagraph \\\"JSON (JavaScript Object Notation), specified by RFC 7159 (which obsoletes RFC 4627) and by ECMA-404, is a lightweight data interchange format inspired by JavaScript object literal syntax (although it \\\"\\n[ax-61000019] link \\\"JSON (JavaScript Object Notation)\\\"\\n[ax-61000020] link \\\"RFC 7159\\\"\\n[ax-61000021] link \\\"RFC 4627\\\"\\n[ax-61000022] link \\\"ECMA-404\\\"\\n[ax-61000023] link \\\"JavaScript\\\"\\n[ax-61000024] doc-noteref \\\"[1]\\\"\\nparagraph \\\"Note\\\"\\nparagraph \\\"The term “object” in the context of JSON processing in Python can be ambiguous. All values in Python are objects. In JSON, an object refers to any data wrapped in curly braces, similar to a Python dic\\\"\\nparagraph \\\"Warning\\\"\\nparagraph \\\"Be cautious when parsing JSON data from untrusted sources. A malicious JSON string may cause the decoder to consume considerable CPU and memory resources. Limiting the size of data to be parsed is rec\\\"\\nparagraph \\\"This module exposes an API familiar to users of the standard library marshal and pickle modules.\\\"\\n[ax-61000025] link \\\"marshal\\\"\\n[ax-61000026] link \\\"pickle\\\"\\nparagraph \\\"Encoding basic Python object hierarchies:\\\"\\ncode \\\">>> import json >>> json.dumps(['foo', {'bar': ('baz', None, 1.0, 2)}]) '[\\\\\\\"foo\\\\\\\", {\\\\\\\"bar\\\\\\\": [\\\\\\\"baz\\\\\\\", null, 1.0, 2]}]' >>> print(json.dumps(\\\\\\\"\\\\\\\\\\\\\\\"foo\\\\\\\\bar\\\\\\\")) \\\\\\\"\\\\\\\\\\\\\\\"foo\\\\\\\\bar\\\\\\\" >>> print(json.dumps('\\\\\\\\u1234')) \\\\\\\"\\\\\\\\u1234\\\"\\nparagraph \\\"Compact encoding:\\\"\\ncode \\\">>> import json >>> json.dumps([1, 2, 3, {'4': 5, '6': 7}], separators=(',', ':')) '[1,2,3,{\\\\\\\"4\\\\\\\":5,\\\\\\\"6\\\\\\\":7}]'\\\"\\nparagraph \\\"Pretty printing:\\\"\\ncode \\\">>> import json >>> print(json.dumps({'6': 7, '4': 5}, sort_keys=True, indent=4)) { \\\\\\\"4\\\\\\\": 5, \\\\\\\"6\\\\\\\": 7 }\\\"\\nparagraph \\\"Customizing JSON object encoding:\\\"\\ncode \\\">>> import json >>> def custom_json(obj): ... if isinstance(obj, complex): ... return {'__complex__': True, 'real': obj.real, 'imag': obj.imag} ... raise TypeError(f'Cannot serialize object of {type(o\\\"\\nparagraph \\\"Decoding JSON:\\\"\\ncode \\\">>> import json >>> json.loads('[\\\\\\\"foo\\\\\\\", {\\\\\\\"bar\\\\\\\":[\\\\\\\"baz\\\\\\\", null, 1.0, 2]}]') ['foo', {'bar': ['baz', None, 1.0, 2]}] >>> json.loads('\\\\\\\"\\\\\\\\\\\\\\\\\\\\\\\"foo\\\\\\\\\\\\\\\\bar\\\\\\\"') '\\\\\\\"foo\\\\\\\\x08ar' >>> from io import StringIO >>> io = Strin\\\"\\nparagraph \\\"Customizing JSON object decoding:\\\"\",\"title\":\"json — JSON encoder and decoder — Python 3.15.2 documentation\",\"truncated\":true,\"url\":\"https://docs.python.org/3/library/json.html#json.loads\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\",\"Continue with next_offset and revision to read this captured snapshot.\"]}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 61.20255100005306,
+      "response_bytes": 5684
+    },
+    {
+      "sequence": 8,
+      "name": "callisto",
+      "arguments": {
+        "op": "help",
+        "args": {
+          "op": "extract"
+        }
+      },
+      "started_at": "2026-11-17T14:54:28.530Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"args_schema\":{\"additionalProperties\":false,\"properties\":{\"fields\":{\"additionalProperties\":{\"anyOf\":[{\"type\":\"string\"},{\"properties\":{\"attribute\":{\"type\":\"string\"},\"selector\":{\"type\":\"string\"},\"type\":{\"enum\":[\"text\",\"number\"],\"type\":\"string\"}},\"type\":\"object\"}]},\"maxProperties\":20,\"minProperties\":1,\"type\":\"object\"},\"include_text\":{\"type\":\"boolean\"},\"limit\":{\"maximum\":1000,\"minimum\":1,\"type\":\"integer\"},\"paginate\":{\"properties\":{\"max_pages\":{\"maximum\":25,\"minimum\":1,\"type\":\"integer\"},\"next\":{\"maxLength\":500,\"minLength\":1,\"type\":\"string\"}},\"required\":[\"next\"],\"type\":\"object\"},\"selector\":{\"maxLength\":500,\"minLength\":1,\"type\":\"string\"}},\"required\":[\"selector\",\"fields\"],\"type\":\"object\"},\"description\":\"Read structured rows from the shared page using CSS selectors: a row selector plus a field map. Optionally follow a next-page control and merge pages. Returns typed rows, not a snapshot, so counting and aggregation need one call.\",\"op\":\"extract\"}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 0.7777639999985695,
+      "response_bytes": 1121
+    },
+    {
+      "sequence": 9,
+      "name": "callisto",
+      "arguments": {
+        "op": "help",
+        "args": {
+          "op": "snapshot"
+        }
+      },
+      "started_at": "2026-11-17T14:54:31.850Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"args_schema\":{\"additionalProperties\":false,\"properties\":{\"diff\":{\"default\":false,\"type\":\"boolean\"},\"focus\":{\"default\":\"all\",\"enum\":[\"all\",\"main\",\"modal\",\"auto\"],\"type\":\"string\"},\"include_text\":{\"default\":true,\"type\":\"boolean\"},\"max_chars\":{\"maximum\":30000,\"minimum\":1000,\"type\":\"integer\"},\"offset\":{\"maximum\":10000,\"minimum\":0,\"type\":\"integer\"},\"query\":{\"maxLength\":200,\"minLength\":1,\"type\":\"string\"},\"retain_navigation\":{\"default\":true,\"type\":\"boolean\"},\"revision\":{\"type\":\"string\"},\"selector\":{\"maxLength\":500,\"minLength\":1,\"type\":\"string\"}},\"type\":\"object\"},\"description\":\"Inspect the selected tab. In Full browser control mode, the active tab is adopted automatically when none is selected; otherwise share a tab or call browser tab_select first. Use max_chars to bound output and offset=next_offset to page through truncated controls. Refs belong to the latest snapshot. This experimental DOM-derived snapshot can omit content and frames. Use focus=auto/main/modal to prioritize a region while retaining navigation. Scoped diff baselines are independent. offset is a line index; use next_offset.\",\"op\":\"snapshot\"}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 0.7402739999815822,
+      "response_bytes": 1267
+    },
+    {
+      "sequence": 10,
+      "name": "callisto",
+      "arguments": {
+        "op": "snapshot",
+        "args": {
+          "selector": "[id=\"json.loads\"]",
+          "max_chars": 8000
+        }
+      },
+      "started_at": "2026-11-17T14:54:36.548Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"next_offset\":null,\"offset\":0,\"omitted\":198,\"order_changed\":false,\"revision\":\"ax-1086907296556532761:2\",\"scope\":{\"focus\":\"all\",\"include_text\":true,\"query\":null,\"retain_navigation\":true,\"selector\":\"[id=\\\"json.loads\\\"]\"},\"text\":\"term \\\"json.loads(s, *, cls=None, object_hook=None, parse_float=None, parse_int=None, parse_constant=None, object_pairs_hook=None, array_hook=None, **kw)\\\"\",\"title\":\"json — JSON encoder and decoder — Python 3.15.2 documentation\",\"truncated\":false,\"url\":\"https://docs.python.org/3/library/json.html#json.loads\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\",\"198 controls/headings outside the selected region omitted.\"]}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 17.355326999910176,
+      "response_bytes": 879
+    },
+    {
+      "sequence": 11,
+      "name": "callisto",
+      "arguments": {
+        "op": "snapshot",
+        "args": {
+          "selector": "section:has([id=\"json.loads\"])",
+          "max_chars": 10000
+        }
+      },
+      "started_at": "2026-11-17T14:54:44.498Z",
+      "result": {
+        "content": [
+          {
+            "text": "Observation selector must match exactly one element, including open shadow roots.",
+            "type": "text"
+          }
+        ],
+        "isError": true
+      },
+      "failed": true,
+      "elapsed_ms": 5.736428000032902,
+      "response_bytes": 135
+    },
+    {
+      "sequence": 12,
+      "name": "callisto",
+      "arguments": {
+        "op": "snapshot",
+        "args": {
+          "focus": "main",
+          "max_chars": 30000
+        }
+      },
+      "started_at": "2026-11-17T14:54:48.360Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"next_offset\":372,\"offset\":0,\"omitted\":5,\"order_changed\":false,\"revision\":\"ax-1086907296556532761:3\",\"scope\":{\"focus\":\"main\",\"include_text\":true,\"query\":null,\"retain_navigation\":true,\"selector\":null},\"text\":\"[ax-61000017] main \\\"json — JSON encoder and decoder Source code: Lib/json/__init__.py JSON (JavaScript Object Notation), specified by RFC 7159 (which obsoletes RFC 4627) and by ECMA-404, is a lightweight data interchange\\\"\\nheading \\\"json — JSON encoder and decoder\\\"\\nparagraph \\\"Source code: Lib/json/__init__.py\\\"\\n[ax-61000018] link \\\"Lib/json/__init__.py\\\"\\nparagraph \\\"JSON (JavaScript Object Notation), specified by RFC 7159 (which obsoletes RFC 4627) and by ECMA-404, is a lightweight data interchange format inspired by JavaScript object literal syntax (although it \\\"\\n[ax-61000019] link \\\"JSON (JavaScript Object Notation)\\\"\\n[ax-61000020] link \\\"RFC 7159\\\"\\n[ax-61000021] link \\\"RFC 4627\\\"\\n[ax-61000022] link \\\"ECMA-404\\\"\\n[ax-61000023] link \\\"JavaScript\\\"\\n[ax-61000024] doc-noteref \\\"[1]\\\"\\nparagraph \\\"Note\\\"\\nparagraph \\\"The term “object” in the context of JSON processing in Python can be ambiguous. All values in Python are objects. In JSON, an object refers to any data wrapped in curly braces, similar to a Python dic\\\"\\nparagraph \\\"Warning\\\"\\nparagraph \\\"Be cautious when parsing JSON data from untrusted sources. A malicious JSON string may cause the decoder to consume considerable CPU and memory resources. Limiting the size of data to be parsed is rec\\\"\\nparagraph \\\"This module exposes an API familiar to users of the standard library marshal and pickle modules.\\\"\\n[ax-61000025] link \\\"marshal\\\"\\n[ax-61000026] link \\\"pickle\\\"\\nparagraph \\\"Encoding basic Python object hierarchies:\\\"\\ncode \\\">>> import json >>> json.dumps(['foo', {'bar': ('baz', None, 1.0, 2)}]) '[\\\\\\\"foo\\\\\\\", {\\\\\\\"bar\\\\\\\": [\\\\\\\"baz\\\\\\\", null, 1.0, 2]}]' >>> print(json.dumps(\\\\\\\"\\\\\\\\\\\\\\\"foo\\\\\\\\bar\\\\\\\")) \\\\\\\"\\\\\\\\\\\\\\\"foo\\\\\\\\bar\\\\\\\" >>> print(json.dumps('\\\\\\\\u1234')) \\\\\\\"\\\\\\\\u1234\\\"\\nparagraph \\\"Compact encoding:\\\"\\ncode \\\">>> import json >>> json.dumps([1, 2, 3, {'4': 5, '6': 7}], separators=(',', ':')) '[1,2,3,{\\\\\\\"4\\\\\\\":5,\\\\\\\"6\\\\\\\":7}]'\\\"\\nparagraph \\\"Pretty printing:\\\"\\ncode \\\">>> import json >>> print(json.dumps({'6': 7, '4': 5}, sort_keys=True, indent=4)) { \\\\\\\"4\\\\\\\": 5, \\\\\\\"6\\\\\\\": 7 }\\\"\\nparagraph \\\"Customizing JSON object encoding:\\\"\\ncode \\\">>> import json >>> def custom_json(obj): ... if isinstance(obj, complex): ... return {'__complex__': True, 'real': obj.real, 'imag': obj.imag} ... raise TypeError(f'Cannot serialize object of {type(o\\\"\\nparagraph \\\"Decoding JSON:\\\"\\ncode \\\">>> import json >>> json.loads('[\\\\\\\"foo\\\\\\\", {\\\\\\\"bar\\\\\\\":[\\\\\\\"baz\\\\\\\", null, 1.0, 2]}]') ['foo', {'bar': ['baz', None, 1.0, 2]}] >>> json.loads('\\\\\\\"\\\\\\\\\\\\\\\\\\\\\\\"foo\\\\\\\\\\\\\\\\bar\\\\\\\"') '\\\\\\\"foo\\\\\\\\x08ar' >>> from io import StringIO >>> io = Strin\\\"\\nparagraph \\\"Customizing JSON object decoding:\\\"\\ncode \\\">>> import json >>> def as_complex(dct): ... if '__complex__' in dct: ... return complex(dct['real'], dct['imag']) ... return dct ... >>> json.loads('{\\\\\\\"__complex__\\\\\\\": true, \\\\\\\"real\\\\\\\": 1, \\\\\\\"imag\\\\\\\": 2}', ... \\\"\\nparagraph \\\"Extending JSONEncoder:\\\"\\n[ax-61000027] link \\\"JSONEncoder\\\"\\ncode \\\">>> import json >>> class ComplexEncoder(json.JSONEncoder): ... def default(self, obj): ... if isinstance(obj, complex): ... return [obj.real, obj.imag] ... # Let the base class default method raise t\\\"\\nparagraph \\\"Using json from the shell to validate and pretty-print:\\\"\\ncode \\\"$ echo '{\\\\\\\"json\\\\\\\":\\\\\\\"obj\\\\\\\"}' | python -m json { \\\\\\\"json\\\\\\\": \\\\\\\"obj\\\\\\\" } $ echo '{1.2:3.4}' | python -m json Expecting property name enclosed in double quotes: line 1 column 2 (char 1)\\\"\\nparagraph \\\"See Command-line interface for detailed documentation.\\\"\\n[ax-61000028] link \\\"Command-line interface\\\"\\nparagraph \\\"Note\\\"\\nparagraph \\\"JSON is a subset of YAML 1.2. The JSON produced by this module’s default settings (in particular, the default separators value) is also a subset of YAML 1.0 and 1.1. This module can thus also be used \\\"\\n[ax-61000029] link \\\"YAML\\\"\\nparagraph \\\"Note\\\"\\nparagraph \\\"This module’s encoders and decoders preserve input and output order by default. Order is only lost if the underlying containers are unordered.\\\"\\nheading \\\"Basic Usage\\\"\\nterm \\\"json.dump(obj, fp, *, skipkeys=False, ensure_ascii=True, check_circular=True, allow_nan=True, cls=None, indent=None, separators=None, default=None, sort_keys=False, **kw)\\\"\\ndefinition \\\"Serialize obj as a JSON formatted stream to fp (a .write()-supporting file-like object) using this Python-to-JSON conversion table. Note Unlike pickle and marshal, JSON is not a framed protocol, so tr\\\"\\nparagraph \\\"Serialize obj as a JSON formatted stream to fp (a .write()-supporting file-like object) using this Python-to-JSON conversion table.\\\"\\n[ax-61000030] link \\\"file-like object\\\"\\n[ax-61000031] link \\\"Python-to-JSON conversion table\\\"\\nparagraph \\\"Note\\\"\\nparagraph \\\"Unlike pickle and marshal, JSON is not a framed protocol, so trying to serialize multiple objects with repeated calls to dump() using the same fp will result in an invalid JSON file.\\\"\\n[ax-61000032] link \\\"pickle\\\"\\n[ax-61000033] link \\\"marshal\\\"\\nterm \\\"Parameters:\\\"\\ndefinition \\\"obj (object) – The Python object to be serialized. fp (file-like object) – The file-like object obj will be serialized to. The json module always produces str objects, not bytes objects, therefore fp.\\\"\\nlistitem \\\"obj (object) – The Python object to be serialized.\\\"\\nparagraph \\\"obj (object) – The Python object to be serialized.\\\"\\n[ax-61000034] link \\\"object\\\"\\nlistitem \\\"fp (file-like object) – The file-like object obj will be serialized to. The json module always produces str objects, not bytes objects, therefore fp.write() must support str input.\\\"\\nparagraph \\\"fp (file-like object) – The file-like object obj will be serialized to. The json module always produces str objects, not bytes objects, therefore fp.write() must support str input.\\\"\\n[ax-61000035] link \\\"file-like object\\\"\\n[ax-61000036] link \\\"str\\\"\\n[ax-61000037] link \\\"bytes\\\"\\nlistitem \\\"skipkeys (bool) – If True, keys that are not of a basic type (str, int, float, bool, None) will be skipped instead of raising a TypeError. Default False.\\\"\\nparagraph \\\"skipkeys (bool) – If True, keys that are not of a basic type (str, int, float, bool, None) will be skipped instead of raising a TypeError. Default False.\\\"\\n[ax-61000038] link \\\"bool\\\"\\n[ax-61000039] link \\\"str\\\"\\n[ax-61000040] link \\\"int\\\"\\n[ax-61000041] link \\\"float\\\"\\n[ax-61000042] link \\\"TypeError\\\"\\nlistitem \\\"ensure_ascii (bool) – If True (the default), the output is guaranteed to have all incoming non-ASCII and non-printable characters escaped. If False, all characters will be outputted as-is, except for \\\"\\nparagraph \\\"ensure_ascii (bool) – If True (the default), the output is guaranteed to have all incoming non-ASCII and non-printable characters escaped. If False, all characters will be outputted as-is, except for \\\"\\n[ax-61000043] link \\\"bool\\\"\\nlistitem \\\"check_circular (bool) – If False, the circular reference check for container types is skipped and a circular reference will result in a RecursionError (or worse). Default True.\\\"\\nparagraph \\\"check_circular (bool) – If False, the circular reference check for container types is skipped and a circular reference will result in a RecursionError (or worse). Default True.\\\"\\n[ax-61000044] link \\\"bool\\\"\\n[ax-61000045] link \\\"RecursionError\\\"\\nlistitem \\\"allow_nan (bool) – If False, serialization of out-of-range float values (nan, inf, -inf) will result in a ValueError, in strict compliance with the JSON specification. If True (the default), their Jav\\\"\\nparagraph \\\"allow_nan (bool) – If False, serialization of out-of-range float values (nan, inf, -inf) will result in a ValueError, in strict compliance with the JSON specification. If True (the default), their Jav\\\"\\n[ax-61000046] link \\\"bool\\\"\\n[ax-61000047] link \\\"float\\\"\\n[ax-61000048] link \\\"ValueError\\\"\\nlistitem \\\"cls (a JSONEncoder subclass) – If set, a custom JSON encoder with the default() method overridden, for serializing into custom datatypes. If None (the default), JSONEncoder is used.\\\"\\nparagraph \\\"cls (a JSONEncoder subclass) – If set, a custom JSON encoder with the default() method overridden, for serializing into custom datatypes. If None (the default), JSONEncoder is used.\\\"\\n[ax-61000049] link \\\"JSONEncoder\\\"\\n[ax-61000050] link \\\"default()\\\"\\nlistitem \\\"indent (int | str | None) – If a positive integer or string, JSON array elements and object members will be pretty-printed with that indent level. A positive integer indents that many spaces per level\\\"\\nparagraph \\\"indent (int | str | None) – If a positive integer or string, JSON array elements and object members will be pretty-printed with that indent level. A positive integer indents that many spaces per level\\\"\\n[ax-61000051] link \\\"int\\\"\\n[ax-61000052] link \\\"str\\\"\\n[ax-61000053] link \\\"None\\\"\\nlistitem \\\"separators (tuple | None) – A two-tuple: (item_separator, key_separator). If None (the default), separators defaults to (', ', ': ') if indent is None, and (',', ': ') otherwise. For the most compact \\\"\\nparagraph \\\"separators (tuple | None) – A two-tuple: (item_separator, key_separator). If None (the default), separators defaults to (', ', ': ') if indent is None, and (',', ': ') otherwise. For the most compact \\\"\\n[ax-61000054] link \\\"tuple\\\"\\n[ax-61000055] link \\\"None\\\"\\nlistitem \\\"default (callable | None) – A function that is called for objects that can’t otherwise be serialized. It should return a JSON encodable version of the object or raise a TypeError. If None (the default\\\"\\nparagraph \\\"default (callable | None) – A function that is called for objects that can’t otherwise be serialized. It should return a JSON encodable version of the object or raise a TypeError. If None (the default\\\"\\n[ax-61000056] link \\\"callable\\\"\\n[ax-61000057] link \\\"TypeError\\\"\\nlistitem \\\"sort_keys (bool) – If True, dictionaries will be outputted sorted by key. Default False.\\\"\\nparagraph \\\"sort_keys (bool) – If True, dictionaries will be outputted sorted by key. Default False.\\\"\\n[ax-61000058] link \\\"bool\\\"\\nparagraph \\\"Note\\\"\\nparagraph \\\"Keys in key/value pairs of JSON are always of the type str. When a dictionary is converted into JSON, all the keys of the dictionary are converted to strings. As a result of this, if a dictionary is c\\\"\\n[ax-61000059] link \\\"str\\\"\\nparagraph \\\"Changed in version 3.2: Allow strings for indent in addition to integers.\\\"\\nparagraph \\\"Changed in version 3.4: Use (',', ': ') as default if indent is not None.\\\"\\nparagraph \\\"Changed in version 3.6: All optional parameters are now keyword-only.\\\"\\n[ax-61000060] link \\\"keyword-only\\\"\\nterm \\\"json.dumps(obj, *, skipkeys=False, ensure_ascii=True, check_circular=True, allow_nan=True, cls=None, indent=None, separators=None, default=None, sort_keys=False, **kw)\\\"\\ndefinition \\\"Serialize obj to a JSON formatted str using this conversion table. The arguments have the same meaning as in dump().\\\"\\nparagraph \\\"Serialize obj to a JSON formatted str using this conversion table. The arguments have the same meaning as in dump().\\\"\\n[ax-61000061] link \\\"str\\\"\\n[ax-61000062] link \\\"conversion table\\\"\\n[ax-61000063] link \\\"dump()\\\"\\nterm \\\"json.load(fp, *, cls=None, object_hook=None, parse_float=None, parse_int=None, parse_constant=None, object_pairs_hook=None, array_hook=None, **kw)\\\"\\ndefinition \\\"Deserialize fp to a Python object using the JSON-to-Python conversion table. Parameters: fp (file-like object) – A .read()-supporting text file or binary file containing the JSON document to be deseri\\\"\\nparagraph \\\"Deserialize fp to a Python object using the JSON-to-Python conversion table.\\\"\\n[ax-61000064] link \\\"JSON-to-Python conversion table\\\"\\nterm \\\"Parameters:\\\"\\ndefinition \\\"fp (file-like object) – A .read()-supporting text file or binary file containing the JSON document to be deserialized. cls (a JSONDecoder subclass) – If set, a custom JSON decoder. Additional keyword \\\"\\nlistitem \\\"fp (file-like object) – A .read()-supporting text file or binary file containing the JSON document to be deserialized.\\\"\\nparagraph \\\"fp (file-like object) – A .read()-supporting text file or binary file containing the JSON document to be deserialized.\\\"\\n[ax-61000065] link \\\"file-like object\\\"\\n[ax-61000066] link \\\"text file\\\"\\n[ax-61000067] link \\\"binary file\\\"\\nlistitem \\\"cls (a JSONDecoder subclass) – If set, a custom JSON decoder. Additional keyword arguments to load() will be passed to the constructor of cls. If None (the default), JSONDecoder is used.\\\"\\nparagraph \\\"cls (a JSONDecoder subclass) – If set, a custom JSON decoder. Additional keyword arguments to load() will be passed to the constructor of cls. If None (the default), JSONDecoder is used.\\\"\\n[ax-61000068] link \\\"JSONDecoder\\\"\\nlistitem \\\"object_hook (callable | None) – If set, a function that is called with the result of any JSON object literal decoded (a dict). The return value of this function will be used instead of the dict. This \\\"\\nparagraph \\\"object_hook (callable | None) – If set, a function that is called with the result of any JSON object literal decoded (a dict). The return value of this function will be used instead of the dict. This \\\"\\n[ax-61000069] link \\\"callable\\\"\\n[ax-61000070] link \\\"dict\\\"\\n[ax-61000071] link \\\"JSON-RPC\\\"\\nlistitem \\\"object_pairs_hook (callable | None) – If set, a function that is called with the result of any JSON object literal decoded with an ordered list of pairs. The return value of this function will be used\\\"\\nparagraph \\\"object_pairs_hook (callable | None) – If set, a function that is called with the result of any JSON object literal decoded with an ordered list of pairs. The return value of this function will be used\\\"\\n[ax-61000072] link \\\"callable\\\"\\n[ax-61000073] link \\\"dict\\\"\\nlistitem \\\"array_hook (callable | None) – If set, a function that is called with the result of any JSON array literal decoded as a Python list. The return value of this function will be used instead of the list.\\\"\\nparagraph \\\"array_hook (callable | None) – If set, a function that is called with the result of any JSON array literal decoded as a Python list. The return value of this function will be used instead of the list.\\\"\\n[ax-61000074] link \\\"callable\\\"\\n[ax-61000075] link \\\"list\\\"\\nlistitem \\\"parse_float (callable | None) – If set, a function that is called with the string of every JSON float to be decoded. If None (the default), it is equivalent to float(num_str). This can be used to pars\\\"\\nparagraph \\\"parse_float (callable | None) – If set, a function that is called with the string of every JSON float to be decoded. If None (the default), it is equivalent to float(num_str). This can be used to pars\\\"\\n[ax-61000076] link \\\"callable\\\"\\n[ax-61000077] link \\\"decimal.Decimal\\\"\\nlistitem \\\"parse_int (callable | None) – If set, a function that is called with the string of every JSON int to be decoded. If None (the default), it is equivalent to int(num_str). This can be used to parse JSON\\\"\\nparagraph \\\"parse_int (callable | None) – If set, a function that is called with the string of every JSON int to be decoded. If None (the default), it is equivalent to int(num_str). This can be used to parse JSON\\\"\\n[ax-61000078] link \\\"callable\\\"\\n[ax-61000079] link \\\"float\\\"\\nlistitem \\\"parse_constant (callable | None) – If set, a function that is called with one of the following strings: '-Infinity', 'Infinity', or 'NaN'. This can be used to raise an exception if invalid JSON number\\\"\\nparagraph \\\"parse_constant (callable | None) – If set, a function that is called with one of the following strings: '-Infinity', 'Infinity', or 'NaN'. This can be used to raise an exception if invalid JSON number\\\"\\n[ax-61000080] link \\\"callable\\\"\\nterm \\\"Raises:\\\"\\ndefinition \\\"JSONDecodeError – When the data being deserialized is not a valid JSON document. UnicodeDecodeError – When the data being deserialized does not contain UTF-8, UTF-16 or UTF-32 encoded data.\\\"\\nlistitem \\\"JSONDecodeError – When the data being deserialized is not a valid JSON document.\\\"\\nparagraph \\\"JSONDecodeError – When the data being deserialized is not a valid JSON document.\\\"\\n[ax-61000081] link \\\"JSONDecodeError\\\"\\nlistitem \\\"UnicodeDecodeError – When the data being deserialized does not contain UTF-8, UTF-16 or UTF-32 encoded data.\\\"\\nparagraph \\\"UnicodeDecodeError – When the data being deserialized does not contain UTF-8, UTF-16 or UTF-32 encoded data.\\\"\\n[ax-61000082] link \\\"UnicodeDecodeError\\\"\\nparagraph \\\"Changed in version 3.1:\\\"\\nlistitem \\\"Added the optional object_pairs_hook parameter.\\\"\\nparagraph \\\"Added the optional object_pairs_hook parameter.\\\"\\nlistitem \\\"parse_constant doesn’t get called on ‘null’, ‘true’, ‘false’ anymore.\\\"\\nparagraph \\\"parse_constant doesn’t get called on ‘null’, ‘true’, ‘false’ anymore.\\\"\\nparagraph \\\"Changed in version 3.6:\\\"\\nlistitem \\\"All optional parameters are now keyword-only.\\\"\\nparagraph \\\"All optional parameters are now keyword-only.\\\"\\n[ax-61000083] link \\\"keyword-only\\\"\\nlistitem \\\"fp can now be a binary file. The input encoding should be UTF-8, UTF-16 or UTF-32.\\\"\\nparagraph \\\"fp can now be a binary file. The input encoding should be UTF-8, UTF-16 or UTF-32.\\\"\\n[ax-61000084] link \\\"binary file\\\"\\nparagraph \\\"Changed in version 3.11: The default parse_int of int() now limits the maximum length of the integer string via the interpreter’s integer string conversion length limitation to help avoid denial of se\\\"\\n[ax-61000085] link \\\"int()\\\"\\n[ax-61000086] link \\\"integer string conversion length limitation\\\"\\nparagraph \\\"Changed in version 3.15: Added the optional array_hook parameter.\\\"\\nterm \\\"json.loads(s, *, cls=None, object_hook=None, parse_float=None, parse_int=None, parse_constant=None, object_pairs_hook=None, array_hook=None, **kw)\\\"\\ndefinition \\\"Identical to load(), but instead of a file-like object, deserialize s (a str, bytes or bytearray instance containing a JSON document) to a Python object using this conversion table. Changed in version\\\"\\nparagraph \\\"Identical to load(), but instead of a file-like object, deserialize s (a str, bytes or bytearray instance containing a JSON document) to a Python object using this conversion table.\\\"\\n[ax-61000087] link \\\"load()\\\"\\n[ax-61000088] link \\\"str\\\"\\n[ax-61000089] link \\\"bytes\\\"\\n[ax-61000090] link \\\"bytearray\\\"\\n[ax-61000091] link \\\"conversion table\\\"\\nparagraph \\\"Changed in version 3.6: s can now be of type bytes or bytearray. The input encoding should be UTF-8, UTF-16 or UTF-32.\\\"\\n[ax-61000092] link \\\"bytes\\\"\\n[ax-61000093] link \\\"bytearray\\\"\\nparagraph \\\"Changed in version 3.9: The keyword argument encoding has been removed.\\\"\\nheading \\\"Encoders and Decoders\\\"\\nterm \\\"class json.JSONDecoder(*, object_hook=None, parse_float=None, parse_int=None, parse_constant=None, strict=True, object_pairs_hook=None, array_hook=None)\\\"\\ndefinition \\\"Simple JSON decoder. Performs the following translations in decoding by default: JSON Python object dict array list string str number (int) int number (real) float true True false False null None It a\\\"\\nparagraph \\\"Simple JSON decoder.\\\"\\nparagraph \\\"Performs the following translations in decoding by default:\\\"\\ncolumnheader \\\"JSON\\\"\\nparagraph \\\"JSON\\\"\\ncolumnheader \\\"Python\\\"\\nparagraph \\\"Python\\\"\\ncell \\\"object\\\"\\nparagraph \\\"object\\\"\\ncell \\\"dict\\\"\\nparagraph \\\"dict\\\"\\ncell \\\"array\\\"\\nparagraph \\\"array\\\"\\ncell \\\"list\\\"\\nparagraph \\\"list\\\"\\ncell \\\"string\\\"\\nparagraph \\\"string\\\"\\ncell \\\"str\\\"\\nparagraph \\\"str\\\"\\ncell \\\"number (int)\\\"\\nparagraph \\\"number (int)\\\"\\ncell \\\"int\\\"\\nparagraph \\\"int\\\"\\ncell \\\"number (real)\\\"\\nparagraph \\\"number (real)\\\"\\ncell \\\"float\\\"\\nparagraph \\\"float\\\"\\ncell \\\"true\\\"\\nparagraph \\\"true\\\"\\ncell \\\"True\\\"\\nparagraph \\\"True\\\"\\ncell \\\"false\\\"\\nparagraph \\\"false\\\"\\ncell \\\"False\\\"\\nparagraph \\\"False\\\"\\ncell \\\"null\\\"\\nparagraph \\\"null\\\"\\ncell \\\"None\\\"\\nparagraph \\\"None\\\"\\nparagraph \\\"It also understands NaN, Infinity, and -Infinity as their corresponding float values, which is outside the JSON spec.\\\"\\nparagraph \\\"object_hook is an optional function that will be called with the result of every JSON object decoded and its return value will be used in place of the given dict. This can be used to provide custom de\\\"\\n[ax-61000094] link \\\"dict\\\"\\n[ax-61000095] link \\\"JSON-RPC\\\"\\nparagraph \\\"object_pairs_hook is an optional function that will be called with the result of every JSON object decoded with an ordered list of pairs. The return value of object_pairs_hook will be used instead of \\\"\\n[ax-61000096] link \\\"dict\\\"\\nparagraph \\\"Changed in version 3.1: Added support for object_pairs_hook.\\\"\\nparagraph \\\"array_hook is an optional function that will be called with the result of every JSON array decoded as a list. The return value of array_hook will be used instead of the list. This feature can be used \\\"\\n[ax-61000097] link \\\"list\\\"\\nparagraph \\\"Changed in version 3.15: Added support for array_hook.\\\"\\nparagraph \\\"parse_float is an optional function that will be called with the string of every JSON float to be decoded. By default, this is equivalent to float(num_str). This can be used to use another datatype or\\\"\\n[ax-61000098] link \\\"decimal.Decimal\\\"\\nparagraph \\\"parse_int is an optional function that will be called with the string of every JSON int to be decoded. By default, this is equivalent to int(num_str). This can be used to use another datatype or parse\\\"\\n[ax-61000099] link \\\"float\\\"\\nparagraph \\\"parse_constant is an optional function that will be called with one of the following strings: '-Infinity', 'Infinity', 'NaN'. This can be used to raise an exception if invalid JSON numbers are encount\\\"\\nparagraph \\\"If strict is false (True is the default), then control characters will be allowed inside strings. Control characters in this context are those with character codes in the 0–31 range, including '\\\\\\\\t' (t\\\"\\nparagraph \\\"If the data being deserialized is not a valid JSON document, a JSONDecodeError will be raised.\\\"\\n[ax-61000100] link \\\"JSONDecodeError\\\"\\nparagraph \\\"Changed in version 3.6: All parameters are now keyword-only.\\\"\\n[ax-61000101] link \\\"keyword-only\\\"\\nterm \\\"decode(s)\\\"\\ndefinition \\\"Return the Python representation of s (a str instance containing a JSON document). JSONDecodeError will be raised if the given JSON document is not valid.\\\"\\nparagraph \\\"Return the Python representation of s (a str instance containing a JSON document).\\\"\\n[ax-61000102] link \\\"str\\\"\\nparagraph \\\"JSONDecodeError will be raised if the given JSON document is not valid.\\\"\\n[ax-61000103] link \\\"JSONDecodeError\\\"\\nterm \\\"raw_decode(s)\\\"\\ndefinition \\\"Decode a JSON document from s (a str beginning with a JSON document) and return a 2-tuple of the Python representation and the index in s where the document ended. This can be used to decode a JSON do\\\"\\nparagraph \\\"Decode a JSON document from s (a str beginning with a JSON document) and return a 2-tuple of the Python representation and the index in s where the document ended.\\\"\\n[ax-61000104] link \\\"str\\\"\\nparagraph \\\"This can be used to decode a JSON document from a string that may have extraneous data at the end.\\\"\\nterm \\\"class json.JSONEncoder(*, skipkeys=False, ensure_ascii=True, check_circular=True, allow_nan=True, sort_keys=False, indent=None, separators=None, default=None)\\\"\\ndefinition \\\"Extensible JSON encoder for Python data structures. Supports the following objects and types by default: Python JSON dict, frozendict object list, tuple array str string int, float, int- & float-deriv\\\"\\nparagraph \\\"Extensible JSON encoder for Python data structures.\\\"\\nparagraph \\\"Supports the following objects and types by default:\\\"\\ncolumnheader \\\"Python\\\"\\nparagraph \\\"Python\\\"\\ncolumnheader \\\"JSON\\\"\\nparagraph \\\"JSON\\\"\\ncell \\\"dict, frozendict\\\"\\nparagraph \\\"dict, frozendict\\\"\\ncell \\\"object\\\"\\nparagraph \\\"object\\\"\\ncell \\\"list, tuple\\\"\\nparagraph \\\"list, tuple\\\"\\ncell \\\"array\\\"\\nparagraph \\\"array\\\"\\ncell \\\"str\\\"\\nparagraph \\\"str\\\"\\ncell \\\"string\\\"\\nparagraph \\\"string\\\"\\ncell \\\"int, float, int- & float-derived Enums\\\"\\nparagraph \\\"int, float, int- & float-derived Enums\\\"\\ncell \\\"number\\\"\\nparagraph \\\"number\\\"\\ncell \\\"True\\\"\\nparagraph \\\"True\\\"\\ncell \\\"true\\\"\\nparagraph \\\"true\\\"\\ncell \\\"False\\\"\\nparagraph \\\"False\\\"\\ncell \\\"false\\\"\\nparagraph \\\"false\\\"\\ncell \\\"None\\\"\\nparagraph \\\"None\\\"\\ncell \\\"null\\\"\\nparagraph \\\"null\\\"\\nparagraph \\\"Changed in version 3.4: Added support for int- and float-derived Enum classes.\\\"\\nparagraph \\\"Changed in version 3.15: Added support for frozendict.\\\"\\n[ax-61000105] link \\\"frozendict\\\"\\nparagraph \\\"To extend this to recognize other objects, subclass and implement a default() method with another method that returns a serializable object for o if possible, otherwise it should call the superclass i\\\"\\n[ax-61000106] link \\\"default()\\\"\\n[ax-61000107] link \\\"TypeError\\\"\\nparagraph \\\"If skipkeys is false (the default), a TypeError will be raised when trying to encode keys that are not str, int, float, bool or None. If skipkeys is true, such items are simply skipped.\\\"\\n[ax-61000108] link \\\"TypeError\\\"\\n[ax-61000109] link \\\"str\\\"\\n[ax-61000110] link \\\"int\\\"\\n[ax-61000111] link \\\"float\\\"\\n[ax-61000112] link \\\"bool\\\"\\nparagraph \\\"If ensure_ascii is true (the default), the output is guaranteed to have all incoming non-ASCII and non-printable characters escaped. If ensure_ascii is false, all characters will be output as-is, exce\\\"\\nparagraph \\\"If check_circular is true (the default), then lists, dicts, and custom encoded objects will be checked for circular references during encoding to prevent an infinite recursion (which would cause a Rec\\\"\\n[ax-61000113] link \\\"RecursionError\\\"\\nparagraph \\\"If allow_nan is true (the default), then NaN, Infinity, and -Infinity will be encoded as such. This behavior is not JSON specification compliant, but is consistent with most JavaScript based encoders \\\"\\n[ax-61000114] link \\\"ValueError\\\"\\nparagraph \\\"If sort_keys is true (default: False), then the output of dictionaries will be sorted by key; this is useful for regression tests to ensure that JSON serializations can be compared on a day-to-day bas\\\"\\nparagraph \\\"If indent is a non-negative integer or string, then JSON array elements and object members will be pretty-printed with that indent level. An indent level of 0, negative, or \\\\\\\"\\\\\\\" will only insert newline\\\"\\nparagraph \\\"Changed in version 3.2: Allow strings for indent in addition to integers.\\\"\\nparagraph \\\"If specified, separators should be an (item_separator, key_separator) tuple. The default is (', ', ': ') if indent is None and (',', ': ') otherwise. To get the most compact JSON representation, you s\\\"\\nparagraph \\\"Changed in version 3.4: Use (',', ': ') as default if indent is not None.\\\"\\nparagraph \\\"If specified, default should be a function that gets called for objects that can’t otherwise be serialized. It should return a JSON encodable version of the object or raise a TypeError. If not specifi\\\"\\n[ax-61000115] link \\\"TypeError\\\"\\nparagraph \\\"Changed in version 3.6: All parameters are now keyword-only.\\\"\\n[ax-61000116] link \\\"keyword-only\\\"\\nterm \\\"default(o)\\\"\\ndefinition \\\"Implement this method in a subclass such that it returns a serializable object for o, or calls the base implementation (to raise a TypeError). For example, to support arbitrary iterators, you could im\\\"\\nparagraph \\\"Implement this method in a subclass such that it returns a serializable object for o, or calls the base implementation (to raise a TypeError).\\\"\\n[ax-61000117] link \\\"TypeError\\\"\\nparagraph \\\"For example, to support arbitrary iterators, you could implement default() like this:\\\"\\ncode \\\"def default(self, o): try: iterable = iter(o) except TypeError: pass else: return list(iterable) # Let the base class default method raise the TypeError return super().default(o)\\\"\\nterm \\\"encode(o)\\\"\\ndefinition \\\"Return a JSON string representation of a Python data structure, o. For example: >>> json.JSONEncoder().encode({\\\\\\\"foo\\\\\\\": [\\\\\\\"bar\\\\\\\", \\\\\\\"baz\\\\\\\"]}) '{\\\\\\\"foo\\\\\\\": [\\\\\\\"bar\\\\\\\", \\\\\\\"baz\\\\\\\"]}'\\\"\\nparagraph \\\"Return a JSON string representation of a Python data structure, o. For example:\\\"\\ncode \\\">>> json.JSONEncoder().encode({\\\\\\\"foo\\\\\\\": [\\\\\\\"bar\\\\\\\", \\\\\\\"baz\\\\\\\"]}) '{\\\\\\\"foo\\\\\\\": [\\\\\\\"bar\\\\\\\", \\\\\\\"baz\\\\\\\"]}'\\\"\\nterm \\\"iterencode(o)\\\"\\ndefinition \\\"Encode the given object, o, and yield each string representation as available. For example: for chunk in json.JSONEncoder().iterencode(bigobject): mysocket.write(chunk)\\\"\\nparagraph \\\"Encode the given object, o, and yield each string representation as available. For example:\\\"\\ncode \\\"for chunk in json.JSONEncoder().iterencode(bigobject): mysocket.write(chunk)\\\"\\nheading \\\"Exceptions\\\"\\nterm \\\"exception json.JSONDecodeError(msg, doc, pos)\\\"\\ndefinition \\\"Subclass of ValueError with the following additional attributes: msg The unformatted error message. doc The JSON document being parsed. pos The start index of doc where parsing failed. lineno The line\\\"\\nparagraph \\\"Subclass of ValueError with the following additional attributes:\\\"\\n[ax-61000118] link \\\"ValueError\\\"\\nterm \\\"msg\\\"\\ndefinition \\\"The unformatted error message.\\\"\\nparagraph \\\"The unformatted error message.\\\"\\nterm \\\"doc\\\"\\ndefinition \\\"The JSON document being parsed.\\\"\\nparagraph \\\"The JSON document being parsed.\\\"\\nterm \\\"pos\\\"\\ndefinition \\\"The start index of doc where parsing failed.\\\"\\nparagraph \\\"The start index of doc where parsing failed.\\\"\\nterm \\\"lineno\\\"\\ndefinition \\\"The line corresponding to pos.\\\"\\nparagraph \\\"The line corresponding to pos.\\\"\\nterm \\\"colno\\\"\\ndefinition \\\"The column corresponding to pos.\\\"\\nparagraph \\\"The column corresponding to pos.\\\"\\nparagraph \\\"Added in version 3.5.\\\"\\nheading \\\"Standard Compliance and Interoperability\\\"\\nparagraph \\\"The JSON format is specified by RFC 7159 and by ECMA-404. This section details this module’s level of compliance with the RFC. For simplicity, JSONEncoder and JSONDecoder subclasses, and parameters ot\\\"\\n[ax-61000119] link \\\"RFC 7159\\\"\\n[ax-61000120] link \\\"ECMA-404\\\"\\n[ax-61000121] link \\\"JSONEncoder\\\"\\n[ax-61000122] link \\\"JSONDecoder\\\"\\nparagraph \\\"This module does not comply with the RFC in a strict fashion, implementing some extensions that are valid JavaScript but not valid JSON. In particular:\\\"\\nlistitem \\\"Infinite and NaN number values are accepted and output;\\\"\\nparagraph \\\"Infinite and NaN number values are accepted and output;\\\"\\nlistitem \\\"Repeated names within an object are accepted, and only the value of the last name-value pair is used.\\\"\\nparagraph \\\"Repeated names within an object are accepted, and only the value of the last name-value pair is used.\\\"\\nparagraph \\\"Since the RFC permits RFC-compliant parsers to accept input texts that are not RFC-compliant, this module’s deserializer is technically RFC-compliant under default settings.\\\"\\nheading \\\"Character Encodings\\\"\\nparagraph \\\"The RFC requires that JSON be represented using either UTF-8, UTF-16, or UTF-32, with UTF-8 being the recommended default for maximum interoperability.\\\"\\nparagraph \\\"As permitted, though not required, by the RFC, this module’s serializer sets ensure_ascii=True by default, thus escaping the output so that the resulting strings only contain printable ASCII character\\\"\",\"title\":\"json — JSON encoder and decoder — Python 3.15.2 documentation\",\"truncated\":true,\"url\":\"https://docs.python.org/3/library/json.html#json.loads\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\",\"5 controls/headings outside the selected region omitted.\",\"Continue with next_offset and revision to read this captured snapshot.\"]}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 77.97820400004275,
+      "response_bytes": 34301
+    }
+  ]
+}

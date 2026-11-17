@@ -1,0 +1,33 @@
+# Measurement notes
+
+## Suites and boundaries
+
+The screening matrix has 24 public trials (six goals, two repetitions, two engines), 12 owned-account trials (three goals, two repetitions, two engines), and six official WebArena Verified retrieval trials (three goals, one attempt per engine). Engine order alternates. Each trial starts a fresh Codex conversation, requests `gpt-6-luna` at `high` effort, and records actual CLI token usage. Codex does not independently echo an upstream served-model identifier. No other model/provider was substituted.
+
+The public suite keeps the controlled task-tool facade for comparison with the older pilot. Native initialization instructions are not forwarded there. Account and official suites forward native initialization instructions and expose the default Codex-compatible catalog: compact Callisto or Browse execute/status/tabs. They do not measure the OpenCode native Code Mode experience. The suites cannot be pooled into one success, speed or cost claim.
+
+Browser input is synthetic DOM in Zen; Browse uses its existing execution path on Chromium. This compares products on their browsers, rather than isolating protocol overhead on one browser. All profiles belong to the fixtures; permission onboarding, personal profiles and store installation are excluded. Account trials pre-enable Full browser control. Public/account profiles are reused serially across fresh task cases; official trials create a new site container and browser profile for each attempt. Provider cache state is not controlled, and preflights can warm common prefixes. No isolated cold-start or RSS result is claimed.
+
+Each report retains exact harness sources and their hashes, native catalogs/initialization mode, answers, visible tool calls, failed calls, returned-byte measurements and usage. Billed dollar cost, model-request counts and underlying browser-command counts are unavailable. MCP calls include local help and composed actions. Task time includes host startup, model work, navigation, retries, waits, shutdown and independent verification; provisioning/login are separately recorded. Official Magento provisioning uses a loopback-only proxy adding the official public fixture login header. No personal credentials are involved.
+
+## Judges
+
+Public success requires correct facts plus an appropriate observed source and an exact quote seen in browser output. Facts-only checks are a secondary diagnostic. Neither failed quote has been silently accepted as a paraphrase. Account success requires the exact intended server state, exactly one authenticated write, no unrelated mutation, and the actual receipt tab where applicable. Official tasks 41, 94 and 208 use `webarena-verified==1.2.3`'s structural AgentResponseEvaluator. Its dataset SHA256 and full per-attempt scores are retained. The adapter rejects tasks needing network-event evaluation; no invented trace or alternative matcher is used to score those tasks.
+
+The conservative transcript audit rejects visible direct HTTP/file access and forbidden host tools. It is not an execution sandbox and cannot prove the absence of obfuscated JavaScript. The public oracle obtains mutable metadata independently and never shows the gold data to the model. Owned fixtures and public official benchmark data contain no personal account data.
+
+## Deviations and unsuccessful setup
+
+- OpenCode's requested DeepSeek Flash Free model returned HTTP 429 `provider.free-limit` during availability preflight. No measured OpenCode model trial ran; native Code Mode and multi-model conclusions remain unmeasured.
+- The first paired public preflight failed before model calls because Snap Chromium could not load an extension from host `/tmp`. The fixture now always copies the unchanged extension into the owned Snap-visible profile path. The failed directory is retained.
+- The deterministic account browser gate initially used an overly strict wrapped-label locator. The test locator was corrected and all three UI/state workflows passed before the full account cohort; fixture content and the independent oracle were unchanged.
+- An account preflight accidentally overlapped part of the public run. Every primary result remains. The separate timing-only view excludes whole affected pairs: GitHub issue repetition 1 and PyPI metadata repetition 1. The overlap window is conservative. Trial boundaries are inferred from original trace mtimes minus recorded task duration, with a two-second margin. Original inferred intervals are preserved in overlap-audit.json so Git checkout mtimes cannot change this audit. Subsequent model runs were serial.
+- Official site preflight reached an authenticated dashboard, but the first full-suite setup then exposed automatic initialization overwriting the assigned base URL. It is retained as `luna-step5-webarena-2026-11-17-setup-failed`, with zero model trials. Setting `WA_ENV_CTRL_EXTERNAL_SITE_URL` to the proxy origin aligns automatic and explicit initialization. A delayed server check then passed.
+- The next official setup exposed the fixture's exact-URL lease check after Magento redirected `/admin` to its dashboard. It is retained as `luna-step5-webarena-2026-11-17-setup-failed2`, also with zero model trials. Resolving the authenticated redirect before browser/tab provisioning fixes this without changing an agent outcome. The successful suite archives the corrected harness.
+- Expired pairing codes requested by the model in owned test sessions are redacted before publication, including duplicate host-event copies. Original byte counts, usage, elapsed times, outcomes and call counts are preserved. The redaction audit records hashes of original and published files; exact originals remain in a private local backup. Published string lengths therefore differ from recorded returned bytes for affected calls.
+
+## Interpretation
+
+Task-cluster bootstrap intervals retain both repetitions of each sampled goal and use a fixed seed. Six public or three account/official clusters are too few to infer broad reliability or stable tail latency. Sample p95 is reported as a descriptive order statistic, not a production percentile. All attempts, including failures and the public overlap, remain in the primary statistics; the no-overlap timing view is explicitly secondary.
+
+The historical pilot used Browse CLI 0.1.0 and extension 0.0.16. This run pins CLI and extension 0.1.1. Sites, provider behavior and cache state can also differ. Consequently the new-versus-old comparison is descriptive, not a causal ablation of the Callisto changes. No universal benchmark win, billed-cost advantage, full WebArena/BrowserGym score, or completed multi-model/native OpenCode comparison follows from this screening run.

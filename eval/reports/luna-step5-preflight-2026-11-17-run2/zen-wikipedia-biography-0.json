@@ -1,0 +1,580 @@
+{
+  "schema": "callisto.real-world-trace.v1",
+  "host": {
+    "code": 0,
+    "signal": null,
+    "error": null,
+    "timed_out": false,
+    "elapsed_ms": 33849.915982000006,
+    "usage": {
+      "input_tokens": 125479,
+      "cached_input_tokens": 75136,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 714,
+      "reasoning_output_tokens": 262
+    },
+    "final": "{\"answer\":\"Ada Lovelace was born on 10 December 1815 in London, England. Her mother was Anne Isabella Milbanke.\",\"evidence\":[{\"url\":\"https://en.wikipedia.org/wiki/Ada_Lovelace\",\"quote\":\"Augusta Ada Byron 10 December 1815 London, England\"},{\"url\":\"https://en.wikipedia.org/wiki/Ada_Lovelace\",\"quote\":\"Anne Isabella Milbanke (mother)\"}]}",
+    "events": [
+      {
+        "type": "thread.started",
+        "thread_id": "01a1e9e9-eb91-7093-9302-64e87417d50f"
+      },
+      {
+        "type": "turn.started"
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_0",
+          "type": "agent_message",
+          "text": "I’ll inspect Wikipedia’s live page in the controlled browser, follow the relevant links, and verify each requested fact from page text before returning the exact quotes."
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_1",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "navigate",
+            "args": {
+              "url": "https://en.wikipedia.org/wiki/Main_Page"
+            }
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_1",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "navigate",
+            "args": {
+              "url": "https://en.wikipedia.org/wiki/Main_Page"
+            }
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"feedback\":{\"frame_id\":0,\"needs_observation\":true,\"ready\":false,\"tab_id\":2,\"url\":\"https://en.wikipedia.org/wiki/Main_Page\"},\"navigationStarted\":true}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_2",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "snapshot",
+            "args": {
+              "max_chars": 7000
+            }
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_2",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "snapshot",
+            "args": {
+              "max_chars": 7000
+            }
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"next_offset\":162,\"offset\":0,\"omitted\":0,\"order_changed\":false,\"revision\":\"ax-10094587461803528765:1\",\"scope\":{\"focus\":\"all\",\"include_text\":true,\"query\":null,\"retain_navigation\":true,\"selector\":null},\"text\":\"[ax-5000001] link \\\"Jump to content\\\"\\n[ax-5000002] button \\\"Main menu\\\"\\n[ax-5000003] link \\\"\\\"\\n[ax-5000004] search \\\"Search\\\"\\n[ax-5000005] searchbox \\\"Search Wikipedia\\\"\\n[ax-5000006] button \\\"Search\\\"\\nlistitem \\\"Donate\\\"\\n[ax-5000007] link \\\"Donate\\\"\\nlistitem \\\"Create account\\\"\\n[ax-5000008] link \\\"Create account\\\"\\nlistitem \\\"Log in\\\"\\n[ax-5000009] link \\\"Log in\\\"\\n[ax-5000010] link \\\"Wiki Loves Food 2026 in India Documenting India's vibrant culinary heritage and food traditions.\\\"\\nparagraph \\\"Wiki Loves Food 2026 in India Documenting India's vibrant culinary heritage and food traditions.\\\"\\n[ax-5000011] link \\\"Hide\\\"\\nlistitem \\\"Main Page\\\"\\n[ax-5000012] link \\\"Main Page\\\"\\nlistitem \\\"Talk\\\"\\n[ax-5000013] link \\\"Talk\\\"\\nlistitem \\\"Read\\\"\\n[ax-5000014] link \\\"Read\\\"\\nlistitem \\\"View source\\\"\\n[ax-5000015] link \\\"View source\\\"\\nlistitem \\\"View history\\\"\\n[ax-5000016] link \\\"View history\\\"\\nlistitem \\\"Save\\\"\\n[ax-5000017] link \\\"Save\\\"\\n[ax-5000018] button \\\"Tools\\\"\\ntext \\\"Appearance\\\"\\n[ax-5000019] button \\\"Hide Appearance\\\"\\ntext \\\"Text\\\"\\nlistitem \\\"Small Standard Large\\\"\\n[ax-5000020] radio \\\"Small\\\"\\n[ax-5000021] radio \\\"Standard\\\"\\n[ax-5000022] radio \\\"Large\\\"\\ntext \\\"Width\\\"\\nlistitem \\\"Standard Wide\\\"\\n[ax-5000023] radio \\\"Standard\\\"\\n[ax-5000024] radio \\\"Wide\\\"\\ntext \\\"Color\\\"\\nlistitem \\\"Automatic Light Dark\\\"\\n[ax-5000025] radio \\\"Automatic\\\"\\n[ax-5000026] radio \\\"Light\\\"\\n[ax-5000027] radio \\\"Dark\\\"\\ntext \\\",\\\"\\nheading \\\"Welcome to Wikipedia\\\"\\n[ax-5000028] link \\\"Wikipedia\\\"\\ntext \\\"the encyclopedia that .\\\"\\n[ax-5000029] link \\\"free\\\"\\n[ax-5000030] link \\\"anyone can edit\\\"\\nlistitem \\\"261,656 active editors\\\"\\n[ax-5000031] link \\\"261,656\\\"\\nlistitem \\\"7,265,534 articles in English\\\"\\n[ax-5000032] link \\\"7,265,534\\\"\\n[ax-5000033] link \\\"English\\\"\\nheading \\\"From today's featured article\\\"\\ntext \\\"From today's featured article\\\"\\n[ax-5000034] link \\\"Dividing the Light was one of the installation artworks that inspired the game.\\\"\\ntext \\\"was one of the installation artworks that inspired the game.\\\"\\n[ax-5000035] link \\\"Dividing the Light\\\"\\nparagraph \\\"Islands: Non-Places is an abstract art game developed and published by Carl Burton. It was released on November 17, 2016, and consists of a series of anonymous, liminal environments, each rendered in \\\"\\n[ax-5000036] link \\\"Islands: Non-Places\\\"\\n[ax-5000037] link \\\"art game\\\"\\n[ax-5000038] link \\\"liminal\\\"\\n[ax-5000039] link \\\"Marc Augé\\\"\\n[ax-5000040] link \\\"installation art\\\"\\n[ax-5000041] link \\\"James Turrell\\\"\\n[ax-5000042] link \\\"field recordings\\\"\\n[ax-5000043] link \\\"Chris Watson\\\"\\n[ax-5000044] link \\\"Nuovo Award\\\"\\n[ax-5000045] link \\\"Independent Games Festival\\\"\\n[ax-5000046] link \\\"Full article...\\\"\\ntext \\\"Recently featured:\\\"\\nlistitem \\\"Mark Satin\\\"\\n[ax-5000047] link \\\"Mark Satin\\\"\\nlistitem \\\"\\\\\\\"Can't Let Go\\\\\\\" (Mariah Carey song)\\\"\\n[ax-5000048] link \\\"\\\\\\\"Can't Let Go\\\\\\\" (Mariah Carey song)\\\"\\nlistitem \\\"Aucanquilcha\\\"\\n[ax-5000049] link \\\"Aucanquilcha\\\"\\nlistitem \\\"Archive\\\"\\n[ax-5000050] link \\\"Archive\\\"\\nlistitem \\\"By email\\\"\\n[ax-5000051] link \\\"By email\\\"\\nlistitem \\\"More featured articles\\\"\\n[ax-5000052] link \\\"More featured articles\\\"\\nlistitem \\\"About\\\"\\n[ax-5000053] link \\\"About\\\"\\nheading \\\"Did you know ...\\\"\\n[ax-5000054] link \\\"Harbour Tower\\\"\\ntext \\\"Harbour Tower\\\"\\nlistitem \\\"... that the Harbour Tower (pictured) is set to become the second-tallest building in Argentina upon its inauguration?\\\"\\n[ax-5000055] link \\\"Harbour Tower\\\"\\nlistitem \\\"... that Shruthi L won the 2024 World Women's Billiards Championship as the lowest-seeded player in the tournament?\\\"\\n[ax-5000056] link \\\"Shruthi L\\\"\\n[ax-5000057] link \\\"World Women's Billiards Championship\\\"\\nlistitem \\\"... that Lego Creator was one of three Lego-themed video games released at the same time?\\\"\\n[ax-5000058] link \\\"Lego Creator\\\"\\nlistitem \\\"... that communist land minister Prabhu Narayan Chaudhury announced moves to seize land from the former king of Nepal in 2006?\\\"\\n[ax-5000059] link \\\"Prabhu Narayan Chaudhury\\\"\\n[ax-5000060] link \\\"king of Nepal\\\"\\nlistitem \\\"... that Real Sound publishes up to 100 articles per day?\\\"\\n[ax-5000061] link \\\"Real Sound\\\"\\nlistitem \\\"... that painter Gabrielle Bertrand was officially only a chambermaid when she taught the future queen Marie Antoinette to paint?\\\"\\n[ax-5000062] link \\\"Gabrielle Bertrand\\\"\\nlistitem \\\"... that some commuters rowed boats to get to a train station in New York City in the early 20th century?\\\"\\n[ax-5000063] link \\\"a train station in New York City\\\"\\nlistitem \\\"... that Bill Meier spoke for 43 hours almost without pause to fight a bill?\\\"\\n[ax-5000064] link \\\"Bill Meier\\\"\\nlistitem \\\"... that The Shinano Mainichi Shimbun once launched noodles printed with edible ink?\\\"\\n[ax-5000065] link \\\"The Shinano Mainichi Shimbun\\\"\\nlistitem \\\"Archive\\\"\\n[ax-5000066] link \\\"Archive\\\"\\nlistitem \\\"Start a new article\\\"\\n[ax-5000067] link \\\"Start a new article\\\"\\nlistitem \\\"Nominate an article\\\"\\n[ax-5000068] link \\\"Nominate an article\\\"\\nheading \\\"Help us improve this article!\\\"\\n[ax-5000069] link \\\"Garbage bin with trash on top\\\"\\ntext \\\"Garbage bin with trash on top\\\"\\ntext \\\"This week's article for improvement is , waste material discarded by humans. The words , , , and are generally used interchangeably.\\\"\\n[ax-5000070] link \\\"garbage\\\"\\nparagraph \\\"You can improve this article by:\\\"\\nlistitem \\\"Expanding the \\\\\\\"History\\\\\\\" and \\\\\\\"Treatment\\\\\\\" sections\\\"\\n[ax-5000071] link \\\"History\\\"\\n[ax-5000072] link \\\"Treatment\\\"\\nlistitem \\\"Finding reliable sources about garbage disposal\\\"\\n[ax-5000073] link \\\"reliable sources\\\"\\nlistitem \\\"Using sources mentioned on the talk page to add content to the article\\\"\\n[ax-5000074] link \\\"sources mentioned on the talk page\\\"\\nparagraph \\\"You can be bold and start editing the article. Have questions or suggestions? Visit the article's talk page, or post at the Teahouse for general discussion.\\\"\\n[ax-5000075] link \\\"be bold\\\"\\n[ax-5000076] link \\\"start editing the article\\\"\\n[ax-5000077] link \\\"the article's talk page\\\"\\n[ax-5000078] link \\\"Teahouse\\\"\\nlistitem \\\"For new editors\\\"\\n[ax-5000079] link \\\"For new editors\\\"\\nlistitem \\\"Archive\\\"\\n[ax-5000080] link \\\"Archive\\\"\\nlistitem \\\"What is this?\\\"\\n[ax-5000081] link \\\"What is this?\\\"\\nheading \\\"In the news\\\"\\n[ax-5000082] figure \\\"Jensen Huang\\\"\\n[ax-5000083] link \\\"Jensen Huang in 2026\\\"\\nlistitem \\\"Nvidia CEO Jensen Huang (pictured) resigns amidst allegations of being targeted by a Chinese spy and of having extramarital affairs.\\\"\\n[ax-5000084] link \\\"Nvidia\\\"\\n[ax-5000085] link \\\"Jensen Huang\\\"\\n[ax-5000086] link \\\"being targeted by a Chinese spy\\\"\\nlistitem \\\"The Salvadoran military intervention in Haiti intensifies with airstrikes on 400 Mawozo's alleged headquarters and a deployment to the Sylvio Cator Stadium.\\\"\\n[ax-5000087] link \\\"Salvadoran military intervention in Haiti\\\"\\n[ax-5000088] link \\\"400 Mawozo\\\"\\n[ax-5000089] link \\\"Sylvio Cator Stadium\\\"\\nlistitem \\\"American ocean liner SS United States is scuttled in the Gulf of Mexico to create the largest artificial reef.\\\"\\n[ax-5000090] link \\\"SS United States\\\"\\n[ax-5000091] link \\\"scuttled\\\"\\n[ax-5000092] link \\\"artificial reef\\\"\\nlistitem \\\"The End of Everything by M. John Harrison wins the Booker Prize.\\\"\\n[ax-5000093] link \\\"The End of Everything\\\"\\n[ax-5000094] link \\\"M. John Harrison\\\"\\n[ax-5000095] link \\\"Booker Prize\\\"\\ntext \\\":\\\"\\nlistitem \\\"Iran war\\\"\\n[ax-5000096] link \\\"Iran war\\\"\",\"title\":\"Wikipedia, the free encyclopedia\",\"truncated\":true,\"url\":\"https://en.wikipedia.org/wiki/Main_Page\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\",\"Continue with next_offset and revision to read this captured snapshot.\"]}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_3",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "run",
+            "args": {
+              "steps": [
+                {
+                  "action": "fill",
+                  "ref": "ax-5000005",
+                  "value": "Ada Lovelace"
+                },
+                {
+                  "action": "press",
+                  "key": "Enter"
+                }
+              ],
+              "snapshot": false
+            }
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_3",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "run",
+            "args": {
+              "steps": [
+                {
+                  "action": "fill",
+                  "ref": "ax-5000005",
+                  "value": "Ada Lovelace"
+                },
+                {
+                  "action": "press",
+                  "key": "Enter"
+                }
+              ],
+              "snapshot": false
+            }
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"completed\":2,\"elapsed_ms\":87,\"feedback\":{\"document_revision\":\"ax-10094587461803528765\",\"dom_version\":11,\"needs_observation\":true,\"title\":\"Wikipedia, the free encyclopedia\",\"url\":\"https://en.wikipedia.org/wiki/Main_Page\"}}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_4",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "snapshot",
+            "args": {
+              "max_chars": 5000
+            }
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_4",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "snapshot",
+            "args": {
+              "max_chars": 5000
+            }
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"next_offset\":112,\"offset\":0,\"omitted\":0,\"order_changed\":false,\"revision\":\"ax-10094587461803528765:2\",\"scope\":{\"focus\":\"all\",\"include_text\":true,\"query\":null,\"retain_navigation\":true,\"selector\":null},\"text\":\"[ax-5000001] link \\\"Jump to content\\\"\\n[ax-5000002] button \\\"Main menu\\\"\\n[ax-5000003] link \\\"\\\"\\n[ax-5000004] search \\\"Ada Lovelace English mathematician (1815–1852) Ada Lovelace (microarchitecture) GPU microarchitecture by Nvidia Ada Lovelace Day Annual event celebrating the contributions of women to STEM fields Ada \\\"\\n[ax-5000272] combobox \\\"Search Wikipedia\\\" =Ada Lovelace\\n[ax-5000273] listbox \\\"Search results\\\"\\n[ax-5000274] option \\\"Ada Lovelace English mathematician (1815–1852)\\\"\\n[ax-5000275] link \\\"Ada Lovelace English mathematician (1815–1852)\\\"\\n[ax-5000276] option \\\"Ada Lovelace (microarchitecture) GPU microarchitecture by Nvidia\\\"\\n[ax-5000277] link \\\"Ada Lovelace (microarchitecture) GPU microarchitecture by Nvidia\\\"\\n[ax-5000278] option \\\"Ada Lovelace Day Annual event celebrating the contributions of women to STEM fields\\\"\\n[ax-5000279] link \\\"Ada Lovelace Day Annual event celebrating the contributions of women to STEM fields\\\"\\n[ax-5000280] option \\\"Ada Lovelace Award Award for women in computing, founded 1981\\\"\\n[ax-5000281] link \\\"Ada Lovelace Award Award for women in computing, founded 1981\\\"\\n[ax-5000282] option \\\"Alan M. Lovelace American scientist and government official (1929–2018)\\\"\\n[ax-5000283] link \\\"Alan M. Lovelace American scientist and government official (1929–2018)\\\"\\n[ax-5000284] option \\\"Delilah S. Dawson (Redirected from Ava Lovelace) American author (born 1977)\\\"\\n[ax-5000285] link \\\"Delilah S. Dawson (Redirected from Ava Lovelace) American author (born 1977)\\\"\\n[ax-5000286] option \\\"Search for pages containing Ada Lovelace\\\"\\n[ax-5000287] link \\\"Search for pages containing Ada Lovelace\\\"\\n[ax-5000288] button \\\"Search\\\"\\nlistitem \\\"Donate\\\"\\n[ax-5000007] link \\\"Donate\\\"\\nlistitem \\\"Create account\\\"\\n[ax-5000008] link \\\"Create account\\\"\\nlistitem \\\"Log in\\\"\\n[ax-5000009] link \\\"Log in\\\"\\n[ax-5000010] link \\\"Wiki Loves Food 2026 in India Documenting India's vibrant culinary heritage and food traditions.\\\"\\nparagraph \\\"Wiki Loves Food 2026 in India Documenting India's vibrant culinary heritage and food traditions.\\\"\\n[ax-5000011] link \\\"Hide\\\"\\nlistitem \\\"Main Page\\\"\\n[ax-5000012] link \\\"Main Page\\\"\\nlistitem \\\"Talk\\\"\\n[ax-5000013] link \\\"Talk\\\"\\nlistitem \\\"Read\\\"\\n[ax-5000014] link \\\"Read\\\"\\nlistitem \\\"View source\\\"\\n[ax-5000015] link \\\"View source\\\"\\nlistitem \\\"View history\\\"\\n[ax-5000016] link \\\"View history\\\"\\nlistitem \\\"Save\\\"\\n[ax-5000017] link \\\"Save\\\"\\n[ax-5000018] button \\\"Tools\\\"\\ntext \\\"Appearance\\\"\\n[ax-5000019] button \\\"Hide Appearance\\\"\\ntext \\\"Text\\\"\\nlistitem \\\"Small Standard Large\\\"\\n[ax-5000020] radio \\\"Small\\\"\\n[ax-5000021] radio \\\"Standard\\\"\\n[ax-5000022] radio \\\"Large\\\"\\ntext \\\"Width\\\"\\nlistitem \\\"Standard Wide\\\"\\n[ax-5000023] radio \\\"Standard\\\"\\n[ax-5000024] radio \\\"Wide\\\"\\ntext \\\"Color\\\"\\nlistitem \\\"Automatic Light Dark\\\"\\n[ax-5000025] radio \\\"Automatic\\\"\\n[ax-5000026] radio \\\"Light\\\"\\n[ax-5000027] radio \\\"Dark\\\"\\ntext \\\",\\\"\\nheading \\\"Welcome to Wikipedia\\\"\\n[ax-5000028] link \\\"Wikipedia\\\"\\ntext \\\"the encyclopedia that .\\\"\\n[ax-5000029] link \\\"free\\\"\\n[ax-5000030] link \\\"anyone can edit\\\"\\nlistitem \\\"261,656 active editors\\\"\\n[ax-5000031] link \\\"261,656\\\"\\nlistitem \\\"7,265,534 articles in English\\\"\\n[ax-5000032] link \\\"7,265,534\\\"\\n[ax-5000033] link \\\"English\\\"\\nheading \\\"From today's featured article\\\"\\ntext \\\"From today's featured article\\\"\\n[ax-5000034] link \\\"Dividing the Light was one of the installation artworks that inspired the game.\\\"\\ntext \\\"was one of the installation artworks that inspired the game.\\\"\\n[ax-5000035] link \\\"Dividing the Light\\\"\\nparagraph \\\"Islands: Non-Places is an abstract art game developed and published by Carl Burton. It was released on November 17, 2016, and consists of a series of anonymous, liminal environments, each rendered in \\\"\\n[ax-5000036] link \\\"Islands: Non-Places\\\"\\n[ax-5000037] link \\\"art game\\\"\\n[ax-5000038] link \\\"liminal\\\"\\n[ax-5000039] link \\\"Marc Augé\\\"\\n[ax-5000040] link \\\"installation art\\\"\\n[ax-5000041] link \\\"James Turrell\\\"\\n[ax-5000042] link \\\"field recordings\\\"\\n[ax-5000043] link \\\"Chris Watson\\\"\\n[ax-5000044] link \\\"Nuovo Award\\\"\\n[ax-5000045] link \\\"Independent Games Festival\\\"\\n[ax-5000046] link \\\"Full article...\\\"\\ntext \\\"Recently featured:\\\"\\nlistitem \\\"Mark Satin\\\"\\n[ax-5000047] link \\\"Mark Satin\\\"\\nlistitem \\\"\\\\\\\"Can't Let Go\\\\\\\" (Mariah Carey song)\\\"\\n[ax-5000048] link \\\"\\\\\\\"Can't Let Go\\\\\\\" (Mariah Carey song)\\\"\\nlistitem \\\"Aucanquilcha\\\"\\n[ax-5000049] link \\\"Aucanquilcha\\\"\\nlistitem \\\"Archive\\\"\\n[ax-5000050] link \\\"Archive\\\"\\nlistitem \\\"By email\\\"\\n[ax-5000051] link \\\"By email\\\"\\nlistitem \\\"More featured articles\\\"\\n[ax-5000052] link \\\"More featured articles\\\"\\nlistitem \\\"About\\\"\\n[ax-5000053] link \\\"About\\\"\\nheading \\\"Did you know ...\\\"\\n[ax-5000054] link \\\"Harbour Tower\\\"\\ntext \\\"Harbour Tower\\\"\\nlistitem \\\"... that the Harbour Tower (pictured) is set to become the second-tallest building in Argentina upon its inauguration?\\\"\\n[ax-5000055] link \\\"Harbour Tower\\\"\\nlistitem \\\"... that Shruthi L won the 2024 World Women's Billiards Championship as the lowest-seeded player in the tournament?\\\"\\n[ax-5000056] link \\\"Shruthi L\\\"\\n[ax-5000057] link \\\"World Women's Billiards Championship\\\"\\nlistitem \\\"... that Lego Creator was one of three Lego-themed video games released at the same time?\\\"\\n[ax-5000058] link \\\"Lego Creator\\\"\",\"title\":\"Wikipedia, the free encyclopedia\",\"truncated\":true,\"url\":\"https://en.wikipedia.org/wiki/Main_Page\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\",\"Continue with next_offset and revision to read this captured snapshot.\"]}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_5",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "click",
+            "args": {
+              "ref": "ax-5000275"
+            }
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_5",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "click",
+            "args": {
+              "ref": "ax-5000275"
+            }
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"completed\":true,\"feedback\":{\"document_revision\":\"ax-10094587461803528765\",\"dom_version\":31,\"frame_id\":0,\"needs_observation\":true,\"ready\":true,\"tab_id\":2,\"title\":\"Wikipedia, the free encyclopedia\",\"url\":\"https://en.wikipedia.org/wiki/Main_Page\"}}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.started",
+        "item": {
+          "id": "item_6",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "snapshot",
+            "args": {
+              "max_chars": 5000
+            }
+          },
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_6",
+          "type": "mcp_tool_call",
+          "server": "browser",
+          "tool": "callisto",
+          "arguments": {
+            "op": "snapshot",
+            "args": {
+              "max_chars": 5000
+            }
+          },
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"next_offset\":127,\"offset\":0,\"omitted\":0,\"order_changed\":false,\"revision\":\"ax-16270982697841284407:1\",\"scope\":{\"focus\":\"all\",\"include_text\":true,\"query\":null,\"retain_navigation\":true,\"selector\":null},\"text\":\"[ax-6000001] link \\\"Jump to content\\\"\\n[ax-6000002] button \\\"Main menu\\\"\\n[ax-6000003] link \\\"\\\"\\n[ax-6000004] search \\\"Search\\\"\\n[ax-6000005] searchbox \\\"Search Wikipedia\\\"\\n[ax-6000006] button \\\"Search\\\"\\nlistitem \\\"Donate\\\"\\n[ax-6000007] link \\\"Donate\\\"\\nlistitem \\\"Create account\\\"\\n[ax-6000008] link \\\"Create account\\\"\\nlistitem \\\"Log in\\\"\\n[ax-6000009] link \\\"Log in\\\"\\n[ax-6000010] link \\\"Wiki Loves Food 2026 in India Documenting India's vibrant culinary heritage and food traditions.\\\"\\nparagraph \\\"Wiki Loves Food 2026 in India Documenting India's vibrant culinary heritage and food traditions.\\\"\\n[ax-6000011] link \\\"Hide\\\"\\nheading \\\"Contents\\\"\\n[ax-6000012] button \\\"Hide Contents\\\"\\nlistitem \\\"(Top)\\\"\\n[ax-6000013] link \\\"(Top)\\\"\\nlistitem \\\"Biography Toggle Biography subsection\\\"\\n[ax-6000014] link \\\"Biography\\\"\\n[ax-6000015] button \\\"Toggle Biography subsection\\\"\\nlistitem \\\"Work Toggle Work subsection\\\"\\n[ax-6000016] link \\\"Work\\\"\\n[ax-6000017] button \\\"Toggle Work subsection\\\"\\nlistitem \\\"Commemoration Toggle Commemoration subsection\\\"\\n[ax-6000018] link \\\"Commemoration\\\"\\n[ax-6000019] button \\\"Toggle Commemoration subsection\\\"\\nlistitem \\\"In popular culture Toggle In popular culture subsection\\\"\\n[ax-6000020] link \\\"In popular culture\\\"\\n[ax-6000021] button \\\"Toggle In popular culture subsection\\\"\\nlistitem \\\"Publications Toggle Publications subsection\\\"\\n[ax-6000022] link \\\"Publications\\\"\\n[ax-6000023] button \\\"Toggle Publications subsection\\\"\\nlistitem \\\"See also\\\"\\n[ax-6000024] link \\\"See also\\\"\\nlistitem \\\"Explanatory notes\\\"\\n[ax-6000025] link \\\"Explanatory notes\\\"\\nlistitem \\\"References Toggle References subsection\\\"\\n[ax-6000026] link \\\"References\\\"\\n[ax-6000027] button \\\"Toggle References subsection\\\"\\nlistitem \\\"Further reading\\\"\\n[ax-6000028] link \\\"Further reading\\\"\\nlistitem \\\"External links\\\"\\n[ax-6000029] link \\\"External links\\\"\\nheading \\\"Ada Lovelace\\\"\\ntext \\\"Ada Lovelace\\\"\\n[ax-6000030] button \\\"113 languages\\\"\\nlistitem \\\"Article\\\"\\n[ax-6000031] link \\\"Article\\\"\\nlistitem \\\"Talk\\\"\\n[ax-6000032] link \\\"Talk\\\"\\nlistitem \\\"Read\\\"\\n[ax-6000033] link \\\"Read\\\"\\nlistitem \\\"View source\\\"\\n[ax-6000034] link \\\"View source\\\"\\nlistitem \\\"View history\\\"\\n[ax-6000035] link \\\"View history\\\"\\nlistitem \\\"Save\\\"\\n[ax-6000036] link \\\"Save\\\"\\n[ax-6000037] button \\\"Tools\\\"\\ntext \\\"Appearance\\\"\\n[ax-6000038] button \\\"Hide Appearance\\\"\\ntext \\\"Text\\\"\\nlistitem \\\"Small Standard Large\\\"\\n[ax-6000039] radio \\\"Small\\\"\\n[ax-6000040] radio \\\"Standard\\\"\\n[ax-6000041] radio \\\"Large\\\"\\ntext \\\"Width\\\"\\nlistitem \\\"Standard Wide\\\"\\n[ax-6000042] radio \\\"Standard\\\"\\n[ax-6000043] radio \\\"Wide\\\"\\ntext \\\"Color\\\"\\nlistitem \\\"Automatic Light Dark\\\"\\n[ax-6000044] radio \\\"Automatic\\\"\\n[ax-6000045] radio \\\"Light\\\"\\n[ax-6000046] radio \\\"Dark\\\"\\n[ax-6000047] link \\\"This article is semi-protected.\\\"\\ntext \\\"From Wikipedia, the free encyclopedia\\\"\\n[ax-6000048] note \\\"For the computer microarchitecture, see Ada Lovelace (microarchitecture).\\\"\\n[ax-6000049] link \\\"Ada Lovelace (microarchitecture)\\\"\\ncolumnheader \\\"The Right Honourable The Countess of Lovelace\\\"\\n[ax-6000050] link \\\"The Right Honourable\\\"\\ncell \\\"Daguerreotype of Lovelace (c. 1843)[1]\\\"\\n[ax-6000051] link \\\"\\\"\\n[ax-6000052] link \\\"Daguerreotype\\\"\\n[ax-6000053] link \\\"[1]\\\"\\ncolumnheader \\\"Born\\\"\\ncell \\\"Augusta Ada Byron 10 December 1815 London, England\\\"\\ncolumnheader \\\"Died\\\"\\ncell \\\"27 November 1852 (aged 36) Marylebone, London, England\\\"\\n[ax-6000054] link \\\"Marylebone\\\"\\ncolumnheader \\\"Resting place\\\"\\ncell \\\"Church of St Mary Magdalene, Hucknall, Nottingham, England\\\"\\n[ax-6000055] link \\\"Church of St Mary Magdalene, Hucknall\\\"\\ncolumnheader \\\"Known for\\\"\\ncell \\\"Mathematics, computing\\\"\\n[ax-6000056] link \\\"Mathematics\\\"\\n[ax-6000057] link \\\"computing\\\"\\ncolumnheader \\\"Spouse\\\"\\ncell \\\"William King-Noel, 1st Earl of Lovelace ​ ​(m. 1835)​\\\"\\n[ax-6000058] link \\\"William King-Noel, 1st Earl of Lovelace\\\"\\ncolumnheader \\\"Children\\\"\\ncell \\\"Byron King-Noel, Viscount Ockham Anne Blunt, 15th Baroness Wentworth Ralph King-Milbanke, 2nd Earl of Lovelace\\\"\\nlistitem \\\"Byron King-Noel, Viscount Ockham\\\"\\n[ax-6000059] link \\\"Byron King-Noel, Viscount Ockham\\\"\\nlistitem \\\"Anne Blunt, 15th Baroness Wentworth\\\"\\n[ax-6000060] link \\\"Anne Blunt, 15th Baroness Wentworth\\\"\\nlistitem \\\"Ralph King-Milbanke, 2nd Earl of Lovelace\\\"\\n[ax-6000061] link \\\"Ralph King-Milbanke, 2nd Earl of Lovelace\\\"\\ncolumnheader \\\"Parents\\\"\\ncell \\\"George Byron, 6th Baron Byron (father) Anne Isabella Milbanke (mother)\\\"\\nlistitem \\\"George Byron, 6th Baron Byron (father)\\\"\\n[ax-6000062] link \\\"George Byron, 6th Baron Byron\\\"\\nlistitem \\\"Anne Isabella Milbanke (mother)\\\"\\n[ax-6000063] link \\\"Anne Isabella Milbanke\\\"\\ncolumnheader \\\"Signature\\\"\\ncell \\\"\\\"\\n[ax-6000064] link \\\"\\\"\\nparagraph \\\"Augusta Ada King, Countess of Lovelace (née Byron; 10 December 1815 – 27 November 1852), also known as Ada Lovelace, was an English mathematician and writer chiefly known for work on Charles Babbage's\\\"\\n[ax-6000065] link \\\"née\\\"\\n[ax-6000066] link \\\"mathematician\\\"\\n[ax-6000067] link \\\"writer\\\"\\n[ax-6000068] link \\\"Charles Babbage\\\"\\n[ax-6000069] link \\\"computer\\\"\\n[ax-6000070] link \\\"analytical engine\\\"\\n[ax-6000071] link \\\"computer programmer\\\"\",\"title\":\"Ada Lovelace - Wikipedia\",\"truncated\":true,\"url\":\"https://en.wikipedia.org/wiki/Ada_Lovelace\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\",\"Continue with next_offset and revision to read this captured snapshot.\"]}"
+              }
+            ],
+            "structured_content": null
+          },
+          "error": null,
+          "status": "completed"
+        }
+      },
+      {
+        "type": "item.completed",
+        "item": {
+          "id": "item_7",
+          "type": "agent_message",
+          "text": "{\"answer\":\"Ada Lovelace was born on 10 December 1815 in London, England. Her mother was Anne Isabella Milbanke.\",\"evidence\":[{\"url\":\"https://en.wikipedia.org/wiki/Ada_Lovelace\",\"quote\":\"Augusta Ada Byron 10 December 1815 London, England\"},{\"url\":\"https://en.wikipedia.org/wiki/Ada_Lovelace\",\"quote\":\"Anne Isabella Milbanke (mother)\"}]}"
+        }
+      },
+      {
+        "type": "turn.completed",
+        "usage": {
+          "input_tokens": 125479,
+          "cached_input_tokens": 75136,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 714,
+          "reasoning_output_tokens": 262
+        }
+      }
+    ],
+    "parse_errors": 0,
+    "diagnostic": null,
+    "configuration": {
+      "model": "gpt-6-luna",
+      "effort": "high",
+      "sandbox": "read-only",
+      "shell_tool": false,
+      "web_search": "disabled",
+      "user_config_loaded": false,
+      "project_instructions_loaded": false,
+      "skills_catalog_max_tokens": 1,
+      "automatic_skill_instructions": false,
+      "fixture_tool_approval": "explicit approve",
+      "auth": "existing signed-in Codex host",
+      "mcp_transport": "stdio → private Unix socket → native runtime MCP client"
+    }
+  },
+  "engine": "zen",
+  "task": "wikipedia-biography",
+  "round": 0,
+  "phase": 0,
+  "success": true,
+  "outcome": "passed",
+  "answer": {
+    "answer": "Ada Lovelace was born on 10 December 1815 in London, England. Her mother was Anne Isabella Milbanke.",
+    "evidence": [
+      {
+        "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+        "quote": "Augusta Ada Byron 10 December 1815 London, England"
+      },
+      {
+        "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+        "quote": "Anne Isabella Milbanke (mother)"
+      }
+    ]
+  },
+  "expected": {
+    "date": "10 December 1815",
+    "place": "London",
+    "mother": "Anne Isabella Milbanke"
+  },
+  "evaluation": {
+    "passed": true,
+    "facts": [
+      {
+        "pattern": "10\\s+December\\s+1815|December\\s+10,?\\s+1815|1815-12-10",
+        "passed": true
+      },
+      {
+        "pattern": "London",
+        "passed": true
+      },
+      {
+        "pattern": "(?:Annabella|Anne?\\s+Isabella)(?:\\s+Noel)?\\s+(?:Milbanke|Byron)",
+        "passed": true
+      }
+    ],
+    "evidence": [
+      {
+        "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+        "quote": "Augusta Ada Byron 10 December 1815 London, England",
+        "source_matches": true,
+        "quote_observed": true
+      },
+      {
+        "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+        "quote": "Anne Isabella Milbanke (mother)",
+        "source_matches": true,
+        "quote_observed": true
+      }
+    ],
+    "forbidden_network_or_file_calls": 0
+  },
+  "preparation_ms": 60.983383999999205,
+  "host_elapsed_ms": 33849.915982000006,
+  "verification_ms": 1.6693250000025728,
+  "task_elapsed_ms": 33858.437377,
+  "usage": {
+    "input_tokens": 125479,
+    "cached_input_tokens": 75136,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 714,
+    "reasoning_output_tokens": 262
+  },
+  "model_verified": null,
+  "host_error": null,
+  "tool_calls": 6,
+  "tool_failures": 0,
+  "tool_elapsed_ms": 378.44659100000354,
+  "response_bytes": 22917,
+  "response_characters": 22895,
+  "forbidden_host_calls": 0,
+  "reported_cost_usd": null,
+  "cost_usd": null,
+  "timed_out": false,
+  "trace_file": "zen-wikipedia-biography-0.json",
+  "prompt": "Complete this read-only public website task using ONLY the browser MCP tools. You must inspect the live page; do not answer from memory. You choose your own observations, selectors and actions. Do not use HTTP/API clients, fetch, network replay, files, shell, other agents, or non-browser tools. Browser DOM evaluation is allowed for text extraction, but must not make network requests. Do not visit API endpoints. Do not sign in, create accounts, post messages, buy, or change account settings. Do not solve CAPTCHAs or bypass access challenges; report them. You may follow links, use site search and recover from errors. Stay on the task site. Maximum 30 browser calls. Verify all requested facts and finish with JSON {\"answer\":\"concise answer covering every requested fact\",\"evidence\":[{\"url\":\"source page URL\",\"quote\":\"a short exact supporting quote you observed in browser output\"}]}. Evidence quotes must be copied exactly from an observation. Do not claim success when blocked.\nYou control the owned Zen tab using Callisto in synthetic-dom input mode. Navigation starts loading; read a fresh snapshot before using refs. You may use run, batches, targeted observations, extraction and supported explicit waits. Do not enable or change input mode. Use the callisto tool with op and args. op=help returns one operation contract on demand.\nStart URL: https://en.wikipedia.org/wiki/Main_Page\nTask: Find Ada Lovelace on Wikipedia. Report her full birth date, birthplace and mother’s name. Cite the biography page and a short supporting quote.",
+  "tools": [
+    {
+      "sequence": 1,
+      "name": "callisto",
+      "arguments": {
+        "op": "navigate",
+        "args": {
+          "url": "https://en.wikipedia.org/wiki/Main_Page"
+        }
+      },
+      "started_at": "2026-11-17T14:29:52.668Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"feedback\":{\"frame_id\":0,\"needs_observation\":true,\"ready\":false,\"tab_id\":2,\"url\":\"https://en.wikipedia.org/wiki/Main_Page\"},\"navigationStarted\":true}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 6.0961739999984275,
+      "response_bytes": 205
+    },
+    {
+      "sequence": 2,
+      "name": "callisto",
+      "arguments": {
+        "op": "snapshot",
+        "args": {
+          "max_chars": 7000
+        }
+      },
+      "started_at": "2026-11-17T14:29:55.713Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"next_offset\":162,\"offset\":0,\"omitted\":0,\"order_changed\":false,\"revision\":\"ax-10094587461803528765:1\",\"scope\":{\"focus\":\"all\",\"include_text\":true,\"query\":null,\"retain_navigation\":true,\"selector\":null},\"text\":\"[ax-5000001] link \\\"Jump to content\\\"\\n[ax-5000002] button \\\"Main menu\\\"\\n[ax-5000003] link \\\"\\\"\\n[ax-5000004] search \\\"Search\\\"\\n[ax-5000005] searchbox \\\"Search Wikipedia\\\"\\n[ax-5000006] button \\\"Search\\\"\\nlistitem \\\"Donate\\\"\\n[ax-5000007] link \\\"Donate\\\"\\nlistitem \\\"Create account\\\"\\n[ax-5000008] link \\\"Create account\\\"\\nlistitem \\\"Log in\\\"\\n[ax-5000009] link \\\"Log in\\\"\\n[ax-5000010] link \\\"Wiki Loves Food 2026 in India Documenting India's vibrant culinary heritage and food traditions.\\\"\\nparagraph \\\"Wiki Loves Food 2026 in India Documenting India's vibrant culinary heritage and food traditions.\\\"\\n[ax-5000011] link \\\"Hide\\\"\\nlistitem \\\"Main Page\\\"\\n[ax-5000012] link \\\"Main Page\\\"\\nlistitem \\\"Talk\\\"\\n[ax-5000013] link \\\"Talk\\\"\\nlistitem \\\"Read\\\"\\n[ax-5000014] link \\\"Read\\\"\\nlistitem \\\"View source\\\"\\n[ax-5000015] link \\\"View source\\\"\\nlistitem \\\"View history\\\"\\n[ax-5000016] link \\\"View history\\\"\\nlistitem \\\"Save\\\"\\n[ax-5000017] link \\\"Save\\\"\\n[ax-5000018] button \\\"Tools\\\"\\ntext \\\"Appearance\\\"\\n[ax-5000019] button \\\"Hide Appearance\\\"\\ntext \\\"Text\\\"\\nlistitem \\\"Small Standard Large\\\"\\n[ax-5000020] radio \\\"Small\\\"\\n[ax-5000021] radio \\\"Standard\\\"\\n[ax-5000022] radio \\\"Large\\\"\\ntext \\\"Width\\\"\\nlistitem \\\"Standard Wide\\\"\\n[ax-5000023] radio \\\"Standard\\\"\\n[ax-5000024] radio \\\"Wide\\\"\\ntext \\\"Color\\\"\\nlistitem \\\"Automatic Light Dark\\\"\\n[ax-5000025] radio \\\"Automatic\\\"\\n[ax-5000026] radio \\\"Light\\\"\\n[ax-5000027] radio \\\"Dark\\\"\\ntext \\\",\\\"\\nheading \\\"Welcome to Wikipedia\\\"\\n[ax-5000028] link \\\"Wikipedia\\\"\\ntext \\\"the encyclopedia that .\\\"\\n[ax-5000029] link \\\"free\\\"\\n[ax-5000030] link \\\"anyone can edit\\\"\\nlistitem \\\"261,656 active editors\\\"\\n[ax-5000031] link \\\"261,656\\\"\\nlistitem \\\"7,265,534 articles in English\\\"\\n[ax-5000032] link \\\"7,265,534\\\"\\n[ax-5000033] link \\\"English\\\"\\nheading \\\"From today's featured article\\\"\\ntext \\\"From today's featured article\\\"\\n[ax-5000034] link \\\"Dividing the Light was one of the installation artworks that inspired the game.\\\"\\ntext \\\"was one of the installation artworks that inspired the game.\\\"\\n[ax-5000035] link \\\"Dividing the Light\\\"\\nparagraph \\\"Islands: Non-Places is an abstract art game developed and published by Carl Burton. It was released on November 17, 2016, and consists of a series of anonymous, liminal environments, each rendered in \\\"\\n[ax-5000036] link \\\"Islands: Non-Places\\\"\\n[ax-5000037] link \\\"art game\\\"\\n[ax-5000038] link \\\"liminal\\\"\\n[ax-5000039] link \\\"Marc Augé\\\"\\n[ax-5000040] link \\\"installation art\\\"\\n[ax-5000041] link \\\"James Turrell\\\"\\n[ax-5000042] link \\\"field recordings\\\"\\n[ax-5000043] link \\\"Chris Watson\\\"\\n[ax-5000044] link \\\"Nuovo Award\\\"\\n[ax-5000045] link \\\"Independent Games Festival\\\"\\n[ax-5000046] link \\\"Full article...\\\"\\ntext \\\"Recently featured:\\\"\\nlistitem \\\"Mark Satin\\\"\\n[ax-5000047] link \\\"Mark Satin\\\"\\nlistitem \\\"\\\\\\\"Can't Let Go\\\\\\\" (Mariah Carey song)\\\"\\n[ax-5000048] link \\\"\\\\\\\"Can't Let Go\\\\\\\" (Mariah Carey song)\\\"\\nlistitem \\\"Aucanquilcha\\\"\\n[ax-5000049] link \\\"Aucanquilcha\\\"\\nlistitem \\\"Archive\\\"\\n[ax-5000050] link \\\"Archive\\\"\\nlistitem \\\"By email\\\"\\n[ax-5000051] link \\\"By email\\\"\\nlistitem \\\"More featured articles\\\"\\n[ax-5000052] link \\\"More featured articles\\\"\\nlistitem \\\"About\\\"\\n[ax-5000053] link \\\"About\\\"\\nheading \\\"Did you know ...\\\"\\n[ax-5000054] link \\\"Harbour Tower\\\"\\ntext \\\"Harbour Tower\\\"\\nlistitem \\\"... that the Harbour Tower (pictured) is set to become the second-tallest building in Argentina upon its inauguration?\\\"\\n[ax-5000055] link \\\"Harbour Tower\\\"\\nlistitem \\\"... that Shruthi L won the 2024 World Women's Billiards Championship as the lowest-seeded player in the tournament?\\\"\\n[ax-5000056] link \\\"Shruthi L\\\"\\n[ax-5000057] link \\\"World Women's Billiards Championship\\\"\\nlistitem \\\"... that Lego Creator was one of three Lego-themed video games released at the same time?\\\"\\n[ax-5000058] link \\\"Lego Creator\\\"\\nlistitem \\\"... that communist land minister Prabhu Narayan Chaudhury announced moves to seize land from the former king of Nepal in 2006?\\\"\\n[ax-5000059] link \\\"Prabhu Narayan Chaudhury\\\"\\n[ax-5000060] link \\\"king of Nepal\\\"\\nlistitem \\\"... that Real Sound publishes up to 100 articles per day?\\\"\\n[ax-5000061] link \\\"Real Sound\\\"\\nlistitem \\\"... that painter Gabrielle Bertrand was officially only a chambermaid when she taught the future queen Marie Antoinette to paint?\\\"\\n[ax-5000062] link \\\"Gabrielle Bertrand\\\"\\nlistitem \\\"... that some commuters rowed boats to get to a train station in New York City in the early 20th century?\\\"\\n[ax-5000063] link \\\"a train station in New York City\\\"\\nlistitem \\\"... that Bill Meier spoke for 43 hours almost without pause to fight a bill?\\\"\\n[ax-5000064] link \\\"Bill Meier\\\"\\nlistitem \\\"... that The Shinano Mainichi Shimbun once launched noodles printed with edible ink?\\\"\\n[ax-5000065] link \\\"The Shinano Mainichi Shimbun\\\"\\nlistitem \\\"Archive\\\"\\n[ax-5000066] link \\\"Archive\\\"\\nlistitem \\\"Start a new article\\\"\\n[ax-5000067] link \\\"Start a new article\\\"\\nlistitem \\\"Nominate an article\\\"\\n[ax-5000068] link \\\"Nominate an article\\\"\\nheading \\\"Help us improve this article!\\\"\\n[ax-5000069] link \\\"Garbage bin with trash on top\\\"\\ntext \\\"Garbage bin with trash on top\\\"\\ntext \\\"This week's article for improvement is , waste material discarded by humans. The words , , , and are generally used interchangeably.\\\"\\n[ax-5000070] link \\\"garbage\\\"\\nparagraph \\\"You can improve this article by:\\\"\\nlistitem \\\"Expanding the \\\\\\\"History\\\\\\\" and \\\\\\\"Treatment\\\\\\\" sections\\\"\\n[ax-5000071] link \\\"History\\\"\\n[ax-5000072] link \\\"Treatment\\\"\\nlistitem \\\"Finding reliable sources about garbage disposal\\\"\\n[ax-5000073] link \\\"reliable sources\\\"\\nlistitem \\\"Using sources mentioned on the talk page to add content to the article\\\"\\n[ax-5000074] link \\\"sources mentioned on the talk page\\\"\\nparagraph \\\"You can be bold and start editing the article. Have questions or suggestions? Visit the article's talk page, or post at the Teahouse for general discussion.\\\"\\n[ax-5000075] link \\\"be bold\\\"\\n[ax-5000076] link \\\"start editing the article\\\"\\n[ax-5000077] link \\\"the article's talk page\\\"\\n[ax-5000078] link \\\"Teahouse\\\"\\nlistitem \\\"For new editors\\\"\\n[ax-5000079] link \\\"For new editors\\\"\\nlistitem \\\"Archive\\\"\\n[ax-5000080] link \\\"Archive\\\"\\nlistitem \\\"What is this?\\\"\\n[ax-5000081] link \\\"What is this?\\\"\\nheading \\\"In the news\\\"\\n[ax-5000082] figure \\\"Jensen Huang\\\"\\n[ax-5000083] link \\\"Jensen Huang in 2026\\\"\\nlistitem \\\"Nvidia CEO Jensen Huang (pictured) resigns amidst allegations of being targeted by a Chinese spy and of having extramarital affairs.\\\"\\n[ax-5000084] link \\\"Nvidia\\\"\\n[ax-5000085] link \\\"Jensen Huang\\\"\\n[ax-5000086] link \\\"being targeted by a Chinese spy\\\"\\nlistitem \\\"The Salvadoran military intervention in Haiti intensifies with airstrikes on 400 Mawozo's alleged headquarters and a deployment to the Sylvio Cator Stadium.\\\"\\n[ax-5000087] link \\\"Salvadoran military intervention in Haiti\\\"\\n[ax-5000088] link \\\"400 Mawozo\\\"\\n[ax-5000089] link \\\"Sylvio Cator Stadium\\\"\\nlistitem \\\"American ocean liner SS United States is scuttled in the Gulf of Mexico to create the largest artificial reef.\\\"\\n[ax-5000090] link \\\"SS United States\\\"\\n[ax-5000091] link \\\"scuttled\\\"\\n[ax-5000092] link \\\"artificial reef\\\"\\nlistitem \\\"The End of Everything by M. John Harrison wins the Booker Prize.\\\"\\n[ax-5000093] link \\\"The End of Everything\\\"\\n[ax-5000094] link \\\"M. John Harrison\\\"\\n[ax-5000095] link \\\"Booker Prize\\\"\\ntext \\\":\\\"\\nlistitem \\\"Iran war\\\"\\n[ax-5000096] link \\\"Iran war\\\"\",\"title\":\"Wikipedia, the free encyclopedia\",\"truncated\":true,\"url\":\"https://en.wikipedia.org/wiki/Main_Page\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\",\"Continue with next_offset and revision to read this captured snapshot.\"]}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 75.83179999999993,
+      "response_bytes": 8992
+    },
+    {
+      "sequence": 3,
+      "name": "callisto",
+      "arguments": {
+        "op": "run",
+        "args": {
+          "steps": [
+            {
+              "action": "fill",
+              "ref": "ax-5000005",
+              "value": "Ada Lovelace"
+            },
+            {
+              "action": "press",
+              "key": "Enter"
+            }
+          ],
+          "snapshot": false
+        }
+      },
+      "started_at": "2026-11-17T14:30:00.983Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"completed\":2,\"elapsed_ms\":87,\"feedback\":{\"document_revision\":\"ax-10094587461803528765\",\"dom_version\":11,\"needs_observation\":true,\"title\":\"Wikipedia, the free encyclopedia\",\"url\":\"https://en.wikipedia.org/wiki/Main_Page\"}}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 89.55959999999686,
+      "response_bytes": 284
+    },
+    {
+      "sequence": 4,
+      "name": "callisto",
+      "arguments": {
+        "op": "snapshot",
+        "args": {
+          "max_chars": 5000
+        }
+      },
+      "started_at": "2026-11-17T14:30:03.781Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"next_offset\":112,\"offset\":0,\"omitted\":0,\"order_changed\":false,\"revision\":\"ax-10094587461803528765:2\",\"scope\":{\"focus\":\"all\",\"include_text\":true,\"query\":null,\"retain_navigation\":true,\"selector\":null},\"text\":\"[ax-5000001] link \\\"Jump to content\\\"\\n[ax-5000002] button \\\"Main menu\\\"\\n[ax-5000003] link \\\"\\\"\\n[ax-5000004] search \\\"Ada Lovelace English mathematician (1815–1852) Ada Lovelace (microarchitecture) GPU microarchitecture by Nvidia Ada Lovelace Day Annual event celebrating the contributions of women to STEM fields Ada \\\"\\n[ax-5000272] combobox \\\"Search Wikipedia\\\" =Ada Lovelace\\n[ax-5000273] listbox \\\"Search results\\\"\\n[ax-5000274] option \\\"Ada Lovelace English mathematician (1815–1852)\\\"\\n[ax-5000275] link \\\"Ada Lovelace English mathematician (1815–1852)\\\"\\n[ax-5000276] option \\\"Ada Lovelace (microarchitecture) GPU microarchitecture by Nvidia\\\"\\n[ax-5000277] link \\\"Ada Lovelace (microarchitecture) GPU microarchitecture by Nvidia\\\"\\n[ax-5000278] option \\\"Ada Lovelace Day Annual event celebrating the contributions of women to STEM fields\\\"\\n[ax-5000279] link \\\"Ada Lovelace Day Annual event celebrating the contributions of women to STEM fields\\\"\\n[ax-5000280] option \\\"Ada Lovelace Award Award for women in computing, founded 1981\\\"\\n[ax-5000281] link \\\"Ada Lovelace Award Award for women in computing, founded 1981\\\"\\n[ax-5000282] option \\\"Alan M. Lovelace American scientist and government official (1929–2018)\\\"\\n[ax-5000283] link \\\"Alan M. Lovelace American scientist and government official (1929–2018)\\\"\\n[ax-5000284] option \\\"Delilah S. Dawson (Redirected from Ava Lovelace) American author (born 1977)\\\"\\n[ax-5000285] link \\\"Delilah S. Dawson (Redirected from Ava Lovelace) American author (born 1977)\\\"\\n[ax-5000286] option \\\"Search for pages containing Ada Lovelace\\\"\\n[ax-5000287] link \\\"Search for pages containing Ada Lovelace\\\"\\n[ax-5000288] button \\\"Search\\\"\\nlistitem \\\"Donate\\\"\\n[ax-5000007] link \\\"Donate\\\"\\nlistitem \\\"Create account\\\"\\n[ax-5000008] link \\\"Create account\\\"\\nlistitem \\\"Log in\\\"\\n[ax-5000009] link \\\"Log in\\\"\\n[ax-5000010] link \\\"Wiki Loves Food 2026 in India Documenting India's vibrant culinary heritage and food traditions.\\\"\\nparagraph \\\"Wiki Loves Food 2026 in India Documenting India's vibrant culinary heritage and food traditions.\\\"\\n[ax-5000011] link \\\"Hide\\\"\\nlistitem \\\"Main Page\\\"\\n[ax-5000012] link \\\"Main Page\\\"\\nlistitem \\\"Talk\\\"\\n[ax-5000013] link \\\"Talk\\\"\\nlistitem \\\"Read\\\"\\n[ax-5000014] link \\\"Read\\\"\\nlistitem \\\"View source\\\"\\n[ax-5000015] link \\\"View source\\\"\\nlistitem \\\"View history\\\"\\n[ax-5000016] link \\\"View history\\\"\\nlistitem \\\"Save\\\"\\n[ax-5000017] link \\\"Save\\\"\\n[ax-5000018] button \\\"Tools\\\"\\ntext \\\"Appearance\\\"\\n[ax-5000019] button \\\"Hide Appearance\\\"\\ntext \\\"Text\\\"\\nlistitem \\\"Small Standard Large\\\"\\n[ax-5000020] radio \\\"Small\\\"\\n[ax-5000021] radio \\\"Standard\\\"\\n[ax-5000022] radio \\\"Large\\\"\\ntext \\\"Width\\\"\\nlistitem \\\"Standard Wide\\\"\\n[ax-5000023] radio \\\"Standard\\\"\\n[ax-5000024] radio \\\"Wide\\\"\\ntext \\\"Color\\\"\\nlistitem \\\"Automatic Light Dark\\\"\\n[ax-5000025] radio \\\"Automatic\\\"\\n[ax-5000026] radio \\\"Light\\\"\\n[ax-5000027] radio \\\"Dark\\\"\\ntext \\\",\\\"\\nheading \\\"Welcome to Wikipedia\\\"\\n[ax-5000028] link \\\"Wikipedia\\\"\\ntext \\\"the encyclopedia that .\\\"\\n[ax-5000029] link \\\"free\\\"\\n[ax-5000030] link \\\"anyone can edit\\\"\\nlistitem \\\"261,656 active editors\\\"\\n[ax-5000031] link \\\"261,656\\\"\\nlistitem \\\"7,265,534 articles in English\\\"\\n[ax-5000032] link \\\"7,265,534\\\"\\n[ax-5000033] link \\\"English\\\"\\nheading \\\"From today's featured article\\\"\\ntext \\\"From today's featured article\\\"\\n[ax-5000034] link \\\"Dividing the Light was one of the installation artworks that inspired the game.\\\"\\ntext \\\"was one of the installation artworks that inspired the game.\\\"\\n[ax-5000035] link \\\"Dividing the Light\\\"\\nparagraph \\\"Islands: Non-Places is an abstract art game developed and published by Carl Burton. It was released on November 17, 2016, and consists of a series of anonymous, liminal environments, each rendered in \\\"\\n[ax-5000036] link \\\"Islands: Non-Places\\\"\\n[ax-5000037] link \\\"art game\\\"\\n[ax-5000038] link \\\"liminal\\\"\\n[ax-5000039] link \\\"Marc Augé\\\"\\n[ax-5000040] link \\\"installation art\\\"\\n[ax-5000041] link \\\"James Turrell\\\"\\n[ax-5000042] link \\\"field recordings\\\"\\n[ax-5000043] link \\\"Chris Watson\\\"\\n[ax-5000044] link \\\"Nuovo Award\\\"\\n[ax-5000045] link \\\"Independent Games Festival\\\"\\n[ax-5000046] link \\\"Full article...\\\"\\ntext \\\"Recently featured:\\\"\\nlistitem \\\"Mark Satin\\\"\\n[ax-5000047] link \\\"Mark Satin\\\"\\nlistitem \\\"\\\\\\\"Can't Let Go\\\\\\\" (Mariah Carey song)\\\"\\n[ax-5000048] link \\\"\\\\\\\"Can't Let Go\\\\\\\" (Mariah Carey song)\\\"\\nlistitem \\\"Aucanquilcha\\\"\\n[ax-5000049] link \\\"Aucanquilcha\\\"\\nlistitem \\\"Archive\\\"\\n[ax-5000050] link \\\"Archive\\\"\\nlistitem \\\"By email\\\"\\n[ax-5000051] link \\\"By email\\\"\\nlistitem \\\"More featured articles\\\"\\n[ax-5000052] link \\\"More featured articles\\\"\\nlistitem \\\"About\\\"\\n[ax-5000053] link \\\"About\\\"\\nheading \\\"Did you know ...\\\"\\n[ax-5000054] link \\\"Harbour Tower\\\"\\ntext \\\"Harbour Tower\\\"\\nlistitem \\\"... that the Harbour Tower (pictured) is set to become the second-tallest building in Argentina upon its inauguration?\\\"\\n[ax-5000055] link \\\"Harbour Tower\\\"\\nlistitem \\\"... that Shruthi L won the 2024 World Women's Billiards Championship as the lowest-seeded player in the tournament?\\\"\\n[ax-5000056] link \\\"Shruthi L\\\"\\n[ax-5000057] link \\\"World Women's Billiards Championship\\\"\\nlistitem \\\"... that Lego Creator was one of three Lego-themed video games released at the same time?\\\"\\n[ax-5000058] link \\\"Lego Creator\\\"\",\"title\":\"Wikipedia, the free encyclopedia\",\"truncated\":true,\"url\":\"https://en.wikipedia.org/wiki/Main_Page\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\",\"Continue with next_offset and revision to read this captured snapshot.\"]}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 39.800938000000315,
+      "response_bytes": 6587
+    },
+    {
+      "sequence": 5,
+      "name": "callisto",
+      "arguments": {
+        "op": "click",
+        "args": {
+          "ref": "ax-5000275"
+        }
+      },
+      "started_at": "2026-11-17T14:30:06.945Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"completed\":true,\"feedback\":{\"document_revision\":\"ax-10094587461803528765\",\"dom_version\":31,\"frame_id\":0,\"needs_observation\":true,\"ready\":true,\"tab_id\":2,\"title\":\"Wikipedia, the free encyclopedia\",\"url\":\"https://en.wikipedia.org/wiki/Main_Page\"}}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 49.377016000005824,
+      "response_bytes": 312
+    },
+    {
+      "sequence": 6,
+      "name": "callisto",
+      "arguments": {
+        "op": "snapshot",
+        "args": {
+          "max_chars": 5000
+        }
+      },
+      "started_at": "2026-11-17T14:30:09.713Z",
+      "result": {
+        "content": [
+          {
+            "text": "{\"base_revision\":null,\"capture_truncated\":false,\"diff\":false,\"live_changed\":false,\"next_offset\":127,\"offset\":0,\"omitted\":0,\"order_changed\":false,\"revision\":\"ax-16270982697841284407:1\",\"scope\":{\"focus\":\"all\",\"include_text\":true,\"query\":null,\"retain_navigation\":true,\"selector\":null},\"text\":\"[ax-6000001] link \\\"Jump to content\\\"\\n[ax-6000002] button \\\"Main menu\\\"\\n[ax-6000003] link \\\"\\\"\\n[ax-6000004] search \\\"Search\\\"\\n[ax-6000005] searchbox \\\"Search Wikipedia\\\"\\n[ax-6000006] button \\\"Search\\\"\\nlistitem \\\"Donate\\\"\\n[ax-6000007] link \\\"Donate\\\"\\nlistitem \\\"Create account\\\"\\n[ax-6000008] link \\\"Create account\\\"\\nlistitem \\\"Log in\\\"\\n[ax-6000009] link \\\"Log in\\\"\\n[ax-6000010] link \\\"Wiki Loves Food 2026 in India Documenting India's vibrant culinary heritage and food traditions.\\\"\\nparagraph \\\"Wiki Loves Food 2026 in India Documenting India's vibrant culinary heritage and food traditions.\\\"\\n[ax-6000011] link \\\"Hide\\\"\\nheading \\\"Contents\\\"\\n[ax-6000012] button \\\"Hide Contents\\\"\\nlistitem \\\"(Top)\\\"\\n[ax-6000013] link \\\"(Top)\\\"\\nlistitem \\\"Biography Toggle Biography subsection\\\"\\n[ax-6000014] link \\\"Biography\\\"\\n[ax-6000015] button \\\"Toggle Biography subsection\\\"\\nlistitem \\\"Work Toggle Work subsection\\\"\\n[ax-6000016] link \\\"Work\\\"\\n[ax-6000017] button \\\"Toggle Work subsection\\\"\\nlistitem \\\"Commemoration Toggle Commemoration subsection\\\"\\n[ax-6000018] link \\\"Commemoration\\\"\\n[ax-6000019] button \\\"Toggle Commemoration subsection\\\"\\nlistitem \\\"In popular culture Toggle In popular culture subsection\\\"\\n[ax-6000020] link \\\"In popular culture\\\"\\n[ax-6000021] button \\\"Toggle In popular culture subsection\\\"\\nlistitem \\\"Publications Toggle Publications subsection\\\"\\n[ax-6000022] link \\\"Publications\\\"\\n[ax-6000023] button \\\"Toggle Publications subsection\\\"\\nlistitem \\\"See also\\\"\\n[ax-6000024] link \\\"See also\\\"\\nlistitem \\\"Explanatory notes\\\"\\n[ax-6000025] link \\\"Explanatory notes\\\"\\nlistitem \\\"References Toggle References subsection\\\"\\n[ax-6000026] link \\\"References\\\"\\n[ax-6000027] button \\\"Toggle References subsection\\\"\\nlistitem \\\"Further reading\\\"\\n[ax-6000028] link \\\"Further reading\\\"\\nlistitem \\\"External links\\\"\\n[ax-6000029] link \\\"External links\\\"\\nheading \\\"Ada Lovelace\\\"\\ntext \\\"Ada Lovelace\\\"\\n[ax-6000030] button \\\"113 languages\\\"\\nlistitem \\\"Article\\\"\\n[ax-6000031] link \\\"Article\\\"\\nlistitem \\\"Talk\\\"\\n[ax-6000032] link \\\"Talk\\\"\\nlistitem \\\"Read\\\"\\n[ax-6000033] link \\\"Read\\\"\\nlistitem \\\"View source\\\"\\n[ax-6000034] link \\\"View source\\\"\\nlistitem \\\"View history\\\"\\n[ax-6000035] link \\\"View history\\\"\\nlistitem \\\"Save\\\"\\n[ax-6000036] link \\\"Save\\\"\\n[ax-6000037] button \\\"Tools\\\"\\ntext \\\"Appearance\\\"\\n[ax-6000038] button \\\"Hide Appearance\\\"\\ntext \\\"Text\\\"\\nlistitem \\\"Small Standard Large\\\"\\n[ax-6000039] radio \\\"Small\\\"\\n[ax-6000040] radio \\\"Standard\\\"\\n[ax-6000041] radio \\\"Large\\\"\\ntext \\\"Width\\\"\\nlistitem \\\"Standard Wide\\\"\\n[ax-6000042] radio \\\"Standard\\\"\\n[ax-6000043] radio \\\"Wide\\\"\\ntext \\\"Color\\\"\\nlistitem \\\"Automatic Light Dark\\\"\\n[ax-6000044] radio \\\"Automatic\\\"\\n[ax-6000045] radio \\\"Light\\\"\\n[ax-6000046] radio \\\"Dark\\\"\\n[ax-6000047] link \\\"This article is semi-protected.\\\"\\ntext \\\"From Wikipedia, the free encyclopedia\\\"\\n[ax-6000048] note \\\"For the computer microarchitecture, see Ada Lovelace (microarchitecture).\\\"\\n[ax-6000049] link \\\"Ada Lovelace (microarchitecture)\\\"\\ncolumnheader \\\"The Right Honourable The Countess of Lovelace\\\"\\n[ax-6000050] link \\\"The Right Honourable\\\"\\ncell \\\"Daguerreotype of Lovelace (c. 1843)[1]\\\"\\n[ax-6000051] link \\\"\\\"\\n[ax-6000052] link \\\"Daguerreotype\\\"\\n[ax-6000053] link \\\"[1]\\\"\\ncolumnheader \\\"Born\\\"\\ncell \\\"Augusta Ada Byron 10 December 1815 London, England\\\"\\ncolumnheader \\\"Died\\\"\\ncell \\\"27 November 1852 (aged 36) Marylebone, London, England\\\"\\n[ax-6000054] link \\\"Marylebone\\\"\\ncolumnheader \\\"Resting place\\\"\\ncell \\\"Church of St Mary Magdalene, Hucknall, Nottingham, England\\\"\\n[ax-6000055] link \\\"Church of St Mary Magdalene, Hucknall\\\"\\ncolumnheader \\\"Known for\\\"\\ncell \\\"Mathematics, computing\\\"\\n[ax-6000056] link \\\"Mathematics\\\"\\n[ax-6000057] link \\\"computing\\\"\\ncolumnheader \\\"Spouse\\\"\\ncell \\\"William King-Noel, 1st Earl of Lovelace ​ ​(m. 1835)​\\\"\\n[ax-6000058] link \\\"William King-Noel, 1st Earl of Lovelace\\\"\\ncolumnheader \\\"Children\\\"\\ncell \\\"Byron King-Noel, Viscount Ockham Anne Blunt, 15th Baroness Wentworth Ralph King-Milbanke, 2nd Earl of Lovelace\\\"\\nlistitem \\\"Byron King-Noel, Viscount Ockham\\\"\\n[ax-6000059] link \\\"Byron King-Noel, Viscount Ockham\\\"\\nlistitem \\\"Anne Blunt, 15th Baroness Wentworth\\\"\\n[ax-6000060] link \\\"Anne Blunt, 15th Baroness Wentworth\\\"\\nlistitem \\\"Ralph King-Milbanke, 2nd Earl of Lovelace\\\"\\n[ax-6000061] link \\\"Ralph King-Milbanke, 2nd Earl of Lovelace\\\"\\ncolumnheader \\\"Parents\\\"\\ncell \\\"George Byron, 6th Baron Byron (father) Anne Isabella Milbanke (mother)\\\"\\nlistitem \\\"George Byron, 6th Baron Byron (father)\\\"\\n[ax-6000062] link \\\"George Byron, 6th Baron Byron\\\"\\nlistitem \\\"Anne Isabella Milbanke (mother)\\\"\\n[ax-6000063] link \\\"Anne Isabella Milbanke\\\"\\ncolumnheader \\\"Signature\\\"\\ncell \\\"\\\"\\n[ax-6000064] link \\\"\\\"\\nparagraph \\\"Augusta Ada King, Countess of Lovelace (née Byron; 10 December 1815 – 27 November 1852), also known as Ada Lovelace, was an English mathematician and writer chiefly known for work on Charles Babbage's\\\"\\n[ax-6000065] link \\\"née\\\"\\n[ax-6000066] link \\\"mathematician\\\"\\n[ax-6000067] link \\\"writer\\\"\\n[ax-6000068] link \\\"Charles Babbage\\\"\\n[ax-6000069] link \\\"computer\\\"\\n[ax-6000070] link \\\"analytical engine\\\"\\n[ax-6000071] link \\\"computer programmer\\\"\",\"title\":\"Ada Lovelace - Wikipedia\",\"truncated\":true,\"url\":\"https://en.wikipedia.org/wiki/Ada_Lovelace\",\"warnings\":[\"DOM-derived snapshot; closed shadow roots and unselected frames are omitted.\",\"Continue with next_offset and revision to read this captured snapshot.\"]}",
+            "type": "text"
+          }
+        ]
+      },
+      "failed": false,
+      "elapsed_ms": 117.78106300000218,
+      "response_bytes": 6537
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "schema": "callisto.fixture-secret-redaction.v1",
+  "reason": "Expired pairing codes from owned disposable relay sessions; no personal credentials. Native pair discovery calls remain counted.",
+  "replacement": "[REDACTED_EXPIRED_FIXTURE_PAIRING_CODE]",
+  "distinct_fixture_codes_redacted": 2,
+  "changes": [
+    {
+      "file": "luna-step5-account-2026-11-17/zen-preferences-1.json",
+      "original_sha256": "9b60d56ee05326e378ddad7221e2c59133a8f6a59a500eda3a438d875f2cbcb9",
+      "published_sha256": "47feeab40510c1bee1fd24188244b57244f1e35de9d0b2f28770c31aca7738b7",
+      "replacements": 2
+    },
+    {
+      "file": "luna-step5-account-2026-11-17/zen-receipt-tabs-1.json",
+      "original_sha256": "c419db8f3577c1cd94ea0425233eb05c21903edfac6a5986b0ebdcde65831fa9",
+      "published_sha256": "2177c9ffb29c0419b80c8c84836a15bb561b003c40b02f19f3e2b01e9e002302",
+      "replacements": 2
+    },
+    {
+      "file": "luna-step5-account-2026-11-17/zen-receipt-tabs-0.json",
+      "original_sha256": "16fce493a88b282acfa3ab1cb6b52ea1d0704355d632a69e34cbc5c264fc7da3",
+      "published_sha256": "71c7dc081a22420bb4974a812ff4dc9addcf608fa9af7466bcb6e77075c1272d",
+      "replacements": 2
+    },
+    {
+      "file": "luna-step5-account-2026-11-17/zen-return-0.json",
+      "original_sha256": "16b6194e64dcdeffec2c607d22fe74606d7aa4b0a3424539959124f135c40be0",
+      "published_sha256": "b3840e2400ac56c4ffbb3d4218a3531ee97c2c3f58d37f8fe41bfb9a0268ab17",
+      "replacements": 2
+    },
+    {
+      "file": "luna-step5-account-preflight-2026-11-17/zen-preferences-0.json",
+      "original_sha256": "6f2ef7205689916b12fb2882604b14b6fe309a9c585e5299689d156141b8e61d",
+      "published_sha256": "18271e0dccb86ffc67b7494dad441ffbd6f65bdc0368b1960a928e4f4517043d",
+      "replacements": 2
+    }
+  ],
+  "measurements": "Original response_bytes, usage, elapsed times, scores and calls are preserved. Published text lengths differ. SHA256 of exact private originals is retained; raw originals remain in a private local backup.",
+  "private_backup": "/home/lothnic/.local/state/callisto-eval/step5-2026-11-17-private"
+}
