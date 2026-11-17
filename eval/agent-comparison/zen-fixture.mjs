@@ -12,8 +12,8 @@ async function freePort(){const server=createServer();await new Promise(r=>serve
 export async function until(check,timeout=15000){const until=Date.now()+timeout;let last;while(Date.now()<until){try{const value=await check();if(value)return value;}catch(error){last=error;}await pause(100);}throw Error('Fixture deadline exceeded'+(last?': '+last.message:''));}
 export const value=result=>{if(result.isError)throw Error(result.content?.map(c=>c.text||'').join(' '));return JSON.parse(result.content.find(c=>c.type==='text').text);};
 export class ZenFixture {
- constructor(client,{kind='zen',headless=kind==='firefox'}={}){this.client=client;this.kind=kind;this.headless=headless;this.extensionVersion=0;}
- async call(name,args={}){return value(await this.client.callTool({name,arguments:args},{timeout:45000}));}
+ constructor(client,{kind='zen',headless=kind==='firefox',promptBehavior,allowSystemAccess=false}={}){this.client=client;this.kind=kind;this.headless=headless;this.promptBehavior=promptBehavior;this.allowSystemAccess=allowSystemAccess;this.extensionVersion=0;}
+ async call(name,args={}){if(name==='callisto_browser'&&args.action?.startsWith('fixture_'))return this.fixtureControl(args);return value(await this.client.callTool({name,arguments:args},{timeout:45000}));}
  async request(path,data,method){const response=await fetch(this.driverURL+path,{method:method??(data?'POST':'GET'),headers:{'Content-Type':'application/json'},body:data?JSON.stringify(data):undefined,signal:AbortSignal.timeout(30000)});const result=await response.json();if(!response.ok)throw Error(result.value?.message||'WebDriver request failed');return result.value;}
  async start(url){
   this.url=url;
@@ -22,7 +22,7 @@ export class ZenFixture {
   this.directory=await mkdtemp(join(base,'callisto-persistent-'));await chmod(this.directory,0o700);
   this.profile=join(this.directory,'profile');await exec('mkdir',['-p',this.profile]);
   this.driverURL='http://127.0.0.1:'+await freePort();const bidiPort=await freePort();
-  this.driver=spawn('xvfb-run',['-a',process.env.GECKODRIVER_BINARY||'/snap/firefox/current/usr/lib/firefox/geckodriver','--host','127.0.0.1','--port',new URL(this.driverURL).port,'--websocket-port',String(bidiPort),'--profile-root',this.directory],{stdio:'ignore',detached:true,env:{...process.env,MOZ_ENABLE_WAYLAND:'0',GDK_BACKEND:'x11',WAYLAND_DISPLAY:''}});
+  this.driver=spawn('xvfb-run',['-a',process.env.GECKODRIVER_BINARY||'/snap/firefox/current/usr/lib/firefox/geckodriver','--host','127.0.0.1','--port',new URL(this.driverURL).port,'--websocket-port',String(bidiPort),'--profile-root',this.directory,...(this.allowSystemAccess?['--allow-system-access']:[])],{stdio:'ignore',detached:true,env:{...process.env,MOZ_ENABLE_WAYLAND:'0',GDK_BACKEND:'x11',WAYLAND_DISPLAY:''}});
   await until(()=>fetch(this.driverURL+'/status').then(r=>r.ok));
   if(this.kind==='zen'){
    const location=(await exec('flatpak',['info','--show-location','app.zen_browser.zen'])).stdout.trim();
@@ -36,7 +36,7 @@ export class ZenFixture {
  async openBrowser(){
   const args=['-no-remote','-profile',this.profile];if(this.headless)args.push('-headless');
   const options={args,prefs:{'zen.welcome-screen.seen':true,'browser.shell.checkDefaultBrowser':false,'privacy.userContext.enabled':true}};if(this.binary)options.binary=this.binary;
-  const created=await this.request('/session',{capabilities:{alwaysMatch:{browserName:'firefox',webSocketUrl:true,'moz:firefoxOptions':options}}});this.session=created.sessionId;this.capabilities=created.capabilities;this.endpoint=created.capabilities.webSocketUrl;
+  const created=await this.request('/session',{capabilities:{alwaysMatch:{browserName:'firefox',webSocketUrl:true,...(this.promptBehavior?{unhandledPromptBehavior:this.promptBehavior}:{}),'moz:firefoxOptions':options}}});this.session=created.sessionId;this.capabilities=created.capabilities;this.endpoint=created.capabilities.webSocketUrl;
   // Zen can expose an internal empty-workspace placeholder as the initial
   // WebDriver context after restart. Create a genuine owned tab explicitly.
   const tab=await this.request(`/session/${this.session}/window/new`,{type:'tab'});this.handle=tab.handle;
@@ -55,8 +55,9 @@ with zipfile.ZipFile(sys.argv[2],'w',zipfile.ZIP_DEFLATED) as z:
   data=p.read_bytes()
   if p.name=='manifest.json':
    m=json.loads(data);m['version']='0.2.'+sys.argv[4];m['permissions']=list(dict.fromkeys(m['permissions']+m.pop('optional_permissions')));data=json.dumps(m).encode()
-  if p.name=='browser-control.js':data+=b'\\nglobalThis.fixtureFocusEvents=[];browser.windows.onFocusChanged.addListener(id=>globalThis.fixtureFocusEvents.push({id,at:Date.now()}));const fixtureBrowserControl=browserControl;browserControl=async(...args)=>{if(args[0].action==="fixture_full_access")return setFullBrowserAccess(args[0].enabled===true);if(args[0].action==="fixture_hide_tab")return browser.tabs.hide(args[0].tab_id);if(args[0].action==="fixture_background_prepare")return args[1].startBackground(args[2],{allowWindowSetup:true});const result=await fixtureBrowserControl(...args);if(args[0].action==="tabs_list")result.fixture_diagnostics={focusEvents:globalThis.fixtureFocusEvents,version:browser.runtime.getManifest().version,windows:(await browser.windows.getAll({populate:true})).map(w=>({id:w.id,focused:w.focused,state:w.state,type:w.type,tabs:w.tabs?.map(t=>({id:t.id,active:t.active,url:t.url}))})),allTabs:(await browser.tabs.query({})).map(t=>({id:t.id,url:t.url}))};return result;};'
-  if p.name=='background.js':data+=b'\\n browserActions.push("fixture_background_prepare","fixture_full_access","fixture_hide_tab");'
+  if p.name=='browser-control.js':data+=b'\\nglobalThis.fixtureFocusEvents=[];browser.windows.onFocusChanged.addListener(id=>globalThis.fixtureFocusEvents.push({id,at:Date.now()}));const fixtureBrowserControl=browserControl;browserControl=async(...args)=>{const result=await fixtureBrowserControl(...args);if(args[0].action==="tabs_list")result.fixture_diagnostics={extensionURL:browser.runtime.getURL("options.html"),focusEvents:globalThis.fixtureFocusEvents,version:browser.runtime.getManifest().version,windows:(await browser.windows.getAll({populate:true})).map(w=>({id:w.id,focused:w.focused,state:w.state,type:w.type,tabs:w.tabs?.map(t=>({id:t.id,active:t.active,url:t.url}))})),allTabs:(await browser.tabs.query({})).map(t=>({id:t.id,url:t.url}))};return result;};'
+  if p.name=='background.js':data=data.replace(b'browser.runtime.onMessage.addListener(async message => {',b'browser.runtime.onMessage.addListener(async message => {if(message.type==="fixture-control")return fixtureUIControl(message.args);')
+  if p.name=='background.js':data+=b'\\nasync function fixtureUIControl(args){if(args.action==="fixture_full_access")return setFullBrowserAccess(args.enabled===true);if(args.action==="fixture_hide_tab")return browser.tabs.hide(args.tab_id);if(args.action==="fixture_background_prepare"){const session=[...new Set(sessions.values())].find(s=>s.target!==null);if(!session)throw Error("No shared fixture tab");return session.startBackground(undefined,{allowWindowSetup:true});}throw Error("Unknown fixture control");}'
   if p.name=='background.js' and code:data+=('\\nsetTimeout(()=>pair('+json.dumps(code)+').catch(console.error),300);').encode()
   z.writestr(p.name,data)
 `,resolve('packages/firefox-rs/extension'),archive,JSON.stringify(code),String(this.extensionVersion)]).catch(error=>{throw Error('Fixture extension build failed: '+String(error.stderr||'archive creation failed').slice(0,300));});
@@ -67,6 +68,23 @@ with zipfile.ZipFile(sys.argv[2],'w',zipfile.ZIP_DEFLATED) as z:
   const tab=await until(async()=>{const listing=await this.call('callisto_browser',{action:'tabs_list'});const tabs=listing.tabs;this.lastTabs=tabs;this.lastDiagnostics=listing.fixture_diagnostics;const matches=tabs.filter(tab=>tab.url===this.url);return matches.find(tab=>tab.active)||(matches.length===1?matches[0]:null);}).catch(()=>{throw Error('Persistent fixture tab missing: '+JSON.stringify({tabs:this.lastTabs,extension:this.lastDiagnostics}));});
   this.tabId=tab.id;await this.call('callisto_browser',{action:'tab_select',tab_id:tab.id});
   await this.call('callisto_input',{action:'enable',endpoint:this.endpoint});
+ }
+ async fixtureControl(args){
+  if(!this.directory||!this.session||!this.allowSystemAccess)throw Error('Fixture UI controls require an explicitly owned system-access test profile');
+  const original=await this.request(`/session/${this.session}/window`);
+  let control;
+  try{
+   const extensionURL=this.lastDiagnostics?.extensionURL||(await this.call('callisto_browser',{action:'tabs_list'})).fixture_diagnostics.extensionURL;
+   if(!extensionURL?.startsWith('moz-extension://'))throw Error('Owned fixture extension URL missing');
+   control=await this.request(`/session/${this.session}/window/new`,{type:'tab'});
+   await this.request(`/session/${this.session}/window`,{handle:control.handle});
+   await this.request(`/session/${this.session}/url`,{url:extensionURL});
+   // The fixture-only handler lives in the installed test copy, never source.
+   return await this.script('return browser.tabs.update('+JSON.stringify(this.tabId)+',{active:true}).then(()=>browser.runtime.sendMessage('+JSON.stringify({type:'fixture-control',args})+'))');
+  }finally{
+   if(control){await this.request(`/session/${this.session}/window`,undefined,'DELETE').catch(()=>{});}
+   await this.request(`/session/${this.session}/window`,{handle:original}).catch(()=>{});
+  }
  }
  async navigate(url){
   // WebDriver navigation does not establish the extension's active-tab lease.

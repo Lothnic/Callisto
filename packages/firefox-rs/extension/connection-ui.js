@@ -50,7 +50,7 @@
   if(state?.full_access){void (async()=>{try{notice((await browser.runtime.sendMessage({type:'full-access',enabled:false})).message);}catch(error){notice(error.message,true);}await refresh();})();return;}
   requestingFull=true;
   void perform(async()=>{try{
-   const granted=await browser.permissions.request({origins:['<all_urls>'],permissions:['tabs','cookies','bookmarks','history','downloads','tabHide']});
+   const granted=await browser.permissions.request({origins:['<all_urls>'],permissions:['tabs','cookies','bookmarks','history','downloads','sessions','tabHide']});
    if(intent!==accessIntent)return {message:'Full browser control was cancelled.'};
    if(!granted)return {message:'Browser access was not granted. Full browser control stays off.'};
    return await browser.runtime.sendMessage({type:'full-access',enabled:true});
@@ -60,7 +60,7 @@
  byId('settings')?.addEventListener('click',()=>browser.runtime.openOptionsPage());
  function permission(id,request,success){byId(id).addEventListener('click',()=>perform(async()=>{const granted=await browser.permissions.request(request);if(!granted)return {message:'Permission was not granted. Existing access is unchanged.'};return typeof success==='function'?success():{message:success};}));}
  permission('allow',{origins:['<all_urls>']},'Navigation allowed. Share the tab again to use it.');
- permission('full',{origins:['<all_urls>'],permissions:['tabs','cookies','bookmarks','history','downloads']},'Browser access enabled.');
+ permission('full',{origins:['<all_urls>'],permissions:['tabs','cookies','bookmarks','history','downloads','sessions']},'Browser access enabled.');
  permission('network',{origins:['<all_urls>'],permissions:['webRequest','webRequestBlocking']},'Network access enabled. The agent must start a capture with explicit origins.');
  permission('containers',{permissions:['cookies']},()=>browser.runtime.sendMessage({type:'enable-containers'}));
  window.addEventListener('focus',refresh);const timer=setInterval(()=>{if(!document.hidden)void refresh();},1500);window.addEventListener('pagehide',()=>clearInterval(timer),{once:true});void refresh();

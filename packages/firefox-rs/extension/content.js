@@ -5,6 +5,7 @@
   globalThis.__callistoTabBridge = true;
   const nodeRefs = new WeakMap();
   let current = new Map();
+  let refScope = null, refSequence = 0;
   let enabled = true;
   let lease = 0;
   let handoff = null;
@@ -39,7 +40,11 @@
   }
   function reference(el) {
     let ref = nodeRefs.get(el);
-    if (!ref) { ref = newRef(); nodeRefs.set(el, ref); }
+    if (!ref) {
+      if(refScope!==null && refSequence>=999999)throw new Error('Document reference capacity reached; navigate before assigning more refs.');
+      ref = refScope===null ? newRef() : `ax-${BigInt(refScope)*1000000n+BigInt(++refSequence)}`;
+      nodeRefs.set(el, ref);
+    }
     current.set(ref, el);
     return ref;
   }
@@ -95,9 +100,16 @@
     if(document.documentElement.getAttribute('data-callisto-lease')===nonce)document.documentElement.removeAttribute('data-callisto-lease');
     preparedInput=null;
   }
+  function selectValue(el,value){
+    const enabled=[...el.options].filter(o=>!o.disabled && !o.parentElement.disabled);
+    const exact=enabled.find(o=>o.value===value);if(exact)return exact.value;
+    const labels=enabled.filter(o=>clean(o.label)===value);
+    if(labels.length===1)return labels[0].value;
+    throw new Error(`Select value or unique label required. Enabled options: ${JSON.stringify(enabled.slice(0,30).map(o=>({label:clean(o.label),value:o.value})))}`);
+  }
   async function prepareInput(args,deadline){
     if(typeof args.nonce!=='string' || !/^[a-f0-9]{64}$/.test(args.nonce))throw new Error('Invalid input binding nonce.');
-    if(!['bind','click','fill','press','hover','check','select','submit'].includes(args.action))throw new Error('Unsupported trusted input action.');
+    if(!['bind','click','fill','press','hover','check','select','submit','drag'].includes(args.action))throw new Error('Unsupported trusted input action.');
     clearPreparedInput();
     let el;
     if(args.action==='press'){
@@ -121,6 +133,13 @@
       }
       if(!el?.isConnected)throw new Error('Unknown or stale reference; capture a new snapshot.');
     }
+    let dropTarget=null;
+    if(args.action==='drag'){
+      if(el.draggable)throw new Error('Trusted HTML5 drag/drop is unsupported by this Firefox adapter. Explicitly disable trusted input for synthetic HTML drag/drop, or use handoff.');
+      dropTarget=current.get(args.target_ref);
+      if(!dropTarget?.isConnected)throw new Error('Unknown or stale drop target; capture a new snapshot.');
+      await actionable(args.target_ref,'click',deadline);
+    }
     let submit_via='click';
     if(args.action==='submit'){
       const form=el.form;if(!form || !HTMLFormElement.prototype.checkValidity.call(form))throw new Error('Target needs a valid associated form.');
@@ -132,6 +151,7 @@
     let select_steps;
     if(args.action==='select'){
       if(!(el instanceof HTMLSelectElement) || el.multiple)throw new Error('Trusted select requires a single native select.');
+      args.value=selectValue(el,args.value);
       const options=[...el.options].filter(option=>!option.disabled && !option.parentElement.disabled);
       select_steps=options.findIndex(option=>option.value===args.value);
       if(select_steps<0 || select_steps>200)throw new Error('No supported enabled select option.');
@@ -139,20 +159,23 @@
     const point=el?await actionable(reference(el),args.action==='fill'?'fill':'click',deadline):null;
     if(el)el.setAttribute('data-callisto-target',args.nonce);
     document.documentElement.setAttribute('data-callisto-lease',args.nonce);
-    preparedInput={...args,el,lease,submit_via,select_steps};
-    const pointInTop=()=>{
-      const rect=el.getBoundingClientRect();let x=Math.max(0,rect.left)+(Math.min(innerWidth,rect.right)-Math.max(0,rect.left))/2,y=Math.max(0,rect.top)+(Math.min(innerHeight,rect.bottom)-Math.max(0,rect.top))/2,view=window;
+    preparedInput={...args,el,lease,submit_via,select_steps,dropTarget};
+    const pointInTop=(target=el)=>{
+      const rect=target.getBoundingClientRect();let x=Math.max(0,rect.left)+(Math.min(innerWidth,rect.right)-Math.max(0,rect.left))/2,y=Math.max(0,rect.top)+(Math.min(innerHeight,rect.bottom)-Math.max(0,rect.top))/2,view=window;
       while(view!==view.top){const host=view.frameElement,r=host.getBoundingClientRect();x+=r.left+host.clientLeft;y+=r.top+host.clientTop;view=host.ownerDocument.defaultView;}
       return {x,y};
     };
-    const coordinates=point?pointInTop():{};preparedInput.coordinates=coordinates;preparedInput.pointInTop=pointInTop;
-    return {nonce:args.nonce,url:location.href,action:args.action,...coordinates,submit_via,select_steps,skip:args.action==='check' && el.checked===args.checked};
+    const coordinates=point?pointInTop():{};
+    if(dropTarget){const drop=pointInTop(dropTarget);coordinates.target_x=drop.x;coordinates.target_y=drop.y;}
+    preparedInput.coordinates=coordinates;preparedInput.pointInTop=pointInTop;
+    return {nonce:args.nonce,url:location.href,action:args.action,...coordinates,submit_via,select_steps,...(args.action==='select'?{value:args.value}:{}),skip:args.action==='check' && el.checked===args.checked};
   }
-  let snapshotCache=null,diffBaseline=null,snapshotRevision=0,domVersion=0;
+  let snapshotCache=null,diffBaselines=new Map(),snapshotRevision=0,domVersion=0;
+  const feedback=()=>({url:location.href,title:withoutTitleMarker(document.title),document_revision:documentRevision,dom_version:domVersion,needs_observation:true});
   const documentRevision=newRef();
   new MutationObserver(records=>{if(records.some(record=>record.type!=='attributes' || !record.attributeName?.startsWith('data-callisto-')))domVersion++;}).observe(document.body,{subtree:true,childList:true,characterData:true,attributes:true});
   function snapshot(options = {}) {
-    if(options.preserve_refs){const previous={current,snapshotCache,diffBaseline};try{return snapshot({...options,preserve_refs:false});}finally{current=previous.current;snapshotCache=previous.snapshotCache;diffBaseline=previous.diffBaseline;}}
+    if(options.preserve_refs){const previous={current,snapshotCache,diffBaselines:new Map(diffBaselines)};try{return snapshot({...options,preserve_refs:false});}finally{current=previous.current;snapshotCache=previous.snapshotCache;diffBaselines=previous.diffBaselines;}}
     const offset=options.offset ?? 0,maxChars=options.max_chars ?? 12000;
     if(!Number.isInteger(offset) || offset<0 || offset>10000 || !Number.isInteger(maxChars) || maxChars<1000 || maxChars>30000)throw new Error('Invalid snapshot offset or max_chars.');
     if(options.diff!==undefined && typeof options.diff!=='boolean')throw new Error('diff must be boolean.');
@@ -165,11 +188,34 @@
         if(matches.length!==1)throw new Error('Observation selector must match exactly one element, including open shadow roots.');
         root=matches[0];
       }
-      const scope={selector:options.selector ?? null,query:options.query ?? null,include_text:options.include_text!==false};
+      const focus=options.focus ?? 'all';
+      if(!['all','main','modal','auto'].includes(focus))throw new Error('focus must be all, main, modal or auto.');
+      if(options.retain_navigation!==undefined && typeof options.retain_navigation!=='boolean')throw new Error('retain_navigation must be boolean.');
+      if(options.selector!==undefined && focus!=='all')throw new Error('Choose selector or focus, not both.');
+      if(root===document && focus!=='all'){
+        const modal=queryDeep(document,'dialog[open],[role=dialog],[aria-modal=true]').filter(visible);
+        const main=queryDeep(document,'main,[role=main]').filter(visible);
+        const roots=focus==='modal'?modal:focus==='main'?main:modal.length?modal:main;
+        if(roots.length!==1)throw new Error(`focus=${focus} requires exactly one visible region; use selector or focus=all.`);
+        root=roots[0];
+      }
+      const scope={selector:options.selector ?? null,query:options.query ?? null,include_text:options.include_text!==false,focus,retain_navigation:options.retain_navigation!==false};
       current=new Map();const lines=[];let total=0,captureTruncated=false;
       const controls='button,a[href],input,textarea,select,[role],h1,h2,h3,h4,h5,h6';
       const selector=scope.include_text?controls+',p,li,td,th,dt,dd,pre,blockquote,div,span,label,summary,figcaption':controls;
-      const candidates=function*(){if(root!==document && root.matches(selector))yield root;if(root.shadowRoot)yield* elements(root.shadowRoot,selector);yield* elements(root,selector);};
+      const candidates=function*(){
+        const seen=new Set();
+        const emit=function*(nodes){for(const node of nodes)if(!seen.has(node)){seen.add(node);yield node;}};
+        if(root!==document && root.matches(selector))yield* emit([root]);
+        if(root.shadowRoot)yield* emit(elements(root.shadowRoot,selector));
+        yield* emit(elements(root,selector));
+        if(root!==document && focus!=='all' && scope.retain_navigation){
+          for(const region of elements(document,'header,nav,[role=banner],[role=navigation]'))if(visible(region))yield* emit(elements(region,controls));
+        }
+      };
+      let omitted=0;
+      const insideRoot=el=>{for(let node=el;node;node=node.parentElement||node.getRootNode()?.host)if(node===root)return true;return false;};
+      if(root!==document){for(const el of elements(document,controls))if(visible(el)&&!insideRoot(el)&&!(focus!=='all'&&scope.retain_navigation&&composedClosest(el,'header,nav,[role=banner],[role=navigation]')))omitted++;}
       for(const el of candidates()){
         if(!visible(el))continue;
         let r=role(el),fullName;
@@ -183,11 +229,15 @@
         if(el.disabled || el.getAttribute('aria-disabled')==='true')line+=' {disabled}';
         if(r==='textbox' || r==='searchbox' || r==='combobox' && el.matches('input,textarea')){const value=el.type==='password'?'[REDACTED]':clean(el.value).slice(0,200);if(value)line+=` =${value}`;}
         if(lines.length>=5000 || total+line.length>500000){captureTruncated=true;break;}
+        if(el instanceof HTMLSelectElement){
+          const enabled=[...el.options].filter(o=>!o.disabled&&!o.parentElement.disabled);
+          line+=` options=${JSON.stringify(enabled.slice(0,5).map(o=>({label:clean(o.label).slice(0,40),value:o.value.slice(0,40)})))}${enabled.length>5||enabled.some(o=>o.label.length>40||o.value.length>40)?' {options_truncated}':''}`;
+        }
         lines.push(line);total+=line.length+1;
       }
       let output=lines,orderChanged=false,baseRevision=null;
       if(options.diff){
-        const previous=diffBaseline && JSON.stringify(diffBaseline.scope)===JSON.stringify(scope)?diffBaseline:null,before=previous?.lines || [];
+        const previous=diffBaselines.get(JSON.stringify(scope)),before=previous?.lines || [];
         baseRevision=previous?.revision ?? null;
         const subtract=(source,other)=>{const counts=new Map();for(const line of other)counts.set(line,(counts.get(line)||0)+1);return source.filter(line=>{const count=counts.get(line)||0;if(count){counts.set(line,count-1);return false;}return true;});};
         output=[...subtract(lines,before).map(line=>'+ '+line),...subtract(before,lines).map(line=>'- '+line)];
@@ -195,11 +245,13 @@
         orderChanged=JSON.stringify(before.filter(line=>now.has(line)))!==JSON.stringify(lines.filter(line=>old.has(line)));
       }
       const revision=`${documentRevision}:${++snapshotRevision}`;
-      diffBaseline={scope,lines,revision};
-      snapshotCache={scope,lines:output,refs:current,revision,baseRevision,orderChanged,version:domVersion,captureTruncated,diff:options.diff===true,url:location.href,title:withoutTitleMarker(document.title)};
+      const baselineKey=JSON.stringify(scope);
+      diffBaselines.delete(baselineKey);diffBaselines.set(baselineKey,{scope,lines,revision});
+      if(diffBaselines.size>8)diffBaselines.delete(diffBaselines.keys().next().value);
+      snapshotCache={scope,omitted,lines:output,refs:current,revision,baseRevision,orderChanged,version:domVersion,captureTruncated,diff:options.diff===true,url:location.href,title:withoutTitleMarker(document.title)};
     }else{
       if(!snapshotCache)throw new Error('No captured snapshot; request offset 0 first.');
-      for(const key of ['selector','query','include_text'])if(options[key]!==undefined && options[key]!==snapshotCache.scope[key])throw new Error('Snapshot continuation scope changed; request offset 0.');
+      for(const key of ['selector','query','include_text','focus','retain_navigation'])if(options[key]!==undefined && options[key]!==snapshotCache.scope[key])throw new Error('Snapshot continuation scope changed; request offset 0.');
       if(options.revision!==undefined && options.revision!==snapshotCache.revision)throw new Error('Snapshot revision changed; request offset 0.');
       if(options.diff!==undefined && options.diff!==snapshotCache.diff)throw new Error('Snapshot continuation diff mode changed.');
       current=snapshotCache.refs;
@@ -208,9 +260,10 @@
     while(cursor<cache.lines.length){const line=cache.lines[cursor];if(chars+line.length+(lines.length?1:0)>maxChars)break;lines.push(line);chars+=line.length+(lines.length>1?1:0);cursor++;}
     const truncated=cursor<cache.lines.length,warnings=['DOM-derived snapshot; closed shadow roots and unselected frames are omitted.'];
     if(document.querySelector('iframe,frame'))warnings.push('Select a frame explicitly to inspect its contents.');
+    if(cache.omitted)warnings.push(`${cache.omitted} controls/headings outside the selected region omitted.`);
     if(cache.captureTruncated)warnings.push('Capture limit reached; use a targeted selector or query for additional content.');
     if(truncated)warnings.push('Continue with next_offset and revision to read this captured snapshot.');
-    return {url:cache.url,title:cache.title,text:lines.join('\n'),offset,next_offset:truncated?cursor:null,truncated,revision:cache.revision,base_revision:cache.baseRevision,order_changed:cache.orderChanged,diff:cache.diff,live_changed:cache.version!==domVersion,capture_truncated:cache.captureTruncated,warnings};
+    return {url:cache.url,title:cache.title,text:lines.join('\n'),offset,next_offset:truncated?cursor:null,truncated,revision:cache.revision,base_revision:cache.baseRevision,order_changed:cache.orderChanged,diff:cache.diff,live_changed:cache.version!==domVersion,capture_truncated:cache.captureTruncated,omitted:cache.omitted,scope:cache.scope,warnings};
   }
   async function actionable(ref, action, deadline = Date.now() + 2000) {
     deadline = Math.min(deadline, Date.now() + 2000);
@@ -374,9 +427,21 @@
     }
     return {url:location.href,title:withoutTitleMarker(document.title),rows: out, has_next, omitted: rows.length > limit};
   }
+  let recording={active:false,events:[],dropped:0};
+  for(const type of ['click','input','change','keydown'])document.addEventListener(type,event=>{
+    if(!enabled || !recording.active || !event.isTrusted)return;
+    const target=event.composedPath()[0];
+    if(!(target instanceof Element) || composedClosest(target,'[data-callisto-handoff]'))return;
+    if(type==='keydown' && !['Enter','Tab','Escape'].includes(event.key))return;
+    const entry={type,at:Date.now(),target:{role:role(target),name:name(target).slice(0,200)}};
+    if(type==='input'||type==='change')entry.value=target.type==='password'?'[REDACTED]':String(target.value ?? '').slice(0,1000);
+    if(type==='keydown')entry.key=event.key;
+    if(recording.events.length===200){recording.events.shift();recording.dropped++;}
+    recording.events.push(entry);
+  },true);
   browser.runtime.onMessage.addListener(async function handle(message) {
-    if (message.type === 'ping') { enabled = true; mark(); return {value:true}; }
-    if (message.type === 'revoke') { enabled = false; lease++;snapshotCache=null;diffBaseline=null;clearPreparedInput(); for(const request of pendingRequests)request.abort();pendingRequests.clear();for (const finish of pendingWaits) finish('Sharing stopped.'); finishHandoff('Sharing stopped during human handoff.'); current.clear(); unmark(); return {value:true}; }
+    if (message.type === 'ping') { if(refScope===null && Number.isSafeInteger(message.ref_scope) && message.ref_scope>0)refScope=message.ref_scope; enabled = true; mark(); return {value:true}; }
+    if (message.type === 'revoke') { enabled = false; lease++;snapshotCache=null;diffBaselines.clear();recording={active:false,events:[],dropped:0};clearPreparedInput(); for(const request of pendingRequests)request.abort();pendingRequests.clear();for (const finish of pendingWaits) finish('Sharing stopped.'); finishHandoff('Sharing stopped during human handoff.'); current.clear(); unmark(); return {value:true}; }
     if (message.type === 'handoff') {
       if (!enabled || handoff) return {error:'Sharing stopped or a handoff is already pending.'};
       if (typeof message.prompt!=='string' || !message.prompt.trim() || message.prompt.length>1000 || !Number.isInteger(message.timeout_ms) || message.timeout_ms<1000 || message.timeout_ms>120000) return {error:'Invalid handoff prompt or timeout.'};
@@ -406,7 +471,9 @@
         if(prepared.el && (!prepared.el.isConnected || prepared.el.getAttribute('data-callisto-target')!==args.nonce))throw new Error('Trusted input target changed.');
         if(prepared.el && !args.finish){
           await actionable(reference(prepared.el),prepared.action==='fill'?'fill':'click',deadline);
+          if(prepared.dropTarget)await actionable(reference(prepared.dropTarget),'click',deadline);
           prepared.coordinates=prepared.pointInTop();
+          if(prepared.dropTarget){const point=prepared.pointInTop(prepared.dropTarget);prepared.coordinates.target_x=point.x;prepared.coordinates.target_y=point.y;}
         }
         if(args.keyboard){
           let focused=document.activeElement;while(focused?.shadowRoot?.activeElement)focused=focused.shadowRoot.activeElement;
@@ -421,6 +488,15 @@
       if (message.method === 'snapshot') return {value:snapshot(message.value ? JSON.parse(message.value) : {})};
       if (message.method === 'page') {
         const args = JSON.parse(message.value);
+        if(args.action==='feedback')return {value:feedback()};
+        if(args.action==='recording'){
+          if(args.operation==='start')recording={active:true,events:[],dropped:0};
+          else if(args.operation==='stop')recording.active=false;
+          else if(args.operation!=='list')throw new Error('recording operation must be start, list or stop.');
+          const limit=args.limit ?? 100;
+          if(!Number.isInteger(limit)||limit<1||limit>200)throw new Error('recording limit must be 1–200.');
+          return {value:{active:recording.active,events:recording.events.slice(-limit),dropped:recording.dropped,document_revision:documentRevision}};
+        }
         if(args.action==='api_replay'){
           const url=new URL(args.url),method=args.method ?? 'GET',expectedLease=lease;
           if(!['GET','HEAD'].includes(method) || url.origin!==location.origin || !args.origins?.includes(url.origin) || url.username || url.password)throw new Error('Replay requires GET/HEAD to the shared page origin.');
@@ -483,7 +559,7 @@
         if (args.action === 'scroll') {
           const x = args.delta_x ?? 0, y = args.delta_y ?? 0;
           if (![x,y].every(n => typeof n === 'number' && Number.isFinite(n) && Math.abs(n)<=100000)) throw new Error('Invalid scroll deltas.');
-          window.scrollBy({left:x,top:y,behavior:'instant'}); return {value:{completed:true}};
+          window.scrollBy({left:x,top:y,behavior:'instant'}); return {value:{completed:true,feedback:feedback()}};
         }
         if (['fill','click','submit','select','check','hover'].includes(args.action)) {
           let target = args.ref;
@@ -505,6 +581,18 @@
           args.ref = target;
         }
         const el = await actionable(args.ref,args.action,deadline);
+        if(args.action==='drag'){
+          const destination=await actionable(args.target_ref,'click',deadline),expected=lease;
+          await actionable(args.ref,'click',deadline);
+          if(!enabled||expected!==lease)throw new Error('Sharing changed before drag dispatch.');
+          const transfer=new DataTransfer();
+          const fire=(target,type)=>{const box=target.getBoundingClientRect();return target.dispatchEvent(new DragEvent(type,{bubbles:true,cancelable:true,dataTransfer:transfer,clientX:box.x+box.width/2,clientY:box.y+box.height/2}));};
+          const started=fire(el,'dragstart');
+          if(!started)return {value:{completed:false,cancelled:true,synthetic:true,feedback:feedback()}};
+          fire(destination,'dragenter');const accepted=!fire(destination,'dragover');
+          if(accepted)fire(destination,'drop');fire(el,'dragend');
+          return {value:{completed:accepted,drop_accepted:accepted,synthetic:true,feedback:feedback()}};
+        }
         if (args.action === 'upload') {
           if (!el.matches('input[type=file]') || !Array.isArray(args.files) || !args.files.length || args.files.length>10) throw new Error('Expected file input and 1–10 files.');
           if (!el.multiple && args.files.length>1) throw new Error('This input accepts only one file.');
@@ -523,14 +611,14 @@
           for (const type of ['pointerover','pointerenter','pointermove']) el.dispatchEvent(new PointerEvent(type,options));
           for (const type of ['mouseover','mouseenter','mousemove']) el.dispatchEvent(new MouseEvent(type,options));
         } else if (args.action === 'select') {
-          if (!(el instanceof HTMLSelectElement) || ![...el.options].some(o=>o.value===args.value && !o.disabled)) throw new Error('No enabled option with that value.');
-          el.value=args.value; el.dispatchEvent(new Event('input',{bubbles:true})); el.dispatchEvent(new Event('change',{bubbles:true}));
+          if (!(el instanceof HTMLSelectElement))throw new Error('Target must be a native select.');
+          el.value=selectValue(el,args.value); el.dispatchEvent(new Event('input',{bubbles:true})); el.dispatchEvent(new Event('change',{bubbles:true}));
         } else if (args.action === 'check') {
           if (!el.matches('input[type=checkbox]') || typeof args.checked !== 'boolean') throw new Error('Expected a checkbox and checked boolean.');
           if (el.checked !== args.checked) el.click();
           if (el.checked !== args.checked) throw new Error('The checkbox did not retain the requested state.');
         } else throw new Error('Unsupported page action.');
-        return {value:{completed:true,synthetic:true}};
+        return {value:{completed:true,synthetic:true,feedback:feedback()}};
       }
       const el = await actionable(message.ref,message.method,deadline);
       if (message.method === 'submit') {
@@ -553,7 +641,7 @@
         el.dispatchEvent(new Event('input',{bubbles:true}));
         el.dispatchEvent(new Event('change',{bubbles:true}));
       } else throw new Error('Unsupported action.');
-      return {value:{completed:true}};
+      return {value:{completed:true,feedback:feedback()}};
     } catch (error) { return {error:String(error.message || error)}; }
   });
 })();

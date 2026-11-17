@@ -39,9 +39,10 @@ export function privateEnvironment(base,home){
 // receives the unchanged native tool name. `codemode:false` keeps the native
 // schema on the provider tool list instead of wrapping it in OpenCode's execute
 // sandbox.
-export function openCodeConfig({model,variant,socket,serverName,toolName}){
+export function openCodeConfig({model,variant,socket,serverName,toolName,toolNames=toolName?[toolName]:[],codeMode=false}){
  if(!/^[a-z0-9-]+$/.test(serverName))throw Error('OpenCode MCP server name must be a short slug');
- const action=`${serverName}_${toolName}`;
+ if(!toolNames.length||toolNames.some(name=>!/^[a-zA-Z0-9_-]+$/.test(name)))throw Error('Explicit native browser tool names are required');
+ const rules=toolNames.map(name=>({action:`${serverName}_${name}`,resource:'*',effect:'allow'}));
  return {
   $schema:'https://opencode.ai/config.json',
   model:`${model}#${variant}`,
@@ -51,7 +52,7 @@ export function openCodeConfig({model,variant,socket,serverName,toolName}){
   compaction:{auto:false},
   permissions:[
    {action:'*',resource:'*',effect:'deny'},
-   {action,resource:'*',effect:'allow'},
+   ...rules,
   ],
   agents:{
    benchmark:{
@@ -59,7 +60,7 @@ export function openCodeConfig({model,variant,socket,serverName,toolName}){
     mode:'primary',
     permissions:[
      {action:'*',resource:'*',effect:'deny'},
-     {action,resource:'*',effect:'allow'},
+     ...rules,
     ],
    },
   },
@@ -69,7 +70,7 @@ export function openCodeConfig({model,variant,socket,serverName,toolName}){
     [serverName]:{
      type:'local',
      command:[process.execPath,proxy,socket],
-     codemode:false,
+     codemode:codeMode,
     },
    },
   },

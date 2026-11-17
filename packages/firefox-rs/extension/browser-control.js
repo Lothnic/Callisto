@@ -1,7 +1,30 @@
 'use strict';
 const fullBrowserPermissions = {origins:['<all_urls>'],permissions:['tabs','cookies','bookmarks','history','downloads']};
 const fullControlPermissions = {origins:['<all_urls>'],permissions:[...fullBrowserPermissions.permissions,'tabHide']};
-const browserActions = ['background','tabs_list','windows_list','tab_select','tab_activate','tab_create','tab_navigate','window_create','window_close','agent_container','tab_close','back','forward','reload','screenshot','cookies_list','cookie_set','cookie_remove','bookmarks_search','history_search','downloads_search','download'];
+const browserActions = ['tab_name','tab_resolve','background','tabs_list','windows_list','tab_select','tab_activate','tab_create','tab_navigate','window_create','window_close','agent_container','tab_close','back','forward','reload','screenshot','cookies_list','cookie_set','cookie_remove','bookmarks_search','history_search','downloads_search','download'];
+let namedTabWrites=Promise.resolve();
+const namedTabStorage=()=>browser.storage.local;
+async function updateNamedTabs(change){
+  const work=namedTabWrites.then(async()=>{
+    const saved=await namedTabStorage().get('callistoNamedTabs');
+    const names={...(saved.callistoNamedTabs ?? {})};
+    const result=await change(names);await namedTabStorage().set({callistoNamedTabs:names});return result;
+  });namedTabWrites=work.catch(()=>{});return work;
+}
+async function resolveNamedTab(name){
+  if(typeof name!=='string'||!name.trim()||name.length>100)throw new Error('tab_name must be 1–100 characters.');
+  await namedTabWrites;
+  const saved=await namedTabStorage().get('callistoNamedTabs');
+  const entry=saved.callistoNamedTabs?.[name];
+  if(!entry || typeof entry.token!=='string')throw new Error('Unknown tab_name; assign it with browser action=tab_name first.');
+  const candidates=[entry.id,...(await browser.tabs.query({})).map(t=>t.id).filter(id=>id!==entry.id)];
+  for(const id of candidates){
+    try{if(await browser.sessions.getTabValue(id,'callistoNamedTab')===entry.token){const tab=await browser.tabs.get(id);if(id!==entry.id)await updateNamedTabs(names=>{names[name]={...entry,id};});return tab;}}catch{}
+  }
+  await updateNamedTabs(names=>{delete names[name];});throw new Error('Named tab has closed; select or create a new tab.');
+}
+
+function forgetNamedTab(id){return updateNamedTabs(names=>{for(const [name,tab] of Object.entries(names))if(tab.id===id)delete names[name];});}
 function webUrl(value) {
   const url = new URL(value);
   if (!['http:','https:'].includes(url.protocol) || url.username || url.password) throw new Error('Expected an HTTP(S) URL without credentials.');
@@ -33,9 +56,27 @@ async function browserControl(args, session, owner) {
   if(session.background&&!['tabs_list','cookies_list','bookmarks_search','history_search','downloads_search'].includes(args.action))await session.checkBackground(owner);
   if (!(await browser.permissions.contains(fullBrowserPermissions))) throw new Error('Choose Enable browser access in the extension and approve its permissions first.');
   session.guard(owner);
+  if((args.action==='tab_name'||args.tab_name!==undefined) && !(await browser.permissions.contains({permissions:['sessions']})))throw new Error('Named tabs need the sessions permission. Choose Enable browser access again to grant it.');
+  if(args.action!=='tab_name' && args.tab_name!==undefined){
+    const tab=await resolveNamedTab(args.tab_name);session.guard(owner);
+    if(args.tab_id!==undefined && args.tab_id!==tab.id)throw new Error('Conflicting tab_id and tab_name.');
+    args={...args,tab_id:tab.id};
+  }
   const id = () => { if (!Number.isSafeInteger(args.tab_id) || args.tab_id < 0) throw new Error('tab_id is required.'); return args.tab_id; };
   const summary = t => ({id:t.id,windowId:t.windowId,url:t.url,title:t.title,active:t.active,cookieStoreId:t.cookieStoreId,pinned:t.pinned,hidden:!!t.hidden});
   switch (args.action) {
+    case 'tab_name': {
+      if(typeof args.tab_name!=='string'||!args.tab_name.trim()||args.tab_name.length>100)throw new Error('tab_name must be 1–100 characters.');
+      const tab=await browser.tabs.get(id());session.guard(owner);
+      const token=await browser.sessions.getTabValue(tab.id,'callistoNamedTab') ?? crypto.randomUUID();
+      await browser.sessions.setTabValue(tab.id,'callistoNamedTab',token);session.guard(owner);
+      await updateNamedTabs(names=>{Object.defineProperty(names,args.tab_name,{value:{id:tab.id,token},enumerable:true,configurable:true,writable:true});});
+      return {...summary(tab),tab_name:args.tab_name};
+    }
+    case 'tab_resolve': {
+      if(args.tab_name===undefined)throw new Error('tab_name is required.');
+      return {...summary(await browser.tabs.get(id())),tab_name:args.tab_name};
+    }
     case 'tabs_list': return {tabs:(await browser.tabs.query({})).map(summary),warning:'Zen may omit tabs from inactive workspaces.'};
     case 'windows_list': return {windows:await browser.windows.getAll({populate:true})};
     case 'tab_activate': {

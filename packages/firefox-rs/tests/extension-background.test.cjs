@@ -32,7 +32,7 @@ function fixture(executeScript = async () => {}, siteAccess = false, saved = {},
       onRemoved:{addListener(){}}, onUpdated:{addListener(fn){ updateListener = fn; }}
     }
   };
-  const context = vm.createContext({browser,WebSocket:Socket,setTimeout,clearTimeout,URL,Date:clock});
+  const context = vm.createContext({browser,crypto:require('node:crypto').webcrypto,WebSocket:Socket,setTimeout,clearTimeout,URL,Date:clock});
   vm.runInContext(fs.readFileSync(path.join(__dirname,'../extension/browser-control.js'),'utf8'), context);
   vm.runInContext(fs.readFileSync(path.join(__dirname,'../extension/background.js'),'utf8'), context);
   return {listener,menuListener,updateListener,domListener,commitListener,Socket,messages,browser,focusChanged:id=>focusListener?.(id),permissionsRemoved:p=>permissionListener?.(p)};
@@ -87,7 +87,9 @@ test('pairing requires server confirmation and stop prevents further sharing', a
   assert.match((await connecting).message,/Connected/);
   assert.match((await listener({type:'share'})).message,/shared/);
   await ws.receive({id:1,method:'status'});
-  assert.deepEqual(messages.at(-1).result,{connected:true,fullAccess:false,execution:{mode:'shared-tab',focusPolicy:'user-controlled',paused:false},sharing:true,active:true,ready:true,continuous:false,browserAccess:false,capabilities:{trustedInput:false,trustedBinding:true,frames:'same-origin',playwrightExecution:false,run:true,extract:true,snapshotPagination:true,runFormControls:true,selectorWait:true,targetedObservation:true,networkInspection:false,backgroundWindow:true,fullBrowserControl:true}});
+  assert.match(messages.at(-1).result.lease_id,/^[0-9]+$/);
+  const {lease_id,...publicStatus}=messages.at(-1).result;
+  assert.deepEqual(publicStatus,{connected:true,fullAccess:false,execution:{mode:'shared-tab',focusPolicy:'user-controlled',paused:false},sharing:true,active:true,ready:true,continuous:false,browserAccess:false,capabilities:{trustedInput:false,trustedBinding:true,frames:'same-origin',playwrightExecution:false,run:true,extract:true,snapshotPagination:true,runFormControls:true,selectorWait:true,targetedObservation:true,networkInspection:false,backgroundWindow:true,fullBrowserControl:true,canonicalActions:true,focusedSnapshot:true,scopedDiff:true,shortRefs:true,drag:true,recording:true,demonstration:true,namedTabs:true}});
   await listener({type:'stop'});
   assert.match((await listener({type:'status'})).message,/Connected/);
 });
@@ -223,7 +225,7 @@ test('batch returns one final snapshot and refuses to continue after revocation'
  assert.equal(messages.at(-1).result.completed,2);assert(messages.at(-1).result.snapshot);
  let actions=0;browser.tabs.sendMessage=async(_id,m)=>{if(m.type==='action'){actions++;await listener({type:'stop'});return {value:{completed:true}}}return {value:true}};
  await Socket.last.receive({id:93,method:'batch',value:JSON.stringify([{action:'click_ref',ref:'ax-1'},{action:'click_ref',ref:'ax-2'}])});
- assert.match(messages.at(-1).error,/Batch stopped at step 1/);assert.equal(actions,1);
+ assert.match(messages.at(-1).error,/Run stopped at step 1/);assert.equal(actions,1);
 });
 
 test('control stays within the selected window when another window is focused',async()=>{
@@ -306,10 +308,10 @@ test('run batches form controls and waits in the document with an absolute deadl
   await Socket.last.receive({id:303,method:'run',value:JSON.stringify({steps})});
   assert.equal(messages.at(-1).error,undefined);
   assert.equal(messages.at(-1).result.completed,steps.length);
-  assert.deepEqual(commands.map(m=>JSON.parse(m.value).action),['select','check','hover','submit','wait_for','wait_for']);
+  assert.deepEqual(commands.map(m=>JSON.parse(m.value).action),['select','check','hover','submit','wait_for','wait_for','feedback']);
   assert(commands.every(m=>m.deadline>=before && m.deadline<=Date.now()+60000));
   assert.equal(new Set(commands.slice(0,4).map(m=>m.deadline)).size,1);
-  assert(commands.slice(4).every(m=>m.deadline<=Date.now()+1000));
+  assert(commands.slice(4,6).every(m=>m.deadline<=Date.now()+1000));
 });
 
 test('run rejects invalid waits before dispatching subsequent actions',async()=>{
@@ -344,8 +346,9 @@ test('read-only wait resumes across navigation without extending its deadline',a
   await Socket.last.receive({id:305,method:'run',value:JSON.stringify({steps:[{action:'wait_for',selector:'#result',timeout_ms:1000}]})});
   assert.equal(messages.at(-1).error,undefined);
   assert.equal(messages.at(-1).result.completed,1);
-  assert.equal(waits.length,2);
-  assert.equal(waits[0].deadline,waits[1].deadline);
+  const waitCommands=waits.filter(message=>JSON.parse(message.value).action==='wait_for');
+  assert.equal(waitCommands.length,2);
+  assert.equal(waitCommands[0].deadline,waitCommands[1].deadline);
 });
 
 
@@ -576,4 +579,27 @@ test('Stop during initial revocation cancels a pending user preparation before i
  const entry=new Promise(r=>entered=r);f.browser.tabs.sendMessage=async(id,message,...rest)=>{if(message.type==='revoke'){entered();await new Promise(r=>releases.push(r));}return send(id,message,...rest);};
  const work=f.listener({type:'background-share'});await entry;await f.listener({type:'stop'});for(const release of releases)release();const result=await work;
  assert.match(result.message,/stopped/);assert.equal(f.changes.length,0);assert.equal((await f.listener({type:'ui-status'})).shared_tabs,0);
+});
+
+test('named handles survive extension reload and verify a tab token before resolving reused IDs',async()=>{
+ const saved={},tokens=new Map();let present=new Set([42]);
+ async function create(){
+  const f=fixture(async()=>{},true,saved);
+  f.browser.sessions={getTabValue:async id=>tokens.get(id),setTabValue:async(id,_key,value)=>{tokens.set(id,value);}};
+  f.browser.tabs.query=async()=>[...present].map(id=>({id,active:true,windowId:1}));
+  f.browser.tabs.get=async id=>{if(!present.has(id))throw Error('Tab closed');return {id,active:true,windowId:1};};
+  const pairing=f.listener({type:'pair',code});await new Promise(setImmediate);f.Socket.last.open();await f.Socket.last.receive({type:'paired',protocol:2});await pairing;
+  f.command=async args=>{await f.Socket.last.receive({id:700,method:'browser',value:JSON.stringify(args)});return f.messages.at(-1);};return f;
+ }
+ let f=await create();
+ assert.equal((await f.command({action:'tab_name',tab_id:42,tab_name:'work-form'})).result.tab_name,'work-form');
+ const token=tokens.get(42);assert.equal(typeof token,'string');
+ // A restored tab can get a different ID; the session token identifies it.
+ tokens.delete(42);tokens.set(43,token);present=new Set([43]);delete saved.callistoPairing;
+ f=await create();assert.equal((await f.command({action:'tab_resolve',tab_name:'work-form'})).result.id,43);
+ assert.equal(saved.callistoNamedTabs['work-form'].id,43);
+ // Reusing that numeric browser ID without its token must never select it.
+ tokens.delete(43);
+ assert.match((await f.command({action:'tab_resolve',tab_name:'work-form'})).error,/Named tab has closed/);
+ assert.equal(saved.callistoNamedTabs['work-form'],undefined);
 });

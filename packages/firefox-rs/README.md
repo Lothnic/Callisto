@@ -75,11 +75,14 @@ See [published add-on details](../../docs/published-extension.md) and
 
 ### Agent interface
 
-The default catalog exposes one `callisto` tool: choose `op` and pass its fields
-in `args`. Use `op: "help"` to discover operations or request one contract.
+The default auto profile exposes named tools to OpenCode and one `callisto`
+tool to other clients: choose `op` and pass its fields in `args`. Use `op: "help"` to discover operations or request one contract.
 [Compact interface and examples](../../docs/compact-tools.md) cover setup,
 batching and compatibility. Set `CALLISTO_TOOL_PROFILE=full` to advertise the
-named tools below; existing named requests are still accepted.
+named tools below in any host, or `compact` to force the compact interface.
+Existing named requests are still accepted. See the
+[native runtime improvements](../../docs/native-runtime-improvements.md) for
+consistent action contracts and new browser facilities.
 
 ### Tools at a glance
 

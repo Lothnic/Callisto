@@ -1,4 +1,5 @@
-"""Disposable Firefox/Zen smoke test. Set GECKODRIVER_URL to a running test driver.
+"""Disposable Firefox/Zen smoke test. Set GECKODRIVER_URL to an owned test driver
+started with --allow-system-access for the test extension options-page controls.
 
 The test-only extension adds <all_urls> and automatically shares the fixture;
 it does not verify the production extension's activeTab toolbar gesture.
@@ -56,11 +57,25 @@ env=dict(os.environ,CALLISTO_FIREFOX_STATE_DIR=state.name)
 def client(): return subprocess.Popen([ROOT+'target/debug/callisto-firefox-tab-mcp'],stdin=subprocess.PIPE,stdout=subprocess.PIPE,text=True,env=env)
 p=client()
 def tool(name,args={}):
+ if name=='callisto_browser' and args.get('action','').startswith('fixture_'):
+  return {'content':[{'type':'text','text':json.dumps(fixture_control(args))}]}
  if os.environ.get('CALLISTO_TEST_COMPACT')=='1': name,args='callisto',{'op':name.removeprefix('callisto_'),'args':args}
  p.stdin.write(json.dumps({'jsonrpc':'2.0','id':1,'method':'tools/call','params':{'name':name,'arguments':args}})+'\n');p.stdin.flush();reply=json.loads(p.stdout.readline());return reply.get('result',{'isError':True,'content':[{'type':'text','text':str(reply.get('error'))}]})
 def value(result):
  if result.get('isError'): raise Exception(result)
  return json.loads(result['content'][0]['text'])
+def fixture_control(args):
+ url=value(tool('callisto_browser',{'action':'tabs_list'}))['fixture_extension_url']
+ original=req('/session/'+session+'/window');control=None
+ try:
+  control=req('/session/'+session+'/window/new',{'type':'tab'})
+  req('/session/'+session+'/window',{'handle':control['handle']})
+  req('/session/'+session+'/url',{'url':url})
+  return req('/session/'+session+'/execute/sync',{'script':'return browser.runtime.sendMessage('+json.dumps({'type':'fixture-control','args':args})+')','args':[]})
+ finally:
+  if control:req('/session/'+session+'/window',method='DELETE')
+  req('/session/'+session+'/window',{'handle':original})
+
 session=None
 zen_addon=None
 try:
@@ -83,7 +98,11 @@ try:
    data=open(ROOT+'extension/'+name,'rb').read()
    if name=='manifest.json':
     manifest=json.loads(data);manifest['permissions']=list(dict.fromkeys(manifest['permissions']+['<all_urls>','tabs','tabHide','cookies','bookmarks','history','downloads','webRequest','webRequestBlocking']));data=json.dumps(manifest).encode()
-   if name=='background.js': data+=("\nbrowserActions.push('fixture_full_access','fixture_hide_tab');const originalBrowserControl=browserControl;browserControl=(args,...rest)=>args.action==='fixture_full_access'?setFullBrowserAccess(args.enabled):args.action==='fixture_hide_tab'?browser.tabs.hide(args.tab_id):originalBrowserControl(args,...rest);\n").encode();data+=('\nsetTimeout(async () => { try { await browser.storage.local.set({callistoAgentContainersEnabled:true}); await pair('+json.dumps(pair)+'); await share(); } catch(e) { console.error(e); } }, 1000);').encode()
+   if name=='browser-control.js':data+=b'\nconst fixtureControlOriginal=browserControl;browserControl=async(...args)=>{const result=await fixtureControlOriginal(...args);if(args[0].action==="tabs_list")result.fixture_extension_url=browser.runtime.getURL("options.html");return result;};'
+   if name=='background.js':
+    data=data.replace(b'browser.runtime.onMessage.addListener(async message => {',b'browser.runtime.onMessage.addListener(async message => {if(message.type==="fixture-control")return fixtureUIControl(message.args);')
+    data+=b'\nasync function fixtureUIControl(args){if(args.action==="fixture_full_access")return setFullBrowserAccess(args.enabled===true);if(args.action==="fixture_hide_tab")return browser.tabs.hide(args.tab_id);throw Error("Unknown fixture control");}'
+    data+=('\nsetTimeout(async () => { try { await browser.storage.local.set({callistoAgentContainersEnabled:true}); await pair('+json.dumps(pair)+'); await share(); } catch(e) { console.error(e); } }, 1000);').encode()
    z.writestr(name,data)
  if os.environ.get('CALLISTO_TEST_BROWSER')=='zen':
   handle=tempfile.NamedTemporaryFile(prefix='callisto-smoke-',suffix='.xpi',dir=Path.home()/'.var/app/app.zen_browser.zen/cache',delete=False)

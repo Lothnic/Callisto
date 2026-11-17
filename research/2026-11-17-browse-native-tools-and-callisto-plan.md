@@ -210,6 +210,16 @@ validation, and an OpenCode-native composition profile. Then improve action
 feedback and observation defaults. These target measured mistakes and repeated
 reads before adding a new general executor or another abstraction layer.
 
+## Implementation status
+
+The engineering work for priorities 1–4 is implemented in the source tree; see
+[native runtime improvements](../docs/native-runtime-improvements.md) for the
+contracts, setup, correctness checks and remaining backend limits. Local checks
+cover both Firefox and Zen, and OpenCode's actual config resolver accepts the
+native Code Mode configuration. No model-driven OpenCode composition or new
+comparative performance trial has run. The measurement-dependent exit criteria
+above remain unproven. Priority 5 is on hold pending user approval.
+
 ## Sources
 
 - [browse 0.1.1 tool selection](https://github.com/anomalyco/browse/blob/v0.1.1/rust/crates/browse-relay/src/surface.rs)

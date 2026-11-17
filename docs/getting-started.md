@@ -285,8 +285,9 @@ that the intended action succeeded. See [browser data handling](browser-data.md)
 
 ## Notes for host agents
 
-Firefox/Zen defaults to the compact `callisto` tool: translate the native names
-below to `op` and put their arguments in `args`. For example,
+Firefox/Zen selects named tools for OpenCode and the compact `callisto` tool for
+other hosts. In compact mode, translate the native names below to `op` and put
+their arguments in `args`. For example,
 `callisto_snapshot` becomes `{"op":"snapshot","args":{"max_chars":6000}}`.
 Use `{"op":"help","args":{"op":"run"}}` to load one operation contract.
 Chromium Mini keeps its named tools.
@@ -310,7 +311,8 @@ Chromium Mini keeps its named tools.
   or returning `Unsupported action.`; reload and re-pair it after upgrading.
 - Both backends expose `callisto_find` and `callisto_scroll`. Firefox finds
   rendered DOM text, while Chromium searches its accessibility snapshot;
-  Firefox scroll returns an action result, so capture a new snapshot afterward.
+  Firefox scroll returns an action result with page feedback; observe again when
+the next decision needs page content.
 - For Firefox/Zen, check `callisto_status`, use `tabs_list` and `tab_select`
   only when browser access was granted, then snapshot the chosen tab. Respect
   ownership errors; do not close or take over another session's tab.
@@ -326,3 +328,6 @@ Chromium Mini keeps its named tools.
   release control when finished.
 - Never expose pairing codes or cookie values in logs or responses. Follow the
   user's authorization when reading or changing logged-in pages.
+
+See [unreleased native runtime improvements](native-runtime-improvements.md) for
+unified action fields, OpenCode selection and the new browser facilities.

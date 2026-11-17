@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- Generate native tools, compact help and composed action schemas from one operation registry; validate entire plans before dispatch.
+- Select native tools automatically for OpenCode and preserve host-specific initialization instructions; keep explicit profile overrides.
+- Add focused snapshots, independent scoped diffs, shorter document-safe refs, option labels, bounded waits and compact action feedback.
+- Add lease-bound console/dialog controls, viewport sizing, richer screenshots and pixel comparisons, drag, page-provided WebMCP, trusted human recordings/demonstrations, and verified named tab handles.
+- Add local Firefox/Zen correctness coverage. Comparative benchmark work remains pending approval.
+
+
+## Unreleased
+
 ### Firefox and Zen runtime
 
 - Add explicit background-window preparation, start-on-return, Pause, View and

@@ -39,9 +39,10 @@ replacement for Playwright. An experimental connection to an existing Chromium
 browser through browse's relay is available with significant limitations below.
 Performance and reliability claims are still being tested.
 
-The Firefox/Zen runtime now defaults to [one compact tool](docs/compact-tools.md),
-with operation contracts loaded on demand. Set `CALLISTO_TOOL_PROFILE=full` for
-the legacy named-tool catalog.
+The Firefox/Zen runtime selects its [tool interface](docs/compact-tools.md) per
+host: native named tools for OpenCode, one compact tool for other clients.
+Set `CALLISTO_TOOL_PROFILE=full` or `compact` to override that choice. See the
+[unreleased runtime improvements](docs/native-runtime-improvements.md).
 
 ## Get started
 

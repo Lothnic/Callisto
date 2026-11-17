@@ -1,6 +1,7 @@
 # Compact Firefox/Zen tools
 
-The Firefox/Zen runtime advertises one `callisto` tool by default. Its arguments
+The Firefox/Zen runtime selects its interface per MCP client. OpenCode receives
+named tools automatically; other clients receive one `callisto` tool. Its arguments
 are `op` and an optional `args` object. The existing operations, browser sharing,
 optional permissions, input mode, cancellation and recovery checks are unchanged.
 The Chromium Mini interface is separate.
@@ -22,13 +23,14 @@ out of reports. Installing this runtime does not grant additional browser access
 ## Compose actions
 
 ```json
-{"op":"run","args":{"steps":[{"action":"fill_ref","ref":"ax-1","value":"search text"},{"action":"submit_ref","ref":"ax-1"}],"snapshot":false}}
+{"op":"run","args":{"steps":[{"action":"fill","ref":"ax-1","value":"search text"},{"action":"submit","ref":"ax-1"}],"snapshot":false}}
 ```
 
 Use refs from the latest snapshot. `run` supports dependent actions and explicit
 waits; it stops on the first failure and does not roll back earlier actions.
-`extract` returns structured rows. Browser output is unchanged by this interface
-update; choose bounded snapshots and request observations when needed.
+`extract` returns structured rows. Entire plans are validated before the first
+action, and completed actions return compact page feedback. Legacy `_ref` and
+`_role` actions remain accepted. Use `wait_for` instead of repeated polling.
 
 ## Discover one contract at a time
 
@@ -47,8 +49,9 @@ Unknown operations and malformed envelopes return errors.
 
 ## Compatibility and migration
 
-Restart the agent's MCP connection after installing the new runtime so it reloads
-the catalog. No add-on update is required for this schema-only change.
+Update the runtime and extension together, then restart the agent's MCP
+connection so it reloads the catalog. New browser facilities require the updated
+extension. Named tabs require the updated browser-access permission grant.
 The named `callisto_*` requests remain accepted for existing integrations.
 
 To advertise the complete named-tool catalog, set `CALLISTO_TOOL_PROFILE=full`
@@ -59,7 +62,8 @@ CALLISTO_TOOL_PROFILE=full node scripts/callisto.mjs zen
 ```
 
 Use the host's server environment settings to persist that choice. The default
-is `compact`; other values fail explicitly. Full and compact clients can use
+is `auto`: named tools for OpenCode, compact for other clients. `native` aliases
+`full`; unknown values fail explicitly. Full and compact clients can use
 the same relay independently. Hosts using per-tool allowlists should retain
 `full` or account for `op` when authorizing the compact tool.
 
@@ -68,8 +72,17 @@ is `callisto` with `op: "snapshot"` and the same operation arguments in `args`.
 
 ## Measurement
 
-The serialized default catalog is 940 UTF-8 bytes versus 14,490 bytes for the
-25-tool full catalog: a 93.5% reduction. This is schema size, not model tokens
+The earlier compact-interface baseline measured 940 UTF-8 bytes versus 14,490
+bytes for its 25-tool full catalog. Those are historical sizes; the current
+registry contains additional operations. This is schema size, not model tokens
 or billed cost. Contract help has a runtime context cost when requested, so
 end-to-end usage still needs measured task trials. See the
 [measurement and validation report](../eval/reports/compact-interface-2026-11-17/README.md).
+
+## New native facilities
+
+[Runtime improvements](native-runtime-improvements.md) describe focused snapshots,
+independent diff baselines, shorter safe refs, consistent action contracts,
+console/dialog capture, drag, viewport/screenshots, WebMCP and human demonstration.
+Comparative benchmarks remain approval-gated; schema size alone is not a token or
+cost result.

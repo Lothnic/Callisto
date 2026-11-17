@@ -21,3 +21,14 @@ test('real stdio host transport preserves the owned lease, schema and result; re
   assert.equal(session.events[0].response_bytes,Buffer.byteLength(JSON.stringify(result)));
  }finally{await client?.close();await session.close();await rm(directory,{recursive:true,force:true});}
 });
+
+test('default-host mode preserves initialization instructions and rejects a mismatched host identity',async()=>{
+ const initialization={protocolVersion:'2025-06-18',capabilities:{tools:{}},serverInfo:{name:'native-fixture',version:'2'},instructions:'Compose browser tools in Code Mode.'};
+ const native={clientInfo:{name:'opencode',version:'test'},initialization,callTool:async()=>({content:[]})};
+ const session=new HostSession(native,[],{preserveInitialization:true});
+ const reply=await session.dispatch({method:'initialize',params:{protocolVersion:'2025-06-18',clientInfo:{name:'opencode',version:'test'}}});
+ assert.equal(reply.instructions,initialization.instructions);assert.deepEqual(reply.serverInfo,initialization.serverInfo);
+ await assert.rejects(()=>session.dispatch({method:'initialize',params:{clientInfo:{name:'codex'}}}),/identity differs/);
+ const controlled=new HostSession(native,[]);
+ assert.equal((await controlled.dispatch({method:'initialize',params:{protocolVersion:'2025-06-18'}})).instructions,undefined);
+});

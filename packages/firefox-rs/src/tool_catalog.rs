@@ -8,12 +8,33 @@ pub enum Profile {
     Full,
 }
 impl Profile {
-    pub fn from_env() -> Result<Self> {
-        match std::env::var("CALLISTO_TOOL_PROFILE").as_deref() {
-            Err(std::env::VarError::NotPresent) | Ok("compact") => Ok(Self::Compact),
-            Ok("full") => Ok(Self::Full),
-            _ => bail!("CALLISTO_TOOL_PROFILE must be compact or full"),
+    pub fn for_client(client: Option<&str>) -> Result<Self> {
+        Self::select(
+            std::env::var("CALLISTO_TOOL_PROFILE").ok().as_deref(),
+            client,
+        )
+    }
+    fn select(setting: Option<&str>, client: Option<&str>) -> Result<Self> {
+        match setting {
+            None | Some("auto") => Ok(
+                if client.is_some_and(|name| name.to_ascii_lowercase().contains("opencode")) {
+                    Self::Full
+                } else {
+                    Self::Compact
+                },
+            ),
+            Some("compact") => Ok(Self::Compact),
+            Some("full" | "native") => Ok(Self::Full),
+            _ => bail!("CALLISTO_TOOL_PROFILE must be auto, compact, native or full"),
         }
+    }
+}
+
+pub fn instructions(profile: Profile) -> &'static str {
+    if profile == Profile::Full {
+        "Callisto controls Firefox/Zen through the extension's tab lease. Compose named tools in the host's Code Mode when available. Inspect once, perform dependent actions with run, and extract only needed fields. Standalone and run actions share fields: fill uses value; targets use ref or exact role and name. Prefer bounded wait_for conditions over polling and submit over synthetic Enter. Action feedback identifies the document and navigation state; snapshot supports focus, scoped diff and pagination. Never repeat an uncertain write: inspect first. Tool selection does not grant browser permissions."
+    } else {
+        "Call callisto with {op,args}. Use run for dependent actions and extract for typed rows. Run steps use the same names and fields as standalone operations: {action:'fill',ref:'ax-123',value:'text'}. Prefer wait_for over polling. Use help for one operation's contract, not the full catalog. Observe with focused snapshots or scoped diff. Never repeat an uncertain write: inspect first. Existing tab sharing and permissions apply."
     }
 }
 
@@ -31,7 +52,7 @@ pub fn advertised(full: &Value, profile: Profile) -> Value {
     }));
     json!([{
         "name":"callisto",
-        "description":"Control Firefox/Zen through its shared tab. Pass operation fields in args. Start with status or pair. Navigate: {op:'navigate',args:{url:'https://example.com'}}. Observe: {op:'snapshot',args:{max_chars:6000}}. Act: {op:'run',args:{steps:[{action:'click_ref',ref:'ax-1'}],snapshot:false}}. Get any operation's parameters with {op:'help',args:{op:'run'}}. Use run for dependent actions and extract for rows. Existing sharing, permissions, input mode and cancellation apply. Inspect after uncertain errors before retrying.",
+        "description":"Control Firefox/Zen through its shared tab. Pass operation fields in args. Start with status or pair. Navigate: {op:'navigate',args:{url:'https://example.com'}}. Observe: {op:'snapshot',args:{max_chars:6000}}. Act: {op:'run',args:{steps:[{action:'click',ref:'ax-1'}],snapshot:false}}. Get any operation's parameters with {op:'help',args:{op:'run'}}. Use run for dependent actions and extract for rows. Existing sharing, permissions, input mode and cancellation apply. Inspect after uncertain errors before retrying.",
         "inputSchema":{
             "type":"object",
             "properties":{
@@ -104,6 +125,27 @@ fn lookup<'a>(full: &'a Value, op: &str) -> Result<&'a Value> {
 mod tests {
     use super::*;
     use crate::{session_recovery, tools};
+
+    #[test]
+    fn host_selection_is_per_client_and_explicit_settings_win() {
+        assert_eq!(
+            Profile::select(None, Some("OpenCode/1.0")).unwrap(),
+            Profile::Full
+        );
+        assert_eq!(
+            Profile::select(None, Some("codex")).unwrap(),
+            Profile::Compact
+        );
+        assert_eq!(
+            Profile::select(Some("compact"), Some("opencode")).unwrap(),
+            Profile::Compact
+        );
+        assert_eq!(
+            Profile::select(Some("native"), Some("codex")).unwrap(),
+            Profile::Full
+        );
+        assert!(Profile::select(Some("invalid"), None).is_err());
+    }
 
     #[test]
     fn compact_catalog_is_bounded_and_full_catalog_is_unchanged() {

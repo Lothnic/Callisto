@@ -15,6 +15,9 @@ use std::{
     time::Duration,
 };
 
+#[path = "browser_runtime.rs"]
+mod runtime;
+
 struct Transport {
     endpoint: String,
     bidi: Arc<Bidi>,
@@ -59,6 +62,7 @@ struct State {
     transport: Option<Arc<Transport>>,
     enabled: HashSet<u64>,
     bindings: HashMap<u64, Arc<Binding>>,
+    runtime: HashMap<u64, Arc<Mutex<runtime::Runtime>>>,
 }
 #[derive(Default)]
 pub struct Controller {
@@ -137,7 +141,10 @@ impl Controller {
         if owned {
             transport
                 .bidi
-                .call("session.new", json!({"capabilities":{}}))
+                .call(
+                    "session.new",
+                    json!({"capabilities":{"alwaysMatch":{"unhandledPromptBehavior":"ignore"}}}),
+                )
                 .await?;
         }
         if self.epoch.load(Ordering::SeqCst) != epoch {
@@ -174,6 +181,7 @@ impl Controller {
         let (binding, transport, close) = {
             let mut state = self.state.lock().unwrap();
             state.enabled.remove(&client);
+            state.runtime.remove(&client);
             let binding = state.bindings.remove(&client);
             let transport = state.transport.clone();
             let close = if state.enabled.is_empty() {
@@ -225,7 +233,10 @@ impl Controller {
                 .collect();
             let bindings: Vec<_> = clients
                 .into_iter()
-                .filter_map(|id| state.bindings.remove(&id))
+                .filter_map(|id| {
+                    state.runtime.remove(&id);
+                    state.bindings.remove(&id)
+                })
                 .collect();
             for binding in &bindings {
                 binding.valid.store(false, Ordering::SeqCst);
@@ -252,6 +263,7 @@ impl Controller {
                 binding.valid.store(false, Ordering::SeqCst);
             }
             state.bindings.clear();
+            state.runtime.clear();
             state.transport.take()
         };
         if let Some(transport) = transport {
@@ -343,12 +355,25 @@ impl Controller {
             }
             matches.remove(0)
         };
-        let binding = Arc::new(Binding {
-            lease: lease.into(),
-            context,
-            top,
-            valid: AtomicBool::new(true),
-        });
+        let prior = self.state.lock().unwrap().bindings.get(&client).cloned();
+        let binding = if let Some(prior) = prior.filter(|b| {
+            b.lease == lease
+                && b.context == context
+                && b.top == top
+                && b.valid.load(Ordering::SeqCst)
+        }) {
+            prior
+        } else {
+            if let Some(previous) = self.state.lock().unwrap().bindings.get(&client) {
+                previous.valid.store(false, Ordering::SeqCst);
+            }
+            Arc::new(Binding {
+                lease: lease.into(),
+                context,
+                top,
+                valid: AtomicBool::new(true),
+            })
+        };
         self.validate(bridge, client, transport, &binding, &prepared, false)
             .await?;
         if epoch != self.epoch.load(Ordering::SeqCst) {
@@ -426,8 +451,13 @@ impl Controller {
                     if let Some(steps) = source["actions"].as_array_mut() {
                         for step in steps {
                             if step["type"] == "pointerMove" && validation.get("x").is_some() {
-                                step["x"] = validation["x"].clone();
-                                step["y"] = validation["y"].clone();
+                                let destination =
+                                    step.as_object_mut().unwrap().remove("callisto_destination")
+                                        == Some(json!(true));
+                                step["x"] =
+                                    validation[if destination { "target_x" } else { "x" }].clone();
+                                step["y"] =
+                                    validation[if destination { "target_y" } else { "y" }].clone();
                             }
                         }
                     }
@@ -601,7 +631,16 @@ impl Controller {
             }
             Ok(json!([{"type":"key","id":"callisto-trusted-keys","actions":actions}]))
         };
-        if action == "select" {
+        if action == "drag" {
+            self.send(bridge,client,&transport,&binding,&prepared,json!([{"type":"pointer","id":"callisto-trusted-mouse","parameters":{"pointerType":"mouse"},"actions":[
+                {"type":"pointerMove","x":prepared["x"],"y":prepared["y"],"origin":"viewport"},
+                {"type":"pointerDown","button":0},
+                {"type":"pointerMove","x":prepared["target_x"],"y":prepared["target_y"],"origin":"viewport","duration":400,"callisto_destination":true},
+                {"type":"pause","duration":100},
+                {"type":"pointerMove","x":prepared["target_x"],"y":prepared["target_y"],"origin":"viewport","duration":100,"callisto_destination":true},
+                {"type":"pointerUp","button":0}
+            ]}])).await?;
+        } else if action == "select" {
             self.validate(bridge, client, &transport, &binding, &prepared, false)
                 .await?;
             let expression=format!("(() => {{ const find=root=>{{for(const node of root.querySelectorAll('*')){{if(node.getAttribute('data-callisto-target')==={})return node;if(node.shadowRoot){{const found=find(node.shadowRoot);if(found)return found;}}}}}}; const el=find(document); if (!el) return false; el.focus({{preventScroll:true}}); return el.getRootNode().activeElement===el; }})()",serde_json::to_string(&prepared["nonce"])?);
@@ -713,15 +752,19 @@ impl Controller {
                     .await?;
                 }
             }
-            "click" | "hover" | "check" | "submit" => {}
+            "click" | "hover" | "check" | "submit" | "drag" => {}
             _ => bail!("Unsupported trusted action"),
         }
         if ["select", "check"].contains(&action) {
             self.validate(bridge, client, &transport, &binding, &prepared, true)
                 .await?;
         }
+        let feedback = bridge
+            .call_session(client, "page", None, Some("{\"action\":\"feedback\"}"))
+            .await
+            .unwrap_or(json!({"needs_observation":true,"unavailable":true}));
         Ok(
-            json!({"completed":true,"trusted":true,"input":"webdriver-bidi","extensionSharingControls":true}),
+            json!({"completed":true,"trusted":true,"input":"webdriver-bidi","extensionSharingControls":true,"feedback":feedback}),
         )
     }
 }

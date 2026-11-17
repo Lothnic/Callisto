@@ -7,6 +7,15 @@ let retryDelay = 1000;
 let pairAttempt = 0;
 let storageWrites = Promise.resolve();
 let nextLease = 0;
+let referenceWrites=Promise.resolve(),referenceHighWater=0;
+async function refScope(){
+  const allocated=referenceWrites.then(async()=>{
+    const saved=await browser.storage.local.get('callistoRefScope');
+    const next=Math.max(saved.callistoRefScope ?? 0,referenceHighWater)+1;
+    if(!Number.isSafeInteger(next)||next>9007199253)throw new Error('Reference namespace exhausted.');
+    await browser.storage.local.set({callistoRefScope:next});referenceHighWater=next;return next;
+  });referenceWrites=allocated.catch(()=>{});return allocated;
+}
 let sharingIntent = 0;
 let fullBrowserAccess = false;
 const networkInspector = typeof createNetworkInspector === 'function' ? createNetworkInspector(browser) : null;
@@ -105,7 +114,7 @@ browser.runtime.onMessage.addListener(async message => {
   } catch (error) { return {message:`Error: ${error.message}`}; }
 });
 browser.windows?.onFocusChanged?.addListener(id=>{for(const session of new Set(sessions.values()))void session.focusChanged(id).catch(()=>{});});
-browser.tabs.onRemoved.addListener(id=>{for(const session of sessions.values())session.removed(id);});
+browser.tabs.onRemoved.addListener(id=>{void forgetNamedTab(id).catch(()=>{});for(const session of sessions.values())session.removed(id);});
 browser.tabs.onUpdated.addListener((id,change)=>{for(const session of sessions.values())session.updated(id,change);});
 browser.permissions.onRemoved.addListener(permissions=>{if(fullBrowserAccess&&(permissions.origins?.includes('<all_urls>')||permissions.permissions?.some(p=>fullControlPermissions.permissions.includes(p))))void stop();if(permissions.permissions?.some(p=>['webRequest','webRequestBlocking'].includes(p)) || permissions.origins?.includes('<all_urls>'))networkInspector?.revoke();for(const session of sessions.values())session.permissionsRemoved(permissions);});
 browser.menus.create({id:'callisto-share', title:'Share this tab with Callisto', contexts:['page']});
@@ -181,7 +190,7 @@ async function executeCommand(request,connection){
     if(sessions.size>=64)throw new Error('Too many connected sessions; close unused MCP clients.');
     session=createSession();sessions.set(id,session);
   }
-  const budget = request.method === 'run' ? 60000 : request.method === 'extract' ? 35000 : 10000;
+  const budget = request.method === 'run' ? 60000 : request.method==='demonstrate' ? 125000 : request.method === 'extract' ? 35000 : request.method === 'page' && JSON.parse(request.value ?? '{}').action==='wait_for' ? Math.min(20000,JSON.parse(request.value).timeout_ms ?? 5000) : 10000;
   const deadline=Date.now()+budget;
   if(fullBrowserAccess && !session.background && !['status','browser','release','input_validate'].includes(request.method))await session.prepareFullAccess(connection);
   return session.executeCommand(request,connection,deadline);
@@ -259,7 +268,7 @@ async function share(tabId,expectedOwner,{keepBackground=false}={}) {
     if(stamp!==generation || socket!==connection || !paired)throw new Error('Sharing was stopped while the tab was being prepared.');
     try {
       await browser.tabs.executeScript(tab.id,{file:'/content.js',runAt:'document_end'});
-      await browser.tabs.sendMessage(tab.id,{type:'ping'});break;
+      await browser.tabs.sendMessage(tab.id,{type:'ping',ref_scope:await refScope()});break;
     } catch(error) {
       const pending=await browser.tabs.get(tab.id);
       if(Date.now()>=deadline || !(pending.status==='loading' || pending.pendingUrl || pending.url==='about:blank'))throw error;
@@ -367,7 +376,7 @@ async function restorePage(id) {
   try {
     if (!(await browser.permissions.contains({origins:['<all_urls>']}))) throw new Error('Website permission was removed.');
     await browser.tabs.executeScript(id,{file:'/content.js',runAt:'document_end'});
-    await browser.tabs.sendMessage(id,{type:'ping'});
+    await browser.tabs.sendMessage(id,{type:'ping',ref_scope:await refScope()});
     if (stamp !== generation || selected !== id || socket !== connection || !paired) return;
     ready = true;
   } catch (error) { if (stamp === generation && selected === id) await stop(); }
@@ -381,7 +390,7 @@ async function executeCommand(request, connection, deadline = Date.now()+10000) 
   if (request.method === 'status') {
     const target = chosen === null ? null : await browser.tabs.get(chosen);
     const [active] = target ? await browser.tabs.query({active:true,windowId:target.windowId}) : [];
-    return {connected:true,fullAccess:fullBrowserAccess,execution:taskStatus()??{mode:fullBrowserAccess?'full-browser':'shared-tab',focusPolicy:fullBrowserAccess?'agent-controlled':'user-controlled',paused:false},sharing:chosen !== null,active:chosen !== null && active?.id === chosen,ready,continuous,browserAccess:await browser.permissions.contains(fullBrowserPermissions),capabilities:{trustedInput:false,trustedBinding:true,frames:'same-origin',playwrightExecution:false,run:true,extract:true,snapshotPagination:true,runFormControls:true,selectorWait:true,targetedObservation:true,networkInspection:!!networkInspector,backgroundWindow:true,fullBrowserControl:true}};
+    return {connected:true,lease_id:leaseKey,fullAccess:fullBrowserAccess,execution:taskStatus()??{mode:fullBrowserAccess?'full-browser':'shared-tab',focusPolicy:fullBrowserAccess?'agent-controlled':'user-controlled',paused:false},sharing:chosen !== null,active:chosen !== null && active?.id === chosen,ready,continuous,browserAccess:await browser.permissions.contains(fullBrowserPermissions),capabilities:{trustedInput:false,trustedBinding:true,frames:'same-origin',playwrightExecution:false,run:true,extract:true,snapshotPagination:true,runFormControls:true,selectorWait:true,targetedObservation:true,networkInspection:!!networkInspector,backgroundWindow:true,fullBrowserControl:true,canonicalActions:true,focusedSnapshot:true,scopedDiff:true,shortRefs:true,drag:true,recording:true,demonstration:true,namedTabs:true}};
   }
   if (Date.now() >= deadline) throw new Error('Command deadline exceeded; inspect before retrying.');
   if (request.method === 'browser') {
@@ -419,10 +428,19 @@ async function executeCommand(request, connection, deadline = Date.now()+10000) 
     const frames=await browser.webNavigation.getAllFrames({tabId:chosen});
     if(!frames.some(frame=>frame.frameId===id))throw new Error('Frame no longer exists; list frames again.');
     await browser.tabs.executeScript(chosen,{file:'/content.js',frameId:id,runAt:'document_end'});
-    await browser.tabs.sendMessage(chosen,{type:'ping'},{frameId:id});
+    await browser.tabs.sendMessage(chosen,{type:'ping',ref_scope:await refScope()},{frameId:id});
     if(owner!==ownership || chosen!==selected)throw new Error('Tab changed while selecting frame.');
     selectedFrame=id;frameStale=false;
     return {frameId:id,snapshot:await executeCommand({method:'snapshot'},connection,deadline)};
+  }
+  if(request.method==='demonstrate'){
+    const args=JSON.parse(request.value);
+    await executeCommand({method:'page',value:JSON.stringify({action:'recording',operation:'start'})},connection,deadline);
+    let confirmed;
+    try{confirmed=await executeCommand({method:'handoff',value:JSON.stringify({prompt:args.message,timeout_ms:args.timeout_ms ?? 60000})},connection,deadline);}
+    finally{if(owner===ownership && chosen===selected)await executeCommand({method:'page',value:JSON.stringify({action:'recording',operation:'stop'})},connection,Date.now()+2000).catch(()=>{});}
+    const recording=await executeCommand({method:'page',value:JSON.stringify({action:'recording',operation:'list',limit:200})},connection,Date.now()+2000);
+    return {...confirmed,recording};
   }
   if (request.method === 'handoff') {
     if(backgroundTask){await pauseBackground('needs_attention');throw new Error('needs_attention: View the paused agent window to complete the human step.');}
@@ -512,10 +530,10 @@ async function executeCommand(request, connection, deadline = Date.now()+10000) 
           if (!Number.isInteger(timeout) || timeout < 100 || timeout > 20000) throw new Error('wait_for timeout_ms must be an integer from 100 to 20000.');
           await executeCommand({ method: 'page', value: JSON.stringify(step) }, connection, Math.min(deadline, Date.now()+timeout));
         } else if (step.action === 'extract') {
-          extraction = await executeCommand({ method: 'extract', value: JSON.stringify(step.spec ?? {}) }, connection, deadline);
+          extraction = await executeCommand({ method: 'extract', value: JSON.stringify(Object.fromEntries(Object.entries(step).filter(([key])=>key!=='action'))) }, connection, deadline);
         } else if (step.action === 'navigate') command = { method: 'navigate', value: step.url };
         else if (step.action === 'scroll') command = { method: 'page', value: JSON.stringify({ ...step, action: 'scroll' }) };
-        else if (/^(fill|click|submit|select|check|hover)_(ref|role)$/.test(step.action)) {
+        else if (/^(fill|click|submit|select|check|hover|drag)(_(ref|role))?$/.test(step.action)) {
           const method = step.action.split('_')[0];
           command = { method: 'page', value: JSON.stringify({ ...step, action: method }) };
         } else if (step.action === 'press') command = { method: 'page', value: JSON.stringify({ action: 'press', key: step.key }) };
@@ -530,27 +548,11 @@ async function executeCommand(request, connection, deadline = Date.now()+10000) 
         throw new Error(`Run stopped at step ${completed + 1} (${step.action}); earlier steps may have completed: ${error.message}`);
       }
     }
-    return { completed, elapsed_ms: Date.now() - started, ...(extraction ? { extraction } : {}), ...(args.snapshot ? { snapshot: await executeCommand({ method: 'snapshot' }, connection, deadline) } : {}) };
+    const feedback=await executeCommand({method:'page',value:JSON.stringify({action:'feedback'})},connection,deadline).catch(()=>({unavailable:true,needs_observation:true}));
+    return { completed, elapsed_ms: Date.now() - started,feedback, ...(extraction ? { extraction } : {}), ...(args.snapshot ? { snapshot: await executeCommand({ method: 'snapshot' }, connection, deadline) } : {}) };
   }
   if (request.method === 'batch') {
-    const steps = JSON.parse(request.value);
-    if (!Array.isArray(steps) || !steps.length || steps.length>10) throw new Error('Expected 1–10 batch actions.');
-    let completed = 0;
-    for (const step of steps) {
-      try {
-        if (chosen !== selected || owner !== ownership || socket !== connection || Date.now()>=deadline) throw new Error('Batch ownership changed or its deadline expired.');
-        let command;
-        if (step.action === 'navigate') command = {method:'navigate',value:step.url};
-        else if (step.action === 'scroll') command = {method:'page',value:JSON.stringify({...step,action:'scroll'})};
-        else if (/^(fill|click|submit)_(ref|role)$/.test(step.action)) {
-          const method = step.action.split('_')[0];
-          command = {method:'page',value:JSON.stringify({...step,action:method})};
-        } else throw new Error('Unsupported batch action.');
-        await executeCommand(command,connection,deadline); completed++;
-      } catch (error) { throw new Error(`Batch stopped at step ${completed+1}; earlier actions may have completed: ${error.message}`); }
-    }
-    if (owner !== ownership || chosen !== selected) throw new Error('Batch ownership changed before observation.');
-    return {completed,snapshot:await executeCommand({method:'snapshot'},connection,deadline)};
+    return executeCommand({method:'run',value:JSON.stringify({steps:JSON.parse(request.value),snapshot:true})},connection,deadline);
   }
   if (!['snapshot','click','fill','submit','navigate','page','input_prepare','input_validate'].includes(request.method)) throw new Error('Unsupported action.');
   if(request.method==='input_validate' && JSON.parse(request.value).lease_id!==leaseKey)throw new Error('Trusted input lease was revoked.');
@@ -572,7 +574,7 @@ async function executeCommand(request, connection, deadline = Date.now()+10000) 
     try { await browser.tabs.update(chosen,{url:url.href}); }
     catch (error) { if(chosen===selected && generation===stamp+1)ready=true;throw error; }
     if (sameDocument && chosen===selected && generation===stamp+1)ready=true;
-    return {navigationStarted:true};
+    return {navigationStarted:true,feedback:{tab_id:chosen,frame_id:selectedFrame,url:url.href,ready:false,needs_observation:true}};
   }
   let result;
   try { result = await browser.tabs.sendMessage(chosen,{type:'action',method:request.method,ref:request.ref,value:request.value,deadline},{frameId:selectedFrame}); }
@@ -591,6 +593,7 @@ async function executeCommand(request, connection, deadline = Date.now()+10000) 
     }
     throw new Error(reason);
   }
+  if(result.value?.feedback)result.value.feedback={...result.value.feedback,tab_id:chosen,frame_id:selectedFrame,ready};
   const value=request.method==='input_prepare'?{...result.value,lease_id:leaseKey,tab_id:chosen,frame_id:selectedFrame}:result.value;
   return stamp !== generation ? {...value,navigationStarted:true} : value;
 }

@@ -23,7 +23,7 @@ const inspect=async()=>({human:await fixture.script('return {focused:document.ha
 let before,after,started,executionEnded,osFocusBefore,osFocusAfter,typedText='',rounds=0,task,traceStarted=false;
 const traceDirectory=process.env.BACKGROUND_TRACE_DIR?resolve(process.env.BACKGROUND_TRACE_DIR):null;
 try{
- client=await new MCPClient(runtime,[],environment).initialize();fixture=new ZenFixture(client,{kind:process.env.CALLISTO_TEST_BROWSER||'zen',headless:false});await fixture.start(origin+'/agent');
+ client=await new MCPClient(runtime,[],environment).initialize();fixture=new ZenFixture(client,{kind:process.env.CALLISTO_TEST_BROWSER||'zen',headless:false,allowSystemAccess:true});await fixture.start(origin+'/agent');
  if(traceDirectory){await fixture.call('callisto_trace',{action:'start',directory:traceDirectory});traceStarted=true;}
  stage='window manager';const display=await displayEnvironment();manager=spawn(process.env.BACKGROUND_WINDOW_MANAGER||'openbox',['--sm-disable'],{env:display,stdio:['ignore','ignore','pipe']});manager.stderr.on('data',b=>managerErrors=(managerErrors+b.toString()).slice(-1000));manager.on('error',error=>managerErrors=error.message);await until(async()=>(managerStatus=(await exec('wmctrl',['-m'],{env:display})).stdout).toLowerCase().includes('openbox'));
  await fixture.script('sentinel.textContent="Unsaved document marker"');await fixture.call('callisto_run',{steps:[{action:'fill_role',role:'textbox',name:'Agent name',value:'UNSAVED'}]});

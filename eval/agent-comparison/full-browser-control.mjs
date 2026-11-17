@@ -1,7 +1,7 @@
 // Real browser check in an owned disposable profile. Never adopts personal tabs.
 import assert from 'node:assert/strict';
 import {createServer} from 'node:http';
-import {mkdtemp,rm,writeFile} from 'node:fs/promises';
+import {mkdtemp,rm,writeFile,readFile} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {join,resolve} from 'node:path';
 import {execFileSync} from 'node:child_process';
@@ -19,7 +19,7 @@ const state=await mkdtemp(join(tmpdir(),'callisto-full-control-'));
 const environment={...process.env,CALLISTO_FIREFOX_STATE_DIR:state};
 const binary=resolve('packages/firefox-rs/target/debug/callisto-firefox-tab-mcp');
 const client=new MCPClient(binary,[],environment);
-const fixture=new ZenFixture(client,{kind});
+const fixture=new ZenFixture(client,{kind,allowSystemAccess:true});
 try{
  await client.initialize();await fixture.start(url);
  await fixture.call('callisto_browser',{action:'fixture_full_access',enabled:true});
@@ -52,7 +52,7 @@ try{
  await fixture.call('callisto_browser',{action:'fixture_full_access',enabled:false});
  const status=await fixture.call('callisto_status');assert.equal(status.fullAccess,false);assert.equal(status.sharing,false);
  await assert.rejects(()=>fixture.call('callisto_snapshot'),/No tab shared/);
- const report={passed:true,browser:kind,browserVersion:fixture.capabilities.browserVersion,extension:'temporary fixture copy of source 0.3.0',checks:['active-tab adoption','create and auto-share','input on a newly created tab','activation without sharing','hidden-tab activation','blank-tab navigation','window creation and sharing','window and tab cleanup','disable revokes automatic access']};
+ const report={passed:true,browser:kind,browserVersion:fixture.capabilities.browserVersion,extension:'temporary fixture copy of source '+JSON.parse(await readFile('packages/firefox-rs/extension/manifest.json','utf8')).version,checks:['active-tab adoption','create and auto-share','input on a newly created tab','activation without sharing','hidden-tab activation','blank-tab navigation','window creation and sharing','window and tab cleanup','disable revokes automatic access']};
  if(process.env.FULL_CONTROL_OUTPUT)await writeFile(process.env.FULL_CONTROL_OUTPUT,JSON.stringify(report,null,2)+'\n');
  console.log(JSON.stringify(report));
 }finally{

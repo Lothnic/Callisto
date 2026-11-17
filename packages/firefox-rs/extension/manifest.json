@@ -35,7 +35,8 @@
     "history",
     "downloads",
     "webRequest",
-    "webRequestBlocking"
+    "webRequestBlocking",
+    "sessions"
   ],
   "background": {
     "scripts": [

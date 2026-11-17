@@ -7,6 +7,6 @@ export class MCPClient {
  }
  request(method,params={},options={}){const id=++this.sequence;return new Promise((resolve,reject)=>{const timer=setTimeout(()=>{this.pending.delete(id);this.child.stdin.write(JSON.stringify({jsonrpc:'2.0',method:'notifications/cancelled',params:{requestId:id}})+'\n');reject(Error('MCP request deadline'));},options.timeout??45000);this.pending.set(id,{resolve,reject,timer});this.child.stdin.write(JSON.stringify({jsonrpc:'2.0',id,method,params})+'\n');if(options.cancelAfter)setTimeout(()=>this.child.stdin.write(JSON.stringify({jsonrpc:'2.0',method:'notifications/cancelled',params:{requestId:id}})+'\n'),options.cancelAfter);});}
  callTool(params,options={}){return this.request('tools/call',params,options);}
- async initialize(){await this.request('initialize',{protocolVersion:'2024-11-05',capabilities:{},clientInfo:{name:'callisto-validation',version:'1'}});this.child.stdin.write(JSON.stringify({jsonrpc:'2.0',method:'notifications/initialized'})+'\n');return this;}
+ async initialize({name='callisto-validation',version='1'}={}){this.clientInfo={name,version};this.initialization=await this.request('initialize',{protocolVersion:'2024-11-05',capabilities:{},clientInfo:this.clientInfo});this.child.stdin.write(JSON.stringify({jsonrpc:'2.0',method:'notifications/initialized'})+'\n');return this;}
  async close(){this.child.stdin.end();await Promise.race([new Promise(r=>this.child.once('exit',r)),new Promise(r=>setTimeout(()=>{this.child.kill();r();},3000))]);}
 }

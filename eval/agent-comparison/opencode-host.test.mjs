@@ -96,7 +96,7 @@ test('OpenCode resolves the private host config without global or project MCP se
  const root=await mkdtemp(join(tmpdir(),'callisto-opencode-config-'));
  const home=await prepareOpenCodeHome({root,model:OPENCODE_MODEL,variant:OPENCODE_VARIANT});
  try{
-  const config=openCodeConfig({model:OPENCODE_MODEL,variant:OPENCODE_VARIANT,socket:join(home.home,'bench.sock'),serverName:'zen',toolName:'callisto'});
+  const config=openCodeConfig({model:OPENCODE_MODEL,variant:OPENCODE_VARIANT,socket:join(home.home,'bench.sock'),serverName:'zen',toolName:'callisto',codeMode:true});
   await writeFile(home.config_path,JSON.stringify(config,null,2));
   const {stdout}=await exec('opencode',['--standalone','debug','config'],{cwd:home.home,env:home.environment,timeout:30000});
   const documents=JSON.parse(stdout);
@@ -104,7 +104,7 @@ test('OpenCode resolves the private host config without global or project MCP se
   assert.ok(resolved,'private config document is loaded');
   assert.deepEqual(resolved.model,{providerID:'opencode',model:'deepseek-v4.1-flash-free',variant:'high'});
   assert.deepEqual(Object.keys(resolved.mcp.servers),['zen']);
-  assert.equal(resolved.mcp.servers.zen.codemode,false);
+  assert.equal(resolved.mcp.servers.zen.codemode,true);
   assert.deepEqual(resolved.instructions,[]);
   assert.equal(resolved.compaction.auto,false);
   assert.equal(resolved.default_agent,'benchmark');
@@ -114,4 +114,11 @@ test('OpenCode resolves the private host config without global or project MCP se
   assert.ok(benchmark.permissions.some(rule=>rule.action==='zen_callisto'&&rule.effect==='allow'));
   assert.ok(benchmark.permissions.some(rule=>rule.action==='*'&&rule.effect==='deny'));
  }finally{await rm(root,{recursive:true,force:true});}
+});
+
+test('native composition config enables Code Mode with an explicit browser-tool allowlist',()=>{
+ const config=openCodeConfig({model:OPENCODE_MODEL,variant:OPENCODE_VARIANT,socket:'/tmp/owned.sock',serverName:'zen',toolNames:['callisto_snapshot','callisto_fill','callisto_run'],codeMode:true});
+ assert.equal(config.mcp.servers.zen.codemode,true);
+ assert.deepEqual(config.permissions.filter(r=>r.effect==='allow').map(r=>r.action),['zen_callisto_snapshot','zen_callisto_fill','zen_callisto_run']);
+ assert(config.permissions.some(r=>r.action==='*'&&r.effect==='deny'));
 });

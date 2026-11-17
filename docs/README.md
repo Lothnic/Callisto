@@ -49,3 +49,5 @@ both the add-on and the local bridge:
 Firefox-protected pages, including Mozilla Add-ons and `about:` pages, are
 inaccessible to the extension under default browser settings. Full control
 still follows these browser restrictions.
+
+- [Native runtime improvements (unreleased)](native-runtime-improvements.md): shared contracts, OpenCode selection, focused observations and browser facilities.

@@ -4,6 +4,7 @@
 mod bidi;
 mod keys;
 mod measurement;
+mod operation_contracts;
 mod session_recovery;
 mod tab_relay;
 mod tool_catalog;
@@ -71,10 +72,12 @@ impl Bridge {
             }
         }
         let result = tokio::time::timeout(
-            Duration::from_secs(if method == "handoff" {
+            Duration::from_secs(if method == "handoff" || method == "demonstrate" {
                 125
             } else if method == "run" {
                 65
+            } else if method == "page" {
+                25
             } else if method == "extract" {
                 40
             } else {
@@ -184,51 +187,33 @@ async fn serve_socket(socket: TcpStream, bridge: Arc<Bridge>) {
 }
 
 fn tools() -> Value {
-    json!([
-        {"name":"callisto_press","description":"Dispatch synthetic keydown/keyup on the focused control, including chords such as Control+A. For JavaScript keyboard handlers only: native editing, focus navigation, shortcuts and form submission defaults are not emulated. Use fill or submit for those operations.","inputSchema":{"type":"object","properties":{"key":{"type":"string","minLength":1,"maxLength":40}},"required":["key"]}},
-        {"name":"callisto_frames","description":"List frames in the controlled tab. Frame access depends on granted website permissions.","inputSchema":{"type":"object","properties":{}}},
-        {"name":"callisto_frame","description":"Select a frame by frame_id from callisto_frames, inject the bridge and return a fresh snapshot. Navigation resets selection. Cross-origin frame input fails closed because parent hit testing cannot be verified.","inputSchema":{"type":"object","properties":{"frame_id":{"type":"integer","minimum":0}},"required":["frame_id"]}},
-        {"name":"callisto_handoff","description":"Ask the user to complete a step in the shared page, then click Continue with agent. Use message; prompt is supported for compatibility. Confirmation is not proof of task success.","inputSchema":{"type":"object","properties":{"message":{"type":"string","minLength":1,"maxLength":500},"prompt":{"type":"string","minLength":1,"maxLength":1000},"timeout_ms":{"type":"integer","minimum":1000,"maximum":120000}},"anyOf":[{"required":["message"]},{"required":["prompt"]}]}},
-        {"name":"callisto_capabilities","description":"Report backend capabilities without reading page content.","inputSchema":{"type":"object","properties":{}}},
-        {"name":"callisto_upload","description":"Set files on a visible file input in the controlled page. Reads explicit local file paths, at most 10 files and 10 MiB total. Page input/change handlers may upload immediately. Does not submit the form.","inputSchema":{"type":"object","properties":{"ref":{"type":"string","pattern":"^ax-[0-9]+$"},"paths":{"type":"array","minItems":1,"maxItems":10,"items":{"type":"string"}}},"required":["ref","paths"]}},
-        {"name":"callisto_pair","description":"Get the persistent local browser pairing code (only needed for initial setup) for the Firefox/Zen tab bridge. Enter it in the extension, then explicitly share the desired existing tab.","inputSchema":{"type":"object","properties":{}}},
-        {"name":"callisto_status","description":"Check connection, selected tab and execution state without reading page content. fullAccess=true means Full browser control is enabled in the extension; page tools can adopt and activate tabs automatically.","inputSchema":{"type":"object","properties":{}}},
-        {"name":"callisto_browser","description":"Manage the user's browser after they grant Enable browser access in the extension. background start/pause/resume/stop controls only the already shared tab and needs the optional tabs grant; the user must prepare the window in the extension first because Firefox/Zen may focus it on creation. Execution then preserves the tab and login in an unfocused agent window. View is a user control. Other actions support tabs, screenshots, cookies, bookmarks, history and downloads. tab_select activates and shares that existing tab; tab_activate only focuses it, including browser-protected pages. tab_create accepts an HTTP(S) url and window_id; omitting url creates about:blank. Use tab_navigate with tab_id and an HTTP(S) url to load a blank tab before page actions. In opt-in Full browser control mode, new tabs/windows are automatically shared and page tools can adopt the active tab or reactivate their selected tab. Full mode can only be enabled in the extension UI; Stop turns it off. Check callisto_status.fullAccess. Browser restrictions still apply. window_close closes the specified whole window, including its tabs; use the id returned by window_create for agent-window cleanup. Cookie values are sensitive. Downloads prompt for a save location. Zen may omit inactive workspaces.","inputSchema":{"type":"object","properties":{"action":{"type":"string","enum":["background","tabs_list","windows_list","tab_select","tab_activate","tab_create","tab_navigate","window_create","window_close","agent_container","tab_close","back","forward","reload","screenshot","cookies_list","cookie_set","cookie_remove","bookmarks_search","history_search","downloads_search","download"]},"operation":{"type":"string","enum":["start","pause","resume","stop"],"description":"Required for background. The agent window must remain unfocused and unminimized; unsupported conditions pause instead of raising it."},"window_id":{"type":"integer","minimum":0},"tab_id":{"type":"integer","minimum":0},"url":{"type":"string"},"query":{"type":"string","maxLength":200},"agent_container":{"type":"boolean","description":"Create a new tab or window in the opt-in isolated Callisto cookie container; existing logins will not be available there."},"cookie_store_id":{"type":"string"},"name":{"type":"string"},"value":{"type":"string"}},"required":["action"]}},
-        {"name":"callisto_page","description":"Additional DOM operations on the active controlled page. scroll uses viewport pixel deltas; hover dispatches synthetic pointer/mouse events; select chooses an option by value; check sets a checkbox; text returns bounded visible body text; find searches visible body text. Input uses the explicitly selected callisto_input mode.","inputSchema":{"type":"object","properties":{"action":{"type":"string","enum":["scroll","hover","select","check","text","find"]},"ref":{"type":"string","pattern":"^ax-[0-9]+$"},"value":{"type":"string"},"checked":{"type":"boolean"},"delta_x":{"type":"number"},"delta_y":{"type":"number"},"query":{"type":"string","maxLength":200}},"required":["action"]}},
-        {"name":"callisto_scroll","description":"Scroll the controlled page by viewport pixel deltas. Returns the action result; take a fresh snapshot afterward.","inputSchema":{"type":"object","properties":{"delta_x":{"type":"number","default":0},"delta_y":{"type":"number"}},"required":["delta_y"]}},
-        {"name":"callisto_screenshot","description":"Capture the active controlled tab as a JPEG image. Requires Enable browser access in the extension.","inputSchema":{"type":"object","properties":{}}},
-        {"name":"callisto_find","description":"Search visible page text and return bounded matching snippets. Unlike Chromium accessibility search, this uses rendered DOM text.","inputSchema":{"type":"object","properties":{"query":{"type":"string","minLength":1,"maxLength":200},"max_matches":{"type":"integer","minimum":1,"maximum":10,"default":5}},"required":["query"]}},
-        {"name":"callisto_submit","description":"Submit the form associated with a snapshot ref, preserving browser validation and submit handlers. Use an input or submit-button ref. Submission may navigate; the next snapshot waits for the page.","inputSchema":{"type":"object","properties":{"ref":{"type":"string","pattern":"^ax-[0-9]+$"}},"required":["ref"]}},
-        {"name":"callisto_batch","description":"Execute 1–10 dependent actions in the controlled tab and return a final snapshot in one tool call. Batches stop if tab ownership changes. Earlier actions are not rolled back on failure. Ten-second deadline; input uses the explicitly selected callisto_input mode.","inputSchema":{"type":"object","properties":{"actions":{"type":"array","minItems":1,"maxItems":10,"items":{"type":"object","properties":{"action":{"type":"string","enum":["navigate","click_ref","fill_ref","submit_ref","click_role","fill_role","submit_role","scroll"]},"url":{"type":"string"},"ref":{"type":"string"},"role":{"type":"string"},"name":{"type":"string"},"value":{"type":"string"},"delta_x":{"type":"number"},"delta_y":{"type":"number"}},"required":["action"]}}},"required":["actions"]}},
-        {"name":"callisto_extract","description":"Read structured rows from the shared page using CSS selectors: a row selector plus a field map. Optionally follow a next-page control and merge pages. Returns typed rows, not a snapshot, so counting and aggregation need one call.","inputSchema":{"type":"object","properties":{"selector":{"type":"string","minLength":1,"maxLength":500},"fields":{"type":"object","minProperties":1,"maxProperties":20,"additionalProperties":{"anyOf":[{"type":"string"},{"type":"object","properties":{"selector":{"type":"string"},"attribute":{"type":"string"},"type":{"type":"string","enum":["text","number"]}}}]}},"limit":{"type":"integer","minimum":1,"maximum":1000},"include_text":{"type":"boolean"},"paginate":{"type":"object","properties":{"next":{"type":"string","minLength":1,"maxLength":500},"max_pages":{"type":"integer","minimum":1,"maximum":25}},"required":["next"]}},"required":["selector","fields"]}},
-        {"name":"callisto_run","description":"Run 1–40 dependent steps in one call: navigate; click/fill/submit/select/check/hover by ref or exact role; press; scroll; wait; wait_for text or CSS selector state; extract rows. Use submit instead of synthetic Enter for forms. Returns the last extraction and an optional final snapshot. Stops at the first failure within a 60-second budget; earlier steps are not rolled back. Input uses the explicitly selected callisto_input mode.","inputSchema":{"type":"object","properties":{"steps":{"type":"array","minItems":1,"maxItems":40,"items":{"type":"object","properties":{"action":{"type":"string","enum":["navigate","click_ref","click_role","fill_ref","fill_role","submit_ref","submit_role","select_ref","select_role","check_ref","check_role","hover_ref","hover_role","press","scroll","wait","wait_for","extract"]},"url":{"type":"string"},"ref":{"type":"string"},"role":{"type":"string"},"name":{"type":"string"},"value":{"type":"string"},"key":{"type":"string"},"delta_x":{"type":"number"},"delta_y":{"type":"number"},"ms":{"type":"integer","minimum":1,"maximum":5000},"text":{"type":"string","minLength":1,"maxLength":500},"timeout_ms":{"type":"integer","minimum":100,"maximum":20000},"selector":{"type":"string","minLength":1,"maxLength":500},"state":{"type":"string","enum":["visible","hidden","attached","detached"]},"checked":{"type":"boolean"},"spec":{"type":"object"}},"required":["action"]}},"snapshot":{"type":"boolean"}},"required":["steps"]}},
-        {"name":"callisto_input","description":"Enable trusted BiDi input under the extension shared-tab lease. Explicit loopback endpoint required. Stop sharing revokes new input, network and observations together. No synthetic fallback. Existing callisto_run/batch tools use this mode.","inputSchema":{"type":"object","properties":{"action":{"type":"string","enum":["enable","disable","status"]},"endpoint":{"type":"string"}},"required":["action"]}},
-        {"name":"callisto_network","description":"Inspect traffic in the explicitly shared tab with optional network permission. Start with 1-10 exact origins; list bounded redacted metadata; endpoints summarizes observed paths and field names; optional JSON/form bodies; rules block or redirect within scope. Stop removes rules. Export HAR to a new absolute output_path or return JSON. Capture never supplies credentials or bypasses site authorization.","inputSchema":{"type":"object","properties":{"action":{"type":"string","enum":["start","list","endpoints","compare","schema","openapi","replay","rules","stop","export"]},"origins":{"type":"array","minItems":1,"maxItems":10,"items":{"type":"string"}},"capture_bodies":{"type":"boolean","default":false},"limit":{"type":"integer","minimum":1,"maximum":500},"offset":{"type":"integer","minimum":0},"include_bodies":{"type":"boolean"},"left":{"type":"string"},"right":{"type":"string"},"url":{"type":"string"},"method":{"type":"string","enum":["GET","HEAD"]},"rules":{"type":"array","maxItems":20,"items":{"type":"object","properties":{"action":{"type":"string","enum":["block","redirect"]},"url_prefix":{"type":"string"},"method":{"type":"string"},"redirect_url":{"type":"string"}},"required":["action","url_prefix"]}},"output_path":{"type":"string"}},"required":["action"]}},
-        {"name":"callisto_trace","description":"Record private per-client action JSONL and optional DOM snapshots/screenshots. Start requires a new absolute directory. Checkpoint captures enabled evidence; stop writes a manifest and HAR if a network capture exists. This is not a Playwright trace; screenshots and snapshots can expose private page content.","inputSchema":{"type":"object","properties":{"action":{"type":"string","enum":["start","status","checkpoint","stop"]},"directory":{"type":"string"},"screenshots":{"type":"boolean","default":false},"snapshots":{"type":"boolean","default":false}},"required":["action"]}},
-        {"name":"callisto_snapshot","description":"Inspect the selected tab. In Full browser control mode, the active tab is adopted automatically when none is selected; otherwise share a tab or call callisto_browser tab_select first. Use max_chars to bound output and offset=next_offset to page through truncated controls. Refs belong to the latest snapshot. This experimental DOM-derived snapshot can omit content and frames.","inputSchema":{"type":"object","properties":{"offset":{"type":"integer","minimum":0,"maximum":10000},"max_chars":{"type":"integer","minimum":1000,"maximum":30000},"selector":{"type":"string","minLength":1,"maxLength":500},"query":{"type":"string","minLength":1,"maxLength":200},"include_text":{"type":"boolean","default":true},"diff":{"type":"boolean","default":false},"revision":{"type":"string"}}}},
-        {"name":"callisto_navigate","description":"Navigate the shared active tab to an HTTP(S) URL. Requires the user to grant optional access to all websites and re-share the tab. Poll callisto_status until ready, then take a fresh snapshot.","inputSchema":{"type":"object","properties":{"url":{"type":"string","maxLength":8192}},"required":["url"]}},
-        {"name":"callisto_click","description":"Click a ref from the latest snapshot in the shared tab using a synthetic DOM click. Some websites reject synthetic input.","inputSchema":{"type":"object","properties":{"ref":{"type":"string","pattern":"^ax-[0-9]+$"}},"required":["ref"]}},
-        {"name":"callisto_fill","description":"Fill a ref from the latest snapshot in the shared tab using synthetic input events. Some websites reject synthetic input.","inputSchema":{"type":"object","properties":{"ref":{"type":"string","pattern":"^ax-[0-9]+$"},"value":{"type":"string","maxLength":100000}},"required":["ref","value"]}},
-        {"name":"callisto_close","description":"Stop sharing the tab without closing it or the browser.","inputSchema":{"type":"object","properties":{}}}
-    ])
+    operation_contracts::catalog()
 }
+
 fn text(value: Value) -> Value {
-    if let Some(data) = value
-        .get("dataUrl")
-        .and_then(Value::as_str)
-        .and_then(|s| s.strip_prefix("data:image/jpeg;base64,"))
-    {
-        return json!({"content":[{"type":"image","mimeType":"image/jpeg","data":data}]});
+    if let Some(data_url) = value.get("dataUrl").and_then(Value::as_str) {
+        for mime in ["image/jpeg", "image/png"] {
+            if let Some(data) = data_url.strip_prefix(&format!("data:{mime};base64,")) {
+                let mut metadata = value.clone();
+                metadata.as_object_mut().unwrap().remove("dataUrl");
+                return json!({"content":[{"type":"image","mimeType":mime,"data":data},{"type":"text","text":metadata.to_string()}]});
+            }
+        }
     }
     json!({"content":[{"type":"text","text":value.to_string()}]})
 }
-fn failure(error: impl std::fmt::Display) -> Value {
-    json!({"isError":true,"content":[{"type":"text","text":error.to_string()}]})
+
+fn failure(error: impl Into<anyhow::Error>) -> Value {
+    let error = error.into();
+    let mut reply = json!({"isError":true,"content":[{"type":"text","text":error.to_string()}]});
+    if let Some(invalid) = error.downcast_ref::<operation_contracts::Invalid>() {
+        reply["structuredContent"] = invalid.details();
+    }
+    reply
 }
 async fn call_tool(bridge: &Bridge, session_id: u64, name: &str, args: &Value) -> Result<Value> {
-    if !args.is_object() {
-        bail!("Tool arguments must be an object");
-    }
+    let normalized = operation_contracts::normalize(name, args)?;
+    let args = &normalized;
     if name == "callisto_trace" {
         return match args["action"].as_str().unwrap_or("") {
             "start" => {
@@ -422,8 +407,12 @@ async fn run_trusted(bridge: &Bridge, client: u64, name: &str, args: &Value) -> 
                 bail!("Shared tab ownership changed during the run");
             }
             expected_lease = Some(lease.clone());
-            let native = if action == "press" {
-                Some("press")
+            let native = if [
+                "click", "fill", "submit", "select", "check", "hover", "drag", "press",
+            ]
+            .contains(&action)
+            {
+                Some(action)
             } else {
                 action
                     .strip_suffix("_ref")
@@ -441,7 +430,21 @@ async fn run_trusted(bridge: &Bridge, client: u64, name: &str, args: &Value) -> 
                 extraction = Some(
                     bridge
                         .trusted
-                        .extract(bridge, client, &step["spec"])
+                        .extract(
+                            bridge,
+                            client,
+                            &step
+                                .as_object()
+                                .map(|o| {
+                                    Value::Object(
+                                        o.iter()
+                                            .filter(|(k, _)| k.as_str() != "action")
+                                            .map(|(k, v)| (k.clone(), v.clone()))
+                                            .collect(),
+                                    )
+                                })
+                                .unwrap_or(Value::Null),
+                        )
                         .await?,
                 );
             } else {
@@ -479,6 +482,10 @@ async fn run_trusted(bridge: &Bridge, client: u64, name: &str, args: &Value) -> 
     if let Some(extraction) = extraction {
         result["extraction"] = extraction;
     }
+    result["feedback"] = bridge
+        .call_session(client, "page", None, Some("{\"action\":\"feedback\"}"))
+        .await
+        .unwrap_or(json!({"unavailable":true,"needs_observation":true}));
     if batch || args["snapshot"] == true {
         result["snapshot"] = bridge.call_session(client, "snapshot", None, None).await?;
     }
@@ -491,6 +498,36 @@ async fn call_tool_inner(
     name: &str,
     args: &Value,
 ) -> Result<Value> {
+    if [
+        "callisto_console",
+        "callisto_dialog",
+        "callisto_emulate",
+        "callisto_webmcp",
+        "callisto_screenshot_diff",
+    ]
+    .contains(&name)
+        || (name == "callisto_screenshot"
+            && (bridge.trusted.enabled(session_id)
+                || args["full_page"] == true
+                || args.get("clip").is_some()))
+    {
+        return bridge.trusted.runtime(bridge, session_id, name, args).await;
+    }
+    if ["callisto_recording", "callisto_demonstrate"].contains(&name) {
+        let method = if name == "callisto_demonstrate" {
+            "demonstrate"
+        } else {
+            "page"
+        };
+        let mut input = args.clone();
+        if method == "page" {
+            input["action"] = json!("recording");
+            input["operation"] = args["action"].clone();
+        }
+        return bridge
+            .call_session(session_id, method, None, Some(&input.to_string()))
+            .await;
+    }
     if name == "callisto_page"
         && !matches!(
             args["action"].as_str(),
@@ -527,6 +564,10 @@ async fn call_tool_inner(
             "callisto_fill" => Some("fill"),
             "callisto_press" => Some("press"),
             "callisto_submit" => Some("submit"),
+            "callisto_select" => Some("select"),
+            "callisto_check" => Some("check"),
+            "callisto_hover" => Some("hover"),
+            "callisto_drag" => Some("drag"),
             _ => None,
         };
         if let Some(action) = native_action {
@@ -545,6 +586,34 @@ async fn call_tool_inner(
         if ["callisto_run", "callisto_batch"].contains(&name) {
             return run_trusted(bridge, session_id, name, args).await;
         }
+    }
+    if [
+        "callisto_select",
+        "callisto_check",
+        "callisto_hover",
+        "callisto_drag",
+        "callisto_wait_for",
+        "callisto_wait",
+    ]
+    .contains(&name)
+        || (["callisto_click", "callisto_fill", "callisto_submit"].contains(&name)
+            && args.get("ref").is_none())
+    {
+        let mut input = args.clone();
+        input["action"] = json!(name.trim_start_matches("callisto_"));
+        if name == "callisto_wait" {
+            return bridge
+                .call_session(
+                    session_id,
+                    "run",
+                    None,
+                    Some(&json!({"steps":[input]}).to_string()),
+                )
+                .await;
+        }
+        return bridge
+            .call_session(session_id, "page", None, Some(&input.to_string()))
+            .await;
     }
     match name {
         "callisto_press" => {
@@ -639,11 +708,21 @@ async fn call_tool_inner(
                 "networkInspection",
                 "backgroundWindow",
                 "fullBrowserControl",
+                "canonicalActions",
+                "focusedSnapshot",
+                "scopedDiff",
+                "shortRefs",
+                "drag",
+                "recording",
+                "demonstration",
+                "namedTabs",
             ] {
                 // An older extension may not recognize a newer action even
                 // though the compiled MCP facade exposes its schema.
                 result["capabilities"][feature] = json!(extension[feature].as_bool() == Some(true));
             }
+            let runtime_ready = trusted && extension["canonicalActions"] == true;
+            result["capabilities"]["browserRuntime"] = json!({"console":runtime_ready,"dialogs":runtime_ready,"viewport":runtime_ready,"fullPageScreenshot":runtime_ready,"screenshotDiff":runtime_ready,"webmcp":"requires page/browser API; use webmcp list"});
             Ok(result)
         }
         "callisto_upload" => {
@@ -1007,7 +1086,7 @@ async fn proxy<R: AsyncRead + Unpin, W: AsyncWrite + Unpin>(
     root: &std::path::Path,
 ) -> Result<()> {
     let catalog = tools();
-    let advertised = tool_catalog::advertised(&catalog, tool_catalog::Profile::from_env()?);
+    let mut profile = tool_catalog::Profile::for_client(None)?;
     let mut input = BufReader::new(input).lines();
     let stream = tab_relay::connect(root).await?;
     let (read, mut write) = stream.into_split();
@@ -1021,9 +1100,12 @@ async fn proxy<R: AsyncRead + Unpin, W: AsyncWrite + Unpin>(
                 if let Ok(mut message)=serde_json::from_str::<Value>(&line) {
                     // This interface belongs to the stdio client, not the shared relay.
                     // Different clients can choose compact/full without restarting it.
+                    if message["method"] == "initialize" {
+                        profile = tool_catalog::Profile::for_client(message["params"]["clientInfo"]["name"].as_str())?;
+                    }
                     if message.get("id").is_some() {
                         let local = if message["method"] == "tools/list" {
-                            Some(json!({"tools":advertised}))
+                            Some(json!({"tools":tool_catalog::advertised(&catalog, profile)}))
                         } else if message["method"] == "tools/call" && message["params"]["name"] == "callisto" {
                             match tool_catalog::dispatch(&catalog, &message["params"].get("arguments").cloned().unwrap_or(json!({}))) {
                                 Ok(tool_catalog::Dispatch::Help(help)) => Some(text(help)),
@@ -1050,7 +1132,10 @@ async fn proxy<R: AsyncRead + Unpin, W: AsyncWrite + Unpin>(
                 match line {
                     Ok(Some(line))=>{
                         let mut reply=serde_json::from_str::<Value>(&line).unwrap_or(Value::Null);
-                        if let Some(id)=reply.get("id"){if let Some(request)=pending.remove(&id.to_string()){recovery.response(&request,&mut reply);}}
+                        if let Some(id)=reply.get("id"){if let Some(request)=pending.remove(&id.to_string()){
+                            if request["method"] == "initialize" && reply["result"].is_object() { reply["result"]["instructions"] = json!(tool_catalog::instructions(profile)); }
+                            recovery.response(&request,&mut reply);
+                        }}
                         output.write_all(format!("{reply}\n").as_bytes()).await?;output.flush().await?;false
                     }
                     _=>true,
@@ -1121,7 +1206,7 @@ async fn serve_mcp<R: AsyncRead + Unpin, W: AsyncWrite + Unpin>(
                     None => failure(anyhow!("Request cancelled before execution")),
                     Some(_operation) => {
                         let name = params.get("name").and_then(Value::as_str).unwrap_or("");
-                        if name == "callisto_handoff" {
+                        if ["callisto_handoff", "callisto_demonstrate"].contains(&name) {
                             drop(_operation);
                         }
                         let arguments = params.get("arguments").cloned().unwrap_or(json!({}));
@@ -1238,7 +1323,7 @@ mod tests {
             let error = call_tool(&bridge, 1, "callisto_snapshot", &args)
                 .await
                 .unwrap_err();
-            assert!(error.to_string().contains("Invalid snapshot"));
+            assert!(error.to_string().contains("args."));
         }
     }
 
@@ -1488,7 +1573,7 @@ mod tests {
             let error = call_tool(&bridge, 1, "callisto_page", &json!({"action":action}))
                 .await
                 .unwrap_err();
-            assert!(error.to_string().contains("Unsupported public page action"));
+            assert!(error.to_string().contains("args.action"));
         }
         assert!(bridge.pending.lock().await.is_empty());
     }

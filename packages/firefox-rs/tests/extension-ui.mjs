@@ -29,7 +29,7 @@ try{
  await page.locator('#optional > summary').click();await page.locator('#network').click();assert.equal((await page.evaluate(()=>grants)).length,3);assert.match(await page.locator('#notice').textContent(),/not granted/);
  await page.locator('#full-mode').click();assert.match(await page.locator('#notice').textContent(),/not granted/);assert.equal(await page.evaluate(()=>!!state.full_access),false);
  await page.evaluate(()=>{browser.permissions.request=async permission=>{grants.push(permission);return true;};});
- await page.locator('#full-mode').click();await page.getByRole('heading',{name:'Full browser control active'}).waitFor();assert.equal(await page.locator('#full-mode').getAttribute('aria-pressed'),'true');assert.equal(await page.locator('#stop').isEnabled(),true);
+ await page.locator('#full-mode').click();await page.getByRole('heading',{name:'Full browser control active'}).waitFor();assert.equal(await page.locator('#full-mode').getAttribute('aria-pressed'),'true');assert.equal(await page.evaluate(()=>grants.at(-1).permissions.includes('sessions')),true);assert.equal(await page.locator('#stop').isEnabled(),true);
  await page.screenshot({path:'/tmp/callisto-popup-full-browser.png',fullPage:true});
  await page.locator('#full-mode').click();await page.getByRole('heading',{name:'Connected · no tab shared'}).waitFor();
  await page.locator('#full-mode').click();await page.getByRole('heading',{name:'Full browser control active'}).waitFor();

@@ -24,7 +24,7 @@ jobs:
       - run: npm --prefix packages/mini run build
       - name: Browser and installer contracts
         timeout-minutes: 3
-        run: node --test packages/firefox-rs/tests/extension-background.test.cjs packages/firefox-rs/tests/extension-network.test.cjs scripts/launcher.test.mjs scripts/install-release.test.mjs scripts/site-install.test.mjs scripts/doctor.test.mjs eval/agent-comparison/host-session.test.mjs
+        run: node --test packages/firefox-rs/tests/extension-background.test.cjs packages/firefox-rs/tests/extension-network.test.cjs scripts/launcher.test.mjs scripts/install-release.test.mjs scripts/site-install.test.mjs scripts/doctor.test.mjs scripts/compact-tools.test.mjs eval/agent-comparison/host-session.test.mjs
       - name: DOM bridge tests in runner Chrome
         run: |
           export CHROMIUM_PATH="$(command -v google-chrome)"
@@ -36,7 +36,7 @@ jobs:
         run: |
           command -v firefox
           command -v geckodriver
-          geckodriver --host 127.0.0.1 --port 4444 > /tmp/callisto-geckodriver.log 2>&1 &
+          geckodriver --allow-system-access --host 127.0.0.1 --port 4444 > /tmp/callisto-geckodriver.log 2>&1 &
           driver_pid=$!
           trap 'status=$?; kill "$driver_pid" 2>/dev/null || true; if [ "$status" -ne 0 ]; then cat /tmp/callisto-geckodriver.log; fi' EXIT
           for i in {1..30}; do
@@ -55,6 +55,7 @@ jobs:
           node eval/agent-comparison/session-recovery.mjs
           node eval/agent-comparison/fixture-activation.mjs
           node eval/agent-comparison/full-browser-control.mjs
+          node packages/firefox-rs/tests/native-improvements.mjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:

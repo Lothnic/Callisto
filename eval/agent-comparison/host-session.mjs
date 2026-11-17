@@ -2,7 +2,7 @@
 import {createServer} from 'node:http';
 import {chmod,rm} from 'node:fs/promises';
 export class HostSession {
- constructor(client,tools,{maxCalls=40}={}){this.client=client;this.tools=tools;this.maxCalls=maxCalls;this.events=[];this.closed=false;this.calls=0;this.pending=new Set();}
+ constructor(client,tools,{maxCalls=40,preserveInitialization=false}={}){this.preserveInitialization=preserveInitialization;this.client=client;this.tools=tools;this.maxCalls=maxCalls;this.events=[];this.closed=false;this.calls=0;this.pending=new Set();}
  async start(path){
   this.path=path;this.server=createServer(async(req,res)=>{
    let message;try{
@@ -12,7 +12,7 @@ export class HostSession {
   });await new Promise((resolve,reject)=>{this.server.once('error',reject);this.server.listen(path,resolve);});await chmod(path,0o600);return this;
  }
  async dispatch(message){
-  if(message.method==='initialize')return {protocolVersion:message.params.protocolVersion,capabilities:{tools:{}},serverInfo:{name:'owned-native-browser-session',version:'1'}};
+  if(message.method==='initialize'){this.hostInfo=message.params.clientInfo;const native=this.preserveInitialization?this.client.initialization:null;if(native&&!this.client.clientInfo)throw Error('Native client identity must be recorded before host setup');if(native&&this.client.clientInfo.name!==this.hostInfo?.name)throw Error('Host identity differs from the initialized native client; recreate the owned client with the real host identity');return {...(native||{}),protocolVersion:message.params.protocolVersion,capabilities:{tools:{}},serverInfo:native?.serverInfo||{name:'owned-native-browser-session',version:'1'}};}
   if(message.method==='tools/list')return {tools:this.tools};
   if(message.method==='ping')return {};
   if(message.method==='resources/list')return {resources:[]};
