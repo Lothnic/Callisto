@@ -24,13 +24,14 @@ jobs:
       - run: npm --prefix packages/mini run build
       - name: Browser and installer contracts
         timeout-minutes: 3
-        run: node --test packages/firefox-rs/tests/extension-background.test.cjs packages/firefox-rs/tests/extension-network.test.cjs scripts/launcher.test.mjs scripts/install-release.test.mjs scripts/site-install.test.mjs scripts/doctor.test.mjs scripts/compact-tools.test.mjs eval/agent-comparison/host-session.test.mjs
+        run: node --test packages/firefox-rs/tests/extension-background.test.cjs packages/firefox-rs/tests/extension-network.test.cjs scripts/launcher.test.mjs scripts/install-release.test.mjs scripts/site-install.test.mjs scripts/doctor.test.mjs scripts/compact-tools.test.mjs eval/agent-comparison/host-session.test.mjs eval/agent-comparison/real-world-tasks.test.mjs eval/agent-comparison/real-world-settings.test.mjs eval/agent-comparison/browse-extension.test.mjs eval/agent-comparison/browse-fixture.test.mjs eval/agent-comparison/account-fixture.test.mjs
       - name: DOM bridge tests in runner Chrome
         run: |
           export CHROMIUM_PATH="$(command -v google-chrome)"
           test -n "$CHROMIUM_PATH"
           node packages/firefox-rs/tests/extension-content.mjs
           node packages/firefox-rs/tests/extension-ui.mjs
+          node eval/agent-comparison/account-fixture-browser.mjs
       - name: Firefox extension bridge end-to-end
         timeout-minutes: 5
         run: |
