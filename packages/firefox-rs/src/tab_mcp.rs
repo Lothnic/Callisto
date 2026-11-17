@@ -6,6 +6,7 @@ mod keys;
 mod measurement;
 mod session_recovery;
 mod tab_relay;
+mod tool_catalog;
 mod trace;
 mod trusted_input;
 use anyhow::{anyhow, bail, Result};
@@ -1005,6 +1006,8 @@ async fn proxy<R: AsyncRead + Unpin, W: AsyncWrite + Unpin>(
     mut output: W,
     root: &std::path::Path,
 ) -> Result<()> {
+    let catalog = tools();
+    let advertised = tool_catalog::advertised(&catalog, tool_catalog::Profile::from_env()?);
     let mut input = BufReader::new(input).lines();
     let stream = tab_relay::connect(root).await?;
     let (read, mut write) = stream.into_split();
@@ -1014,8 +1017,30 @@ async fn proxy<R: AsyncRead + Unpin, W: AsyncWrite + Unpin>(
     loop {
         let disconnected = tokio::select! {
             line=input.next_line()=>{
-                let Some(line)=line? else {return Ok(());};
-                if let Ok(message)=serde_json::from_str::<Value>(&line) {
+                let Some(mut line)=line? else {return Ok(());};
+                if let Ok(mut message)=serde_json::from_str::<Value>(&line) {
+                    // This interface belongs to the stdio client, not the shared relay.
+                    // Different clients can choose compact/full without restarting it.
+                    if message.get("id").is_some() {
+                        let local = if message["method"] == "tools/list" {
+                            Some(json!({"tools":advertised}))
+                        } else if message["method"] == "tools/call" && message["params"]["name"] == "callisto" {
+                            match tool_catalog::dispatch(&catalog, &message["params"].get("arguments").cloned().unwrap_or(json!({}))) {
+                                Ok(tool_catalog::Dispatch::Help(help)) => Some(text(help)),
+                                Ok(tool_catalog::Dispatch::Forward{name,arguments}) => {
+                                    message["params"]["name"] = json!(name);
+                                    message["params"]["arguments"] = arguments;
+                                    line = message.to_string();
+                                    None
+                                }
+                                Err(error) => Some(failure(error)),
+                            }
+                        } else { None };
+                        if let Some(result) = local {
+                            let reply=json!({"jsonrpc":"2.0","id":message["id"],"result":result});
+                            output.write_all(format!("{reply}\n").as_bytes()).await?;output.flush().await?;continue;
+                        }
+                    }
                     if let Some(reply)=recovery.request(&message) {output.write_all(format!("{reply}\n").as_bytes()).await?;output.flush().await?;continue;}
                     if let Some(id)=message.get("id"){pending.insert(id.to_string(),message.clone());}
                 }

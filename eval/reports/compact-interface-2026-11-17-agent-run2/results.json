@@ -1,0 +1,862 @@
+{
+  "schema": "callisto.real-world-agent.v1",
+  "updated_at": "2026-11-17T06:25:27.408Z",
+  "model": "gpt-6.1-sol",
+  "reasoning_effort": "high",
+  "input_mode": "synthetic-dom",
+  "repetitions": 1,
+  "engines": [
+    "zen"
+  ],
+  "planned_runs": 6,
+  "completed_runs": 6,
+  "metadata": {
+    "started_at": "2026-11-17T06:21:33.697Z",
+    "source_revision": "a4c4f4d7726ba048c5c6d2d212a30bd7a42094b6",
+    "tool_profile": "compact",
+    "runtime_version": "callisto-firefox-tab-mcp 0.3.1-alpha.1",
+    "runtime_sha256": "e858eb23b15c43090b567e42b315d71a1ce7e3be062657a22a4c350758b9b961",
+    "extension_source_version": "0.3.1",
+    "fixture_extension_version": "0.2.1",
+    "fixture_note": "Owned test extension uses pregranted optional permissions, automatic private pairing and test diagnostics. No task content or answers are injected.",
+    "extension_sources_sha256": {
+      "manifest.json": "86d6aac07f05c5a2d7d8169755da5e406d2d33e56940fa48da26e7e12a9d41aa",
+      "background.js": "0368598de3c6f15cf1e786a7853eb7571951ee580bbdb43fe2776039e612711b",
+      "content.js": "c98f0aad2c17868f510e859dcee1614afaec9c7e152348c679e6e7d66bd0f4de",
+      "browser-control.js": "c0abf50bd136c7989fa5ab3361ae86d7e5619a495bdfd3ceb617c4e61119e080"
+    },
+    "zen_version": "1.14.9b",
+    "zen_profile": "owned temporary persistent profile on Xvfb",
+    "zen_input": {
+      "extensionSharingControls": true,
+      "fallback": false,
+      "leaseBound": false,
+      "mode": "synthetic-dom",
+      "transportConnected": false
+    },
+    "codex_version": "codex-cli 0.166.0",
+    "browse_cli": null,
+    "browse_extension_version": null,
+    "browse_extension_manifest_sha256": null,
+    "chromium_version": null,
+    "browse_profile": null,
+    "setup_elapsed_ms": 12443.762622,
+    "catalogs": {
+      "zen": {
+        "native_count": 1,
+        "exposed_count": 1,
+        "exposed_bytes": 940
+      },
+      "browse": {
+        "native_count": 0,
+        "exposed_count": 0,
+        "exposed_bytes": 2
+      }
+    },
+    "harness_sha256": "04a169c9e3a3dcf8de4a278749f103c233e6822b0ce2d1265bbd1ef837bfbebc"
+  },
+  "phases": [
+    {
+      "id": 0,
+      "metadata": {
+        "started_at": "2026-11-17T06:21:33.697Z",
+        "source_revision": "a4c4f4d7726ba048c5c6d2d212a30bd7a42094b6",
+        "tool_profile": "compact",
+        "runtime_version": "callisto-firefox-tab-mcp 0.3.1-alpha.1",
+        "runtime_sha256": "e858eb23b15c43090b567e42b315d71a1ce7e3be062657a22a4c350758b9b961",
+        "extension_source_version": "0.3.1",
+        "fixture_extension_version": "0.2.1",
+        "fixture_note": "Owned test extension uses pregranted optional permissions, automatic private pairing and test diagnostics. No task content or answers are injected.",
+        "extension_sources_sha256": {
+          "manifest.json": "86d6aac07f05c5a2d7d8169755da5e406d2d33e56940fa48da26e7e12a9d41aa",
+          "background.js": "0368598de3c6f15cf1e786a7853eb7571951ee580bbdb43fe2776039e612711b",
+          "content.js": "c98f0aad2c17868f510e859dcee1614afaec9c7e152348c679e6e7d66bd0f4de",
+          "browser-control.js": "c0abf50bd136c7989fa5ab3361ae86d7e5619a495bdfd3ceb617c4e61119e080"
+        },
+        "zen_version": "1.14.9b",
+        "zen_profile": "owned temporary persistent profile on Xvfb",
+        "zen_input": {
+          "extensionSharingControls": true,
+          "fallback": false,
+          "leaseBound": false,
+          "mode": "synthetic-dom",
+          "transportConnected": false
+        },
+        "codex_version": "codex-cli 0.166.0",
+        "browse_cli": null,
+        "browse_extension_version": null,
+        "browse_extension_manifest_sha256": null,
+        "chromium_version": null,
+        "browse_profile": null,
+        "setup_elapsed_ms": 12443.762622,
+        "catalogs": {
+          "zen": {
+            "native_count": 1,
+            "exposed_count": 1,
+            "exposed_bytes": 940
+          },
+          "browse": {
+            "native_count": 0,
+            "exposed_count": 0,
+            "exposed_bytes": 2
+          }
+        },
+        "harness_sha256": "04a169c9e3a3dcf8de4a278749f103c233e6822b0ce2d1265bbd1ef837bfbebc"
+      }
+    }
+  ],
+  "continuation_note": null,
+  "oracles": {
+    "captured_at": "2026-11-17T06:21:25.007Z",
+    "pypi": {
+      "version": "0.28.1",
+      "requires_python": ">=3.8"
+    },
+    "github": {
+      "title": "Suggestion: 'protected' modifier",
+      "state": "closed",
+      "author": "RyanCavanaugh",
+      "url": "https://github.com/microsoft/TypeScript/issues/1"
+    },
+    "holidays": [
+      {
+        "title": "Summer bank holiday",
+        "date": "2027-08-02",
+        "notes": "",
+        "bunting": true
+      },
+      {
+        "title": "St Andrew’s Day",
+        "date": "2027-11-30",
+        "notes": "",
+        "bunting": true
+      }
+    ],
+    "sources": [
+      "https://pypi.org/pypi/httpx/json",
+      "https://api.github.com/repos/microsoft/TypeScript/issues/1",
+      "https://www.gov.uk/bank-holidays.json"
+    ]
+  },
+  "tasks": [
+    {
+      "id": "wikipedia-biography",
+      "name": "Wikipedia biography",
+      "start": "https://en.wikipedia.org/wiki/Main_Page",
+      "origins": [
+        "https://en.wikipedia.org"
+      ],
+      "instruction": "Find Ada Lovelace on Wikipedia. Report her full birth date, birthplace and mother’s name. Cite the biography page and a short supporting quote.",
+      "expected": {
+        "date": "10 December 1815",
+        "place": "London",
+        "mother": "Anne Isabella Milbanke"
+      },
+      "answer_patterns": [
+        "10\\s+December\\s+1815|December\\s+10,?\\s+1815|1815-12-10",
+        "London",
+        "(?:Annabella|Anne?\\s+Isabella)(?:\\s+Noel)?\\s+(?:Milbanke|Byron)"
+      ],
+      "source_pattern": "en\\.wikipedia\\.org\\/wiki\\/Ada_Lovelace"
+    },
+    {
+      "id": "arxiv-paper",
+      "name": "arXiv paper lookup",
+      "start": "https://arxiv.org/",
+      "origins": [
+        "https://arxiv.org"
+      ],
+      "instruction": "Find the paper titled exactly “Attention Is All You Need” on arXiv. Report its arXiv identifier, first two authors and original submission date. Cite the abstract page and a short supporting quote.",
+      "expected": {
+        "id": "1706.03762",
+        "authors": [
+          "Ashish Vaswani",
+          "Noam Shazeer"
+        ],
+        "date": "12 June 2017"
+      },
+      "answer_patterns": [
+        "1706\\.03762",
+        "Ashish\\s+Vaswani",
+        "Noam\\s+Shazeer",
+        "12\\s+Jun(?:e)?\\s+2017|Jun(?:e)?\\s+12,?\\s+2017|2017-06-12"
+      ],
+      "source_pattern": "arxiv\\.org\\/abs\\/1706\\.03762"
+    },
+    {
+      "id": "github-issue",
+      "name": "GitHub issue lookup",
+      "start": "https://github.com/microsoft/TypeScript",
+      "origins": [
+        "https://github.com"
+      ],
+      "instruction": "Find issue #1 in microsoft/TypeScript on GitHub. Report its title, whether it is open or closed, and the username of the person who opened it. Cite the issue page and a short supporting quote.",
+      "oracle": "github",
+      "expected": {
+        "title": "Suggestion: 'protected' modifier",
+        "state": "closed",
+        "author": "RyanCavanaugh",
+        "url": "https://github.com/microsoft/TypeScript/issues/1"
+      },
+      "answer_patterns": [
+        "Suggestion.{0,10}protected.{0,10}modifier",
+        "closed",
+        "RyanCavanaugh"
+      ],
+      "source_pattern": "github\\.com\\/microsoft\\/TypeScript\\/issues\\/1(?:\\b|#)"
+    },
+    {
+      "id": "pypi-metadata",
+      "name": "PyPI package metadata",
+      "start": "https://pypi.org/project/httpx/",
+      "origins": [
+        "https://pypi.org"
+      ],
+      "instruction": "On PyPI, inspect the httpx project and its release history. Report the latest stable release version and its minimum required Python version. Cite the project page and a short supporting quote.",
+      "oracle": "pypi",
+      "expected": {
+        "version": "0.28.1",
+        "requires_python": ">=3.8"
+      },
+      "answer_patterns": [
+        "0\\.28\\.1",
+        "3\\.8"
+      ],
+      "source_pattern": "pypi\\.org\\/project\\/httpx\\/"
+    },
+    {
+      "id": "python-json",
+      "name": "Python documentation",
+      "start": "https://docs.python.org/3/",
+      "origins": [
+        "https://docs.python.org"
+      ],
+      "instruction": "Find the Python documentation for json.loads. Report the exception raised for invalid JSON and the supported types of its input argument s. Cite the relevant documentation page and a short supporting quote.",
+      "expected": {
+        "error": "JSONDecodeError",
+        "inputs": [
+          "str",
+          "bytes",
+          "bytearray"
+        ]
+      },
+      "answer_patterns": [
+        "JSONDecodeError",
+        "\\bstr\\b|string",
+        "\\bbytes\\b",
+        "\\bbytearray\\b"
+      ],
+      "source_pattern": "docs\\.python\\.org\\/3(?:\\.\\d+)?\\/library\\/json\\.html"
+    },
+    {
+      "id": "govuk-calendar",
+      "name": "GOV.UK holiday calendar",
+      "start": "https://www.gov.uk/bank-holidays",
+      "origins": [
+        "https://www.gov.uk"
+      ],
+      "instruction": "Use the GOV.UK bank holiday calendar for Scotland in 2027. Report the dates of the summer bank holiday and St Andrew’s Day. Cite the calendar page and a short supporting quote.",
+      "oracle": "holidays",
+      "expected": [
+        {
+          "title": "Summer bank holiday",
+          "date": "2027-08-02",
+          "notes": "",
+          "bunting": true
+        },
+        {
+          "title": "St Andrew’s Day",
+          "date": "2027-11-30",
+          "notes": "",
+          "bunting": true
+        }
+      ],
+      "answer_patterns": [
+        "\\b2027\\b",
+        "\\b2(?:st|nd|rd|th)?\\b\\s+August\\b(?:\\s+2027\\b)?|\\bAugust\\s+\\b2(?:st|nd|rd|th)?\\b(?:,?\\s+2027\\b)?|\\b2027-08-02\\b",
+        "\\b30(?:st|nd|rd|th)?\\b\\s+November\\b(?:\\s+2027\\b)?|\\bNovember\\s+\\b30(?:st|nd|rd|th)?\\b(?:,?\\s+2027\\b)?|\\b2027-11-30\\b"
+      ],
+      "source_pattern": "gov\\.uk\\/bank-holidays"
+    }
+  ],
+  "catalogs": {
+    "zen": [
+      {
+        "description": "Control Firefox/Zen through its shared tab. Pass operation fields in args. Start with status or pair. Navigate: {op:'navigate',args:{url:'https://example.com'}}. Observe: {op:'snapshot',args:{max_chars:6000}}. Act: {op:'run',args:{steps:[{action:'click_ref',ref:'ax-1'}],snapshot:false}}. Get any operation's parameters with {op:'help',args:{op:'run'}}. Use run for dependent actions and extract for rows. Existing sharing, permissions, input mode and cancellation apply. Inspect after uncertain errors before retrying.",
+        "inputSchema": {
+          "additionalProperties": false,
+          "properties": {
+            "args": {
+              "type": "object"
+            },
+            "op": {
+              "enum": [
+                "help",
+                "press",
+                "frames",
+                "frame",
+                "handoff",
+                "capabilities",
+                "upload",
+                "pair",
+                "status",
+                "browser",
+                "page",
+                "scroll",
+                "screenshot",
+                "find",
+                "submit",
+                "batch",
+                "extract",
+                "run",
+                "input",
+                "network",
+                "trace",
+                "snapshot",
+                "navigate",
+                "click",
+                "fill",
+                "close"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "op"
+          ],
+          "type": "object"
+        },
+        "name": "callisto"
+      }
+    ],
+    "browse": []
+  },
+  "cost_usd": null,
+  "cost_note": "Actual CLI usage is retained. Signed-in subscription does not provide per-trial dollar charges.",
+  "measurement": "Fresh host conversation per run. Host elapsed includes startup, model turns, navigation, waits, failures and retries. Task elapsed additionally includes independent answer/evidence validation. Profile setup and neutral-tab reacquisition are separate. Verification is not cut off the timer. Browser output UTF-8 bytes and characters are separate from model input/output/cached tokens.",
+  "scope": "Six public informational workflows, two repetitions. Anonymous owned browser profiles; initially the first round is cold per site and the second is warm. A resumed phase resets profiles and is explicitly identified in phase metadata. Fixed gold facts for stable pages; time-stamped official JSON/API oracles for mutable metadata. Native task-tool catalogs differ and are saved. Not a store-install, authenticated-account or production reliability test.",
+  "budget": {
+    "max_browser_calls": 35,
+    "host_timeout_ms": 180000,
+    "stop_before_next_session_at_reported_tokens": 3000000
+  },
+  "results": [
+    {
+      "engine": "zen",
+      "task": "wikipedia-biography",
+      "round": 0,
+      "phase": 0,
+      "success": true,
+      "outcome": "passed",
+      "answer": {
+        "answer": "Ada Lovelace was born on 10 December 1815 in London, England. Her mother was Anne Isabella Milbanke.",
+        "evidence": [
+          {
+            "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+            "quote": "Augusta Ada Byron 10 December 1815 London, England"
+          },
+          {
+            "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+            "quote": "Anne Isabella Milbanke (mother)"
+          }
+        ]
+      },
+      "expected": {
+        "date": "10 December 1815",
+        "place": "London",
+        "mother": "Anne Isabella Milbanke"
+      },
+      "evaluation": {
+        "passed": true,
+        "facts": [
+          {
+            "pattern": "10\\s+December\\s+1815|December\\s+10,?\\s+1815|1815-12-10",
+            "passed": true
+          },
+          {
+            "pattern": "London",
+            "passed": true
+          },
+          {
+            "pattern": "(?:Annabella|Anne?\\s+Isabella)(?:\\s+Noel)?\\s+(?:Milbanke|Byron)",
+            "passed": true
+          }
+        ],
+        "evidence": [
+          {
+            "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+            "quote": "Augusta Ada Byron 10 December 1815 London, England",
+            "source_matches": true,
+            "quote_observed": true
+          },
+          {
+            "url": "https://en.wikipedia.org/wiki/Ada_Lovelace",
+            "quote": "Anne Isabella Milbanke (mother)",
+            "source_matches": true,
+            "quote_observed": true
+          }
+        ],
+        "forbidden_network_or_file_calls": 0
+      },
+      "preparation_ms": 103.96700000000055,
+      "host_elapsed_ms": 22722.681164,
+      "verification_ms": 7.643147999995563,
+      "task_elapsed_ms": 22740.009329,
+      "usage": {
+        "input_tokens": 74296,
+        "cached_input_tokens": 22144,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 321,
+        "reasoning_output_tokens": 0
+      },
+      "tool_calls": 5,
+      "tool_failures": 0,
+      "tool_elapsed_ms": 1895.2410960000016,
+      "response_bytes": 39342,
+      "response_characters": 39312,
+      "forbidden_host_calls": 0,
+      "cost_usd": null,
+      "timed_out": false,
+      "trace_file": "zen-wikipedia-biography-0.json"
+    },
+    {
+      "engine": "zen",
+      "task": "arxiv-paper",
+      "round": 0,
+      "phase": 0,
+      "success": true,
+      "outcome": "passed",
+      "answer": {
+        "answer": "“Attention Is All You Need” — arXiv:1706.03762. First two authors: Ashish Vaswani and Noam Shazeer. Original submission date: 12 June 2017.",
+        "evidence": [
+          {
+            "url": "https://arxiv.org/abs/1706.03762",
+            "quote": "arXiv:1706.03762 [cs.CL]"
+          },
+          {
+            "url": "https://arxiv.org/abs/1706.03762",
+            "quote": "Authors:Ashish Vaswani, Noam Shazeer"
+          },
+          {
+            "url": "https://arxiv.org/abs/1706.03762",
+            "quote": "Submitted on 12 Jun 2017 (v1)"
+          }
+        ]
+      },
+      "expected": {
+        "id": "1706.03762",
+        "authors": [
+          "Ashish Vaswani",
+          "Noam Shazeer"
+        ],
+        "date": "12 June 2017"
+      },
+      "evaluation": {
+        "passed": true,
+        "facts": [
+          {
+            "pattern": "1706\\.03762",
+            "passed": true
+          },
+          {
+            "pattern": "Ashish\\s+Vaswani",
+            "passed": true
+          },
+          {
+            "pattern": "Noam\\s+Shazeer",
+            "passed": true
+          },
+          {
+            "pattern": "12\\s+Jun(?:e)?\\s+2017|Jun(?:e)?\\s+12,?\\s+2017|2017-06-12",
+            "passed": true
+          }
+        ],
+        "evidence": [
+          {
+            "url": "https://arxiv.org/abs/1706.03762",
+            "quote": "arXiv:1706.03762 [cs.CL]",
+            "source_matches": true,
+            "quote_observed": true
+          },
+          {
+            "url": "https://arxiv.org/abs/1706.03762",
+            "quote": "Authors:Ashish Vaswani, Noam Shazeer",
+            "source_matches": true,
+            "quote_observed": true
+          },
+          {
+            "url": "https://arxiv.org/abs/1706.03762",
+            "quote": "Submitted on 12 Jun 2017 (v1)",
+            "source_matches": true,
+            "quote_observed": true
+          }
+        ],
+        "forbidden_network_or_file_calls": 0
+      },
+      "preparation_ms": 98.76216800000111,
+      "host_elapsed_ms": 81197.15288800001,
+      "verification_ms": 12.533039000001736,
+      "task_elapsed_ms": 81219.045659,
+      "usage": {
+        "input_tokens": 267308,
+        "cached_input_tokens": 233088,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 886,
+        "reasoning_output_tokens": 163
+      },
+      "tool_calls": 12,
+      "tool_failures": 1,
+      "tool_elapsed_ms": 10701.365906000014,
+      "response_bytes": 66541,
+      "response_characters": 66527,
+      "forbidden_host_calls": 0,
+      "cost_usd": null,
+      "timed_out": false,
+      "trace_file": "zen-arxiv-paper-0.json"
+    },
+    {
+      "engine": "zen",
+      "task": "github-issue",
+      "round": 0,
+      "phase": 0,
+      "success": true,
+      "outcome": "passed",
+      "answer": {
+        "answer": "Issue #1 is titled “Suggestion: 'protected' modifier”. It is closed and was opened by RyanCavanaugh.",
+        "evidence": [
+          {
+            "url": "https://github.com/microsoft/TypeScript/issues/1",
+            "quote": "Suggestion: 'protected' modifier #1"
+          },
+          {
+            "url": "https://github.com/microsoft/TypeScript/issues/1",
+            "quote": "Closed"
+          },
+          {
+            "url": "https://github.com/microsoft/TypeScript/issues/1",
+            "quote": "Ryan Cavanaugh (RyanCavanaugh)"
+          }
+        ]
+      },
+      "expected": {
+        "title": "Suggestion: 'protected' modifier",
+        "state": "closed",
+        "author": "RyanCavanaugh",
+        "url": "https://github.com/microsoft/TypeScript/issues/1"
+      },
+      "evaluation": {
+        "passed": true,
+        "facts": [
+          {
+            "pattern": "Suggestion.{0,10}protected.{0,10}modifier",
+            "passed": true
+          },
+          {
+            "pattern": "closed",
+            "passed": true
+          },
+          {
+            "pattern": "RyanCavanaugh",
+            "passed": true
+          }
+        ],
+        "evidence": [
+          {
+            "url": "https://github.com/microsoft/TypeScript/issues/1",
+            "quote": "Suggestion: 'protected' modifier #1",
+            "source_matches": true,
+            "quote_observed": true
+          },
+          {
+            "url": "https://github.com/microsoft/TypeScript/issues/1",
+            "quote": "Closed",
+            "source_matches": true,
+            "quote_observed": false
+          },
+          {
+            "url": "https://github.com/microsoft/TypeScript/issues/1",
+            "quote": "Ryan Cavanaugh (RyanCavanaugh)",
+            "source_matches": true,
+            "quote_observed": true
+          }
+        ],
+        "forbidden_network_or_file_calls": 0
+      },
+      "preparation_ms": 129.57139800000004,
+      "host_elapsed_ms": 21312.203064999994,
+      "verification_ms": 2.532643000013195,
+      "task_elapsed_ms": 21325.76829899999,
+      "usage": {
+        "input_tokens": 63429,
+        "cached_input_tokens": 45184,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 280,
+        "reasoning_output_tokens": 0
+      },
+      "tool_calls": 3,
+      "tool_failures": 0,
+      "tool_elapsed_ms": 347.8486249999987,
+      "response_bytes": 19086,
+      "response_characters": 19064,
+      "forbidden_host_calls": 0,
+      "cost_usd": null,
+      "timed_out": false,
+      "trace_file": "zen-github-issue-0.json"
+    },
+    {
+      "engine": "zen",
+      "task": "pypi-metadata",
+      "round": 0,
+      "phase": 0,
+      "success": true,
+      "outcome": "passed",
+      "answer": {
+        "answer": "The latest stable httpx release on PyPI is 0.28.1. It requires Python 3.8 or newer. The newer 1.0.dev releases are marked PRE-RELEASE in the release history.",
+        "evidence": [
+          {
+            "url": "https://pypi.org/project/httpx/",
+            "quote": "httpx 0.28.1"
+          },
+          {
+            "url": "https://pypi.org/project/httpx/",
+            "quote": "HTTPX requires Python 3.8+."
+          },
+          {
+            "url": "https://pypi.org/project/httpx/#history",
+            "quote": "PRE-RELEASE"
+          }
+        ]
+      },
+      "expected": {
+        "version": "0.28.1",
+        "requires_python": ">=3.8"
+      },
+      "evaluation": {
+        "passed": true,
+        "facts": [
+          {
+            "pattern": "0\\.28\\.1",
+            "passed": true
+          },
+          {
+            "pattern": "3\\.8",
+            "passed": true
+          }
+        ],
+        "evidence": [
+          {
+            "url": "https://pypi.org/project/httpx/",
+            "quote": "httpx 0.28.1",
+            "source_matches": true,
+            "quote_observed": true
+          },
+          {
+            "url": "https://pypi.org/project/httpx/",
+            "quote": "HTTPX requires Python 3.8+.",
+            "source_matches": true,
+            "quote_observed": true
+          },
+          {
+            "url": "https://pypi.org/project/httpx/#history",
+            "quote": "PRE-RELEASE",
+            "source_matches": true,
+            "quote_observed": false
+          }
+        ],
+        "forbidden_network_or_file_calls": 0
+      },
+      "preparation_ms": 111.09250199998496,
+      "host_elapsed_ms": 24415.745800999983,
+      "verification_ms": 3.647742000001017,
+      "task_elapsed_ms": 24425.380986000004,
+      "usage": {
+        "input_tokens": 84112,
+        "cached_input_tokens": 61312,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 360,
+        "reasoning_output_tokens": 0
+      },
+      "tool_calls": 4,
+      "tool_failures": 0,
+      "tool_elapsed_ms": 185.31345200003125,
+      "response_bytes": 29753,
+      "response_characters": 29744,
+      "forbidden_host_calls": 0,
+      "cost_usd": null,
+      "timed_out": false,
+      "trace_file": "zen-pypi-metadata-0.json"
+    },
+    {
+      "engine": "zen",
+      "task": "python-json",
+      "round": 0,
+      "phase": 0,
+      "success": true,
+      "outcome": "passed",
+      "answer": {
+        "answer": "json.loads(s) raises json.JSONDecodeError for invalid JSON. Its input s supports str, bytes, and bytearray containing a JSON document.",
+        "evidence": [
+          {
+            "url": "https://docs.python.org/3/library/json.html#json.loads",
+            "quote": "Identical to load(), but instead of a file-like object, deserialize s (a str, bytes or bytearray instance containing a JSON document) to a Python object using this conversion table."
+          },
+          {
+            "url": "https://docs.python.org/3/library/json.html#json.load",
+            "quote": "JSONDecodeError – When the data being deserialized is not a valid JSON document."
+          }
+        ]
+      },
+      "expected": {
+        "error": "JSONDecodeError",
+        "inputs": [
+          "str",
+          "bytes",
+          "bytearray"
+        ]
+      },
+      "evaluation": {
+        "passed": true,
+        "facts": [
+          {
+            "pattern": "JSONDecodeError",
+            "passed": true
+          },
+          {
+            "pattern": "\\bstr\\b|string",
+            "passed": true
+          },
+          {
+            "pattern": "\\bbytes\\b",
+            "passed": true
+          },
+          {
+            "pattern": "\\bbytearray\\b",
+            "passed": true
+          }
+        ],
+        "evidence": [
+          {
+            "url": "https://docs.python.org/3/library/json.html#json.loads",
+            "quote": "Identical to load(), but instead of a file-like object, deserialize s (a str, bytes or bytearray instance containing a JSON document) to a Python object using this conversion table.",
+            "source_matches": true,
+            "quote_observed": true
+          },
+          {
+            "url": "https://docs.python.org/3/library/json.html#json.load",
+            "quote": "JSONDecodeError – When the data being deserialized is not a valid JSON document.",
+            "source_matches": true,
+            "quote_observed": true
+          }
+        ],
+        "forbidden_network_or_file_calls": 0
+      },
+      "preparation_ms": 116.4515680000186,
+      "host_elapsed_ms": 46107.60133599999,
+      "verification_ms": 6.263623000006191,
+      "task_elapsed_ms": 46120.179076,
+      "usage": {
+        "input_tokens": 113656,
+        "cached_input_tokens": 100736,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 424,
+        "reasoning_output_tokens": 0
+      },
+      "tool_calls": 6,
+      "tool_failures": 1,
+      "tool_elapsed_ms": 163.45974699998624,
+      "response_bytes": 37300,
+      "response_characters": 37133,
+      "forbidden_host_calls": 0,
+      "cost_usd": null,
+      "timed_out": false,
+      "trace_file": "zen-python-json-0.json"
+    },
+    {
+      "engine": "zen",
+      "task": "govuk-calendar",
+      "round": 0,
+      "phase": 0,
+      "success": true,
+      "outcome": "passed",
+      "answer": {
+        "answer": "In Scotland in 2027, the summer bank holiday is Monday 2 August, and St Andrew’s Day is Tuesday 30 November.",
+        "evidence": [
+          {
+            "url": "https://www.gov.uk/bank-holidays#scotland",
+            "quote": "2 August Monday Summer bank holiday"
+          },
+          {
+            "url": "https://www.gov.uk/bank-holidays#scotland",
+            "quote": "30 November Tuesday St Andrew’s Day"
+          }
+        ]
+      },
+      "expected": [
+        {
+          "title": "Summer bank holiday",
+          "date": "2027-08-02",
+          "notes": "",
+          "bunting": true
+        },
+        {
+          "title": "St Andrew’s Day",
+          "date": "2027-11-30",
+          "notes": "",
+          "bunting": true
+        }
+      ],
+      "evaluation": {
+        "passed": true,
+        "facts": [
+          {
+            "pattern": "\\b2027\\b",
+            "passed": true
+          },
+          {
+            "pattern": "\\b2(?:st|nd|rd|th)?\\b\\s+August\\b(?:\\s+2027\\b)?|\\bAugust\\s+\\b2(?:st|nd|rd|th)?\\b(?:,?\\s+2027\\b)?|\\b2027-08-02\\b",
+            "passed": true
+          },
+          {
+            "pattern": "\\b30(?:st|nd|rd|th)?\\b\\s+November\\b(?:\\s+2027\\b)?|\\bNovember\\s+\\b30(?:st|nd|rd|th)?\\b(?:,?\\s+2027\\b)?|\\b2027-11-30\\b",
+            "passed": true
+          }
+        ],
+        "evidence": [
+          {
+            "url": "https://www.gov.uk/bank-holidays#scotland",
+            "quote": "2 August Monday Summer bank holiday",
+            "source_matches": true,
+            "quote_observed": true
+          },
+          {
+            "url": "https://www.gov.uk/bank-holidays#scotland",
+            "quote": "30 November Tuesday St Andrew’s Day",
+            "source_matches": true,
+            "quote_observed": true
+          }
+        ],
+        "forbidden_network_or_file_calls": 0
+      },
+      "preparation_ms": 145.2085730000108,
+      "host_elapsed_ms": 36922.05994400001,
+      "verification_ms": 7.0769689999870025,
+      "task_elapsed_ms": 36936.96669,
+      "usage": {
+        "input_tokens": 105470,
+        "cached_input_tokens": 71168,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 462,
+        "reasoning_output_tokens": 57
+      },
+      "tool_calls": 6,
+      "tool_failures": 0,
+      "tool_elapsed_ms": 3643.560113000014,
+      "response_bytes": 34661,
+      "response_characters": 34576,
+      "forbidden_host_calls": 0,
+      "cost_usd": null,
+      "timed_out": false,
+      "trace_file": "zen-govuk-calendar-0.json"
+    }
+  ]
+}

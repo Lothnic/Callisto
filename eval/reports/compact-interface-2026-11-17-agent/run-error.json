@@ -1,0 +1,5 @@
+{
+  "at": "2026-11-17T06:18:08.303Z",
+  "message": "Private browse session could not start",
+  "stack": "Error: Private browse session could not start\n    at BrowseFixture.start (file:///home/lothnic/Desktop/Projects/callisto/eval/agent-comparison/browse-fixture.mjs:28:141)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///home/lothnic/Desktop/Projects/callisto/eval/agent-comparison/real-world-agent.mjs:88:29"
+}

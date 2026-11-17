@@ -61,7 +61,7 @@ absolute path to the built binary:
 For normal use, install [Callisto Bridge from Mozilla Add-ons](https://addons.mozilla.org/en-US/firefox/addon/callisto/)
 and follow the [bridge installer and host setup](../../docs/getting-started.md).
 The store add-on remains installed across browser restarts. Ask your agent for
-`callisto_pair`, enter the code in the popup and choose **Connect runtime**.
+the `pair` operation, enter the code in the popup and choose **Connect runtime**.
 Open a regular website and choose **Share this tab**, or enable
 [Full browser control](../../docs/full-browser-control.md) for automatic tab
 selection, activation and creation. **Stop sharing** releases agent tabs.
@@ -72,6 +72,14 @@ add-ons are removed when the browser exits. The store and development builds
 share an add-on ID; do not treat them as independent installations.
 See [published add-on details](../../docs/published-extension.md) and
 [connection troubleshooting](../../docs/getting-started.md#troubleshooting).
+
+### Agent interface
+
+The default catalog exposes one `callisto` tool: choose `op` and pass its fields
+in `args`. Use `op: "help"` to discover operations or request one contract.
+[Compact interface and examples](../../docs/compact-tools.md) cover setup,
+batching and compatibility. Set `CALLISTO_TOOL_PROFILE=full` to advertise the
+named tools below; existing named requests are still accepted.
 
 ### Tools at a glance
 

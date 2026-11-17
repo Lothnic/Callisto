@@ -1,0 +1,885 @@
+{
+  "measured_at": "2026-11-17T06:18:52.067Z",
+  "unit": "UTF-8 bytes of JSON.stringify(tools); not model tokens",
+  "profiles": {
+    "full": {
+      "tool_count": 25,
+      "catalog_bytes": 14490,
+      "description_bytes": 6274,
+      "input_schema_bytes": 6740,
+      "tools": [
+        {
+          "description": "Dispatch synthetic keydown/keyup on the focused control, including chords such as Control+A. For JavaScript keyboard handlers only: native editing, focus navigation, shortcuts and form submission defaults are not emulated. Use fill or submit for those operations.",
+          "inputSchema": {
+            "properties": {
+              "key": {
+                "maxLength": 40,
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            "required": [
+              "key"
+            ],
+            "type": "object"
+          },
+          "name": "callisto_press"
+        },
+        {
+          "description": "List frames in the controlled tab. Frame access depends on granted website permissions.",
+          "inputSchema": {
+            "properties": {},
+            "type": "object"
+          },
+          "name": "callisto_frames"
+        },
+        {
+          "description": "Select a frame by frame_id from callisto_frames, inject the bridge and return a fresh snapshot. Navigation resets selection. Cross-origin frame input fails closed because parent hit testing cannot be verified.",
+          "inputSchema": {
+            "properties": {
+              "frame_id": {
+                "minimum": 0,
+                "type": "integer"
+              }
+            },
+            "required": [
+              "frame_id"
+            ],
+            "type": "object"
+          },
+          "name": "callisto_frame"
+        },
+        {
+          "description": "Ask the user to complete a step in the shared page, then click Continue with agent. Use message; prompt is supported for compatibility. Confirmation is not proof of task success.",
+          "inputSchema": {
+            "anyOf": [
+              {
+                "required": [
+                  "message"
+                ]
+              },
+              {
+                "required": [
+                  "prompt"
+                ]
+              }
+            ],
+            "properties": {
+              "message": {
+                "maxLength": 500,
+                "minLength": 1,
+                "type": "string"
+              },
+              "prompt": {
+                "maxLength": 1000,
+                "minLength": 1,
+                "type": "string"
+              },
+              "timeout_ms": {
+                "maximum": 120000,
+                "minimum": 1000,
+                "type": "integer"
+              }
+            },
+            "type": "object"
+          },
+          "name": "callisto_handoff"
+        },
+        {
+          "description": "Report backend capabilities without reading page content.",
+          "inputSchema": {
+            "properties": {},
+            "type": "object"
+          },
+          "name": "callisto_capabilities"
+        },
+        {
+          "description": "Set files on a visible file input in the controlled page. Reads explicit local file paths, at most 10 files and 10 MiB total. Page input/change handlers may upload immediately. Does not submit the form.",
+          "inputSchema": {
+            "properties": {
+              "paths": {
+                "items": {
+                  "type": "string"
+                },
+                "maxItems": 10,
+                "minItems": 1,
+                "type": "array"
+              },
+              "ref": {
+                "pattern": "^ax-[0-9]+$",
+                "type": "string"
+              }
+            },
+            "required": [
+              "ref",
+              "paths"
+            ],
+            "type": "object"
+          },
+          "name": "callisto_upload"
+        },
+        {
+          "description": "Get the persistent local browser pairing code (only needed for initial setup) for the Firefox/Zen tab bridge. Enter it in the extension, then explicitly share the desired existing tab.",
+          "inputSchema": {
+            "properties": {},
+            "type": "object"
+          },
+          "name": "callisto_pair"
+        },
+        {
+          "description": "Check connection, selected tab and execution state without reading page content. fullAccess=true means Full browser control is enabled in the extension; page tools can adopt and activate tabs automatically.",
+          "inputSchema": {
+            "properties": {},
+            "type": "object"
+          },
+          "name": "callisto_status"
+        },
+        {
+          "description": "Manage the user's browser after they grant Enable browser access in the extension. background start/pause/resume/stop controls only the already shared tab and needs the optional tabs grant; the user must prepare the window in the extension first because Firefox/Zen may focus it on creation. Execution then preserves the tab and login in an unfocused agent window. View is a user control. Other actions support tabs, screenshots, cookies, bookmarks, history and downloads. tab_select activates and shares that existing tab; tab_activate only focuses it, including browser-protected pages. tab_create accepts an HTTP(S) url and window_id; omitting url creates about:blank. Use tab_navigate with tab_id and an HTTP(S) url to load a blank tab before page actions. In opt-in Full browser control mode, new tabs/windows are automatically shared and page tools can adopt the active tab or reactivate their selected tab. Full mode can only be enabled in the extension UI; Stop turns it off. Check callisto_status.fullAccess. Browser restrictions still apply. window_close closes the specified whole window, including its tabs; use the id returned by window_create for agent-window cleanup. Cookie values are sensitive. Downloads prompt for a save location. Zen may omit inactive workspaces.",
+          "inputSchema": {
+            "properties": {
+              "action": {
+                "enum": [
+                  "background",
+                  "tabs_list",
+                  "windows_list",
+                  "tab_select",
+                  "tab_activate",
+                  "tab_create",
+                  "tab_navigate",
+                  "window_create",
+                  "window_close",
+                  "agent_container",
+                  "tab_close",
+                  "back",
+                  "forward",
+                  "reload",
+                  "screenshot",
+                  "cookies_list",
+                  "cookie_set",
+                  "cookie_remove",
+                  "bookmarks_search",
+                  "history_search",
+                  "downloads_search",
+                  "download"
+                ],
+                "type": "string"
+              },
+              "agent_container": {
+                "description": "Create a new tab or window in the opt-in isolated Callisto cookie container; existing logins will not be available there.",
+                "type": "boolean"
+              },
+              "cookie_store_id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "operation": {
+                "description": "Required for background. The agent window must remain unfocused and unminimized; unsupported conditions pause instead of raising it.",
+                "enum": [
+                  "start",
+                  "pause",
+                  "resume",
+                  "stop"
+                ],
+                "type": "string"
+              },
+              "query": {
+                "maxLength": 200,
+                "type": "string"
+              },
+              "tab_id": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "url": {
+                "type": "string"
+              },
+              "value": {
+                "type": "string"
+              },
+              "window_id": {
+                "minimum": 0,
+                "type": "integer"
+              }
+            },
+            "required": [
+              "action"
+            ],
+            "type": "object"
+          },
+          "name": "callisto_browser"
+        },
+        {
+          "description": "Additional DOM operations on the active controlled page. scroll uses viewport pixel deltas; hover dispatches synthetic pointer/mouse events; select chooses an option by value; check sets a checkbox; text returns bounded visible body text; find searches visible body text. Input uses the explicitly selected callisto_input mode.",
+          "inputSchema": {
+            "properties": {
+              "action": {
+                "enum": [
+                  "scroll",
+                  "hover",
+                  "select",
+                  "check",
+                  "text",
+                  "find"
+                ],
+                "type": "string"
+              },
+              "checked": {
+                "type": "boolean"
+              },
+              "delta_x": {
+                "type": "number"
+              },
+              "delta_y": {
+                "type": "number"
+              },
+              "query": {
+                "maxLength": 200,
+                "type": "string"
+              },
+              "ref": {
+                "pattern": "^ax-[0-9]+$",
+                "type": "string"
+              },
+              "value": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "action"
+            ],
+            "type": "object"
+          },
+          "name": "callisto_page"
+        },
+        {
+          "description": "Scroll the controlled page by viewport pixel deltas. Returns the action result; take a fresh snapshot afterward.",
+          "inputSchema": {
+            "properties": {
+              "delta_x": {
+                "default": 0,
+                "type": "number"
+              },
+              "delta_y": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "delta_y"
+            ],
+            "type": "object"
+          },
+          "name": "callisto_scroll"
+        },
+        {
+          "description": "Capture the active controlled tab as a JPEG image. Requires Enable browser access in the extension.",
+          "inputSchema": {
+            "properties": {},
+            "type": "object"
+          },
+          "name": "callisto_screenshot"
+        },
+        {
+          "description": "Search visible page text and return bounded matching snippets. Unlike Chromium accessibility search, this uses rendered DOM text.",
+          "inputSchema": {
+            "properties": {
+              "max_matches": {
+                "default": 5,
+                "maximum": 10,
+                "minimum": 1,
+                "type": "integer"
+              },
+              "query": {
+                "maxLength": 200,
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            "required": [
+              "query"
+            ],
+            "type": "object"
+          },
+          "name": "callisto_find"
+        },
+        {
+          "description": "Submit the form associated with a snapshot ref, preserving browser validation and submit handlers. Use an input or submit-button ref. Submission may navigate; the next snapshot waits for the page.",
+          "inputSchema": {
+            "properties": {
+              "ref": {
+                "pattern": "^ax-[0-9]+$",
+                "type": "string"
+              }
+            },
+            "required": [
+              "ref"
+            ],
+            "type": "object"
+          },
+          "name": "callisto_submit"
+        },
+        {
+          "description": "Execute 1–10 dependent actions in the controlled tab and return a final snapshot in one tool call. Batches stop if tab ownership changes. Earlier actions are not rolled back on failure. Ten-second deadline; input uses the explicitly selected callisto_input mode.",
+          "inputSchema": {
+            "properties": {
+              "actions": {
+                "items": {
+                  "properties": {
+                    "action": {
+                      "enum": [
+                        "navigate",
+                        "click_ref",
+                        "fill_ref",
+                        "submit_ref",
+                        "click_role",
+                        "fill_role",
+                        "submit_role",
+                        "scroll"
+                      ],
+                      "type": "string"
+                    },
+                    "delta_x": {
+                      "type": "number"
+                    },
+                    "delta_y": {
+                      "type": "number"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "ref": {
+                      "type": "string"
+                    },
+                    "role": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    },
+                    "value": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "action"
+                  ],
+                  "type": "object"
+                },
+                "maxItems": 10,
+                "minItems": 1,
+                "type": "array"
+              }
+            },
+            "required": [
+              "actions"
+            ],
+            "type": "object"
+          },
+          "name": "callisto_batch"
+        },
+        {
+          "description": "Read structured rows from the shared page using CSS selectors: a row selector plus a field map. Optionally follow a next-page control and merge pages. Returns typed rows, not a snapshot, so counting and aggregation need one call.",
+          "inputSchema": {
+            "properties": {
+              "fields": {
+                "additionalProperties": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "properties": {
+                        "attribute": {
+                          "type": "string"
+                        },
+                        "selector": {
+                          "type": "string"
+                        },
+                        "type": {
+                          "enum": [
+                            "text",
+                            "number"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  ]
+                },
+                "maxProperties": 20,
+                "minProperties": 1,
+                "type": "object"
+              },
+              "include_text": {
+                "type": "boolean"
+              },
+              "limit": {
+                "maximum": 1000,
+                "minimum": 1,
+                "type": "integer"
+              },
+              "paginate": {
+                "properties": {
+                  "max_pages": {
+                    "maximum": 25,
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "next": {
+                    "maxLength": 500,
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "next"
+                ],
+                "type": "object"
+              },
+              "selector": {
+                "maxLength": 500,
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            "required": [
+              "selector",
+              "fields"
+            ],
+            "type": "object"
+          },
+          "name": "callisto_extract"
+        },
+        {
+          "description": "Run 1–40 dependent steps in one call: navigate; click/fill/submit/select/check/hover by ref or exact role; press; scroll; wait; wait_for text or CSS selector state; extract rows. Use submit instead of synthetic Enter for forms. Returns the last extraction and an optional final snapshot. Stops at the first failure within a 60-second budget; earlier steps are not rolled back. Input uses the explicitly selected callisto_input mode.",
+          "inputSchema": {
+            "properties": {
+              "snapshot": {
+                "type": "boolean"
+              },
+              "steps": {
+                "items": {
+                  "properties": {
+                    "action": {
+                      "enum": [
+                        "navigate",
+                        "click_ref",
+                        "click_role",
+                        "fill_ref",
+                        "fill_role",
+                        "submit_ref",
+                        "submit_role",
+                        "select_ref",
+                        "select_role",
+                        "check_ref",
+                        "check_role",
+                        "hover_ref",
+                        "hover_role",
+                        "press",
+                        "scroll",
+                        "wait",
+                        "wait_for",
+                        "extract"
+                      ],
+                      "type": "string"
+                    },
+                    "checked": {
+                      "type": "boolean"
+                    },
+                    "delta_x": {
+                      "type": "number"
+                    },
+                    "delta_y": {
+                      "type": "number"
+                    },
+                    "key": {
+                      "type": "string"
+                    },
+                    "ms": {
+                      "maximum": 5000,
+                      "minimum": 1,
+                      "type": "integer"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "ref": {
+                      "type": "string"
+                    },
+                    "role": {
+                      "type": "string"
+                    },
+                    "selector": {
+                      "maxLength": 500,
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "spec": {
+                      "type": "object"
+                    },
+                    "state": {
+                      "enum": [
+                        "visible",
+                        "hidden",
+                        "attached",
+                        "detached"
+                      ],
+                      "type": "string"
+                    },
+                    "text": {
+                      "maxLength": 500,
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "timeout_ms": {
+                      "maximum": 20000,
+                      "minimum": 100,
+                      "type": "integer"
+                    },
+                    "url": {
+                      "type": "string"
+                    },
+                    "value": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "action"
+                  ],
+                  "type": "object"
+                },
+                "maxItems": 40,
+                "minItems": 1,
+                "type": "array"
+              }
+            },
+            "required": [
+              "steps"
+            ],
+            "type": "object"
+          },
+          "name": "callisto_run"
+        },
+        {
+          "description": "Enable trusted BiDi input under the extension shared-tab lease. Explicit loopback endpoint required. Stop sharing revokes new input, network and observations together. No synthetic fallback. Existing callisto_run/batch tools use this mode.",
+          "inputSchema": {
+            "properties": {
+              "action": {
+                "enum": [
+                  "enable",
+                  "disable",
+                  "status"
+                ],
+                "type": "string"
+              },
+              "endpoint": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "action"
+            ],
+            "type": "object"
+          },
+          "name": "callisto_input"
+        },
+        {
+          "description": "Inspect traffic in the explicitly shared tab with optional network permission. Start with 1-10 exact origins; list bounded redacted metadata; endpoints summarizes observed paths and field names; optional JSON/form bodies; rules block or redirect within scope. Stop removes rules. Export HAR to a new absolute output_path or return JSON. Capture never supplies credentials or bypasses site authorization.",
+          "inputSchema": {
+            "properties": {
+              "action": {
+                "enum": [
+                  "start",
+                  "list",
+                  "endpoints",
+                  "compare",
+                  "schema",
+                  "openapi",
+                  "replay",
+                  "rules",
+                  "stop",
+                  "export"
+                ],
+                "type": "string"
+              },
+              "capture_bodies": {
+                "default": false,
+                "type": "boolean"
+              },
+              "include_bodies": {
+                "type": "boolean"
+              },
+              "left": {
+                "type": "string"
+              },
+              "limit": {
+                "maximum": 500,
+                "minimum": 1,
+                "type": "integer"
+              },
+              "method": {
+                "enum": [
+                  "GET",
+                  "HEAD"
+                ],
+                "type": "string"
+              },
+              "offset": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "origins": {
+                "items": {
+                  "type": "string"
+                },
+                "maxItems": 10,
+                "minItems": 1,
+                "type": "array"
+              },
+              "output_path": {
+                "type": "string"
+              },
+              "right": {
+                "type": "string"
+              },
+              "rules": {
+                "items": {
+                  "properties": {
+                    "action": {
+                      "enum": [
+                        "block",
+                        "redirect"
+                      ],
+                      "type": "string"
+                    },
+                    "method": {
+                      "type": "string"
+                    },
+                    "redirect_url": {
+                      "type": "string"
+                    },
+                    "url_prefix": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "action",
+                    "url_prefix"
+                  ],
+                  "type": "object"
+                },
+                "maxItems": 20,
+                "type": "array"
+              },
+              "url": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "action"
+            ],
+            "type": "object"
+          },
+          "name": "callisto_network"
+        },
+        {
+          "description": "Record private per-client action JSONL and optional DOM snapshots/screenshots. Start requires a new absolute directory. Checkpoint captures enabled evidence; stop writes a manifest and HAR if a network capture exists. This is not a Playwright trace; screenshots and snapshots can expose private page content.",
+          "inputSchema": {
+            "properties": {
+              "action": {
+                "enum": [
+                  "start",
+                  "status",
+                  "checkpoint",
+                  "stop"
+                ],
+                "type": "string"
+              },
+              "directory": {
+                "type": "string"
+              },
+              "screenshots": {
+                "default": false,
+                "type": "boolean"
+              },
+              "snapshots": {
+                "default": false,
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "action"
+            ],
+            "type": "object"
+          },
+          "name": "callisto_trace"
+        },
+        {
+          "description": "Inspect the selected tab. In Full browser control mode, the active tab is adopted automatically when none is selected; otherwise share a tab or call callisto_browser tab_select first. Use max_chars to bound output and offset=next_offset to page through truncated controls. Refs belong to the latest snapshot. This experimental DOM-derived snapshot can omit content and frames.",
+          "inputSchema": {
+            "properties": {
+              "diff": {
+                "default": false,
+                "type": "boolean"
+              },
+              "include_text": {
+                "default": true,
+                "type": "boolean"
+              },
+              "max_chars": {
+                "maximum": 30000,
+                "minimum": 1000,
+                "type": "integer"
+              },
+              "offset": {
+                "maximum": 10000,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "query": {
+                "maxLength": 200,
+                "minLength": 1,
+                "type": "string"
+              },
+              "revision": {
+                "type": "string"
+              },
+              "selector": {
+                "maxLength": 500,
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "name": "callisto_snapshot"
+        },
+        {
+          "description": "Navigate the shared active tab to an HTTP(S) URL. Requires the user to grant optional access to all websites and re-share the tab. Poll callisto_status until ready, then take a fresh snapshot.",
+          "inputSchema": {
+            "properties": {
+              "url": {
+                "maxLength": 8192,
+                "type": "string"
+              }
+            },
+            "required": [
+              "url"
+            ],
+            "type": "object"
+          },
+          "name": "callisto_navigate"
+        },
+        {
+          "description": "Click a ref from the latest snapshot in the shared tab using a synthetic DOM click. Some websites reject synthetic input.",
+          "inputSchema": {
+            "properties": {
+              "ref": {
+                "pattern": "^ax-[0-9]+$",
+                "type": "string"
+              }
+            },
+            "required": [
+              "ref"
+            ],
+            "type": "object"
+          },
+          "name": "callisto_click"
+        },
+        {
+          "description": "Fill a ref from the latest snapshot in the shared tab using synthetic input events. Some websites reject synthetic input.",
+          "inputSchema": {
+            "properties": {
+              "ref": {
+                "pattern": "^ax-[0-9]+$",
+                "type": "string"
+              },
+              "value": {
+                "maxLength": 100000,
+                "type": "string"
+              }
+            },
+            "required": [
+              "ref",
+              "value"
+            ],
+            "type": "object"
+          },
+          "name": "callisto_fill"
+        },
+        {
+          "description": "Stop sharing the tab without closing it or the browser.",
+          "inputSchema": {
+            "properties": {},
+            "type": "object"
+          },
+          "name": "callisto_close"
+        }
+      ]
+    },
+    "compact": {
+      "tool_count": 1,
+      "catalog_bytes": 940,
+      "description_bytes": 519,
+      "input_schema_bytes": 368,
+      "tools": [
+        {
+          "description": "Control Firefox/Zen through its shared tab. Pass operation fields in args. Start with status or pair. Navigate: {op:'navigate',args:{url:'https://example.com'}}. Observe: {op:'snapshot',args:{max_chars:6000}}. Act: {op:'run',args:{steps:[{action:'click_ref',ref:'ax-1'}],snapshot:false}}. Get any operation's parameters with {op:'help',args:{op:'run'}}. Use run for dependent actions and extract for rows. Existing sharing, permissions, input mode and cancellation apply. Inspect after uncertain errors before retrying.",
+          "inputSchema": {
+            "additionalProperties": false,
+            "properties": {
+              "args": {
+                "type": "object"
+              },
+              "op": {
+                "enum": [
+                  "help",
+                  "press",
+                  "frames",
+                  "frame",
+                  "handoff",
+                  "capabilities",
+                  "upload",
+                  "pair",
+                  "status",
+                  "browser",
+                  "page",
+                  "scroll",
+                  "screenshot",
+                  "find",
+                  "submit",
+                  "batch",
+                  "extract",
+                  "run",
+                  "input",
+                  "network",
+                  "trace",
+                  "snapshot",
+                  "navigate",
+                  "click",
+                  "fill",
+                  "close"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "op"
+            ],
+            "type": "object"
+          },
+          "name": "callisto"
+        }
+      ]
+    }
+  },
+  "catalog_reduction_percent": 93.5127674258109,
+  "previous_benchmark": {
+    "zen_task_catalog_bytes": 9790,
+    "browse_execute_bytes": 2730,
+    "source": "eval/reports/real-world-2026-11-16-run2/results.json"
+  }
+}

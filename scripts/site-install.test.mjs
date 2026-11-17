@@ -62,7 +62,7 @@ test('default builds the Zen bridge and prints a launcher explicitly selecting z
   assert.ok(existsSync(join(f.directory,'data/callisto-zen/packages/firefox-rs/target/release/callisto-firefox-tab-mcp')));
   assert.equal(f.calls().filter(call=>call.name==='cargo').length,1);
   assert.equal(f.calls().filter(call=>call.name==='npm').length,0);
-  assert.match(result.stdout,/callisto_pair/);
+  assert.match(result.stdout,/Callisto pairing code/);
   const fetch = f.calls().find(call=>call.name==='git' && call.args.includes('fetch'));
   assert.match(fetch.args.at(-1),/^[0-9a-f]{40}$/);
 });

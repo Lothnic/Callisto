@@ -18,7 +18,7 @@ if(!Number.isInteger(repetitions)||repetitions<1||repetitions>2)throw Error('Hos
 const selectedTasks=process.env.BENCH_TASKS?tasks.filter(t=>process.env.BENCH_TASKS.split(',').includes(t.id)):tasks;
 if(!selectedTasks.length)throw Error('No selected tasks');
 const runtime=resolve('packages/firefox-rs/target/debug/callisto-firefox-tab-mcp');
-await mkdir(root,{recursive:false,mode:0o700});const state=await mkdtemp(join(tmpdir(),'callisto-host-')),environment={...process.env,CALLISTO_FIREFOX_STATE_DIR:join(state,'relay')};
+await mkdir(root,{recursive:false,mode:0o700});const state=await mkdtemp(join(tmpdir(),'callisto-host-')),environment={...process.env,CALLISTO_TOOL_PROFILE:'full',CALLISTO_FIREFOX_STATE_DIR:join(state,'relay')};
 const cwd=join(state,'workspace');await mkdir(cwd);const schema=join(state,'answer-schema.json');await writeFile(schema,JSON.stringify({type:'object',properties:{answer:{type:['string','number','boolean','null']}},required:['answer'],additionalProperties:false}));
 const server=createFixtureServer();await new Promise(r=>server.listen(0,'127.0.0.1',r));const origin=`http://127.0.0.1:${server.address().port}`;
 let client,zen,browse;const rows=[];let catalogs,versions;

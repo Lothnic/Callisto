@@ -6,6 +6,7 @@ with the associated notes.
 
 | Comparison | What it measures | Results |
 | --- | --- | --- |
+| [Compact Zen interface](eval/reports/compact-interface-2026-11-17/README.md) | Serialized catalog size and six public-site functional trials | 25 tools / 14,490 bytes to 1 / 940 bytes; 6/6 goals passed, no matched cost claim |
 | [Public-site host-agent pilot](eval/reports/real-world-2026-11-16-run2/README.md) | Six public informational tasks, two repetitions per engine, fresh model conversations and real host usage | Both 12/12 after a documented date-format scoring correction; small sample, profile restart disclosed |
 | [Runtime upgrade follow-up](research/2026-11-runtime-upgrade-comparison.md) | Same-origin frames, batching and bounded snapshots | Current exploratory run; small sample |
 | [MCP vs browse](research/2026-11-callisto-mcp-vs-browse.md) | Scripted local interactions and public-page snapshots | Historical pre-upgrade baseline; small sample |

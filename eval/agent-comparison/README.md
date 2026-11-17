@@ -92,6 +92,15 @@ comma-separated task IDs, `BENCH_REPETITIONS` accepts 1–3, and
 separate configuration. Both engines use `gpt-6.1-sol` at high effort through the
 same Codex host. Each trial is a fresh conversation with browser tools only.
 
+For a compact-interface validation, set `BENCH_ZEN_TOOL_PROFILE=compact` and
+`BENCH_ENGINES=zen`. The default profile remains `full` to preserve the earlier
+14-tool comparison baseline; compact exposes the single `callisto` entry point
+with operation help on demand. `BENCH_ENGINES` also accepts `browse` or
+`zen,browse`. Only selected browser fixtures are started. Resuming requires the
+same engines and profile. A single-engine run validates functionality and cannot
+establish a comparative latency or cost advantage. See the
+[compact interface report](../reports/compact-interface-2026-11-17/README.md).
+
 Time includes the model's work, site navigation, waiting, retries and independent
 answer/evidence checking. Setup and neutral-tab reacquisition are separate.
 Every attempt retains usage, tool errors, text size and visible traces; private

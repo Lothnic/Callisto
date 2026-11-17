@@ -4,6 +4,11 @@ Callisto provides local MCP tools to a host such as Codex, Claude Code or
 OpenCode. The host provides the model; Callisto does not need a separate model
 API key. The runtimes and distribution are experimental.
 
+For the current Firefox/Zen runtime, agents use one `callisto` tool with `op`
+and `args`; for example, `{"op":"pair"}` requests the pairing code.
+[Compact tools](compact-tools.md) explains on-demand contracts and the full
+named-tool compatibility mode used in detailed reference examples below.
+
 ## Choose a browser path
 
 | Path | Browser and session | Setup |
@@ -52,8 +57,9 @@ source installer, not an automatic updater.
 After registration, restart the agent's MCP connection. Install
 [Callisto Bridge from Mozilla Add-ons](https://addons.mozilla.org/en-US/firefox/addon/callisto/),
 then follow [pairing](#pair-firefox-or-zen). The add-on and runtime are both required.
-Verify that your agent exposes `callisto_pair` and reports
-`callisto_capabilities.backend` as `firefox-extension` before requesting a code.
+Verify that your agent can use `callisto` with `op: "capabilities"` and reports
+`backend: "firefox-extension"` before requesting `op: "pair"`. Older runtimes
+and full mode expose the equivalent `callisto_capabilities` and `callisto_pair`.
 
 If an earlier installer configured isolated Chromium Mini, disable its old
 MCP entry or explicitly ask the agent to use `callisto-zen`. Chromium Mini has
@@ -151,7 +157,8 @@ alone does not install the Rust runtime.
    in the existing browser, choose **This Firefox** →
    **Load Temporary Add-on**, and select
    `packages/firefox-rs/extension/manifest.json` from your checkout.
-2. Ask the agent to call `callisto_pair`. Open the Callisto extension popup,
+2. Ask the agent for the Callisto pairing code (`op: "pair"` in the compact
+   interface). Open the Callisto extension popup,
    paste the pairing code into its box, and click **Connect runtime**. Treat the code
    as a secret; enter it only into the extension.
 3. On a regular web page, click **Share this tab**, or right-click the page and
@@ -246,7 +253,9 @@ that the intended action succeeded. See [browser data handling](browser-data.md)
 
 ## Troubleshooting
 
-- **No pairing tool or code:** ask the agent to check `callisto_capabilities`.
+- **No pairing tool or code:** the compact interface uses `callisto` with
+  `op: "pair"`. Ask the agent to check `op: "capabilities"`; full mode uses
+  `callisto_capabilities`.
   The backend must be `firefox-extension`. Isolated Chromium Mini does not pair
   with the add-on. Register the Zen/Firefox bridge, select its MCP entry and
   restart the agent's MCP connection.
@@ -275,6 +284,12 @@ that the intended action succeeded. See [browser data handling](browser-data.md)
   the manifest alone. Prefer the store add-on for normal use.
 
 ## Notes for host agents
+
+Firefox/Zen defaults to the compact `callisto` tool: translate the native names
+below to `op` and put their arguments in `args`. For example,
+`callisto_snapshot` becomes `{"op":"snapshot","args":{"max_chars":6000}}`.
+Use `{"op":"help","args":{"op":"run"}}` to load one operation contract.
+Chromium Mini keeps its named tools.
 
 - Call `callisto_capabilities` first and use the tools advertised by the
   selected backend. The interfaces and response shapes are not identical.

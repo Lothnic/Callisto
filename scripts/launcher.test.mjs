@@ -77,7 +77,7 @@ for(const backend of ['chromium','zen']) test(`launcher forwards ${backend} MCP 
 
 for (const backend of ['chromium', 'zen']) test(`${backend} exposes the common agent tool names and inputs`, async () => {
   const state = mkdtempSync(join(tmpdir(), 'callisto-contract-'));
-  const env = {...process.env, CALLISTO_FIREFOX_STATE_DIR: state};
+  const env = {...process.env, CALLISTO_TOOL_PROFILE:'full', CALLISTO_FIREFOX_STATE_DIR: state};
   const child = spawn(process.execPath, [launcher, backend], {env, stdio:['pipe','pipe','pipe']});
   let output = '', errors = '';
   child.stderr.on('data', b => errors += b);

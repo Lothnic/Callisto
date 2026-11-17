@@ -306,8 +306,8 @@
           : `Run this in your terminal. The installer builds the ${browser} bridge and registers it with ${agent}.`;
       root.querySelector('#setup-restart-help').textContent = `Restart ${agent} or reconnect its MCP servers so it loads the new Callisto ${browser} entry.`;
       root.querySelector('#setup-entry-name').textContent = `callisto-${backend}`;
-      setCopy('#setup-pair-prompt', '#setup-pair-copy', `Use Callisto ${browser}. Check callisto_capabilities and confirm the backend is firefox-extension, then call callisto_pair so I can connect my extension.`);
-      setCopy('#setup-verify-prompt', '#setup-verify-copy', `Use Callisto ${browser}. Check callisto_status, then take a fresh callisto_snapshot of the shared page. Tell me the page title and one thing you can see. If it is not ready, report what is missing.`);
+      setCopy('#setup-pair-prompt', '#setup-pair-copy', `Use Callisto ${browser}. Check that the Firefox/Zen bridge is available, then request its pairing code so I can connect my extension.`);
+      setCopy('#setup-verify-prompt', '#setup-verify-copy', `Use Callisto ${browser}. Check the browser connection, then inspect the shared page. Tell me the page title and one thing you can see. If it is not ready, report what is missing.`);
     }
 
     function showStep(index, focus = false) {

@@ -25,6 +25,9 @@ both the add-on and the local bridge:
 
 ## Browser control
 
+- [Compact tools](compact-tools.md): one default tool, on-demand contracts and
+  named-tool compatibility.
+
 - [Full browser control](full-browser-control.md): tabs, windows, permissions
   and Stop sharing.
 - [Background work](background-work.md): prepare an agent window while working

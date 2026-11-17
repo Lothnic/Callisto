@@ -56,6 +56,7 @@ env=dict(os.environ,CALLISTO_FIREFOX_STATE_DIR=state.name)
 def client(): return subprocess.Popen([ROOT+'target/debug/callisto-firefox-tab-mcp'],stdin=subprocess.PIPE,stdout=subprocess.PIPE,text=True,env=env)
 p=client()
 def tool(name,args={}):
+ if os.environ.get('CALLISTO_TEST_COMPACT')=='1': name,args='callisto',{'op':name.removeprefix('callisto_'),'args':args}
  p.stdin.write(json.dumps({'jsonrpc':'2.0','id':1,'method':'tools/call','params':{'name':name,'arguments':args}})+'\n');p.stdin.flush();reply=json.loads(p.stdout.readline());return reply.get('result',{'isError':True,'content':[{'type':'text','text':str(reply.get('error'))}]})
 def value(result):
  if result.get('isError'): raise Exception(result)
